@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'loginpage.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -79,6 +80,10 @@ class _PharmaConnectState extends State<PharmaConnect> {
                 ),
                 onTap: () {
                   //Push to Login Screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LogInPage()),
+                  );
                 },
               ),
             ),
