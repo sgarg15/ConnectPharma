@@ -1,0 +1,10 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 42.21 34">
+  <defs>
+    <linearGradient id="linear-gradient" x1="10.34" y1="41.69" x2="40.8" y2="11.23" gradientTransform="matrix(1, 0, 0, -1, 0, 50)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2aa4f4"/>
+      <stop offset="1" stop-color="#007ad9"/>
+    </linearGradient>
+  </defs>
+  <title>TwitterIcon</title>
+  <path d="M46.1,11a17.17,17.17,0,0,1-5,1.36,8.63,8.63,0,0,0,3.81-4.76,17.27,17.27,0,0,1-5.5,2.09,8.68,8.68,0,0,0-15,5.87,8.48,8.48,0,0,0,.23,2,24.67,24.67,0,0,1-17.85-9,8.44,8.44,0,0,0-1.17,4.32A8.53,8.53,0,0,0,9.52,20,8.7,8.7,0,0,1,5.59,19v.1a8.61,8.61,0,0,0,7,8.42,8.59,8.59,0,0,1-2.28.31,8.75,8.75,0,0,1-1.63-.16,8.69,8.69,0,0,0,8.08,6A17.52,17.52,0,0,1,6,37.27a17.7,17.7,0,0,1-2.07-.12A24.75,24.75,0,0,0,17.17,41C33.1,41,41.81,27.92,41.81,16.57c0-.37,0-.74,0-1.1A16.93,16.93,0,0,0,46.1,11" transform="translate(-3.89 -7)" style="fill: url(#linear-gradient)"/>
+</svg>

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+//import 'package:line_icons/line_icons.dart';
 
 class LogInPage extends StatefulWidget {
   @override
@@ -69,12 +71,11 @@ class _LogInPageState extends State<LogInPage> {
                 ],
               ),
             ),
+            //Email/Password Text Fields
             Align(
-              alignment: Alignment(0, -0.4),
+              alignment: Alignment(0, -0.28),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                //mainAxisAlignment: MainAxisAlignment.center,
-                //crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   //Email Text Field
                   Container(
@@ -144,70 +145,92 @@ class _LogInPageState extends State<LogInPage> {
                 ],
               ),
             ),
-            //Email Text Field
-            /* Container(
-              width: 324,
-              alignment: Alignment(0, -0.3),
-              child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFFF6F6F6),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFE8E8E8)),
-                    borderRadius: BorderRadius.circular(8.0),
+            //Google/Twitter/Facebook Icons
+            Align(
+              alignment: Alignment(0, 0.31),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  //Google
+                  GestureDetector(
+                    onTap: () {
+                      //Log In Using Google
+                    },
+                    child: SvgPicture.asset('assets/icons/GoogleIcon.svg',
+                        width: 48, height: 48),
                   ),
-                  hintText: 'Email',
-                  hintStyle: TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
-                  prefixIcon: Icon(
-                    Icons.email,
-                    color: Color(0xFFBDBDBD),
-                  ),
-                ),
+                  SizedBox(width: 50),
+                  //Facebook
+                  GestureDetector(
+                      onTap: () {
+                        //Log In Using Twitter
+                      },
+                      child: SvgPicture.asset('assets/icons/FacebookIcon.svg',
+                          width: 48, height: 48)),
+                  SizedBox(width: 50),
+                  //Twitter
+                  GestureDetector(
+                      onTap: () {
+                        //Log In Using Facebook
+                      },
+                      child: SvgPicture.asset('assets/icons/TwitterIcon.svg',
+                          width: 48, height: 48)),
+                ],
               ),
             ),
-            //Password Text Field
-            Container(
-              width: 324,
-              alignment: Alignment(0, -0.035),
-              child: TextFormField(
-                onSaved: (val) => _password = val,
-                obscureText: !_passwordVisible,
-                keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFFF6F6F6),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFE8E8E8)),
-                    borderRadius: BorderRadius.circular(8.0),
+            //Login Button/ Forgot password text
+            Align(
+              alignment: Alignment(0, 0.9),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(
+                    width: 324,
+                    height: 51,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xFF5DB075)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
+                          ))),
+                      onPressed: () {
+                        //Login to account and send to disgnated pharmacy or pharmacist page
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Log In",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  hintText: 'Password',
-                  hintStyle: TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
-                  prefixIcon: Icon(
-                    Icons.lock_outline,
-                    color: Color(0xFFBDBDBD),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: GestureDetector(
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Forgot your password?",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16.0,
+                            color: Color(0xFF5DB075),
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        //Push to Forgot password screen
+                      },
+                    ),
                   ),
-                  suffixIcon: IconButton(
-                    icon: Icon(_passwordVisible
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined),
-                    color: Color(0xFFBDBDBD),
-                    splashRadius: 1,
-                    onPressed: () {
-                      setState(() {
-                        _passwordVisible = !_passwordVisible;
-                      });
-                    },
-                  ),
-                ),
+                ],
               ),
-            ),*/
+            ),
           ],
         ),
       ),
