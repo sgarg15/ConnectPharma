@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'LoginPage.dart';
 
-class LogInPage extends StatefulWidget {
+class PharmacySignUpPage extends StatefulWidget {
   @override
-  _LogInPageState createState() => new _LogInPageState();
+  _PharmacySignUpPageState createState() => new _PharmacySignUpPageState();
 }
 
-class _LogInPageState extends State<LogInPage> {
+class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
   bool _passwordVisible = true;
+  bool checkedValue = false;
 
   String _password;
 
@@ -25,7 +27,7 @@ class _LogInPageState extends State<LogInPage> {
           alignment: Alignment.center,
           //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            //Back/LogIn/SignUp Widgets
+            //Back/Sign Up/Log In Widgets
             Align(
               alignment: Alignment(0, -0.88),
               child: Row(
@@ -43,7 +45,7 @@ class _LogInPageState extends State<LogInPage> {
                   ),
                   RichText(
                     text: TextSpan(
-                      text: "Log In",
+                      text: "Sign Up",
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 35.0,
@@ -54,11 +56,15 @@ class _LogInPageState extends State<LogInPage> {
                     padding: EdgeInsets.only(right: 10),
                     child: GestureDetector(
                       onTap: () {
-                        //Go to Sign Up Page
+                        //Go to LogIn Page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LogInPage()),
+                        );
                       },
                       child: RichText(
                         text: TextSpan(
-                          text: "Sign Up",
+                          text: "LogIn",
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 15.0,
@@ -72,7 +78,7 @@ class _LogInPageState extends State<LogInPage> {
             ),
             //Email/Password Text Fields
             Align(
-              alignment: Alignment(0, -0.28),
+              alignment: Alignment(0, -0.21),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -141,12 +147,37 @@ class _LogInPageState extends State<LogInPage> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 10),
+                  //Newsletter Check Box
+                  CheckboxListTile(
+                    title: RichText(
+                      text: TextSpan(
+                        text:
+                            "I would like to receive your newsletter and other promotional information.",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14.0,
+                          color: Color(0xFF666666),
+                        ),
+                      ),
+                    ),
+                    activeColor: Color(0xFF5DB075),
+                    value: checkedValue,
+                    onChanged: (newValue) {
+                      //todo: Save the check value information to save to account
+                      setState(() {
+                        checkedValue = newValue;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity
+                        .leading, //  <-- leading Checkbox
+                  ),
                 ],
               ),
             ),
             //Google/Twitter/Facebook Icons
             Align(
-              alignment: Alignment(0, 0.31),
+              alignment: Alignment(0, 0.42),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -177,9 +208,9 @@ class _LogInPageState extends State<LogInPage> {
                 ],
               ),
             ),
-            //Login Button/ Forgot password text
+            //Sign Up Button
             Align(
-              alignment: Alignment(0, 0.9),
+              alignment: Alignment(0, 0.87),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -200,31 +231,13 @@ class _LogInPageState extends State<LogInPage> {
                       },
                       child: RichText(
                         text: TextSpan(
-                          text: "Log In",
+                          text: "Sign Up as a Pharmacy",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: GestureDetector(
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Forgot your password?",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16.0,
-                            color: Color(0xFF5DB075),
-                          ),
-                        ),
-                      ),
-                      onTap: () {
-                        //Push to Forgot password screen
-                      },
                     ),
                   ),
                 ],

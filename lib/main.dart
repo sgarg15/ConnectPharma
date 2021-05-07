@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'loginpage.dart';
+import 'LoginPage.dart';
+import 'PharmacySignUpPage.dart';
+import 'PharmacistSignUpPage.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -96,6 +98,11 @@ class _PharmaConnectState extends State<PharmaConnect> {
                 child: ElevatedButton(
                   onPressed: () {
                     //Send to Pharmacist Sign Up Page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PharmacistSignUpPage()),
+                    );
                   },
                   child: RichText(
                     text: TextSpan(
@@ -117,6 +124,11 @@ class _PharmaConnectState extends State<PharmaConnect> {
                 child: ElevatedButton(
                   onPressed: () {
                     //Send to Pharmacy Sign Up Page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PharmacySignUpPage()),
+                    );
                   },
                   child: RichText(
                     text: TextSpan(
