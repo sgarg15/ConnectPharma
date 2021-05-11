@@ -9,10 +9,12 @@ class LogInPage extends StatefulWidget {
 class _LogInPageState extends State<LogInPage> {
   bool _passwordVisible = true;
 
+  // ignore: unused_field
   String _password;
 
   @override
   void initState() {
+    super.initState();
     _passwordVisible = false;
   }
 

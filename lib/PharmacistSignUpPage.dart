@@ -11,10 +11,12 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
   bool _passwordVisible = true;
   bool checkedValue = false;
 
+  // ignore: unused_field
   String _password;
 
   @override
   void initState() {
+    super.initState();
     _passwordVisible = false;
   }
 
