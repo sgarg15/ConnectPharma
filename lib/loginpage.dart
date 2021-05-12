@@ -1,5 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LogInPage extends StatefulWidget {
   @override
@@ -8,14 +11,19 @@ class LogInPage extends StatefulWidget {
 
 class _LogInPageState extends State<LogInPage> {
   bool _passwordVisible = true;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  DatabaseReference dbRef = FirebaseDatabase.instance.reference();
 
   // ignore: unused_field
-  String _password;
+  String _password, _email;
 
   @override
   void initState() {
     super.initState();
-    _passwordVisible = false;
+    Firebase.initializeApp().whenComplete(() {
+      _passwordVisible = false;
+      setState(() {});
+    });
   }
 
   @override
@@ -75,75 +83,93 @@ class _LogInPageState extends State<LogInPage> {
             //Email/Password Text Fields
             Align(
               alignment: Alignment(0, -0.28),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  //Email Text Field
-                  Container(
-                    width: 324,
-                    child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFF6F6F6),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFFE8E8E8)),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        hintText: 'Email',
-                        hintStyle:
-                            TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
-                        prefixIcon: Icon(
-                          Icons.email,
-                          color: Color(0xFFBDBDBD),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  //Password Text Field
-                  Container(
-                    width: 324,
-                    child: TextFormField(
-                      onSaved: (val) => _password = val,
-                      obscureText: !_passwordVisible,
-                      keyboardType: TextInputType.visiblePassword,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFF6F6F6),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFFE8E8E8)),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        hintText: 'Password',
-                        hintStyle:
-                            TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
-                        prefixIcon: Icon(
-                          Icons.lock_outline,
-                          color: Color(0xFFBDBDBD),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(_passwordVisible
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined),
-                          color: Color(0xFFBDBDBD),
-                          splashRadius: 1,
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.always,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    //Email Text Field
+                    Container(
+                      width: 324,
+                      child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value.length < 6) {
+                            return 'Please enter a valid Email Address';
+                          }
+                          _formKey.currentState.save();
+                        },
+                        onSaved: (input) {
+                          _email = input;
+                        },
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(0xFFF6F6F6),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          hintText: 'Email',
+                          hintStyle:
+                              TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
+                          prefixIcon: Icon(
+                            Icons.email,
+                            color: Color(0xFFBDBDBD),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 10),
+                    //Password Text Field
+                    Container(
+                      width: 324,
+                      child: TextFormField(
+                        validator: (input) {
+                          if (input.length < 6) {
+                            return 'Please type in a password longer then 6 characters.';
+                          }
+                        },
+                        onSaved: (input) => _password = input,
+                        obscureText: !_passwordVisible,
+                        keyboardType: TextInputType.visiblePassword,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(0xFFF6F6F6),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          hintText: 'Password',
+                          hintStyle:
+                              TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: Color(0xFFBDBDBD),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(_passwordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                            color: Color(0xFFBDBDBD),
+                            splashRadius: 1,
+                            onPressed: () {
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             //Google/Twitter/Facebook Icons
@@ -199,6 +225,7 @@ class _LogInPageState extends State<LogInPage> {
                           ))),
                       onPressed: () {
                         //Login to account and send to disgnated pharmacy or pharmacist page
+                        logIn();
                       },
                       child: RichText(
                         text: TextSpan(
@@ -236,5 +263,48 @@ class _LogInPageState extends State<LogInPage> {
         ),
       ),
     );
+  }
+
+  Future<void> logIn() async {
+    //Validate Fields
+    final formState = _formKey.currentState;
+    if (formState.validate()) {
+      //Login to firebase
+      formState.save();
+      try {
+        UserCredential user = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _password)
+            .then((result) {
+          return dbRef.child("Users/" + result.user.uid).once();
+        }).then((DataSnapshot user) {
+          String userType = user.value["user_type"].toString();
+          return userType;
+        }).then((userType) {
+          if (userType == "Pharmacy") {
+            //SEND TO PHARMACY INFO LOGIN THINGS
+          } else if (userType == "Pharmacist") {
+            //SEND TO PHARMACIST INFO LOGIN THINGS
+          }
+        });
+      } catch (e) {
+        print(e.message);
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Error"),
+                content: Text(e.message),
+                actions: [
+                  TextButton(
+                    child: Text("Ok"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              );
+            });
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,12 +17,15 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
   String _password, _email;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   DatabaseReference dbRef =
-      FirebaseDatabase.instance.reference().child("Pharmacy Users");
+      FirebaseDatabase.instance.reference().child("Users");
 
   @override
   void initState() {
     super.initState();
-    _passwordVisible = false;
+    Firebase.initializeApp().whenComplete(() {
+      _passwordVisible = false;
+      setState(() {});
+    });
   }
 
   @override
@@ -85,7 +89,6 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
             //Email/Password Text Fields
             Align(
               alignment: Alignment(0, -0.21),
-              //TODO: USE FORM WIDGET FOR THIS LIKE THIS: https://flutter.dev/docs/cookbook/forms/validation#:~:text=Validate%20the%20input%20by%20providing,the%20TextFormField%20isn't%20empty.
               child: Form(
                 key: _formKey,
                 autovalidateMode: AutovalidateMode.always,
@@ -98,7 +101,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                       child: TextFormField(
                         validator: (input) {
                           if (input.isEmpty) {
-                            return 'Please type in a email!';
+                            return 'Please type in a valid email.';
                           }
                           _formKey.currentState.save();
                         },
@@ -133,7 +136,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                       child: TextFormField(
                         validator: (input) {
                           if (input.length < 6) {
-                            return 'Please type in a passowrd longer then 6 characters!';
+                            return 'Please type in a password longer then 6 characters.';
                           }
                         },
                         onSaved: (input) => _password = input,
@@ -283,10 +286,8 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
       //Login to firebase
       formState.save();
       try {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Successfully sign up")));
         // ignore: unused_local_variable
-        /*UserCredential user = await FirebaseAuth.instance
+        UserCredential user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password)
             .then((result) {
           dbRef.child(result.user.uid).set({
@@ -295,10 +296,29 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
           }).then((res) {
             // Direct to Pharmacy Information Form pages
           });
-        });*/
+        });
         //Send to Pharmacy Sign Up Information Page
       } catch (e) {
         print(e.message);
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Error"),
+                content: Text(e.message),
+                actions: [
+                  TextButton(
+                    child: Text(
+                      "Ok",
+                      style: TextStyle(color: Color(0xFF5DB075)),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              );
+            });
       }
     }
   }
