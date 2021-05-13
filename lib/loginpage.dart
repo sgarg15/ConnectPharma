@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'all_used.dart';
 
 class LogInPage extends StatefulWidget {
   @override
@@ -12,7 +11,6 @@ class LogInPage extends StatefulWidget {
 class _LogInPageState extends State<LogInPage> {
   bool _passwordVisible = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  DatabaseReference dbRef = FirebaseDatabase.instance.reference();
 
   // ignore: unused_field
   String _password, _email;
@@ -94,9 +92,9 @@ class _LogInPageState extends State<LogInPage> {
                       width: 324,
                       child: TextFormField(
                         keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value.length < 6) {
-                            return 'Please enter a valid Email Address';
+                        validator: (input) {
+                          if (input.isEmpty) {
+                            return 'Please type in a valid email.';
                           }
                           _formKey.currentState.save();
                         },
@@ -225,7 +223,7 @@ class _LogInPageState extends State<LogInPage> {
                           ))),
                       onPressed: () {
                         //Login to account and send to disgnated pharmacy or pharmacist page
-                        logIn();
+                        logInEmail(_formKey, _email, _password, context);
                       },
                       child: RichText(
                         text: TextSpan(
@@ -263,48 +261,5 @@ class _LogInPageState extends State<LogInPage> {
         ),
       ),
     );
-  }
-
-  Future<void> logIn() async {
-    //Validate Fields
-    final formState = _formKey.currentState;
-    if (formState.validate()) {
-      //Login to firebase
-      formState.save();
-      try {
-        UserCredential user = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: _email, password: _password)
-            .then((result) {
-          return dbRef.child("Users/" + result.user.uid).once();
-        }).then((DataSnapshot user) {
-          String userType = user.value["user_type"].toString();
-          return userType;
-        }).then((userType) {
-          if (userType == "Pharmacy") {
-            //SEND TO PHARMACY INFO LOGIN THINGS
-          } else if (userType == "Pharmacist") {
-            //SEND TO PHARMACIST INFO LOGIN THINGS
-          }
-        });
-      } catch (e) {
-        print(e.message);
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Error"),
-                content: Text(e.message),
-                actions: [
-                  TextButton(
-                    child: Text("Ok"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              );
-            });
-      }
-    }
   }
 }

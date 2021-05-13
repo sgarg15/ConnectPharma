@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'Sign Up Information Pages/PharmacySignUpInfo.dart';
 import 'LoginPage.dart';
+import 'all_used.dart';
+import "package:email_validator/email_validator.dart";
 
 class PharmacySignUpPage extends StatefulWidget {
   @override
@@ -16,8 +17,6 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
 
   String _password, _email;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  DatabaseReference dbRef =
-      FirebaseDatabase.instance.reference().child("Users");
 
   @override
   void initState() {
@@ -100,7 +99,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                       width: 324,
                       child: TextFormField(
                         validator: (input) {
-                          if (input.isEmpty) {
+                          if (!EmailValidator.validate(input)) {
                             return 'Please type in a valid email.';
                           }
                           _formKey.currentState.save();
@@ -256,7 +255,8 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                           ))),
                       onPressed: () {
                         //Login to account and send to disgnated pharmacy or pharmacist page
-                        signUpPharmacy();
+                        signUpEmail(_formKey, _email, _password, context,
+                            "Pharmacy", PharmacySignUpInfoPage());
                       },
                       child: RichText(
                         text: TextSpan(
@@ -276,50 +276,5 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
         ),
       ),
     );
-  }
-
-  Future<void> signUpPharmacy() async {
-    //Validate Fields
-    print("IN THE SIGN UP PHARMACY");
-    final formState = _formKey.currentState;
-    if (formState.validate()) {
-      //Login to firebase
-      formState.save();
-      try {
-        // ignore: unused_local_variable
-        UserCredential user = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: _email, password: _password)
-            .then((result) {
-          dbRef.child(result.user.uid).set({
-            "email": _email,
-            "user_type": "Pharmacy",
-          }).then((res) {
-            // Direct to Pharmacy Information Form pages
-          });
-        });
-        //Send to Pharmacy Sign Up Information Page
-      } catch (e) {
-        print(e.message);
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Error"),
-                content: Text(e.message),
-                actions: [
-                  TextButton(
-                    child: Text(
-                      "Ok",
-                      style: TextStyle(color: Color(0xFF5DB075)),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              );
-            });
-      }
-    }
   }
 }
