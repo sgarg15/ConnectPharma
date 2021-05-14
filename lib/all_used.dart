@@ -84,11 +84,30 @@ Future<void> signUpEmail(
           "email": email,
           "user_type": userType,
         }).then((res) {
-          // Direct to whichever they are in Information Form pages
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => infoPage),
-          );
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Important!"),
+                  content: Text(
+                      "You will later be required to verify this email. Without verifying your email you will not be allowed access the services. Please make sure you have access to this email. Thank you"),
+                  actions: [
+                    TextButton(
+                      child: Text(
+                        "Ok",
+                        style: TextStyle(color: Color(0xFF5DB075)),
+                      ),
+                      onPressed: () {
+                        // Direct to whichever they are in Information Form pages
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => infoPage),
+                        );
+                      },
+                    )
+                  ],
+                );
+              });
         });
       });
     } catch (e) {

@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../main.dart';
 
 class PharmacistSignUpInfoPage extends StatefulWidget {
   @override
@@ -18,15 +21,38 @@ class _PharmacistSignUpInfoPage extends State<PharmacistSignUpInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        child: Stack(
-          alignment: Alignment.center,
-          //mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("PHARMACIST SIGN UP"),
-          ],
+    return new WillPopScope(
+      onWillPop: () async {
+        //TODO: REMOVE THIS ONCE EVERYTHING WORKS AND REPLACE IT INSIDE THE SIDE MENU
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Important!"),
+                content: Text("You will be signed out."),
+                actions: [
+                  TextButton(
+                    child: Text(
+                      "Ok",
+                      style: TextStyle(color: Color(0xFF5DB075)),
+                    ),
+                    onPressed: () {
+                      // Direct to whichever they are in Information Form pages
+                      FirebaseAuth.instance.signOut();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PharmaConnect()),
+                      );
+                    },
+                  )
+                ],
+              );
+            });
+      },
+      child: new Scaffold(
+        appBar: new AppBar(
+          title: new Text("Pharmacist Info Page"),
         ),
       ),
     );
