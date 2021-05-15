@@ -5,6 +5,7 @@ import 'Sign Up Information Pages/PharmacySignUpInfo.dart';
 import 'LoginPage.dart';
 import 'all_used.dart';
 import "package:email_validator/email_validator.dart";
+import 'package:google_sign_in/google_sign_in.dart';
 
 class PharmacySignUpPage extends StatefulWidget {
   @override
@@ -212,6 +213,8 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                   GestureDetector(
                     onTap: () {
                       //Log In Using Google
+                      googleAuthenticationSignUp(
+                          "Pharmacy", context, PharmacySignUpInfoPage());
                     },
                     child: SvgPicture.asset('assets/icons/GoogleIcon.svg',
                         width: 48, height: 48),

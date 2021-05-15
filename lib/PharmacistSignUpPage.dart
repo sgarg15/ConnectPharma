@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pharma_connect/LoginPage.dart';
@@ -21,7 +22,10 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
   @override
   void initState() {
     super.initState();
-    _passwordVisible = false;
+    Firebase.initializeApp().whenComplete(() {
+      _passwordVisible = false;
+      setState(() {});
+    });
   }
 
   @override
@@ -209,6 +213,8 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                   GestureDetector(
                     onTap: () {
                       //Log In Using Google
+                      googleAuthenticationSignUp(
+                          "Pharmacist", context, PharmacistSignUpInfoPage());
                     },
                     child: SvgPicture.asset('assets/icons/GoogleIcon.svg',
                         width: 48, height: 48),

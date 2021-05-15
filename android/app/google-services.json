@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "70575821894",
+    "firebase_url": "https://pharmaconnect-e59ba-default-rtdb.firebaseio.com",
     "project_id": "pharmaconnect-e59ba",
     "storage_bucket": "pharmaconnect-e59ba.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "70575821894-ljrtd8jeodd97gq3i98sruu72hce92b6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pharma_connect",
+            "certificate_hash": "aedfdd485b1a92a2fc16889996a5f47ce23da63d"
+          }
+        },
         {
           "client_id": "70575821894-2eniqbejng5qha4hri3bsl6ebcb0s1mo.apps.googleusercontent.com",
           "client_type": 3

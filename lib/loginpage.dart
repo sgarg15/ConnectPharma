@@ -180,6 +180,7 @@ class _LogInPageState extends State<LogInPage> {
                   GestureDetector(
                     onTap: () {
                       //Log In Using Google
+                      googleAuthenticationLogIn(context);
                     },
                     child: SvgPicture.asset('assets/icons/GoogleIcon.svg',
                         width: 48, height: 48),

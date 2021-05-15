@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../all_used.dart';
 import '../main.dart';
 
 class PharmacistSignUpInfoPage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _PharmacistSignUpInfoPage extends State<PharmacistSignUpInfoPage> {
                     ),
                     onPressed: () {
                       // Direct to whichever they are in Information Form pages
-                      FirebaseAuth.instance.signOut();
+                      signOut();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

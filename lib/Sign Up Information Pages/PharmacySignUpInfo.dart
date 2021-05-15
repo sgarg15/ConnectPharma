@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pharma_connect/all_used.dart';
 
 import '../main.dart';
 
@@ -10,6 +12,7 @@ class PharmacySignUpInfoPage extends StatefulWidget {
 
 class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // ignore: unused_field
   String _password, _email;
@@ -38,7 +41,7 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
                     ),
                     onPressed: () {
                       // Direct to whichever they are in Information Form pages
-                      FirebaseAuth.instance.signOut();
+                      signOut();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -52,7 +55,7 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
       },
       child: new Scaffold(
         appBar: new AppBar(
-          title: new Text("Pharmacist Info Page"),
+          title: new Text("Pharmacy Info Page"),
         ),
       ),
     );

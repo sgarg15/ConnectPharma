@@ -1,10 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'Sign Up Information Pages/PharmacySignUpInfo.dart';
 import 'Sign Up Information Pages/PharmacistSignUpInfo.dart';
 
 DatabaseReference dbRef = FirebaseDatabase.instance.reference();
+FirebaseAuth _auth = FirebaseAuth.instance;
+GoogleSignIn _googleSignIn = GoogleSignIn();
+User _user;
 
 Future<void> logInEmail(
   GlobalKey<FormState> formKey,
@@ -134,3 +138,78 @@ Future<void> signUpEmail(
     }
   }
 }
+
+Future<void> googleAuthenticationSignUp(
+  String userType,
+  BuildContext context,
+  StatefulWidget pageToDirect,
+) async {
+  try {
+    print("Google Signing In");
+    GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+    GoogleSignInAuthentication authentication =
+        await googleSignInAccount.authentication;
+
+    AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: authentication.accessToken,
+      idToken: authentication.idToken,
+    );
+    await _auth.signInWithCredential(credential).then((value) {
+      dbRef.child("Users").child(value.user.uid).set({
+        "email": googleSignInAccount.email,
+        "user_type": userType,
+      }).then((value) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => pageToDirect));
+      });
+    });
+    return _user = await _auth.currentUser;
+  } catch (e) {
+    print(e.message);
+  }
+}
+
+Future<void> googleAuthenticationLogIn(
+  BuildContext context,
+) async {
+  try {
+    GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+    GoogleSignInAuthentication authentication =
+        await googleSignInAccount.authentication;
+
+    AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: authentication.accessToken,
+      idToken: authentication.idToken,
+    );
+    await _auth.signInWithCredential(credential).then((result) {
+      return dbRef.child("Users/" + result.user.uid).once();
+    }).then((DataSnapshot user) {
+      String userType = user.value["user_type"].toString();
+      return userType;
+    }).then((userType) {
+      if (userType == "Pharmacy") {
+        print("Logged in as pharmacy");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PharmacySignUpInfoPage()),
+        );
+      } else if (userType == "Pharmacist") {
+        print("Logged in as pharmacist");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PharmacistSignUpInfoPage()),
+        );
+      }
+    });
+    return _user = await _auth.currentUser;
+  } catch (e) {
+    print(e.message);
+  }
+}
+
+Future<void> signOut() async {
+  await _auth.signOut().then((_) {
+    _googleSignIn.signOut();
+  });
+}
+
