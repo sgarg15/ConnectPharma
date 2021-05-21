@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'Sign Up Information Pages/PharmacySignUpInfo.dart';
 import 'Sign Up Information Pages/PharmacistSignUpInfo.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 DatabaseReference dbRef = FirebaseDatabase.instance.reference();
 FirebaseAuth _auth = FirebaseAuth.instance;
 GoogleSignIn _googleSignIn = GoogleSignIn();
+FacebookAuth _facebookAuth = FacebookAuth.instance;
 User _user;
 
 Future<void> logInEmail(
@@ -30,13 +33,13 @@ Future<void> logInEmail(
         String userType = user.value["user_type"].toString();
         return userType;
       }).then((userType) {
-        if (userType == "Pharmacy") {
+        if (userType.toLowerCase() == "pharmacy") {
           print("Logged in as pharmacy");
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => PharmacySignUpInfoPage()),
           );
-        } else if (userType == "Pharmacist") {
+        } else if (userType.toLowerCase() == "pharmacist") {
           print("Logged in as pharmacist");
           Navigator.push(
             context,
@@ -86,7 +89,7 @@ Future<void> signUpEmail(
           .then((result) {
         dbRef.child("Users").child(result.user.uid).set({
           "email": email,
-          "user_type": userType,
+          "user_type": userType.toLowerCase(),
         }).then((res) {
           showDialog(
               context: context,
@@ -139,10 +142,11 @@ Future<void> signUpEmail(
   }
 }
 
-Future<void> googleAuthenticationSignUp(
+Future<void> googleAuthentication(
   String userType,
   BuildContext context,
   StatefulWidget pageToDirect,
+  String action,
 ) async {
   try {
     print("Google Signing In");
@@ -154,34 +158,87 @@ Future<void> googleAuthenticationSignUp(
       accessToken: authentication.accessToken,
       idToken: authentication.idToken,
     );
-    await _auth.signInWithCredential(credential).then((value) {
+    if (action.toLowerCase() == "signup") {
+      await _auth.signInWithCredential(credential).then((value) {
+        dbRef.child("Users").child(value.user.uid).set({
+          "email": googleSignInAccount.email,
+          "user_type": userType.toLowerCase(),
+        }).then((value) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => pageToDirect));
+        });
+      });
+      return _user = await _auth.currentUser;
+    } else if (action.toLowerCase() == "login") {
+      await _auth.signInWithCredential(credential).then((result) {
+        return dbRef.child("Users/" + result.user.uid).once();
+      }).then((DataSnapshot user) {
+        String userType = user.value["user_type"].toString();
+        return userType;
+      }).then((userType) {
+        if (userType.toLowerCase() == "pharmacy") {
+          print("Logged in as pharmacy");
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PharmacySignUpInfoPage()),
+          );
+        } else if (userType.toLowerCase() == "pharmacist") {
+          print("Logged in as pharmacist");
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PharmacistSignUpInfoPage()),
+          );
+        }
+      });
+      return _user = await _auth.currentUser;
+    }
+  } catch (e) {
+    print(e.message);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(e.message),
+            actions: [
+              TextButton(
+                child: Text("Ok"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+}
+
+// ignore: missing_return
+Future<UserCredential> facebookAuthentication(
+  String userType,
+  BuildContext context,
+  StatefulWidget pageToDirect,
+  String action,
+) async {
+  final LoginResult result =
+      await FacebookAuth.instance.login(permissions: ['email']);
+
+  final facebookAuthCredential =
+      FacebookAuthProvider.credential(result.accessToken.token);
+  if (action.toLowerCase() == "signup") {
+    return await FirebaseAuth.instance
+        .signInWithCredential(facebookAuthCredential)
+        .then((value) {
       dbRef.child("Users").child(value.user.uid).set({
-        "email": googleSignInAccount.email,
-        "user_type": userType,
+        "email": _facebookAuth.getUserData(fields: "email"),
+        "user_type": userType.toLowerCase(),
       }).then((value) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => pageToDirect));
       });
     });
-    return _user = await _auth.currentUser;
-  } catch (e) {
-    print(e.message);
-  }
-}
-
-Future<void> googleAuthenticationLogIn(
-  BuildContext context,
-) async {
-  try {
-    GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
-    GoogleSignInAuthentication authentication =
-        await googleSignInAccount.authentication;
-
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: authentication.accessToken,
-      idToken: authentication.idToken,
-    );
-    await _auth.signInWithCredential(credential).then((result) {
+  } else if (action.toLowerCase() == "login") {
+    await _auth.signInWithCredential(facebookAuthCredential).then((result) {
       return dbRef.child("Users/" + result.user.uid).once();
     }).then((DataSnapshot user) {
       String userType = user.value["user_type"].toString();
@@ -201,15 +258,12 @@ Future<void> googleAuthenticationLogIn(
         );
       }
     });
-    return _user = await _auth.currentUser;
-  } catch (e) {
-    print(e.message);
   }
 }
 
 Future<void> signOut() async {
   await _auth.signOut().then((_) {
     _googleSignIn.signOut();
+    _facebookAuth.logOut();
   });
 }
-

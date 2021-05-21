@@ -213,8 +213,8 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                   GestureDetector(
                     onTap: () {
                       //Log In Using Google
-                      googleAuthenticationSignUp(
-                          "Pharmacy", context, PharmacySignUpInfoPage());
+                      googleAuthentication("Pharmacy", context,
+                          PharmacySignUpInfoPage(), "signup");
                     },
                     child: SvgPicture.asset('assets/icons/GoogleIcon.svg',
                         width: 48, height: 48),
@@ -223,7 +223,9 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                   //Facebook
                   GestureDetector(
                       onTap: () {
-                        //Log In Using Twitter
+                        //Log In Using Facebook
+                        facebookAuthentication("pharmacy", context,
+                            PharmacySignUpInfoPage(), "signup");
                       },
                       child: SvgPicture.asset('assets/icons/FacebookIcon.svg',
                           width: 48, height: 48)),

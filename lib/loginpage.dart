@@ -180,7 +180,7 @@ class _LogInPageState extends State<LogInPage> {
                   GestureDetector(
                     onTap: () {
                       //Log In Using Google
-                      googleAuthenticationLogIn(context);
+                      googleAuthentication(null, context, null, "login");
                     },
                     child: SvgPicture.asset('assets/icons/GoogleIcon.svg',
                         width: 48, height: 48),
@@ -189,7 +189,8 @@ class _LogInPageState extends State<LogInPage> {
                   //Facebook
                   GestureDetector(
                       onTap: () {
-                        //Log In Using Twitter
+                        //Log In Using facebook
+                        facebookAuthentication(null, context, null, "login");
                       },
                       child: SvgPicture.asset('assets/icons/FacebookIcon.svg',
                           width: 48, height: 48)),
