@@ -26,12 +26,12 @@ Future<void> logInEmail(
     //Login to firebase
     formState.save();
     try {
-      UserCredential user = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)
-          .then((result) {
-        return dbRef.child("Users/" + result.user.uid).once();
-      }).then((DataSnapshot user) {
-        String userType = user.value["user_type"].toString();
+          .then((value) {
+        return users.doc(value.user.uid.toString()).get();
+      }).then((DocumentSnapshot user) {
+        String userType = user.get("user_type").toString();
         print(email);
         return userType;
       }).then((userType) {
@@ -85,16 +85,14 @@ Future<void> signUpEmail(
     //Login to firebase
     formState.save();
     try {
-      // ignore: unused_local_variable
       UserCredential user = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password)
-          .then((result) {
-        dbRef.child("Users").child(result.user.uid).set({
-          "email": email,
-          "user_type": userType.toLowerCase(),
-        });
-      }).then((res) {
-        showDialog(
+          .then((value) {
+        return users
+            .doc(value.user.uid.toString())
+            .set({"email": email, "user_type": userType.toLowerCase()});
+      }).then((value) {
+        return showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -223,45 +221,6 @@ Future<void> signOut() async {
   });
 }
 
-Widget formField2(
-    String hint, String aboveLine, TextEditingController textController) {
-  RichText(
-    textAlign: TextAlign.left,
-    text: TextSpan(
-      text: "First Name",
-      style: TextStyle(
-        fontSize: 16,
-        color: Colors.black,
-        fontWeight: FontWeight.w400,
-      ),
-    ),
-  );
-  SizedBox(height: 5);
-  Container(
-    width: 335,
-    child: Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(10.0),
-      child: TextFormField(
-        controller: textController,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Color(0xFFF6F6F6),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFE8E8E8)),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          hintText: 'Enter you First Name...',
-          hintStyle: TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
-        ),
-      ),
-    ),
-  );
-}
-
 class formField extends StatelessWidget {
   String fieldTitle;
   String hintText;
@@ -287,7 +246,7 @@ class formField extends StatelessWidget {
               style: GoogleFonts.questrial(
                 fontSize: 16,
                 color: Colors.black,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
               )),
         ),
         SizedBox(height: 10),
@@ -302,7 +261,7 @@ class formField extends StatelessWidget {
               controller: textController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Color(0xFFF6F6F6),
+                fillColor: Color(0xFFF0F0F0),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(color: Color(0xFFE8E8E8))),

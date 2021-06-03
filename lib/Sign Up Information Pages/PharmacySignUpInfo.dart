@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharma_connect/all_used.dart';
+import 'package:signature/signature.dart';
 import '../main.dart';
 
 class PharmacySignUpInfoPage extends StatefulWidget {
@@ -13,6 +14,12 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneNumberController = TextEditingController();
+  final SignatureController _controller = SignatureController(
+    penStrokeWidth: 5, //you can set pen stroke with by changing this value
+    penColor: Colors.black, // change your pen color
+    exportBackgroundColor:
+        Colors.white, //set the color you want to see in final result
+  );
 
   String _dropdownValue;
 
@@ -26,7 +33,7 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
     return new WillPopScope(
       onWillPop: () async {
         //TODO: REMOVE THIS ONCE EVERYTHING WORKS AND REPLACE IT INSIDE THE SIDE MENU
-        showDialog(
+        return showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
@@ -136,7 +143,7 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
                             style: GoogleFonts.questrial(
                               fontSize: 16,
                               color: Colors.black,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w500,
                             )),
                       ),
                       SizedBox(height: 10),
@@ -156,7 +163,7 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
                               value: _dropdownValue,
                               decoration: InputDecoration(
                                 filled: true,
-                                fillColor: Color(0xFFF6F6F6),
+                                fillColor: Color(0xFFF0F0F0),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide:
@@ -181,8 +188,7 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
                                 fontWeight: FontWeight.w400,
                               )),
                         ),
-                      )
-
+                      ),
                     ],
                   ),
                 ),
