@@ -190,7 +190,6 @@ class _LogInPageState extends State<LogInPage> {
                   GestureDetector(
                       onTap: () {
                         //Log In Using facebook
-                        facebookAuthentication(null, context, null, "login");
                       },
                       child: SvgPicture.asset('assets/icons/FacebookIcon.svg',
                           width: 48, height: 48)),

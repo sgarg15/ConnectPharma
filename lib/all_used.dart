@@ -1,17 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'Sign Up Information Pages/PharmacySignUpInfo.dart';
 import 'Sign Up Information Pages/PharmacistSignUpInfo.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 DatabaseReference dbRef = FirebaseDatabase.instance.reference();
+FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseAuth _auth = FirebaseAuth.instance;
 GoogleSignIn _googleSignIn = GoogleSignIn();
-FacebookAuth _facebookAuth = FacebookAuth.instance;
 User _user;
+CollectionReference users = FirebaseFirestore.instance.collection("Users");
 
 Future<void> logInEmail(
   GlobalKey<FormState> formKey,
@@ -31,6 +32,7 @@ Future<void> logInEmail(
         return dbRef.child("Users/" + result.user.uid).once();
       }).then((DataSnapshot user) {
         String userType = user.value["user_type"].toString();
+        print(email);
         return userType;
       }).then((userType) {
         if (userType.toLowerCase() == "pharmacy") {
@@ -90,32 +92,32 @@ Future<void> signUpEmail(
         dbRef.child("Users").child(result.user.uid).set({
           "email": email,
           "user_type": userType.toLowerCase(),
-        }).then((res) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Important!"),
-                  content: Text(
-                      "You will later be required to verify this email. Without verifying your email you will not be allowed access the services. Please make sure you have access to this email. Thank you"),
-                  actions: [
-                    TextButton(
-                      child: Text(
-                        "Ok",
-                        style: TextStyle(color: Color(0xFF5DB075)),
-                      ),
-                      onPressed: () {
-                        // Direct to whichever they are in Information Form pages
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => infoPage),
-                        );
-                      },
-                    )
-                  ],
-                );
-              });
         });
+      }).then((res) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Important!"),
+                content: Text(
+                    "You will later be required to verify this email. Without verifying your email you will not be allowed access the services. Please make sure you have access to this email. Thank you"),
+                actions: [
+                  TextButton(
+                    child: Text(
+                      "Ok",
+                      style: TextStyle(color: Color(0xFF5DB075)),
+                    ),
+                    onPressed: () {
+                      // Direct to whichever they are in Information Form pages
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => infoPage),
+                      );
+                    },
+                  )
+                ],
+              );
+            });
       });
     } catch (e) {
       print(e.message);
@@ -150,7 +152,9 @@ Future<void> googleAuthentication(
 ) async {
   try {
     print("Google Signing In");
+    // Trigger the authentication flow
     GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+    // Obtain the auth details from the request
     GoogleSignInAuthentication authentication =
         await googleSignInAccount.authentication;
 
@@ -159,14 +163,14 @@ Future<void> googleAuthentication(
       idToken: authentication.idToken,
     );
     if (action.toLowerCase() == "signup") {
+      AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: authentication.accessToken,
+        idToken: authentication.idToken,
+      );
+
       await _auth.signInWithCredential(credential).then((value) {
-        dbRef.child("Users").child(value.user.uid).set({
-          "email": googleSignInAccount.email,
-          "user_type": userType.toLowerCase(),
-        }).then((value) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => pageToDirect));
-        });
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => pageToDirect));
       });
       return _user = await _auth.currentUser;
     } else if (action.toLowerCase() == "login") {
@@ -213,57 +217,107 @@ Future<void> googleAuthentication(
   }
 }
 
-// ignore: missing_return
-Future<UserCredential> facebookAuthentication(
-  String userType,
-  BuildContext context,
-  StatefulWidget pageToDirect,
-  String action,
-) async {
-  final LoginResult result =
-      await FacebookAuth.instance.login(permissions: ['email']);
-
-  final facebookAuthCredential =
-      FacebookAuthProvider.credential(result.accessToken.token);
-  if (action.toLowerCase() == "signup") {
-    return await FirebaseAuth.instance
-        .signInWithCredential(facebookAuthCredential)
-        .then((value) {
-      dbRef.child("Users").child(value.user.uid).set({
-        "email": _facebookAuth.getUserData(fields: "email"),
-        "user_type": userType.toLowerCase(),
-      }).then((value) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => pageToDirect));
-      });
-    });
-  } else if (action.toLowerCase() == "login") {
-    await _auth.signInWithCredential(facebookAuthCredential).then((result) {
-      return dbRef.child("Users/" + result.user.uid).once();
-    }).then((DataSnapshot user) {
-      String userType = user.value["user_type"].toString();
-      return userType;
-    }).then((userType) {
-      if (userType == "Pharmacy") {
-        print("Logged in as pharmacy");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PharmacySignUpInfoPage()),
-        );
-      } else if (userType == "Pharmacist") {
-        print("Logged in as pharmacist");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PharmacistSignUpInfoPage()),
-        );
-      }
-    });
-  }
-}
-
 Future<void> signOut() async {
   await _auth.signOut().then((_) {
     _googleSignIn.signOut();
-    _facebookAuth.logOut();
   });
+}
+
+Widget formField2(
+    String hint, String aboveLine, TextEditingController textController) {
+  RichText(
+    textAlign: TextAlign.left,
+    text: TextSpan(
+      text: "First Name",
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.black,
+        fontWeight: FontWeight.w400,
+      ),
+    ),
+  );
+  SizedBox(height: 5);
+  Container(
+    width: 335,
+    child: Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(10.0),
+      child: TextFormField(
+        controller: textController,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Color(0xFFF6F6F6),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          hintText: 'Enter you First Name...',
+          hintStyle: TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
+        ),
+      ),
+    ),
+  );
+}
+
+class formField extends StatelessWidget {
+  String fieldTitle;
+  String hintText;
+  TextEditingController textController;
+  TextInputType keyboardStyle;
+
+  formField(
+      {this.fieldTitle,
+      this.hintText,
+      this.textController,
+      this.keyboardStyle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        RichText(
+          textAlign: TextAlign.left,
+          text: TextSpan(
+              text: fieldTitle,
+              style: GoogleFonts.questrial(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+              )),
+        ),
+        SizedBox(height: 10),
+        Container(
+          width: 335,
+          height: 50,
+          child: Material(
+            elevation: 5.0,
+            borderRadius: BorderRadius.circular(10.0),
+            child: TextFormField(
+              keyboardType: keyboardStyle,
+              controller: textController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFFF6F6F6),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                hintText: hintText,
+                hintStyle:
+                    GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

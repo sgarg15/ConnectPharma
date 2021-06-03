@@ -224,8 +224,6 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                   GestureDetector(
                       onTap: () {
                         //Log In Using Facebook
-                        facebookAuthentication("pharmacist", context,
-                            PharmacistSignUpInfoPage(), "signup");
                       },
                       child: SvgPicture.asset('assets/icons/FacebookIcon.svg',
                           width: 48, height: 48)),

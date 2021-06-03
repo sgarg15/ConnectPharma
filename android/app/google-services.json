@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "70575821894-ljrtd8jeodd97gq3i98sruu72hce92b6.apps.googleusercontent.com",
+          "client_id": "70575821894-6iafd5tb205mbmrvvi2i2h08f0mmgkcu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.pharma_connect",
-            "certificate_hash": "aedfdd485b1a92a2fc16889996a5f47ce23da63d"
+            "certificate_hash": "3ead24db2a4006826c3a56f748a2d704e3270d0d"
           }
         },
         {
