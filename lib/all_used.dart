@@ -257,6 +257,7 @@ class formField extends StatelessWidget {
             elevation: 5.0,
             borderRadius: BorderRadius.circular(10.0),
             child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               keyboardType: keyboardStyle,
               controller: textController,
               decoration: InputDecoration(
