@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'Sign Up Information Pages/PharmacySignUpInfo.dart';
+import 'Sign Up Information Pages/Pharmacy/AccountInformation.dart';
 import 'LoginPage.dart';
 import 'all_used.dart';
 import "package:email_validator/email_validator.dart";

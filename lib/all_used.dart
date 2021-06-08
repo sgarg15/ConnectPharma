@@ -1,10 +1,12 @@
+import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'Sign Up Information Pages/PharmacySignUpInfo.dart';
+import 'Sign Up Information Pages/Pharmacy/AccountInformation.dart';
 import 'Sign Up Information Pages/PharmacistSignUpInfo.dart';
 
 DatabaseReference dbRef = FirebaseDatabase.instance.reference();
@@ -257,6 +259,8 @@ class formField extends StatelessWidget {
             elevation: 5.0,
             borderRadius: BorderRadius.circular(10.0),
             child: TextFormField(
+              //textAlign: TextAlign.start,
+              textAlignVertical: TextAlignVertical.bottom,
               textCapitalization: TextCapitalization.sentences,
               keyboardType: keyboardStyle,
               controller: textController,
@@ -274,6 +278,7 @@ class formField extends StatelessWidget {
                 hintStyle:
                     GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16),
               ),
+              style: GoogleFonts.inter(color: Colors.black, fontSize: 16),
             ),
           ),
         ),

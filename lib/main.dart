@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'LoginPage.dart';
 import 'PharmacySignUpPage.dart';
 import 'PharmacistSignUpPage.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load();
+
   runApp(MaterialApp(
     home: PharmaConnect(),
     debugShowCheckedModeBanner: false,

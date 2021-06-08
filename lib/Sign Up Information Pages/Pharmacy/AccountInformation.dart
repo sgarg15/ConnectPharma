@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pharma_connect/Sign%20Up%20Information%20Pages/Pharmacy/PharmacyInformation.dart';
 import 'package:pharma_connect/all_used.dart';
 import 'package:signature/signature.dart';
-import '../main.dart';
+import '../../main.dart';
 
 class PharmacySignUpInfoPage extends StatefulWidget {
   @override
@@ -84,6 +85,7 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                //Information Text
                 Align(
                   alignment: Alignment(0, -0.96),
                   child: Padding(
@@ -332,6 +334,12 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
                                 ))),
                             onPressed: () {
                               //Go to Next sign up form page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PharmacyInformation()),
+                              );
                             },
                             child: RichText(
                               text: TextSpan(
@@ -339,6 +347,7 @@ class _PharmacySignUpInfoPage extends State<PharmacySignUpInfoPage> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
