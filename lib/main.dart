@@ -1,24 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'LoginPage.dart';
-import 'PharmacySignUpPage.dart';
-import 'PharmacistSignUpPage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'package:pharma_connect/src/screens/login.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/pharmacy_signup.dart';
 
-Future main() async {
-  await dotenv.load();
-
-  runApp(MaterialApp(
-    home: PharmaConnect(),
-    debugShowCheckedModeBanner: false,
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(ProviderScope(
+    child: PharmaConnect(),
   ));
 }
 
-class PharmaConnect extends StatefulWidget {
-  @override
-  _PharmaConnectState createState() => new _PharmaConnectState();
-}
-
-class _PharmaConnectState extends State<PharmaConnect> {
+class PharmaConnect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,30 +63,6 @@ class _PharmaConnectState extends State<PharmaConnect> {
                 ),
               ),
             ),
-            //Log In Text and Button
-            Container(
-              alignment: Alignment(0, 0.95),
-              child: GestureDetector(
-                child: RichText(
-                  text: TextSpan(
-                    text: "Log In",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 25.0,
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  //Push to Login Screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LogInPage()),
-                  );
-                },
-              ),
-            ),
             //Button For Pharmacist Registration
             Container(
               alignment: Alignment(0, 0.4),
@@ -101,11 +72,6 @@ class _PharmaConnectState extends State<PharmaConnect> {
                 child: ElevatedButton(
                   onPressed: () {
                     //Send to Pharmacist Sign Up Page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PharmacistSignUpPage()),
-                    );
                   },
                   child: RichText(
                     text: TextSpan(
@@ -127,11 +93,7 @@ class _PharmaConnectState extends State<PharmaConnect> {
                 child: ElevatedButton(
                   onPressed: () {
                     //Send to Pharmacy Sign Up Page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PharmacySignUpPage()),
-                    );
+                    Get.to(PharmacySignUpPage());
                   },
                   child: RichText(
                     text: TextSpan(
@@ -142,6 +104,27 @@ class _PharmaConnectState extends State<PharmaConnect> {
                     ),
                   ),
                 ),
+              ),
+            ),
+            //Log In Text and Button
+            Container(
+              alignment: Alignment(0, 0.95),
+              child: GestureDetector(
+                child: RichText(
+                  text: TextSpan(
+                    text: "Log In",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 25.0,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  //Push to Login Screen
+                  Get.to(LogInPage());
+                },
               ),
             ),
           ],
