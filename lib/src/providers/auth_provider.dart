@@ -31,7 +31,7 @@ class AuthProvider extends ChangeNotifier {
 
   Status get status => _status;
 
-  Stream<UserModel> get user => _auth.authStateChanges().map(_userFromFirebase);
+  //Stream<UserModel> get user => _auth.authStateChanges().map(_userFromFirebase);
 
   AuthProvider() {
     //initialise object
@@ -42,11 +42,12 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //Create user object based on the given FirebaseUser
-  UserModel _userFromFirebase(User? user) {
+  UserModel _userFromFirebase(User? user, String? userType) {
     return UserModel(
       uid: user!.uid,
       email: user.email,
       displayName: user.displayName,
+      userType: userType,
     );
   }
 
@@ -55,7 +56,7 @@ class AuthProvider extends ChangeNotifier {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
     } else {
-      _userFromFirebase(firebaseUser);
+      _userFromFirebase(firebaseUser, null);
       _status = Status.Authenticated;
     }
     notifyListeners();
@@ -63,7 +64,7 @@ class AuthProvider extends ChangeNotifier {
 
   //Method for new user registration using email and password
   Future<UserModel?> registerWithEmailAndPassword(
-      String email, String password) async {
+      String email, String password, String userType) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
@@ -74,7 +75,7 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
       });
 
-      return _userFromFirebase(result.user);
+      return _userFromFirebase(result.user, userType);
     } catch (e) {
       print("Error on the new user registration = " + e.toString());
       _status = Status.Unauthenticated;
@@ -95,7 +96,7 @@ class AuthProvider extends ChangeNotifier {
         _status = Status.Authenticated;
         notifyListeners();
       });
-      return _userFromFirebase(result.user);
+      return _userFromFirebase(result.user, null);
     } catch (e) {
       print("Error on the sign in = " + e.toString());
       _status = Status.Unauthenticated;
@@ -129,7 +130,7 @@ class AuthProvider extends ChangeNotifier {
         _status = Status.Authenticated;
       });
 
-      return _userFromFirebase(result.user);
+      return _userFromFirebase(result.user, null);
     } catch (err) {
       print("Error on the sign in = " + err.toString());
       _status = Status.Unauthenticated;

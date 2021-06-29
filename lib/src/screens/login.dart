@@ -97,7 +97,7 @@ class _LogInPageState extends State<LogInPage> {
 
                 //Email/Password Widgets
                 Align(
-                  alignment: Alignment(0, -0.28),
+                  alignment: Alignment(0, -0.2),
                   child: Form(
                     key: _formKey,
                     autovalidateMode: AutovalidateMode.always,
@@ -115,7 +115,15 @@ class _LogInPageState extends State<LogInPage> {
                                   .changeEmail(emailAddress);
                             },
                             decoration: InputDecoration(
-                              errorText: logIn.emailErr.toString(),
+                              errorText: logIn.emailErr,
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFE8E8E8))),
+                              errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFE8E8E8))),
                               filled: true,
                               fillColor: Color(0xFFF6F6F6),
                               enabledBorder: OutlineInputBorder(
@@ -137,7 +145,8 @@ class _LogInPageState extends State<LogInPage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+
+                        SizedBox(height: 5),
                         //Password
                         Container(
                           width: 324,
@@ -150,7 +159,15 @@ class _LogInPageState extends State<LogInPage> {
                                   .changePassword(password);
                             },
                             decoration: InputDecoration(
-                              errorText: logIn.emailErr.toString(),
+                              errorText: logIn.passwordErr,
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFE8E8E8))),
+                              errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFE8E8E8))),
                               filled: true,
                               fillColor: Color(0xFFF6F6F6),
                               enabledBorder: OutlineInputBorder(
@@ -207,6 +224,7 @@ class _LogInPageState extends State<LogInPage> {
                           height: 48,
                         ),
                       ),
+                      SizedBox(width: 50),
                       //Facebook
                       GestureDetector(
                           onTap: () {
@@ -242,8 +260,16 @@ class _LogInPageState extends State<LogInPage> {
                         height: 51,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xFF5DB075)),
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.disabled))
+                                    return Colors.grey;
+                                  else {
+                                    return Color(0xFF5DB075);
+                                  }
+                                },
+                              ),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(

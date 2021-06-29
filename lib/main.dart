@@ -8,9 +8,14 @@ import 'package:pharma_connect/src/screens/Pharmacy/pharmacy_signup.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(ProviderScope(
-    child: PharmaConnect(),
-  ));
+  runApp(
+    ProviderScope(
+      child: MaterialApp(
+        home: PharmaConnect(),
+        debugShowCheckedModeBanner: false,
+      ),
+    ),
+  );
 }
 
 class PharmaConnect extends StatelessWidget {
@@ -93,7 +98,10 @@ class PharmaConnect extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     //Send to Pharmacy Sign Up Page
-                    Get.to(PharmacySignUpPage());
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PharmacySignUpPage()));
                   },
                   child: RichText(
                     text: TextSpan(
@@ -123,7 +131,8 @@ class PharmaConnect extends StatelessWidget {
                 ),
                 onTap: () {
                   //Push to Login Screen
-                  Get.to(LogInPage());
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LogInPage()));
                 },
               ),
             ),

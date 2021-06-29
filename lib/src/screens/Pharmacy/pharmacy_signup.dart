@@ -8,6 +8,7 @@ import 'package:pharma_connect/model/pharmacySignUpModel.dart';
 import 'package:pharma_connect/model/user_model.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/accountInformation.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 
 final pharmacySignUpProvider =
@@ -155,7 +156,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                                   .changePassword(password);
                             },
                             decoration: InputDecoration(
-                              errorText: pharmacySignUp.emailErr.toString(),
+                              errorText: pharmacySignUp.passwordErr.toString(),
                               filled: true,
                               fillColor: Color(0xFFF6F6F6),
                               enabledBorder: OutlineInputBorder(
@@ -250,6 +251,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                           height: 48,
                         ),
                       ),
+                      SizedBox(width: 50),
                       //Facebook
                       GestureDetector(
                           onTap: () {
@@ -285,8 +287,18 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                         height: 51,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xFF5DB075)),
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Color(0xFF5DB075);
+                                  else if (states
+                                      .contains(MaterialState.disabled))
+                                    return Colors.grey;
+                                  return Color(
+                                      0xFF5DB075); // Use the component's default.
+                                },
+                              ),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -300,17 +312,24 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                                   UserModel? userModel = await authModel
                                       .registerWithEmailAndPassword(
                                           pharmacySignUp.email.toString(),
-                                          pharmacySignUp.password.toString())
+                                          pharmacySignUp.password.toString(), "pharmacy")
                                       .then((value) {
                                     if (value == null) {
                                       Get.snackbar("Error!",
                                           "There was an error signing up the user. Please try again.");
                                     } else {
-                                      print(value.uid);
-                                      print(value.email);
-                                      print(value.displayName);
+                                      UserModel(
+                                        userType: "pharmacy"
+                                      )
+                                      print("UID: " + value.uid!);
+                                      print("Email: " + value.email!);
+                                      print("User Type: " + value.userType!);
                                       //Pharmacy Information Page
-                                      //Get.to();
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             AccountInformationPharmacy()));
                                     }
                                   });
                                 },

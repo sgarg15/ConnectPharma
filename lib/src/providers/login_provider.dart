@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:pharma_connect/model/loginModel.dart';
@@ -6,11 +7,12 @@ class LogInProvider extends StateNotifier<LogInModel> {
   LogInProvider() : super(LogInModel());
 
   bool isValid() {
-    if (state.emailErr == "" ||
-        state.passwordErr == "" ||
+    if (state.emailErr != "" ||
+        state.passwordErr != "" ||
         state.email == "" ||
         state.password == "") {
       print("true");
+      print(state.emailErr);
       return true;
     } else {
       print("false");
@@ -22,11 +24,7 @@ class LogInProvider extends StateNotifier<LogInModel> {
   void changeEmail(String value) {
     state = state.updateLogIn(
       email: value,
-      emailErr:
-          (RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                  .hasMatch(value))
-              ? "Incorrect Format"
-              : "",
+      emailErr: (!EmailValidator.validate(value)) ? "Incorrect Format" : "",
     );
   }
 

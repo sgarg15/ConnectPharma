@@ -80,7 +80,7 @@ class _AccountInformationPharmacyState
                 color: Colors.black, //change your color here
               ),
               title: new Text(
-                "Account Owner Information",
+                "Pharmacy",
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -125,9 +125,7 @@ class _AccountInformationPharmacyState
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          
-                        ],
+                        children: <Widget>[],
                       ),
                     ),
                   ),
