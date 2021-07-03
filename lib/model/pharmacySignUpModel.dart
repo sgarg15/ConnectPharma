@@ -1,31 +1,91 @@
+import 'dart:typed_data';
+
+import 'package:pharma_connect/model/validatorModel.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/pharmacyInformation.dart';
+
 class PharmacySignUpModel {
-  final String? email;
-  final String? password;
-  final String emailErr;
-  final String passwordErr;
-  final bool passwordVisibility;
+  ValidatorModel? email = ValidatorModel("", "");
+  ValidatorModel? password = ValidatorModel("", "");
+  bool passwordVisibility;
+
+  String? firstName = "";
+  String? lastName = "";
+  String? phoneNumber = "";
+  String? position;
+  Uint8List? signatureData;
+
+  String? pharmacyName = "";
+  String? streetAddress = "";
+  String? storeNumber = "";
+  String? city = "";
+  String? postalCode = "";
+  String? country = "";
+  String? phoneNumberPharmacy = "";
+  String? faxNumberPharmacy = "";
+  String? accreditationProvince = "";
+  List<Software?>? softwareList = [];
 
   PharmacySignUpModel({
-    this.email = "",
-    this.password = "",
-    this.emailErr = "",
-    this.passwordErr = "",
+    this.email,
+    this.password,
     this.passwordVisibility = false,
+    this.firstName,
+    this.lastName,
+    this.phoneNumber,
+    this.position,
+    this.signatureData,
+    this.pharmacyName,
+    this.streetAddress,
+    this.storeNumber,
+    this.city,
+    this.postalCode,
+    this.country,
+    this.phoneNumberPharmacy,
+    this.faxNumberPharmacy,
+    this.accreditationProvince,
+    this.softwareList,
   });
 
   PharmacySignUpModel updatePharmacySignUp({
-    String? email,
-    String? password,
-    String? emailErr,
-    String? passwordErr,
+    ValidatorModel? email,
+    ValidatorModel? password,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    String? position,
+    Uint8List? signatureData,
     bool passwordVisibility = false,
+    String? pharmacyName,
+    String? streetAddress,
+    String? storeNumber,
+    String? city,
+    String? postalCode,
+    String? country,
+    String? phoneNumberPharmacy,
+    String? faxNumberPharmacy,
+    String? accreditationProvince,
+    List<Software?>? softwareList,
   }) {
     return PharmacySignUpModel(
       email: email ?? this.email,
       password: password ?? this.password,
-      emailErr: emailErr ?? this.emailErr,
-      passwordErr: passwordErr ?? this.passwordErr,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      position: position ?? this.position,
+      signatureData: signatureData ?? this.signatureData,
       passwordVisibility: passwordVisibility,
+      pharmacyName: pharmacyName ?? this.pharmacyName,
+      streetAddress: streetAddress ?? this.streetAddress,
+      storeNumber: storeNumber ?? this.storeNumber,
+      city: city ?? this.city,
+      postalCode: postalCode ?? this.postalCode,
+      country: country ?? this.country,
+      phoneNumberPharmacy: phoneNumberPharmacy ?? this.phoneNumberPharmacy,
+      faxNumberPharmacy: faxNumberPharmacy ?? this.faxNumberPharmacy,
+      accreditationProvince:
+          accreditationProvince ?? this.accreditationProvince,
+      softwareList: softwareList ?? this.softwareList,
     );
   }
 }

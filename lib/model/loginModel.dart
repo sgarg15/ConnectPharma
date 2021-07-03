@@ -1,9 +1,9 @@
 class LogInModel {
-  final String? email;
-  final String? password;
-  final String emailErr;
-  final String passwordErr;
-  final bool passwordVisibility;
+  String? email;
+  String? password;
+  String emailErr;
+  String passwordErr;
+  bool passwordVisibility;
 
   LogInModel({
     this.email = "",

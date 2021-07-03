@@ -105,7 +105,7 @@ class _LogInPageState extends State<LogInPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         //Email
-                        Container(
+                        SizedBox(
                           width: 324,
                           child: TextFormField(
                             keyboardType: TextInputType.emailAddress,

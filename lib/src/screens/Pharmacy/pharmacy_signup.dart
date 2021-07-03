@@ -84,7 +84,10 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                         child: GestureDetector(
                           onTap: () {
                             //Go to Log In Page
-                            Get.to(LogInPage());
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LogInPage()));
                           },
                           child: RichText(
                             text: TextSpan(
@@ -121,7 +124,15 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                                   .changeEmail(emailAddress);
                             },
                             decoration: InputDecoration(
-                              errorText: pharmacySignUp.emailErr.toString(),
+                              errorText: pharmacySignUp.email?.error,
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFE8E8E8))),
+                              errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFE8E8E8))),
                               filled: true,
                               fillColor: Color(0xFFF6F6F6),
                               enabledBorder: OutlineInputBorder(
@@ -143,7 +154,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         //Password
                         Container(
                           width: 324,
@@ -156,9 +167,17 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                                   .changePassword(password);
                             },
                             decoration: InputDecoration(
-                              errorText: pharmacySignUp.passwordErr.toString(),
+                              errorText: pharmacySignUp.password?.error,
                               filled: true,
                               fillColor: Color(0xFFF6F6F6),
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFE8E8E8))),
+                              errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFFE8E8E8))),
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   borderSide:
@@ -221,60 +240,6 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                   ),
                 ),
 
-                //Google/Twitter/Facebook Icons
-                Align(
-                  alignment: Alignment(0, 0.31),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      //Google
-                      GestureDetector(
-                        onTap: () async {
-                          //Log In using Google
-                          UserModel? userModel =
-                              await authModel.signInWithGoogle().then((value) {
-                            if (value == null) {
-                              Get.snackbar("Error!",
-                                  "There was an error signing up the user. Please try again.");
-                            } else {
-                              print(value.uid);
-                              print(value.email);
-                              print(value.displayName);
-                              //Go to pharmacy Information sign up pages
-                              //Get.to();
-                            }
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          'assets/icons/GoogleIcon.svg',
-                          width: 48,
-                          height: 48,
-                        ),
-                      ),
-                      SizedBox(width: 50),
-                      //Facebook
-                      GestureDetector(
-                          onTap: () {
-                            //Log In Using facebook
-                          },
-                          child: SvgPicture.asset(
-                              'assets/icons/FacebookIcon.svg',
-                              width: 48,
-                              height: 48)),
-                      SizedBox(width: 50),
-                      //Twitter
-                      GestureDetector(
-                          onTap: () {
-                            //Log In Using Facebook
-                          },
-                          child: SvgPicture.asset(
-                              'assets/icons/TwitterIcon.svg',
-                              width: 48,
-                              height: 48)),
-                    ],
-                  ),
-                ),
-
                 //Sign Up Button
                 Align(
                   alignment: Alignment(0, 0.87),
@@ -306,32 +271,14 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                               ))),
                           onPressed: (context
                                   .read(pharmacySignUpProvider.notifier)
-                                  .isValid())
+                                  .isValidSignUp())
                               ? null
                               : () async {
-                                  UserModel? userModel = await authModel
-                                      .registerWithEmailAndPassword(
-                                          pharmacySignUp.email.toString(),
-                                          pharmacySignUp.password.toString(), "pharmacy")
-                                      .then((value) {
-                                    if (value == null) {
-                                      Get.snackbar("Error!",
-                                          "There was an error signing up the user. Please try again.");
-                                    } else {
-                                      UserModel(
-                                        userType: "pharmacy"
-                                      )
-                                      print("UID: " + value.uid!);
-                                      print("Email: " + value.email!);
-                                      print("User Type: " + value.userType!);
-                                      //Pharmacy Information Page
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             AccountInformationPharmacy()));
-                                    }
-                                  });
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AccountInformationPharmacy()));
                                 },
                           child: RichText(
                             text: TextSpan(
