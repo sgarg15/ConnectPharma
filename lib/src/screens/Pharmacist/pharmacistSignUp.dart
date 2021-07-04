@@ -1,33 +1,32 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
 import 'package:pharma_connect/model/pharmacySignUpModel.dart';
-import 'package:pharma_connect/model/user_model.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
+import 'package:pharma_connect/src/providers/pharmacist_signUp_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/pharmacistLocation.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/accountInformation.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 
-final pharmacySignUpProvider =
-    StateNotifierProvider<PharmacySignUpProvider, PharmacySignUpModel>((ref) {
-  return PharmacySignUpProvider();
+final pharmacistSignUpProvider =
+    StateNotifierProvider<PharmacistSignUpProvider, PharmacistSignUpModel>(
+        (ref) {
+  return PharmacistSignUpProvider();
 });
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
-class PharmacySignUpPage extends StatefulWidget {
-  const PharmacySignUpPage({Key? key}) : super(key: key);
+class PharmacistSignUpPage extends StatefulWidget {
+  const PharmacistSignUpPage({Key? key}) : super(key: key);
 
   @override
-  _PharmacySignUpPageState createState() => _PharmacySignUpPageState();
+  _PharmacistSignUpPageState createState() => _PharmacistSignUpPageState();
 }
 
-class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
+class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
   bool checkedValue = false;
 
   //String _password, _email;
@@ -43,7 +42,6 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
     return Consumer(
       builder: (context, watch, child) {
         final pharmacySignUp = watch(pharmacySignUpProvider);
-        final authModel = watch(authProvider);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -278,11 +276,11 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              AccountInformationPharmacy()));
+                                              PharmacistLocation()));
                                 },
                           child: RichText(
                             text: TextSpan(
-                              text: "Sign Up as a pharmacy",
+                              text: "Sign Up as a pharmacist",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,

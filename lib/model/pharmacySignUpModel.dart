@@ -25,6 +25,11 @@ class PharmacySignUpModel {
   String? accreditationProvince = "";
   List<Software?>? softwareList = [];
 
+  String? managerFirstName = "";
+  String? managerLastName = "";
+  String? managerPhoneNumber = "";
+  String? licenseNumber = "";
+
   PharmacySignUpModel({
     this.email,
     this.password,
@@ -44,6 +49,10 @@ class PharmacySignUpModel {
     this.faxNumberPharmacy,
     this.accreditationProvince,
     this.softwareList,
+    this.managerFirstName,
+    this.managerLastName,
+    this.managerPhoneNumber,
+    this.licenseNumber,
   });
 
   PharmacySignUpModel updatePharmacySignUp({
@@ -65,6 +74,10 @@ class PharmacySignUpModel {
     String? faxNumberPharmacy,
     String? accreditationProvince,
     List<Software?>? softwareList,
+    String? managerFirstName,
+    String? managerLastName,
+    String? managerPhoneNumber,
+    String? licenseNumber,
   }) {
     return PharmacySignUpModel(
       email: email ?? this.email,
@@ -86,6 +99,10 @@ class PharmacySignUpModel {
       accreditationProvince:
           accreditationProvince ?? this.accreditationProvince,
       softwareList: softwareList ?? this.softwareList,
+      managerFirstName: managerFirstName ?? this.managerFirstName,
+      managerLastName: managerLastName ?? this.managerLastName,
+      managerPhoneNumber: managerPhoneNumber ?? this.managerPhoneNumber,
+      licenseNumber: licenseNumber ?? this.licenseNumber,
     );
   }
 }

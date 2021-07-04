@@ -4,10 +4,11 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pharma_connect/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacySignUpModel.dart';
+import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
+import 'package:pharma_connect/src/Address%20Search/placeService.dart';
 import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/pharmacyManagerInformation.dart';
 import 'package:uuid/uuid.dart';
-import 'Address Search/locationSearch.dart';
-import 'Address Search/placeService.dart';
 import 'accountInformation.dart';
 
 class Software {
@@ -473,7 +474,11 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                           .isValidPharmacyInformation())
                       ? null
                       : () {
-                          //push to next signup page
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PharmacyManagerInformation()));
                         },
                   child: RichText(
                     text: TextSpan(

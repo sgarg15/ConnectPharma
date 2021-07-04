@@ -56,6 +56,9 @@ class _AccountInformationPharmacyState
                       style: TextStyle(color: Color(0xFF5DB075)),
                     ),
                     onPressed: () {
+                      context
+                          .read(pharmacySignUpProvider.notifier)
+                          .clearAllValues();
                       // Direct to whichever they are in Information Form pages
                       Navigator.pushReplacement(
                         context,

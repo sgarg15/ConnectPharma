@@ -61,8 +61,10 @@ class AddressSearch extends SearchDelegate<Suggestion?> {
                   ),
                   itemCount: snapshot.data.length,
                 )
-              : CircularProgressIndicator(
-                  color: Color(0xFF5DB075),
+              : Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF5DB075),
+                  ),
                 ),
     );
   }

@@ -68,6 +68,46 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
     }
   }
 
+  bool isValidManagerInformation() {
+    if (state.managerFirstName == "" ||
+        state.managerLastName == "" ||
+        state.managerPhoneNumber == "" ||
+        state.licenseNumber == "" ||
+        state.managerFirstName == null ||
+        state.managerLastName == null ||
+        state.managerPhoneNumber == null ||
+        state.licenseNumber == null) {
+      print("true account info");
+      return true;
+    } else {
+      print("false account info");
+      return false;
+    }
+  }
+
+  void clearAllValues() {
+    state.email = ValidatorModel(null, null);
+    state.password = ValidatorModel(null, null);
+    state.firstName = null;
+    state.lastName = null;
+    state.phoneNumber = null;
+    state.position = null;
+    state.signatureData = null;
+    state.pharmacyName = null;
+    state.streetAddress = null;
+    state.storeNumber = null;
+    state.city = null;
+    state.postalCode = null;
+    state.country = null;
+    state.phoneNumberPharmacy = null;
+    state.faxNumberPharmacy = null;
+    state.softwareList = null;
+    state.managerFirstName = null;
+    state.managerLastName = null;
+    state.managerPhoneNumber = null;
+    state.licenseNumber = null;
+  }
+
   //Getters
   String? get email => state.email?.value;
   String? get passwprd => state.password?.value;
@@ -89,6 +129,11 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   String? get faxNumber => state.faxNumberPharmacy;
   String? get accreditationProvince => state.accreditationProvince;
   List<Software?>? get softwareList => state.softwareList;
+
+  String? get managerFirstName => state.managerFirstName;
+  String? get managerLastName => state.managerLastName;
+  String? get managerPhoneNumber => state.managerPhoneNumber;
+  String? get licenseNumber => state.licenseNumber;
 
   //Setters Sign Up
   void changeEmail(String value) {
@@ -169,5 +214,22 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
 
   void changeSoftwareList(List<Software?> value) {
     state = state.updatePharmacySignUp(softwareList: value);
+  }
+
+  //Manager Information
+  void changeManagerFirstName(String? value) {
+    state = state.updatePharmacySignUp(managerFirstName: value);
+  }
+
+  void changeMangagerLastName(String? value) {
+    state = state.updatePharmacySignUp(managerLastName: value);
+  }
+
+  void changeManagerPhoneNumber(String? value) {
+    state = state.updatePharmacySignUp(managerPhoneNumber: value);
+  }
+
+  void changeLicenseNumber(String? value) {
+    state = state.updatePharmacySignUp(licenseNumber: value);
   }
 }
