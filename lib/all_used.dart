@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: must_be_immutable
 class formField extends StatelessWidget {
   String? fieldTitle;
   String? hintText;
@@ -77,7 +77,7 @@ class formField extends StatelessWidget {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                offset: Offset(0.3,5),
+                  offset: Offset(0.3, 3),
                   blurRadius: 3.0,
                   spreadRadius: 0.5,
                   color: Colors.grey.shade400)

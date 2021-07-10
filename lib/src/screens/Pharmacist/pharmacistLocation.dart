@@ -7,7 +7,7 @@ import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
 import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
 import 'package:pharma_connect/src/Address%20Search/placeService.dart';
 import 'package:pharma_connect/src/providers/pharmacist_signUp_provider.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/pharmacyInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/pharmacistInformation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../main.dart';
@@ -81,6 +81,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
           bottomOpacity: 1,
           shadowColor: Colors.black,
         ),
+
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -183,7 +184,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
-                                    offset: Offset(0.3, 5),
+                                    offset: Offset(0.3, 3),
                                     blurRadius: 3.0,
                                     spreadRadius: 0.5,
                                     color: Colors.grey.shade400)
@@ -216,8 +217,6 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                                       placeDetails.streetNumber! +
                                           " " +
                                           placeDetails.street.toString() +
-                                          ", " +
-                                          placeDetails.zipCode.toString() +
                                           ", " +
                                           placeDetails.city.toString() +
                                           ", " +
@@ -289,7 +288,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
               Center(
                 child: Consumer(
                   builder: (context, watch, child) {
-                    final pharmacySignUp = watch(pharmacistSignUpProvider);
+                    watch(pharmacistSignUpProvider);
                     return SizedBox(
                       width: 324,
                       height: 51,
@@ -313,6 +312,11 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                             ? null
                             : () {
                                 print("Pressed");
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PharmacistInformation()));
                               },
                         child: RichText(
                           text: TextSpan(

@@ -1,6 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:pharma_connect/model/loginModel.dart';
 
 class LogInProvider extends StateNotifier<LogInModel> {

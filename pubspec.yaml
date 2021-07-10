@@ -43,9 +43,9 @@ dependencies:
   flutter_riverpod: ^0.14.0+3
   get: ^4.1.4
   email_validator: ^2.0.1
-
-
-
+  file_picker: ^3.0.3
+  open_file: ^3.2.1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

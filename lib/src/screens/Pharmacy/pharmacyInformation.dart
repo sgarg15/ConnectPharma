@@ -3,10 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pharma_connect/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/pharmacySignUpModel.dart';
 import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
 import 'package:pharma_connect/src/Address%20Search/placeService.dart';
-import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/pharmacyManagerInformation.dart';
 import 'package:uuid/uuid.dart';
 import 'accountInformation.dart';
@@ -388,7 +386,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                          offset: Offset(0.3, 5),
+                          offset: Offset(0.3, 3),
                           blurRadius: 3.0,
                           spreadRadius: 0.5,
                           color: Colors.grey.shade400)

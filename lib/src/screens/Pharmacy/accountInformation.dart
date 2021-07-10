@@ -282,7 +282,7 @@ class _AccountInformationPharmacyState
               Center(
                 child: Consumer(
                   builder: (context, watch, child) {
-                    final pharmacySignUp = watch(pharmacySignUpProvider);
+                    watch(pharmacySignUpProvider);
                     return SizedBox(
                       width: 324,
                       height: 51,

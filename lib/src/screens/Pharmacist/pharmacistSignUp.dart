@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
-import 'package:pharma_connect/model/pharmacySignUpModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacist_signUp_provider.dart';
-import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/pharmacistLocation.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/accountInformation.dart';
 import 'package:pharma_connect/src/screens/login.dart';
@@ -28,7 +26,7 @@ class PharmacistSignUpPage extends StatefulWidget {
 
 class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
   bool checkedValue = false;
-
+  bool isSwitched = true;
   //String _password, _email;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -41,7 +39,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        final pharmacySignUp = watch(pharmacySignUpProvider);
+        final pharmacySignUp = watch(pharmacistSignUpProvider);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
