@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/photoInformation.dart';
 import 'package:signature/signature.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
@@ -483,16 +484,27 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                     borderRadius: BorderRadius.circular(10),
                                   ))),
                               onPressed: () async {
-                                _result = await FilePicker.platform.pickFiles(
-                                  type: FileType.custom,
-                                  allowedExtensions: ['pdf'],
-                                );
-                                if (_result!.files.first.path != null) {
-                                  setState(() {
-                                    filePicked = true;
-                                  });
-                                } else {
-                                  // User canceled the picker
+                                try {
+                                  _result = await FilePicker.platform.pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['pdf'],
+                                  );
+                                  if (_result!.files.first.path != null) {
+                                    setState(() {
+                                      filePicked = true;
+                                    });
+                                  } else {
+                                    // User canceled the picker
+                                  }
+                                } catch (error) {
+                                  print("ERROR: " + error.toString());
+                                  final snackBar = SnackBar(
+                                    content: Text(
+                                        'There was an error, please try again.'),
+                                    duration: Duration(seconds: 3),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
                                 }
                               },
                               child: RichText(
@@ -509,6 +521,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                           )
                         else
                           Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               SizedBox(
                                 width: 170,
@@ -542,7 +555,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(width: 35),
                               SizedBox(
                                 width: 100,
                                 height: 45,
@@ -605,7 +618,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
             Center(
               child: Consumer(
                 builder: (context, watch, child) {
-                 watch(pharmacistSignUpProvider);
+                  watch(pharmacistSignUpProvider);
                   return SizedBox(
                     width: 324,
                     height: 51,
@@ -630,11 +643,11 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                           ? null
                           : () {
                               print("Pressed");
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             PharmacistInformation()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PhotoInformation()));
                             },
                       child: RichText(
                         text: TextSpan(

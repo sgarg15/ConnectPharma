@@ -91,15 +91,15 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   //Setters Sign Up
   void changeEmail(String value) {
     state = state.updatePharmacistSignUp(
-      email: ValidatorModel(
-          value, (!EmailValidator.validate(value)) ? "Incorrect Format" : null),
+      email: ValidatorModel(value.trim(),
+          (!EmailValidator.validate(value)) ? "Incorrect Format" : null),
     );
   }
 
   void changePassword(String value) {
     state = state.updatePharmacistSignUp(
-      password: ValidatorModel(
-          value, (value.length < 6) ? "Must be at least 6 characters" : null),
+      password: ValidatorModel(value.trim(),
+          (value.length < 6) ? "Must be at least 6 characters" : null),
     );
   }
 
@@ -109,44 +109,44 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
 
 //Setters Pharmacist Location
   void changeFirstName(String value) {
-    state = state.updatePharmacistSignUp(firstName: value);
+    state = state.updatePharmacistSignUp(firstName: value.trim());
   }
 
   void changeLastName(String value) {
-    state = state.updatePharmacistSignUp(lastName: value);
+    state = state.updatePharmacistSignUp(lastName: value.trim());
   }
 
   void changePhoneNumber(String value) {
-    state = state.updatePharmacistSignUp(phoneNumber: value);
+    state = state.updatePharmacistSignUp(phoneNumber: value.trim());
   }
 
   void changePharmacistAddress(String value) {
-    state = state.updatePharmacistSignUp(address: value);
+    state = state.updatePharmacistSignUp(address: value.trim());
   }
 
   //Setters Pharmacist Information
   void changeFirstYearLicensed(String value) {
-    state = state.updatePharmacistSignUp(firstYearLicensed: value);
+    state = state.updatePharmacistSignUp(firstYearLicensed: value.trim());
   }
 
   void changeRegistrationNumber(String value) {
-    state = state.updatePharmacistSignUp(registrationNumber: value);
+    state = state.updatePharmacistSignUp(registrationNumber: value.trim());
   }
 
   void changeRegistrationProvince(String value) {
-    state = state.updatePharmacistSignUp(registrationProvince: value);
+    state = state.updatePharmacistSignUp(registrationProvince: value.trim());
   }
 
   void changeGraduationYear(String value) {
-    state = state.updatePharmacistSignUp(graduationYear: value);
+    state = state.updatePharmacistSignUp(graduationYear: value.trim());
   }
 
   void changeInstitutionName(String value) {
-    state = state.updatePharmacistSignUp(instituationName: value);
+    state = state.updatePharmacistSignUp(instituationName: value.trim());
   }
 
   void changeWorkingExperience(String value) {
-    state = state.updatePharmacistSignUp(workingExperiance: value);
+    state = state.updatePharmacistSignUp(workingExperiance: value.trim());
   }
 
   void changeWillingToMove(bool value) {

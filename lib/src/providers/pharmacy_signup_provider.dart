@@ -136,15 +136,15 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   //Setters Sign Up
   void changeEmail(String value) {
     state = state.updatePharmacySignUp(
-      email: ValidatorModel(
-          value, (!EmailValidator.validate(value)) ? "Incorrect Format" : null),
+      email: ValidatorModel(value.trim(),
+          (!EmailValidator.validate(value)) ? "Incorrect Format" : null),
     );
   }
 
   void changePassword(String value) {
     state = state.updatePharmacySignUp(
-      password: ValidatorModel(
-          value, (value.length < 6) ? "Must be at least 6 characters" : null),
+      password: ValidatorModel(value.trim(),
+          (value.length < 6) ? "Must be at least 6 characters" : null),
     );
   }
 
@@ -154,15 +154,15 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
 
   //Setters Account Info
   void changeFirstName(String value) {
-    state = state.updatePharmacySignUp(firstName: value);
+    state = state.updatePharmacySignUp(firstName: value.trim());
   }
 
   void changeLastName(String value) {
-    state = state.updatePharmacySignUp(lastName: value);
+    state = state.updatePharmacySignUp(lastName: value.trim());
   }
 
   void changePhoneNumber(String value) {
-    state = state.updatePharmacySignUp(phoneNumber: value);
+    state = state.updatePharmacySignUp(phoneNumber: value.trim());
   }
 
   void changePosition(String? value) {
@@ -174,40 +174,40 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   }
 
   //Setters Pharmacy Information
-  void changePharmacyName(String? value) {
-    state = state.updatePharmacySignUp(pharmacyName: value);
+  void changePharmacyName(String value) {
+    state = state.updatePharmacySignUp(pharmacyName: value.trim());
   }
 
   void changeStreetAddress(String? value) {
-    state = state.updatePharmacySignUp(streetAddress: value);
+    state = state.updatePharmacySignUp(streetAddress: value?.trim());
   }
 
   void changeStoreNumber(String? value) {
-    state = state.updatePharmacySignUp(storeNumber: value);
+    state = state.updatePharmacySignUp(storeNumber: value?.trim());
   }
 
   void changeCity(String? value) {
-    state = state.updatePharmacySignUp(city: value);
+    state = state.updatePharmacySignUp(city: value?.trim());
   }
 
   void changePostalCode(String? value) {
-    state = state.updatePharmacySignUp(postalCode: value);
+    state = state.updatePharmacySignUp(postalCode: value?.trim());
   }
 
   void changeCountry(String? value) {
-    state = state.updatePharmacySignUp(country: value);
+    state = state.updatePharmacySignUp(country: value?.trim());
   }
 
-  void changePhoneNumberPharmacy(String? value) {
-    state = state.updatePharmacySignUp(phoneNumberPharmacy: value);
+  void changePhoneNumberPharmacy(String value) {
+    state = state.updatePharmacySignUp(phoneNumberPharmacy: value.trim());
   }
 
-  void changeFaxNumber(String? value) {
-    state = state.updatePharmacySignUp(faxNumberPharmacy: value);
+  void changeFaxNumber(String value) {
+    state = state.updatePharmacySignUp(faxNumberPharmacy: value.trim());
   }
 
-  void changeAccreditationProvince(String? value) {
-    state = state.updatePharmacySignUp(accreditationProvince: value);
+  void changeAccreditationProvince(String value) {
+    state = state.updatePharmacySignUp(accreditationProvince: value.trim());
   }
 
   void changeSoftwareList(List<Software?> value) {
@@ -215,19 +215,19 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   }
 
   //Manager Information
-  void changeManagerFirstName(String? value) {
-    state = state.updatePharmacySignUp(managerFirstName: value);
+  void changeManagerFirstName(String value) {
+    state = state.updatePharmacySignUp(managerFirstName: value.trim());
   }
 
-  void changeMangagerLastName(String? value) {
-    state = state.updatePharmacySignUp(managerLastName: value);
+  void changeMangagerLastName(String value) {
+    state = state.updatePharmacySignUp(managerLastName: value.trim());
   }
 
-  void changeManagerPhoneNumber(String? value) {
-    state = state.updatePharmacySignUp(managerPhoneNumber: value);
+  void changeManagerPhoneNumber(String value) {
+    state = state.updatePharmacySignUp(managerPhoneNumber: value.trim());
   }
 
-  void changeLicenseNumber(String? value) {
-    state = state.updatePharmacySignUp(licenseNumber: value);
+  void changeLicenseNumber(String value) {
+    state = state.updatePharmacySignUp(licenseNumber: value.trim());
   }
 }

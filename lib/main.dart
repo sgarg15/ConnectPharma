@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/pharmacistSkills.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/pharmacistSignUp.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/pharmacy_signup.dart';
 
@@ -82,7 +82,7 @@ class PharmaConnect extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PharmacistSkills()));
+                            builder: (context) => PharmacistSignUpPage()));
                   },
                   child: RichText(
                     text: TextSpan(
