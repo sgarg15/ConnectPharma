@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/pharmacistLegalInformation.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/4pharmacistLegalInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../all_used.dart';

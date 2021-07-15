@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
+import '../../providers/auth_provider.dart';
+
+final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
+  return AuthProvider();
+});
 
 class PhotoInformation extends StatefulWidget {
   PhotoInformation({Key? key}) : super(key: key);
@@ -731,8 +736,44 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ))),
-                      onPressed: () {
+                      onPressed: () async {
                         print("Pressed");
+                        context
+                            .read(authProvider.notifier)
+                            .registerWithEmailAndPassword(
+                              context
+                                  .read(pharmacistSignUpProvider.notifier)
+                                  .email
+                                  .toString(),
+                              context
+                                  .read(pharmacistSignUpProvider.notifier)
+                                  .password
+                                  .toString(),
+                            )
+                            .then((value) {
+                          print("UPLOADING DATA");
+                          if (value == null) {
+                            print("ERROR");
+                            final snackBar = SnackBar(
+                              content: Text(
+                                  "There was an error trying to register you. Please check your email and password and try again."),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else {
+                            context
+                                .read(authProvider.notifier)
+                                .uploadPharmacistUserInformation(value, context)
+                                .then((value) {
+                              final snackBar = SnackBar(
+                                content: Text("User Registered"),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              print("DATA UPLOADED");
+                            });
+                          }
+                        });
                       },
                       child: RichText(
                         text: TextSpan(

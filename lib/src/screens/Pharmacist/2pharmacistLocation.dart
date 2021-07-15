@@ -3,20 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharma_connect/all_used.dart';
-import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
 import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
 import 'package:pharma_connect/src/Address%20Search/placeService.dart';
-import 'package:pharma_connect/src/providers/pharmacist_signUp_provider.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/pharmacistInformation.dart';
+import '1pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/3pharmacistInformation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../main.dart';
-
-final pharmacistSignUpProvider =
-    StateNotifierProvider<PharmacistSignUpProvider, PharmacistSignUpModel>(
-        (ref) {
-  return PharmacistSignUpProvider();
-});
 
 class PharmacistLocation extends StatefulWidget {
   const PharmacistLocation({Key? key}) : super(key: key);
@@ -49,6 +42,9 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                       style: TextStyle(color: Color(0xFF5DB075)),
                     ),
                     onPressed: () {
+                      context
+                          .read(pharmacistSignUpProvider.notifier)
+                          .clearAllValues();
                       // Direct to whichever they are in Information Form pages
                       Navigator.pushReplacement(
                         context,
@@ -129,7 +125,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                               .changeFirstName(firstName);
                         },
                         validation: (value) {
-                          if (value == null || value.isEmpty) {
+                          if (value.isEmpty) {
                             return "This field is required";
                           }
                           return null;
@@ -212,7 +208,11 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                                       .changePharmacistAddress(
                                           placeDetails.streetNumber! +
                                               " " +
-                                              placeDetails.street.toString());
+                                              placeDetails.street.toString() +
+                                              ", " +
+                                              placeDetails.city.toString() +
+                                              ", " +
+                                              placeDetails.country.toString());
                                   streetAddress.text =
                                       placeDetails.streetNumber! +
                                           " " +

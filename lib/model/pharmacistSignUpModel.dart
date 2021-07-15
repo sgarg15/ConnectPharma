@@ -1,24 +1,22 @@
 import 'dart:typed_data';
 
-import 'package:pharma_connect/model/validatorModel.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/pharmacistSkills.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/5pharmacistSkills.dart';
 
 class PharmacistSignUpModel {
-  ValidatorModel? email = ValidatorModel("", "");
-  ValidatorModel? password = ValidatorModel("", "");
-  bool passwordVisibility;
+  String email;
+  String password;
 
-  String? firstName = "";
-  String? lastName = "";
-  String? address = "";
-  String? phoneNumber = "";
+  String firstName;
+  String lastName;
+  String address;
+  String phoneNumber;
 
-  String? firstYearLicensed = "";
-  String? registrationNumber = "";
-  String? registrationProvince = "";
-  String? graduationYear = "";
-  String? institutionName = "";
-  String? workingExperiance = "";
+  String firstYearLicensed;
+  String registrationNumber;
+  String registrationProvince;
+  String graduationYear;
+  String institutionName;
+  String workingExperiance;
   bool willingToMove;
 
   bool entitledToWork;
@@ -34,19 +32,18 @@ class PharmacistSignUpModel {
   Uint8List? signatureData;
 
   PharmacistSignUpModel({
-    this.email,
-    this.password,
-    this.passwordVisibility = false,
-    this.firstName,
-    this.lastName,
-    this.address,
-    this.phoneNumber,
-    this.firstYearLicensed,
-    this.registrationNumber,
-    this.registrationProvince,
-    this.graduationYear,
-    this.institutionName,
-    this.workingExperiance,
+    this.email = "",
+    this.password = "",
+    this.firstName = "",
+    this.lastName = "",
+    this.address = "",
+    this.phoneNumber = "",
+    this.firstYearLicensed = "",
+    this.registrationNumber = "",
+    this.registrationProvince = "",
+    this.graduationYear = "",
+    this.institutionName = "",
+    this.workingExperiance = "",
     this.willingToMove = false,
     this.entitledToWork = false,
     this.activeMember = false,
@@ -60,10 +57,9 @@ class PharmacistSignUpModel {
     this.signatureData,
   });
 
-  PharmacistSignUpModel updatePharmacistSignUp({
-    ValidatorModel? email,
-    ValidatorModel? password,
-    bool passwordVisibility = false,
+  PharmacistSignUpModel copyWithPharmacistSignUp({
+    String? email,
+    String? password,
     String? firstName,
     String? lastName,
     String? address,
@@ -89,7 +85,6 @@ class PharmacistSignUpModel {
     return PharmacistSignUpModel(
       email: email ?? this.email,
       password: password ?? this.password,
-      passwordVisibility: passwordVisibility,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       address: address ?? this.address,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/pharmacistSkills.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/5pharmacistSkills.dart';
 
 class PharmacistLegalInformation extends StatefulWidget {
   PharmacistLegalInformation({Key? key}) : super(key: key);
@@ -14,7 +14,6 @@ class PharmacistLegalInformation extends StatefulWidget {
 
 class _PharmacistLegalInformationState
     extends State<PharmacistLegalInformation> {
-
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
@@ -264,6 +263,7 @@ class _PharmacistLegalInformationState
                           ))),
                       onPressed: () {
                         print("Pressed");
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(

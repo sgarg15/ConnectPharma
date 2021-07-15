@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pharma_connect/model/user_model.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 
 enum Status {
   Uninitialized,
@@ -10,6 +13,7 @@ enum Status {
   Unauthenticated,
   Registering
 }
+
 /*
 The UI will depends on the Status to decide which screen/action to be done.
 - Uninitialized - Checking user is logged or not, the Splash Screen will be shown
@@ -25,6 +29,7 @@ class AuthProvider extends ChangeNotifier {
   //Firebase Auth object
   FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
+  CollectionReference users = FirebaseFirestore.instance.collection("Users");
 
   //Default status
   Status _status = Status.Uninitialized;
@@ -63,8 +68,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //Method for new user registration using email and password
-  Future<UserModel?> registerWithEmailAndPassword(
-      String email, String password, String userType) async {
+  Future<UserCredential?> registerWithEmailAndPassword(
+      String email, String password) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
@@ -74,14 +79,70 @@ class AuthProvider extends ChangeNotifier {
         _status = Status.Authenticated;
         notifyListeners();
       });
-
-      return _userFromFirebase(result.user, userType);
+      return result;
     } catch (e) {
       print("Error on the new user registration = " + e.toString());
       _status = Status.Unauthenticated;
       notifyListeners();
       return null;
     }
+  }
+
+  Future<void> uploadPharmacistUserInformation(
+      UserCredential? user, BuildContext context) async {
+    if (user == null) {
+      return null;
+    }
+    users
+        .doc(user.user?.uid.toString())
+        .collection("Information")
+        .doc("Sign Up Information")
+        .set({
+      "User Type": "Pharmacist",
+      "Email": context.read(pharmacistSignUpProvider.notifier).email,
+      "First Name": context.read(pharmacistSignUpProvider.notifier).firstName,
+      "Last Name": context.read(pharmacistSignUpProvider.notifier).lastName,
+      "Address": context.read(pharmacistSignUpProvider.notifier).address,
+      "Phone Number":
+          context.read(pharmacistSignUpProvider.notifier).phoneNumber,
+      "First Year Licensed":
+          context.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
+      "Registration Number":
+          context.read(pharmacistSignUpProvider.notifier).registrationNumber,
+      "Registration Province":
+          context.read(pharmacistSignUpProvider.notifier).registrationProvince,
+      "Gradutation Year":
+          context.read(pharmacistSignUpProvider.notifier).graduationYear,
+      "Institution Name":
+          context.read(pharmacistSignUpProvider.notifier).institutionName,
+      "Working Experience":
+          context.read(pharmacistSignUpProvider.notifier).workingExperience,
+      "Willing to Move": context
+          .read(pharmacistSignUpProvider.notifier)
+          .willingToMove
+          .toString(),
+      "Entitled to Work": context
+          .read(pharmacistSignUpProvider.notifier)
+          .entitledToWork
+          .toString(),
+      "Active Member": context
+          .read(pharmacistSignUpProvider.notifier)
+          .activeMember
+          .toString(),
+      "Liability Insurance": context
+          .read(pharmacistSignUpProvider.notifier)
+          .liabilityInsurance
+          .toString(),
+      "License Restricted": context
+          .read(pharmacistSignUpProvider.notifier)
+          .licenseRestricted
+          .toString(),
+      "MalPractice": context
+          .read(pharmacistSignUpProvider.notifier)
+          .malpractice
+          .toString(),
+      "Felon": context.read(pharmacistSignUpProvider.notifier).felon.toString(),
+    });
   }
 
   //Method to handle user sign in using email and password
