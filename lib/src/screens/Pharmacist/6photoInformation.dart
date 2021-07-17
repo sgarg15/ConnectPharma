@@ -121,7 +121,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                           .frontIDData;
                                       print("FILE PATH: " +
                                           frontFile!.path.toString());
-                                      OpenFile.open(frontFile?.path);
+                                      OpenFile.open(frontFile!.path);
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -276,7 +276,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                           .backIDData;
                                       print("FILE PATH: " +
                                           backFile!.path.toString());
-                                      OpenFile.open(backFile?.path);
+                                      OpenFile.open(backFile!.path);
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -456,7 +456,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                           .registrationCertificateData;
                                       print("FILE PATH: " +
                                           registrationFile!.path.toString());
-                                      OpenFile.open(registrationFile?.path);
+                                      OpenFile.open(registrationFile!.path);
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -639,7 +639,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                           .profilePhotoData;
                                       print("FILE PATH: " +
                                           profilePhotoFile!.path.toString());
-                                      OpenFile.open(profilePhotoFile?.path);
+                                      OpenFile.open(profilePhotoFile!.path);
                                     },
                                     child: RichText(
                                       text: TextSpan(

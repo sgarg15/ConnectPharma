@@ -6,7 +6,7 @@ import 'package:pharma_connect/all_used.dart';
 import 'package:pharma_connect/model/pharmacySignUpModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/pharmacyInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/3pharmacyInformation.dart';
 import 'package:signature/signature.dart';
 
 import '../../../main.dart';

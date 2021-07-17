@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharma_connect/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'accountInformation.dart';
+import '2accountInformation.dart';
 
 class PharmacyManagerInformation extends StatelessWidget {
   PharmacyManagerInformation({Key? key}) : super(key: key);

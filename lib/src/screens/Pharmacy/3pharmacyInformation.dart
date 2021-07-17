@@ -5,9 +5,9 @@ import 'package:pharma_connect/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
 import 'package:pharma_connect/src/Address%20Search/placeService.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/pharmacyManagerInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/4pharmacyManagerInformation.dart';
 import 'package:uuid/uuid.dart';
-import 'accountInformation.dart';
+import '2accountInformation.dart';
 
 class Software {
   final int id;

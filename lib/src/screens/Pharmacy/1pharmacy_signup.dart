@@ -1,10 +1,13 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacySignUpModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/accountInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/2accountInformation.dart';
 import 'package:pharma_connect/src/screens/login.dart';
+
+import '../../../all_used.dart';
 
 final pharmacySignUpProvider =
     StateNotifierProvider<PharmacySignUpProvider, PharmacySignUpModel>((ref) {
@@ -24,6 +27,7 @@ class PharmacySignUpPage extends StatefulWidget {
 
 class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
   bool checkedValue = false;
+  bool passwordVisibility = false;
 
   //String _password, _email;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -37,7 +41,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        final pharmacySignUp = watch(pharmacySignUpProvider);
+        watch(pharmacySignUpProvider);
         watch(authProvider);
 
         return Scaffold(
@@ -109,103 +113,117 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         //Email
-                        Container(
-                          width: 324,
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: (emailAddress) {
-                              context
-                                  .read(pharmacySignUpProvider.notifier)
-                                  .changeEmail(emailAddress);
-                            },
-                            decoration: InputDecoration(
-                              errorText: pharmacySignUp.email?.error,
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              filled: true,
-                              fillColor: Color(0xFFF6F6F6),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              focusedBorder: OutlineInputBorder(
+                        formField(
+                          hintText: "Email",
+                          decoration: false,
+                          keyboardStyle: TextInputType.emailAddress,
+                          textCapitalization: TextCapitalization.none,
+                          onChanged: (String emailAddress) {
+                            context
+                                .read(pharmacySignUpProvider.notifier)
+                                .changeEmail(emailAddress);
+                          },
+                          validation: (value) {
+                            if (!EmailValidator.validate(value)) {
+                              return "Incorrect Format";
+                            }
+                            return null;
+                          },
+                          initialValue: context
+                              .read(pharmacySignUpProvider.notifier)
+                              .email,
+                          inputDecoration: InputDecoration(
+                            focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
                                 borderSide:
-                                    BorderSide(color: Color(0xFFE8E8E8)),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: 'Email',
-                              hintStyle: TextStyle(
-                                  color: Color(0xFFBDBDBD), fontSize: 16),
-                              prefixIcon: Icon(
-                                Icons.email,
-                                color: Color(0xFFBDBDBD),
-                              ),
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            filled: true,
+                            fillColor: Color(0xFFF6F6F6),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            hintText: 'Email',
+                            hintStyle: TextStyle(
+                                color: Color(0xFFBDBDBD), fontSize: 16),
+                            prefixIcon: Icon(
+                              Icons.email,
+                              color: Color(0xFFBDBDBD),
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
+
                         //Password
-                        Container(
-                          width: 324,
-                          child: TextFormField(
-                            obscureText: !pharmacySignUp.passwordVisibility,
-                            keyboardType: TextInputType.visiblePassword,
-                            onChanged: (password) {
-                              context
-                                  .read(pharmacySignUpProvider.notifier)
-                                  .changePassword(password);
-                            },
-                            decoration: InputDecoration(
-                              errorText: pharmacySignUp.password?.error,
-                              filled: true,
-                              fillColor: Color(0xFFF6F6F6),
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              focusedBorder: OutlineInputBorder(
+                        formField(
+                          hintText: "Password",
+                          obscureText: !passwordVisibility,
+                          textCapitalization: TextCapitalization.none,
+                          decoration: false,
+                          keyboardStyle: TextInputType.emailAddress,
+                          onChanged: (String password) {
+                            context
+                                .read(pharmacySignUpProvider.notifier)
+                                .changePassword(password);
+                          },
+                          validation: (value) {
+                            if (value!.length < 6) {
+                              return "Password must be greater than 6 characters";
+                            }
+                            return null;
+                          },
+                          initialValue: context
+                              .read(pharmacySignUpProvider.notifier)
+                              .password,
+                          inputDecoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(0xFFF6F6F6),
+                            focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
                                 borderSide:
-                                    BorderSide(color: Color(0xFFE8E8E8)),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: 'Password',
-                              hintStyle: TextStyle(
-                                  color: Color(0xFFBDBDBD), fontSize: 16),
-                              prefixIcon: Icon(
-                                Icons.lock_outline,
-                                color: Color(0xFFBDBDBD),
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(pharmacySignUp.passwordVisibility
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined),
-                                color: Color(0xFFBDBDBD),
-                                splashRadius: 1,
-                                onPressed: () {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changePasswordVisibility(
-                                          !pharmacySignUp.passwordVisibility);
-                                },
-                              ),
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            hintText: 'Password',
+                            hintStyle: TextStyle(
+                                color: Color(0xFFBDBDBD), fontSize: 16),
+                            prefixIcon: Icon(
+                              Icons.lock_outline,
+                              color: Color(0xFFBDBDBD),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(passwordVisibility
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined),
+                              color: Color(0xFFBDBDBD),
+                              splashRadius: 1,
+                              onPressed: () {
+                                setState(() {
+                                  passwordVisibility = !passwordVisibility;
+                                });
+                              },
                             ),
                           ),
                         ),
                         SizedBox(height: 10),
+
                         //Newsletter Check Box
                         CheckboxListTile(
                           title: RichText(

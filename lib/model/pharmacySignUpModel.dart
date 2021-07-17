@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:pharma_connect/model/validatorModel.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/pharmacyInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/3pharmacyInformation.dart';
 
 class PharmacySignUpModel {
   ValidatorModel? email = ValidatorModel("", "");

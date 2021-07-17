@@ -500,7 +500,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                         .resumePDFData;
                                     print(
                                         "FILE PATH: " + file!.path.toString());
-                                    OpenFile.open(file?.path);
+                                    OpenFile.open(file!.path);
                                   },
                                   child: RichText(
                                     text: TextSpan(
@@ -779,25 +779,6 @@ class _SignatureBoxState extends State<SignatureBox> {
                                   Color(0xFF5DB075)),
                             ),
                             onPressed: () async {
-                              // context
-                              //     .read(pharmacistSignUpProvider.notifier)
-                              //     .changeSignature((widget
-                              //             ._sigController.isNotEmpty)
-                              //         ? await widget._sigController
-                              //             .toPngBytes()
-                              //             .then((value) {
-                              //             if (value != null) {
-                              //               print(context
-                              //                   .read(pharmacistSignUpProvider
-                              //                       .notifier)
-                              //                   .signatureData);
-                              //               print(value);
-                              //               setState(() {
-                              //                 signatureSaved = true;
-                              //               });
-                              //             }
-                              //           })
-                              //         : null);
                               if (widget._sigController.isNotEmpty) {
                                 context
                                     .read(pharmacistSignUpProvider.notifier)

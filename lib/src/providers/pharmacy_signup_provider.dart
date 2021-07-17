@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacySignUpModel.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:pharma_connect/model/validatorModel.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/pharmacyInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/3pharmacyInformation.dart';
 
 class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   PharmacySignUpProvider() : super(PharmacySignUpModel());
@@ -108,7 +108,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
 
   //Getters
   String? get email => state.email?.value;
-  String? get passwprd => state.password?.value;
+  String? get password => state.password?.value;
   bool? get passwordVisiblity => state.passwordVisibility;
 
   String? get firstName => state.firstName;
