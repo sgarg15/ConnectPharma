@@ -45,6 +45,8 @@ dependencies:
   email_validator: ^2.0.1
   file_picker: ^3.0.3
   open_file: ^3.2.1
+  firebase_storage: ^9.0.0
+  flutter_multi_formatter: ^2.3.1
   
 dev_dependencies:
   flutter_test:

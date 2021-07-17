@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/5pharmacistSkills.dart';
 
 class PharmacistSignUpModel {
@@ -31,6 +33,12 @@ class PharmacistSignUpModel {
   List<Language?>? languageList = [];
   Uint8List? signatureData;
 
+  File? resumePDF;
+  File? frontID;
+  File? backID;
+  File? registrationCertificate;
+  File? profilePhoto;
+
   PharmacistSignUpModel({
     this.email = "",
     this.password = "",
@@ -55,6 +63,11 @@ class PharmacistSignUpModel {
     this.skillList,
     this.languageList,
     this.signatureData,
+    this.resumePDF = null,
+    this.frontID = null,
+    this.backID = null,
+    this.registrationCertificate = null,
+    this.profilePhoto = null,
   });
 
   PharmacistSignUpModel copyWithPharmacistSignUp({
@@ -81,6 +94,11 @@ class PharmacistSignUpModel {
     List<Skill?>? skillList,
     List<Language?>? languageList,
     Uint8List? signatureData,
+    File? resumePDF,
+    File? frontID,
+    File? backID,
+    File? registrationCertificate,
+    File? profilePhoto,
   }) {
     return PharmacistSignUpModel(
       email: email ?? this.email,
@@ -106,6 +124,12 @@ class PharmacistSignUpModel {
       skillList: skillList ?? this.skillList,
       languageList: languageList ?? this.languageList,
       signatureData: signatureData ?? this.signatureData,
+      resumePDF: resumePDF ?? this.resumePDF,
+      frontID: frontID ?? this.frontID,
+      backID: backID ?? this.backID,
+      registrationCertificate:
+          registrationCertificate ?? this.registrationCertificate,
+      profilePhoto: profilePhoto ?? this.profilePhoto,
     );
   }
 }

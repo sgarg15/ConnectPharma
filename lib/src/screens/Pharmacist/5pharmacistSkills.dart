@@ -1,9 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/6photoInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:signature/signature.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
@@ -129,6 +133,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
 
   bool filePicked = false;
   FilePickerResult? _result;
+  File? file;
 
   @override
   Widget build(BuildContext context) {
@@ -467,59 +472,10 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                               )),
                         ),
                         SizedBox(height: 10),
-                        if (filePicked == false)
-                          SizedBox(
-                            width: 270,
-                            height: 45,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith<Color>(
-                                          (states) {
-                                    return Color(0xFF5DB075); // Regular color
-                                  }),
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ))),
-                              onPressed: () async {
-                                try {
-                                  _result = await FilePicker.platform.pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: ['pdf'],
-                                  );
-                                  if (_result!.files.first.path != null) {
-                                    setState(() {
-                                      filePicked = true;
-                                    });
-                                  } else {
-                                    // User canceled the picker
-                                  }
-                                } catch (error) {
-                                  print("ERROR: " + error.toString());
-                                  final snackBar = SnackBar(
-                                    content: Text(
-                                        'There was an error, please try again.'),
-                                    duration: Duration(seconds: 3),
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                }
-                              },
-                              child: RichText(
-                                text: TextSpan(
-                                  text: "Select Resume",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        else
+                        if (context
+                                .read(pharmacistSignUpProvider.notifier)
+                                .resumePDFData !=
+                            null)
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
@@ -539,13 +495,16 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                         borderRadius: BorderRadius.circular(10),
                                       ))),
                                   onPressed: () async {
-                                    PlatformFile file = _result!.files.first;
-                                    print("FILE PATH: " + file.path.toString());
-                                    OpenFile.open(file.path);
+                                    file = context
+                                        .read(pharmacistSignUpProvider.notifier)
+                                        .resumePDFData;
+                                    print(
+                                        "FILE PATH: " + file!.path.toString());
+                                    OpenFile.open(file?.path);
                                   },
                                   child: RichText(
                                     text: TextSpan(
-                                      text: "View",
+                                      text: "View Resume",
                                       style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -574,8 +533,17 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                   onPressed: () async {
                                     setState(() {
                                       _result = null;
-                                      filePicked = false;
+                                      file = null;
                                     });
+                                    print(context
+                                        .read(pharmacistSignUpProvider.notifier)
+                                        .firstName);
+                                    context
+                                        .read(pharmacistSignUpProvider.notifier)
+                                        .clearResumePDF();
+                                    print(context
+                                        .read(pharmacistSignUpProvider.notifier)
+                                        .firstName);
                                   },
                                   child: RichText(
                                     text: TextSpan(
@@ -590,6 +558,68 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                 ),
                               ),
                             ],
+                          )
+                        else
+                          SizedBox(
+                            width: 270,
+                            height: 45,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.resolveWith<Color>(
+                                          (states) {
+                                    return Color(0xFF5DB075); // Regular color
+                                  }),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ))),
+                              onPressed: () async {
+                                try {
+                                  _result = await FilePicker.platform.pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: ['pdf'],
+                                    //withData: true,
+                                  );
+                                  if (_result!.files.first.path != null) {
+                                    setState(() {
+                                      filePicked = true;
+                                    });
+                                    file = File(
+                                        _result!.files.first.path.toString());
+
+                                    context
+                                        .read(pharmacistSignUpProvider.notifier)
+                                        .changeResumePDF(file);
+                                    print(context
+                                        .read(pharmacistSignUpProvider.notifier)
+                                        .resumePDFData);
+                                  } else {
+                                    // User canceled the picker
+                                  }
+                                } catch (error) {
+                                  print("ERROR: " + error.toString());
+                                  final snackBar = SnackBar(
+                                    content: Text(
+                                        'There was an error, please try again.'),
+                                    duration: Duration(seconds: 3),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Select Resume",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           )
                       ],
                     ),
@@ -672,7 +702,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
   }
 }
 
-class SignatureBox extends StatelessWidget {
+class SignatureBox extends StatefulWidget {
   const SignatureBox({
     Key? key,
     required SignatureController sigController,
@@ -680,6 +710,13 @@ class SignatureBox extends StatelessWidget {
         super(key: key);
 
   final SignatureController _sigController;
+
+  @override
+  _SignatureBoxState createState() => _SignatureBoxState();
+}
+
+class _SignatureBoxState extends State<SignatureBox> {
+  bool signatureSaved = false;
 
   @override
   Widget build(BuildContext context) {
@@ -713,7 +750,7 @@ class SignatureBox extends StatelessWidget {
                       ),
                     ),
                     child: Signature(
-                      controller: _sigController,
+                      controller: widget._sigController,
                       height: 140,
                       width: MediaQuery.of(context).size.width - 20,
                       backgroundColor: Colors.white,
@@ -742,11 +779,34 @@ class SignatureBox extends StatelessWidget {
                                   Color(0xFF5DB075)),
                             ),
                             onPressed: () async {
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
-                                  .changeSignature((_sigController.isNotEmpty)
-                                      ? await _sigController.toPngBytes()
-                                      : null);
+                              // context
+                              //     .read(pharmacistSignUpProvider.notifier)
+                              //     .changeSignature((widget
+                              //             ._sigController.isNotEmpty)
+                              //         ? await widget._sigController
+                              //             .toPngBytes()
+                              //             .then((value) {
+                              //             if (value != null) {
+                              //               print(context
+                              //                   .read(pharmacistSignUpProvider
+                              //                       .notifier)
+                              //                   .signatureData);
+                              //               print(value);
+                              //               setState(() {
+                              //                 signatureSaved = true;
+                              //               });
+                              //             }
+                              //           })
+                              //         : null);
+                              if (widget._sigController.isNotEmpty) {
+                                context
+                                    .read(pharmacistSignUpProvider.notifier)
+                                    .changeSignature(await widget._sigController
+                                        .toPngBytes());
+                                setState(() {
+                                  signatureSaved = true;
+                                });
+                              }
 
                               Navigator.pop(context);
                             },
@@ -768,7 +828,10 @@ class SignatureBox extends StatelessWidget {
                           height: 35,
                           child: TextButton(
                             onPressed: () {
-                              _sigController.clear();
+                              widget._sigController.clear();
+                              setState(() {
+                                signatureSaved = false;
+                              });
                             },
                             child: Text(
                               "Reset",
@@ -784,8 +847,128 @@ class SignatureBox extends StatelessWidget {
             ),
           );
         },
-        child: Text("Add"),
+        child: !signatureSaved ? Text("Add") : Text("Change"),
       ),
     );
   }
 }
+
+
+// class SignatureBox extends StatelessWidget {
+//   const SignatureBox({
+//     Key? key,
+//     required SignatureController sigController,
+//   })  : _sigController = sigController,
+//         super(key: key);
+
+//   final SignatureController _sigController;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 100,
+//       height: 40,
+//       child: ElevatedButton(
+//         style: ButtonStyle(
+//             backgroundColor:
+//                 MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
+//             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+//                 RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(8),
+//             ))),
+//         onPressed: () {
+//           showDialog(
+//             context: context,
+//             builder: (_) => Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: <Widget>[
+//                 //Signature Pad
+//                 Align(
+//                   alignment: Alignment.center,
+//                   child: Container(
+//                     height: 140,
+//                     width: MediaQuery.of(context).size.width - 20,
+//                     decoration: BoxDecoration(
+//                       border: Border.all(
+//                         width: 3,
+//                         color: Color(0xFF5DB075),
+//                       ),
+//                     ),
+//                     child: Signature(
+//                       controller: _sigController,
+//                       height: 140,
+//                       width: MediaQuery.of(context).size.width - 20,
+//                       backgroundColor: Colors.white,
+//                     ),
+//                   ),
+//                 ),
+//                 //Buttons
+//                 Material(
+//                   child: Container(
+//                     color: Colors.grey.shade200,
+//                     height: 40,
+//                     width: MediaQuery.of(context).size.width - 20,
+//                     child: Row(
+//                       //mainAxisSize: MainAxisSize.min,
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: <Widget>[
+//                         Container(
+//                           width: 100,
+//                           height: 31,
+//                           alignment: Alignment.centerLeft,
+//                           padding: EdgeInsets.only(left: 5),
+//                           child: TextButton.icon(
+//                             clipBehavior: Clip.none,
+//                             style: ButtonStyle(
+//                               backgroundColor: MaterialStateProperty.all<Color>(
+//                                   Color(0xFF5DB075)),
+//                             ),
+//                             onPressed: () async {
+//                               context
+//                                   .read(pharmacistSignUpProvider.notifier)
+//                                   .changeSignature((_sigController.isNotEmpty)
+//                                       ? await _sigController.toPngBytes()
+//                                       : null);
+
+//                               Navigator.pop(context);
+//                             },
+//                             icon: Icon(
+//                               Icons.check,
+//                               color: Colors.white,
+//                               size: 13,
+//                             ),
+//                             label: Text(
+//                               "Apply",
+//                               style:
+//                                   TextStyle(color: Colors.white, fontSize: 13),
+//                             ),
+//                           ),
+//                         ),
+//                         Container(
+//                           alignment: Alignment.centerRight,
+//                           width: 100,
+//                           height: 35,
+//                           child: TextButton(
+//                             onPressed: () {
+//                               _sigController.clear();
+//                             },
+//                             child: Text(
+//                               "Reset",
+//                               style: TextStyle(color: Colors.grey),
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           );
+//         },
+//         child: _sigController.isEmpty ? Text("Add") : Text("Change"),
+//       ),
+//     );
+ 
+//   }
+// }

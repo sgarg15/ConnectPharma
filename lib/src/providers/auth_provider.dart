@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pharma_connect/model/user_model.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 enum Status {
   Uninitialized,
@@ -47,12 +51,11 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //Create user object based on the given FirebaseUser
-  UserModel _userFromFirebase(User? user, String? userType) {
+  UserModel _userFromFirebase(User? user) {
     return UserModel(
       uid: user!.uid,
       email: user.email,
       displayName: user.displayName,
-      userType: userType,
     );
   }
 
@@ -61,10 +64,54 @@ class AuthProvider extends ChangeNotifier {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
     } else {
-      _userFromFirebase(firebaseUser, null);
+      _userFromFirebase(firebaseUser);
       _status = Status.Authenticated;
     }
     notifyListeners();
+  }
+
+  Future<String> saveAsset(
+      File? asset, String uidName, String fileName, String userName) async {
+    try {
+      if (asset != null) {
+        Reference reference = FirebaseStorage.instance
+            .ref()
+            .child(userName + " " + uidName)
+            .child(fileName);
+        UploadTask uploadTask = reference.putFile(asset);
+
+        String url = await (await uploadTask).ref.getDownloadURL();
+        print(url);
+        return url;
+      } else {
+        throw ("File was not able to be uploaded.");
+      }
+    } on FirebaseException catch (e) {
+      print(e);
+      return "";
+    }
+  }
+
+  Future<String> saveImageAsset(Uint8List? asset, String uidName,
+      String fileName, String userName) async {
+    try {
+      if (asset != null) {
+        Reference reference = FirebaseStorage.instance
+            .ref()
+            .child(userName + " " + uidName)
+            .child(fileName);
+        UploadTask uploadTask = reference.putData(asset);
+
+        String url = await (await uploadTask).ref.getDownloadURL();
+        print(url);
+        return url;
+      } else {
+        throw ("File was not able to be uploaded.");
+      }
+    } on FirebaseException catch (e) {
+      print(e);
+      return "";
+    }
   }
 
   //Method for new user registration using email and password
@@ -88,14 +135,48 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> uploadPharmacistUserInformation(
+  Future<UserCredential?> uploadPharmacistUserInformation(
       UserCredential? user, BuildContext context) async {
     if (user == null) {
       return null;
     }
+    String resumePDFURL = await saveAsset(
+        context.read(pharmacistSignUpProvider.notifier).resumePDFData,
+        user.user!.uid,
+        "Resume",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+    String frontIDURL = await saveAsset(
+        context.read(pharmacistSignUpProvider.notifier).frontIDData,
+        user.user!.uid,
+        "Front ID",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+    String backIDURL = await saveAsset(
+        context.read(pharmacistSignUpProvider.notifier).backIDData,
+        user.user!.uid,
+        "Back ID",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+    String registrationCertificateURL = await saveAsset(
+        context
+            .read(pharmacistSignUpProvider.notifier)
+            .registrationCertificateData,
+        user.user!.uid,
+        "Registration Certificate",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+    String profilePhotoURL = await saveAsset(
+        context.read(pharmacistSignUpProvider.notifier).profilePhotoData,
+        user.user!.uid,
+        "Profile Photo",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+
+    String signaureImageURL = await saveImageAsset(
+        context.read(pharmacistSignUpProvider.notifier).signatureData,
+        user.user!.uid,
+        "Signature",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+
     users
         .doc(user.user?.uid.toString())
-        .collection("Information")
+        .collection(context.read(pharmacistSignUpProvider.notifier).firstName)
         .doc("Sign Up Information")
         .set({
       "User Type": "Pharmacist",
@@ -142,7 +223,14 @@ class AuthProvider extends ChangeNotifier {
           .malpractice
           .toString(),
       "Felon": context.read(pharmacistSignUpProvider.notifier).felon.toString(),
+      "Resume Download URL": resumePDFURL,
+      "FrontID Download URL": frontIDURL,
+      "BackID Download URL": backIDURL,
+      "Registration Certificate Download URL": registrationCertificateURL,
+      "Profile Photo Download URL": profilePhotoURL,
+      "Signature Download URL": signaureImageURL,
     });
+    return user;
   }
 
   //Method to handle user sign in using email and password
@@ -151,13 +239,16 @@ class AuthProvider extends ChangeNotifier {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      final UserCredential result = await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .whenComplete(() {
+      final UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      if (result.user!.emailVerified) {
         _status = Status.Authenticated;
         notifyListeners();
-      });
-      return _userFromFirebase(result.user, null);
+        return _userFromFirebase(result.user);
+      } else {
+        return null;
+      }
     } catch (e) {
       print("Error on the sign in = " + e.toString());
       _status = Status.Unauthenticated;
@@ -191,7 +282,7 @@ class AuthProvider extends ChangeNotifier {
         _status = Status.Authenticated;
       });
 
-      return _userFromFirebase(result.user, null);
+      return _userFromFirebase(result.user);
     } catch (err) {
       print("Error on the sign in = " + err.toString());
       _status = Status.Unauthenticated;

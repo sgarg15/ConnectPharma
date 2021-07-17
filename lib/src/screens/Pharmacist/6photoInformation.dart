@@ -1,14 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
-import '../../providers/auth_provider.dart';
-
-final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
-  return AuthProvider();
-});
+import '../../../main.dart';
 
 class PhotoInformation extends StatefulWidget {
   PhotoInformation({Key? key}) : super(key: key);
@@ -26,6 +24,10 @@ class _PhotoInformationState extends State<PhotoInformation> {
   FilePickerResult? _backOfIDResult;
   FilePickerResult? _registrationCertificateResult;
   FilePickerResult? _profilePhotoResult;
+  File? frontFile;
+  File? backFile;
+  File? registrationFile;
+  File? profilePhotoFile;
 
   bool agreeToTermsAndConditions = false;
 
@@ -89,59 +91,10 @@ class _PhotoInformationState extends State<PhotoInformation> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           SizedBox(height: 10),
-                          if (frontOfIDPicked == false)
-                            SizedBox(
-                              width: 270,
-                              height: 45,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>((states) {
-                                      return Color(0xFF5DB075); // Regular color
-                                    }),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ))),
-                                onPressed: () async {
-                                  try {
-                                    _frontOfIDResult =
-                                        await FilePicker.platform.pickFiles(
-                                      type: FileType.image,
-                                    );
-                                    if (_frontOfIDResult!.files.first.path !=
-                                        null) {
-                                      setState(() {
-                                        frontOfIDPicked = true;
-                                      });
-                                    } else {
-                                      // User canceled the picker
-                                    }
-                                  } catch (error) {
-                                    print("ERROR: " + error.toString());
-                                    final snackBar = SnackBar(
-                                      content: Text(
-                                          'There was an error, please try again.'),
-                                      duration: Duration(seconds: 3),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                },
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: "Front of ID",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          else
+                          if (context
+                                  .read(pharmacistSignUpProvider.notifier)
+                                  .frontIDData !=
+                              null)
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -162,11 +115,13 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                               BorderRadius.circular(10),
                                         ))),
                                     onPressed: () async {
-                                      PlatformFile file =
-                                          _frontOfIDResult!.files.first;
-                                      print(
-                                          "FILE PATH: " + file.path.toString());
-                                      OpenFile.open(file.path);
+                                      frontFile = context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .frontIDData;
+                                      print("FILE PATH: " +
+                                          frontFile!.path.toString());
+                                      OpenFile.open(frontFile?.path);
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -200,8 +155,13 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                     onPressed: () async {
                                       setState(() {
                                         _frontOfIDResult = null;
-                                        frontOfIDPicked = false;
+                                        frontFile = null;
                                       });
+
+                                      context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .clearFrontIDImage();
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -217,16 +177,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                 ),
                               ],
                             )
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      //Back of ID
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          SizedBox(height: 10),
-                          if (backOfIDPicked == false)
+                          else
                             SizedBox(
                               width: 270,
                               height: 45,
@@ -243,15 +194,23 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                     ))),
                                 onPressed: () async {
                                   try {
-                                    _backOfIDResult =
+                                    _frontOfIDResult =
                                         await FilePicker.platform.pickFiles(
                                       type: FileType.image,
                                     );
-                                    if (_backOfIDResult!.files.first.path !=
+                                    if (_frontOfIDResult!.files.first.path !=
                                         null) {
                                       setState(() {
-                                        backOfIDPicked = true;
+                                        frontOfIDPicked = true;
                                       });
+                                      frontFile = File(_frontOfIDResult!
+                                          .files.first.path
+                                          .toString());
+
+                                      context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .changeFrontIDImage(frontFile);
                                     } else {
                                       // User canceled the picker
                                     }
@@ -268,7 +227,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                 },
                                 child: RichText(
                                   text: TextSpan(
-                                    text: "Back of ID",
+                                    text: "Front of ID",
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,
@@ -278,7 +237,19 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                 ),
                               ),
                             )
-                          else
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      //Back of ID
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          SizedBox(height: 10),
+                          if (context
+                                  .read(pharmacistSignUpProvider.notifier)
+                                  .backIDData !=
+                              null)
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -299,15 +270,17 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                               BorderRadius.circular(10),
                                         ))),
                                     onPressed: () async {
-                                      PlatformFile file =
-                                          _backOfIDResult!.files.first;
-                                      print(
-                                          "FILE PATH: " + file.path.toString());
-                                      OpenFile.open(file.path);
+                                      backFile = context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .backIDData;
+                                      print("FILE PATH: " +
+                                          backFile!.path.toString());
+                                      OpenFile.open(backFile?.path);
                                     },
                                     child: RichText(
                                       text: TextSpan(
-                                        text: "View Back",
+                                        text: "View Back of ID",
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.white,
@@ -337,8 +310,13 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                     onPressed: () async {
                                       setState(() {
                                         _backOfIDResult = null;
-                                        backOfIDPicked = false;
+                                        backFile = null;
                                       });
+
+                                      context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .clearBackIDImage();
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -353,6 +331,67 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                   ),
                                 ),
                               ],
+                            )
+                          else
+                            SizedBox(
+                              width: 270,
+                              height: 45,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color>((states) {
+                                      return Color(0xFF5DB075); // Regular color
+                                    }),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ))),
+                                onPressed: () async {
+                                  try {
+                                    _backOfIDResult =
+                                        await FilePicker.platform.pickFiles(
+                                      type: FileType.image,
+                                      //withData: true,
+                                    );
+                                    if (_backOfIDResult!.files.first.path !=
+                                        null) {
+                                      setState(() {
+                                        backOfIDPicked = true;
+                                      });
+                                      backFile = File(_backOfIDResult!
+                                          .files.first.path
+                                          .toString());
+
+                                      context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .changeBackIDImage(backFile);
+                                    } else {
+                                      // User canceled the picker
+                                    }
+                                  } catch (error) {
+                                    print("ERROR: " + error.toString());
+                                    final snackBar = SnackBar(
+                                      content: Text(
+                                          'There was an error, please try again.'),
+                                      duration: Duration(seconds: 3),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                },
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: "Back of ID",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             )
                         ],
                       ),
@@ -387,61 +426,10 @@ class _PhotoInformationState extends State<PhotoInformation> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           SizedBox(height: 10),
-                          if (registrationCertificatePicked == false)
-                            SizedBox(
-                              width: 270,
-                              height: 45,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>((states) {
-                                      return Color(0xFF5DB075); // Regular color
-                                    }),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ))),
-                                onPressed: () async {
-                                  try {
-                                    _registrationCertificateResult =
-                                        await FilePicker.platform.pickFiles(
-                                      type: FileType.custom,
-                                      allowedExtensions: ['pdf'],
-                                    );
-                                    if (_registrationCertificateResult!
-                                            .files.first.path !=
-                                        null) {
-                                      setState(() {
-                                        registrationCertificatePicked = true;
-                                      });
-                                    } else {
-                                      // User canceled the picker
-                                    }
-                                  } catch (error) {
-                                    print("ERROR: " + error.toString());
-                                    final snackBar = SnackBar(
-                                      content: Text(
-                                          'There was an error, please try again.'),
-                                      duration: Duration(seconds: 3),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                },
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: "Registration Certificate",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          else
+                          if (context
+                                  .read(pharmacistSignUpProvider.notifier)
+                                  .registrationCertificateData !=
+                              null)
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -462,16 +450,17 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                               BorderRadius.circular(10),
                                         ))),
                                     onPressed: () async {
-                                      PlatformFile file =
-                                          _registrationCertificateResult!
-                                              .files.first;
-                                      print(
-                                          "FILE PATH: " + file.path.toString());
-                                      OpenFile.open(file.path);
+                                      registrationFile = context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .registrationCertificateData;
+                                      print("FILE PATH: " +
+                                          registrationFile!.path.toString());
+                                      OpenFile.open(registrationFile?.path);
                                     },
                                     child: RichText(
                                       text: TextSpan(
-                                        text: "View",
+                                        text: "View Registration Certificate",
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.white,
@@ -501,8 +490,13 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                     onPressed: () async {
                                       setState(() {
                                         _registrationCertificateResult = null;
-                                        registrationCertificatePicked = false;
+                                        registrationFile = null;
                                       });
+
+                                      context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .clearRegistrationCertificatePDF();
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -517,6 +511,71 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                   ),
                                 ),
                               ],
+                            )
+                          else
+                            SizedBox(
+                              width: 270,
+                              height: 45,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color>((states) {
+                                      return Color(0xFF5DB075); // Regular color
+                                    }),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ))),
+                                onPressed: () async {
+                                  try {
+                                    _registrationCertificateResult =
+                                        await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: ['pdf'],
+                                      //withData: true,
+                                    );
+                                    if (_registrationCertificateResult!
+                                            .files.first.path !=
+                                        null) {
+                                      setState(() {
+                                        registrationCertificatePicked = true;
+                                      });
+                                      registrationFile = File(
+                                          _registrationCertificateResult!
+                                              .files.first.path
+                                              .toString());
+
+                                      context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .changeRegistrationCertificate(
+                                              registrationFile);
+                                    } else {
+                                      // User canceled the picker
+                                    }
+                                  } catch (error) {
+                                    print("ERROR: " + error.toString());
+                                    final snackBar = SnackBar(
+                                      content: Text(
+                                          'There was an error, please try again.'),
+                                      duration: Duration(seconds: 3),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                },
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: "Select Registration Certificate",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             )
                         ],
                       ),
@@ -550,59 +609,10 @@ class _PhotoInformationState extends State<PhotoInformation> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           SizedBox(height: 10),
-                          if (profilePhotoPicked == false)
-                            SizedBox(
-                              width: 270,
-                              height: 45,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>((states) {
-                                      return Color(0xFF5DB075); // Regular color
-                                    }),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ))),
-                                onPressed: () async {
-                                  try {
-                                    _profilePhotoResult =
-                                        await FilePicker.platform.pickFiles(
-                                      type: FileType.image,
-                                    );
-                                    if (_profilePhotoResult!.files.first.path !=
-                                        null) {
-                                      setState(() {
-                                        profilePhotoPicked = true;
-                                      });
-                                    } else {
-                                      // User canceled the picker
-                                    }
-                                  } catch (error) {
-                                    print("ERROR: " + error.toString());
-                                    final snackBar = SnackBar(
-                                      content: Text(
-                                          'There was an error, please try again.'),
-                                      duration: Duration(seconds: 3),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }
-                                },
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: "Profile Photo",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          else
+                          if (context
+                                  .read(pharmacistSignUpProvider.notifier)
+                                  .profilePhotoData !=
+                              null)
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -623,15 +633,17 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                               BorderRadius.circular(10),
                                         ))),
                                     onPressed: () async {
-                                      PlatformFile file =
-                                          _profilePhotoResult!.files.first;
-                                      print(
-                                          "FILE PATH: " + file.path.toString());
-                                      OpenFile.open(file.path);
+                                      profilePhotoFile = context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .profilePhotoData;
+                                      print("FILE PATH: " +
+                                          profilePhotoFile!.path.toString());
+                                      OpenFile.open(profilePhotoFile?.path);
                                     },
                                     child: RichText(
                                       text: TextSpan(
-                                        text: "View",
+                                        text: "View Profile Photo",
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.white,
@@ -661,8 +673,13 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                     onPressed: () async {
                                       setState(() {
                                         _profilePhotoResult = null;
-                                        profilePhotoPicked = false;
+                                        profilePhotoFile = null;
                                       });
+
+                                      context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .clearProfilePhotoImage();
                                     },
                                     child: RichText(
                                       text: TextSpan(
@@ -677,6 +694,68 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                   ),
                                 ),
                               ],
+                            )
+                          else
+                            SizedBox(
+                              width: 270,
+                              height: 45,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color>((states) {
+                                      return Color(0xFF5DB075); // Regular color
+                                    }),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ))),
+                                onPressed: () async {
+                                  try {
+                                    _profilePhotoResult = await FilePicker
+                                        .platform
+                                        .pickFiles(type: FileType.image
+                                            //withData: true,
+                                            );
+                                    if (_profilePhotoResult!.files.first.path !=
+                                        null) {
+                                      setState(() {
+                                        profilePhotoPicked = true;
+                                      });
+                                      profilePhotoFile = File(
+                                          _profilePhotoResult!.files.first.path
+                                              .toString());
+
+                                      context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .changeProfilePhotoImage(
+                                              profilePhotoFile);
+                                    } else {
+                                      // User canceled the picker
+                                    }
+                                  } catch (error) {
+                                    print("ERROR: " + error.toString());
+                                    final snackBar = SnackBar(
+                                      content: Text(
+                                          'There was an error, please try again.'),
+                                      duration: Duration(seconds: 3),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  }
+                                },
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: "Select Profile Photo (HeadShot)",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             )
                         ],
                       ),
@@ -741,16 +820,15 @@ class _PhotoInformationState extends State<PhotoInformation> {
                         context
                             .read(authProvider.notifier)
                             .registerWithEmailAndPassword(
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
-                                  .email
-                                  .toString(),
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
-                                  .password
-                                  .toString(),
-                            )
-                            .then((value) {
+                                context
+                                    .read(pharmacistSignUpProvider.notifier)
+                                    .email
+                                    .toString(),
+                                context
+                                    .read(pharmacistSignUpProvider.notifier)
+                                    .password
+                                    .toString())
+                            .then((value) async {
                           print("UPLOADING DATA");
                           if (value == null) {
                             print("ERROR");
@@ -760,17 +838,40 @@ class _PhotoInformationState extends State<PhotoInformation> {
                             );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
+                            return null;
                           } else {
                             context
                                 .read(authProvider.notifier)
                                 .uploadPharmacistUserInformation(value, context)
-                                .then((value) {
+                                .then((value) async {
                               final snackBar = SnackBar(
                                 content: Text("User Registered"),
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                               print("DATA UPLOADED");
+                              await value?.user
+                                  ?.sendEmailVerification()
+                                  .whenComplete(() {
+                                final snackBar = SnackBar(
+                                  content: Text(
+                                    "A verification was sent to the email your registered with, please check your email and verify it.",
+                                  ),
+                                  action: SnackBarAction(
+                                    label: "Ok",
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PharmaConnect()));
+                                    },
+                                  ),
+                                  duration: Duration(seconds: 10),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              });
                             });
                           }
                         });

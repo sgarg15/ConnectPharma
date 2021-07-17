@@ -8,6 +8,7 @@ import 'package:pharma_connect/src/Address%20Search/placeService.dart';
 import '1pharmacistSignUp.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/3pharmacistInformation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 import '../../../main.dart';
 
@@ -125,8 +126,10 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                               .changeFirstName(firstName);
                         },
                         validation: (value) {
-                          if (value.isEmpty) {
-                            return "This field is required";
+                          if (!RegExp(
+                                  r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                              .hasMatch(value)) {
+                            return "Invalid field";
                           }
                           return null;
                         },
@@ -147,8 +150,10 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                               .changeLastName(lastName);
                         },
                         validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
+                          if (!RegExp(
+                                  r"[^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                              .hasMatch(value)) {
+                            return "Invalid field";
                           }
                           return null;
                         },
@@ -268,14 +273,15 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                               .changePhoneNumber(phoneNumber);
                         },
                         validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
+                          if (value.length < 4) {
+                            return "Phone is invalid";
                           }
                           return null;
                         },
                         initialValue: context
                             .read(pharmacistSignUpProvider.notifier)
                             .phoneNumber,
+                        formatter: [MaskedInputFormatter('(###) ###-####')],
                       ),
 
                       SizedBox(height: 20),

@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/5pharmacistSkills.dart';
@@ -45,10 +47,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   bool isValidPharmacistSkills() {
-    if (state.softwareList == "" ||
-        state.skillList == "" ||
-        state.languageList == "" ||
-        state.softwareList == null ||
+    if (state.softwareList == null ||
         state.skillList == null ||
         state.languageList == null) {
       print("true account info");
@@ -111,6 +110,12 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   List<Software?>? get softwareList => state.softwareList;
   List<Skill?>? get skillList => state.skillList;
   List<Language?>? get languageList => state.languageList;
+  File? get resumePDFData => state.resumePDF;
+  File? get frontIDData => state.frontID;
+  File? get backIDData => state.backID;
+  File? get registrationCertificateData => state.registrationCertificate;
+  File? get profilePhotoData => state.profilePhoto;
+  Uint8List? get signatureData => state.signatureData;
 
   //Setters Sign Up
   void changeEmail(String value) {
@@ -210,7 +215,200 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
     state = state.copyWithPharmacistSignUp(languageList: value);
   }
 
-  void changeSignature(Uint8List? value) {
-    state = state.copyWithPharmacistSignUp(signatureData: value);
+  void changeSignature(Uint8List? asset) {
+    //print(asset);
+    state = state.copyWithPharmacistSignUp(signatureData: asset);
+  }
+
+  //Setters PDF and Imgages Files
+  void changeResumePDF(File? asset) {
+    print("INSIDE CHANGE FUNCTION");
+    state = state.copyWithPharmacistSignUp(resumePDF: asset);
+  }
+
+  void clearResumePDF() {
+    state = PharmacistSignUpModel(
+      email: state.email,
+      password: state.password,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      address: state.address,
+      phoneNumber: state.phoneNumber,
+      firstYearLicensed: state.firstYearLicensed,
+      registrationNumber: state.registrationNumber,
+      registrationProvince: state.registrationProvince,
+      graduationYear: state.graduationYear,
+      institutionName: state.institutionName,
+      workingExperiance: state.workingExperiance,
+      willingToMove: state.willingToMove,
+      entitledToWork: state.entitledToWork,
+      activeMember: state.activeMember,
+      liabilityInsurance: state.liabilityInsurance,
+      licenseRestricted: state.licenseRestricted,
+      malpractice: state.malpractice,
+      felon: state.felon,
+      softwareList: state.softwareList,
+      skillList: state.skillList,
+      languageList: state.languageList,
+      signatureData: state.signatureData,
+      resumePDF: null,
+      frontID: state.frontID,
+      backID: state.backID,
+      registrationCertificate: state.registrationCertificate,
+      profilePhoto: state.profilePhoto,
+    );
+    changeResumePDF(null);
+  }
+
+  void changeFrontIDImage(File? asset) {
+    state = state.copyWithPharmacistSignUp(frontID: asset);
+  }
+
+  void clearFrontIDImage() {
+    state = PharmacistSignUpModel(
+      email: state.email,
+      password: state.password,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      address: state.address,
+      phoneNumber: state.phoneNumber,
+      firstYearLicensed: state.firstYearLicensed,
+      registrationNumber: state.registrationNumber,
+      registrationProvince: state.registrationProvince,
+      graduationYear: state.graduationYear,
+      institutionName: state.institutionName,
+      workingExperiance: state.workingExperiance,
+      willingToMove: state.willingToMove,
+      entitledToWork: state.entitledToWork,
+      activeMember: state.activeMember,
+      liabilityInsurance: state.liabilityInsurance,
+      licenseRestricted: state.licenseRestricted,
+      malpractice: state.malpractice,
+      felon: state.felon,
+      softwareList: state.softwareList,
+      skillList: state.skillList,
+      languageList: state.languageList,
+      signatureData: state.signatureData,
+      resumePDF: state.resumePDF,
+      frontID: null,
+      backID: state.backID,
+      registrationCertificate: state.registrationCertificate,
+      profilePhoto: state.profilePhoto,
+    );
+    changeFrontIDImage(null);
+  }
+
+  void changeBackIDImage(File? asset) {
+    state = state.copyWithPharmacistSignUp(backID: asset);
+  }
+
+  void clearBackIDImage() {
+    state = PharmacistSignUpModel(
+      email: state.email,
+      password: state.password,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      address: state.address,
+      phoneNumber: state.phoneNumber,
+      firstYearLicensed: state.firstYearLicensed,
+      registrationNumber: state.registrationNumber,
+      registrationProvince: state.registrationProvince,
+      graduationYear: state.graduationYear,
+      institutionName: state.institutionName,
+      workingExperiance: state.workingExperiance,
+      willingToMove: state.willingToMove,
+      entitledToWork: state.entitledToWork,
+      activeMember: state.activeMember,
+      liabilityInsurance: state.liabilityInsurance,
+      licenseRestricted: state.licenseRestricted,
+      malpractice: state.malpractice,
+      felon: state.felon,
+      softwareList: state.softwareList,
+      skillList: state.skillList,
+      languageList: state.languageList,
+      signatureData: state.signatureData,
+      resumePDF: state.resumePDF,
+      frontID: state.frontID,
+      backID: null,
+      registrationCertificate: state.registrationCertificate,
+      profilePhoto: state.profilePhoto,
+    );
+    changeBackIDImage(null);
+  }
+
+  void changeRegistrationCertificate(File? asset) {
+    state = state.copyWithPharmacistSignUp(registrationCertificate: asset);
+  }
+
+  void clearRegistrationCertificatePDF() {
+    state = PharmacistSignUpModel(
+      email: state.email,
+      password: state.password,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      address: state.address,
+      phoneNumber: state.phoneNumber,
+      firstYearLicensed: state.firstYearLicensed,
+      registrationNumber: state.registrationNumber,
+      registrationProvince: state.registrationProvince,
+      graduationYear: state.graduationYear,
+      institutionName: state.institutionName,
+      workingExperiance: state.workingExperiance,
+      willingToMove: state.willingToMove,
+      entitledToWork: state.entitledToWork,
+      activeMember: state.activeMember,
+      liabilityInsurance: state.liabilityInsurance,
+      licenseRestricted: state.licenseRestricted,
+      malpractice: state.malpractice,
+      felon: state.felon,
+      softwareList: state.softwareList,
+      skillList: state.skillList,
+      languageList: state.languageList,
+      signatureData: state.signatureData,
+      resumePDF: state.resumePDF,
+      frontID: state.frontID,
+      backID: state.backID,
+      registrationCertificate: null,
+      profilePhoto: state.profilePhoto,
+    );
+    changeRegistrationCertificate(null);
+  }
+
+  void changeProfilePhotoImage(File? asset) {
+    state = state.copyWithPharmacistSignUp(profilePhoto: asset);
+  }
+
+  void clearProfilePhotoImage() {
+    state = PharmacistSignUpModel(
+      email: state.email,
+      password: state.password,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      address: state.address,
+      phoneNumber: state.phoneNumber,
+      firstYearLicensed: state.firstYearLicensed,
+      registrationNumber: state.registrationNumber,
+      registrationProvince: state.registrationProvince,
+      graduationYear: state.graduationYear,
+      institutionName: state.institutionName,
+      workingExperiance: state.workingExperiance,
+      willingToMove: state.willingToMove,
+      entitledToWork: state.entitledToWork,
+      activeMember: state.activeMember,
+      liabilityInsurance: state.liabilityInsurance,
+      licenseRestricted: state.licenseRestricted,
+      malpractice: state.malpractice,
+      felon: state.felon,
+      softwareList: state.softwareList,
+      skillList: state.skillList,
+      languageList: state.languageList,
+      signatureData: state.signatureData,
+      resumePDF: state.resumePDF,
+      frontID: state.frontID,
+      backID: state.backID,
+      registrationCertificate: state.registrationCertificate,
+      profilePhoto: null,
+    );
+    changeProfilePhotoImage(null);
   }
 }

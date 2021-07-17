@@ -82,8 +82,8 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                             .changeFirstYearLicensed(licenseYear);
                       },
                       validation: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "This field is required";
+                        if (!RegExp(r"^(19|20)\d{2}$").hasMatch(value)) {
+                          return "Incorrect year format";
                         }
                         return null;
                       },
@@ -104,8 +104,8 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                             .changeRegistrationNumber(registrationNumber);
                       },
                       validation: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "This field is required";
+                        if (value.length < 5) {
+                          return "Registration Number must be greater then 5 characters";
                         }
                         return null;
                       },
@@ -148,8 +148,8 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                             .changeGraduationYear(graduationYear);
                       },
                       validation: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "This field is required";
+                        if (!RegExp(r"^(19|20)\d{2}$").hasMatch(value)) {
+                          return "Incorrect year format";
                         }
                         return null;
                       },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
@@ -14,6 +15,7 @@ class formField extends StatelessWidget {
   InputDecoration? inputDecoration;
   TextCapitalization? textCapitalization;
   bool obscureText;
+  List<TextInputFormatter>? formatter;
 
   formField({
     this.fieldTitle,
@@ -27,6 +29,7 @@ class formField extends StatelessWidget {
     this.inputDecoration,
     this.textCapitalization,
     this.obscureText = false,
+    this.formatter,
   });
 
   @override
@@ -50,6 +53,7 @@ class formField extends StatelessWidget {
           width: 335,
           //height: 50,
           child: TextFormField(
+            inputFormatters: formatter,
             obscureText: obscureText,
             controller: controller,
             autovalidateMode: AutovalidateMode.onUserInteraction,
