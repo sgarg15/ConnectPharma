@@ -1,63 +1,62 @@
 import 'dart:typed_data';
 
-import 'package:pharma_connect/model/validatorModel.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/3pharmacyInformation.dart';
 
 class PharmacySignUpModel {
-  ValidatorModel? email = ValidatorModel("", "");
-  ValidatorModel? password = ValidatorModel("", "");
+  String email;
+  String password;
   bool passwordVisibility;
 
-  String? firstName = "";
-  String? lastName = "";
-  String? phoneNumber = "";
+  String firstName;
+  String lastName;
+  String phoneNumber;
   String? position;
   Uint8List? signatureData;
 
-  String? pharmacyName = "";
-  String? streetAddress = "";
-  String? storeNumber = "";
-  String? city = "";
-  String? postalCode = "";
-  String? country = "";
-  String? phoneNumberPharmacy = "";
-  String? faxNumberPharmacy = "";
-  String? accreditationProvince = "";
+  String pharmacyName;
+  String streetAddress;
+  String storeNumber;
+  String city;
+  String postalCode;
+  String country;
+  String phoneNumberPharmacy;
+  String faxNumberPharmacy;
+  String accreditationProvince;
   List<Software?>? softwareList = [];
 
-  String? managerFirstName = "";
-  String? managerLastName = "";
-  String? managerPhoneNumber = "";
-  String? licenseNumber = "";
+  String managerFirstName;
+  String managerLastName;
+  String managerPhoneNumber;
+  String licenseNumber;
 
   PharmacySignUpModel({
-    this.email,
-    this.password,
+    this.email = "",
+    this.password = "",
     this.passwordVisibility = false,
-    this.firstName,
-    this.lastName,
-    this.phoneNumber,
+    this.firstName = "",
+    this.lastName = "",
+    this.phoneNumber = "",
     this.position,
     this.signatureData,
-    this.pharmacyName,
-    this.streetAddress,
-    this.storeNumber,
-    this.city,
-    this.postalCode,
-    this.country,
-    this.phoneNumberPharmacy,
-    this.faxNumberPharmacy,
-    this.accreditationProvince,
+    this.pharmacyName = "",
+    this.streetAddress = "",
+    this.storeNumber = "",
+    this.city = "",
+    this.postalCode = "",
+    this.country = "",
+    this.phoneNumberPharmacy = "",
+    this.faxNumberPharmacy = "",
+    this.accreditationProvince = "",
     this.softwareList,
-    this.managerFirstName,
-    this.managerLastName,
-    this.managerPhoneNumber,
-    this.licenseNumber,
+    this.managerFirstName = "",
+    this.managerLastName = "",
+    this.managerPhoneNumber = "",
+    this.licenseNumber = "",
   });
 
-  PharmacySignUpModel updatePharmacySignUp({
-    ValidatorModel? email,
-    ValidatorModel? password,
+  PharmacySignUpModel copyWithPharmacySignUp({
+    String? email,
+    String? password,
     String? firstName,
     String? lastName,
     String? phoneNumber,

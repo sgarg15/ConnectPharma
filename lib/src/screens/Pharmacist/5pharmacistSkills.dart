@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/6photoInformation.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:signature/signature.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
@@ -20,6 +19,11 @@ class Software {
     required this.id,
     required this.name,
   });
+
+  @override
+  String toString() {
+    return "$name";
+  }
 }
 
 class Skill {
@@ -30,6 +34,10 @@ class Skill {
     required this.id,
     required this.name,
   });
+  @override
+  String toString() {
+    return "$name";
+  }
 }
 
 class Language {
@@ -40,6 +48,10 @@ class Language {
     required this.id,
     required this.name,
   });
+  @override
+  String toString() {
+    return "$name";
+  }
 }
 
 class PharmacistSkills extends StatefulWidget {

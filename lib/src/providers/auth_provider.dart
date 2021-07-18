@@ -9,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pharma_connect/model/user_model.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/1pharmacy_signup.dart';
 
 enum Status {
   Uninitialized,
@@ -81,10 +82,9 @@ class AuthProvider extends ChangeNotifier {
         UploadTask uploadTask = reference.putFile(asset);
 
         String url = await (await uploadTask).ref.getDownloadURL();
-        print(url);
         return url;
       } else {
-        throw ("File was not able to be uploaded.");
+        return "";
       }
     } on FirebaseException catch (e) {
       print(e);
@@ -103,10 +103,9 @@ class AuthProvider extends ChangeNotifier {
         UploadTask uploadTask = reference.putData(asset);
 
         String url = await (await uploadTask).ref.getDownloadURL();
-        print(url);
         return url;
       } else {
-        throw ("File was not able to be uploaded.");
+        return "";
       }
     } on FirebaseException catch (e) {
       print(e);
@@ -223,11 +222,70 @@ class AuthProvider extends ChangeNotifier {
           .malpractice
           .toString(),
       "Felon": context.read(pharmacistSignUpProvider.notifier).felon.toString(),
+      "Known Software": context
+          .read(pharmacistSignUpProvider.notifier)
+          .softwareList
+          .toString(),
+      "Known Skills":
+          context.read(pharmacistSignUpProvider.notifier).skillList.toString(),
+      "Known Languages": context
+          .read(pharmacistSignUpProvider.notifier)
+          .languageList
+          .toString(),
       "Resume Download URL": resumePDFURL,
       "FrontID Download URL": frontIDURL,
       "BackID Download URL": backIDURL,
       "Registration Certificate Download URL": registrationCertificateURL,
       "Profile Photo Download URL": profilePhotoURL,
+      "Signature Download URL": signaureImageURL,
+    });
+    return user;
+  }
+
+  Future<UserCredential?> uploadPharmacyUserInformation(
+      UserCredential? user, BuildContext context) async {
+    if (user == null) {
+      return null;
+    }
+    String signaureImageURL = await saveImageAsset(
+        context.read(pharmacySignUpProvider.notifier).signatureData,
+        user.user!.uid,
+        "Signature",
+        context.read(pharmacySignUpProvider.notifier).firstName);
+
+    users
+        .doc(user.user?.uid.toString())
+        .collection(context.read(pharmacySignUpProvider.notifier).firstName)
+        .doc("Sign Up Information")
+        .set({
+      "User Type": "Pharmacy",
+      "Email": context.read(pharmacySignUpProvider.notifier).email,
+      "First Name": context.read(pharmacySignUpProvider.notifier).firstName,
+      "Last Name": context.read(pharmacySignUpProvider.notifier).lastName,
+      "Phone Number": context.read(pharmacySignUpProvider.notifier).phoneNumber,
+      "Position": context.read(pharmacySignUpProvider.notifier).position,
+      "Pharmacy Name":
+          context.read(pharmacySignUpProvider.notifier).pharmacyName,
+      "Street Address":
+          context.read(pharmacySignUpProvider.notifier).streetAddress,
+      "Store Number": context.read(pharmacySignUpProvider.notifier).storeNumber,
+      "City": context.read(pharmacySignUpProvider.notifier).city,
+      "Postal Code": context.read(pharmacySignUpProvider.notifier).postalCode,
+      "Country": context.read(pharmacySignUpProvider.notifier).country,
+      "Pharmacy Phone Number":
+          context.read(pharmacySignUpProvider.notifier).phoneNumberPharmacy,
+      "Pharmacy Fax Number":
+          context.read(pharmacySignUpProvider.notifier).faxNumber,
+      "Accreditation Provice":
+          context.read(pharmacySignUpProvider.notifier).accreditationProvince,
+      "Manager First Name":
+          context.read(pharmacySignUpProvider.notifier).managerFirstName,
+      "Manager Last Name":
+          context.read(pharmacySignUpProvider.notifier).managerLastName,
+      "Manager Phone Number":
+          context.read(pharmacySignUpProvider.notifier).managerPhoneNumber,
+      "Manager License Number":
+          context.read(pharmacySignUpProvider.notifier).licenseNumber,
       "Signature Download URL": signaureImageURL,
     });
     return user;

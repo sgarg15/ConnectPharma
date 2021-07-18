@@ -42,7 +42,6 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
     return Consumer(
       builder: (context, watch, child) {
         watch(pharmacySignUpProvider);
-        watch(authProvider);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,

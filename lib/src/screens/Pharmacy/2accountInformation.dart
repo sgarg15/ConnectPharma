@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharma_connect/all_used.dart';
-import 'package:pharma_connect/model/pharmacySignUpModel.dart';
-import 'package:pharma_connect/src/providers/auth_provider.dart';
-import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/1pharmacy_signup.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/3pharmacyInformation.dart';
 import 'package:signature/signature.dart';
 
 import '../../../main.dart';
-
-final pharmacySignUpProvider =
-    StateNotifierProvider<PharmacySignUpProvider, PharmacySignUpModel>((ref) {
-  return PharmacySignUpProvider();
-});
-
-final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
-  return AuthProvider();
-});
 
 class AccountInformationPharmacy extends StatefulWidget {
   const AccountInformationPharmacy({Key? key}) : super(key: key);
@@ -56,9 +46,9 @@ class _AccountInformationPharmacyState
                       style: TextStyle(color: Color(0xFF5DB075)),
                     ),
                     onPressed: () {
-                      context
-                          .read(pharmacySignUpProvider.notifier)
-                          .clearAllValues();
+                      // context
+                      //     .read(pharmacySignUpProvider.notifier)
+                      //     .clearAllValues();
                       // Direct to whichever they are in Information Form pages
                       Navigator.pushReplacement(
                         context,
@@ -138,8 +128,10 @@ class _AccountInformationPharmacyState
                               .changeFirstName(firstName);
                         },
                         validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
+                          if (!RegExp(
+                                  r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                              .hasMatch(value)) {
+                            return "Invalid field";
                           }
                           return null;
                         },
@@ -160,8 +152,10 @@ class _AccountInformationPharmacyState
                               .changeLastName(lastName);
                         },
                         validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
+                          if (!RegExp(
+                                  r"[^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                              .hasMatch(value)) {
+                            return "Invalid field";
                           }
                           return null;
                         },
@@ -182,14 +176,15 @@ class _AccountInformationPharmacyState
                               .changePhoneNumber(phoneNumber);
                         },
                         validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "This field is required";
+                          if (value.length < 4) {
+                            return "Phone is invalid";
                           }
                           return null;
                         },
                         initialValue: context
                             .read(pharmacySignUpProvider.notifier)
                             .phoneNumber,
+                        formatter: [MaskedInputFormatter('(###) ###-####')],
                       ),
                       SizedBox(height: 20),
 
@@ -357,7 +352,7 @@ class _AccountInformationPharmacyState
   }
 }
 
-class SignatureBox extends StatelessWidget {
+class SignatureBox extends StatefulWidget {
   const SignatureBox({
     Key? key,
     required SignatureController sigController,
@@ -365,6 +360,13 @@ class SignatureBox extends StatelessWidget {
         super(key: key);
 
   final SignatureController _sigController;
+
+  @override
+  _SignatureBoxState createState() => _SignatureBoxState();
+}
+
+class _SignatureBoxState extends State<SignatureBox> {
+  bool signatureSaved = false;
 
   @override
   Widget build(BuildContext context) {
@@ -398,7 +400,7 @@ class SignatureBox extends StatelessWidget {
                       ),
                     ),
                     child: Signature(
-                      controller: _sigController,
+                      controller: widget._sigController,
                       height: 140,
                       width: MediaQuery.of(context).size.width - 20,
                       backgroundColor: Colors.white,
@@ -427,11 +429,15 @@ class SignatureBox extends StatelessWidget {
                                   Color(0xFF5DB075)),
                             ),
                             onPressed: () async {
-                              context
-                                  .read(pharmacySignUpProvider.notifier)
-                                  .changeSignature((_sigController.isNotEmpty)
-                                      ? await _sigController.toPngBytes()
-                                      : null);
+                              if (widget._sigController.isNotEmpty) {
+                                context
+                                    .read(pharmacySignUpProvider.notifier)
+                                    .changeSignature(await widget._sigController
+                                        .toPngBytes());
+                                setState(() {
+                                  signatureSaved = true;
+                                });
+                              }
 
                               Navigator.pop(context);
                             },
@@ -453,7 +459,10 @@ class SignatureBox extends StatelessWidget {
                           height: 35,
                           child: TextButton(
                             onPressed: () {
-                              _sigController.clear();
+                              widget._sigController.clear();
+                              setState(() {
+                                signatureSaved = false;
+                              });
                             },
                             child: Text(
                               "Reset",
@@ -469,8 +478,127 @@ class SignatureBox extends StatelessWidget {
             ),
           );
         },
-        child: Text("Add"),
+        child: !signatureSaved ? Text("Add") : Text("Change"),
       ),
     );
   }
 }
+
+// class SignatureBox extends StatelessWidget {
+//   const SignatureBox({
+//     Key? key,
+//     required SignatureController sigController,
+//   })  : _sigController = sigController,
+//         super(key: key);
+
+//   final SignatureController _sigController;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 100,
+//       height: 40,
+//       child: ElevatedButton(
+//         style: ButtonStyle(
+//             backgroundColor:
+//                 MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
+//             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+//                 RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(8),
+//             ))),
+//         onPressed: () {
+//           showDialog(
+//             context: context,
+//             builder: (_) => Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: <Widget>[
+//                 //Signature Pad
+//                 Align(
+//                   alignment: Alignment.center,
+//                   child: Container(
+//                     height: 140,
+//                     width: MediaQuery.of(context).size.width - 20,
+//                     decoration: BoxDecoration(
+//                       border: Border.all(
+//                         width: 3,
+//                         color: Color(0xFF5DB075),
+//                       ),
+//                     ),
+//                     child: Signature(
+//                       controller: _sigController,
+//                       height: 140,
+//                       width: MediaQuery.of(context).size.width - 20,
+//                       backgroundColor: Colors.white,
+//                     ),
+//                   ),
+//                 ),
+//                 //Buttons
+//                 Material(
+//                   child: Container(
+//                     color: Colors.grey.shade200,
+//                     height: 40,
+//                     width: MediaQuery.of(context).size.width - 20,
+//                     child: Row(
+//                       //mainAxisSize: MainAxisSize.min,
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: <Widget>[
+//                         Container(
+//                           width: 100,
+//                           height: 31,
+//                           alignment: Alignment.centerLeft,
+//                           padding: EdgeInsets.only(left: 5),
+//                           child: TextButton.icon(
+//                             clipBehavior: Clip.none,
+//                             style: ButtonStyle(
+//                               backgroundColor: MaterialStateProperty.all<Color>(
+//                                   Color(0xFF5DB075)),
+//                             ),
+//                             onPressed: () async {
+//                               context
+//                                   .read(pharmacySignUpProvider.notifier)
+//                                   .changeSignature((_sigController.isNotEmpty)
+//                                       ? await _sigController.toPngBytes()
+//                                       : null);
+
+//                               Navigator.pop(context);
+//                             },
+//                             icon: Icon(
+//                               Icons.check,
+//                               color: Colors.white,
+//                               size: 13,
+//                             ),
+//                             label: Text(
+//                               "Apply",
+//                               style:
+//                                   TextStyle(color: Colors.white, fontSize: 13),
+//                             ),
+//                           ),
+//                         ),
+//                         Container(
+//                           alignment: Alignment.centerRight,
+//                           width: 100,
+//                           height: 35,
+//                           child: TextButton(
+//                             onPressed: () {
+//                               _sigController.clear();
+//                             },
+//                             child: Text(
+//                               "Reset",
+//                               style: TextStyle(color: Colors.grey),
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           );
+//         },
+//         child: Text("Add"),
+//       ),
+//     );
+//   }
+// }
+

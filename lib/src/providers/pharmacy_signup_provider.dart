@@ -3,21 +3,16 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacySignUpModel.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:pharma_connect/model/validatorModel.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/3pharmacyInformation.dart';
 
 class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   PharmacySignUpProvider() : super(PharmacySignUpModel());
 
   bool isValidSignUp() {
-    if (state.email?.error != null ||
-        state.password?.error != null ||
-        state.email?.value == "" ||
-        state.password?.value == "") {
-      print("true");
+    if (EmailValidator.validate(state.email.toString()) == false ||
+        state.password.length < 6) {
       return true;
     } else {
-      print("false");
       return false;
     }
   }
@@ -26,11 +21,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
     if (state.firstName == "" ||
         state.lastName == "" ||
         state.phoneNumber == "" ||
-        state.position == "" ||
-        state.firstName == null ||
-        state.lastName == null ||
-        state.phoneNumber == null ||
-        state.position == null) {
+        state.position == "") {
       print("true account info");
       return true;
     } else {
@@ -48,16 +39,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
         state.phoneNumberPharmacy == "" ||
         state.faxNumberPharmacy == "" ||
         state.postalCode == "" ||
-        state.accreditationProvince == "" ||
-        state.pharmacyName == null ||
-        state.streetAddress == null ||
-        state.city == null ||
-        state.postalCode == null ||
-        state.country == null ||
-        state.phoneNumberPharmacy == null ||
-        state.faxNumberPharmacy == null ||
-        state.postalCode == null ||
-        state.accreditationProvince == null) {
+        state.accreditationProvince == "") {
       print("true pharmacy info");
       return true;
     } else {
@@ -69,165 +51,158 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   bool isValidManagerInformation() {
     if (state.managerFirstName == "" ||
         state.managerLastName == "" ||
-        state.managerPhoneNumber == "" ||
-        state.licenseNumber == "" ||
-        state.managerFirstName == null ||
-        state.managerLastName == null ||
-        state.managerPhoneNumber == null ||
-        state.licenseNumber == null) {
-      print("true account info");
+        state.managerPhoneNumber.length < 4 ||
+        state.licenseNumber.length < 5) {
+      print("true manager info");
       return true;
     } else {
-      print("false account info");
+      print("false manager info");
       return false;
     }
   }
 
   void clearAllValues() {
-    state.email = ValidatorModel(null, null);
-    state.password = ValidatorModel(null, null);
-    state.firstName = null;
-    state.lastName = null;
-    state.phoneNumber = null;
+    state.email = "";
+    state.password = "";
+    state.firstName = "";
+    state.lastName = "";
+    state.phoneNumber = "";
     state.position = null;
-    state.signatureData = null;
-    state.pharmacyName = null;
-    state.streetAddress = null;
-    state.storeNumber = null;
-    state.city = null;
-    state.postalCode = null;
-    state.country = null;
-    state.phoneNumberPharmacy = null;
-    state.faxNumberPharmacy = null;
+    state.pharmacyName = "";
+    state.streetAddress = "";
+    state.storeNumber = "";
+    state.city = "";
+    state.postalCode = "";
+    state.country = "";
+    state.phoneNumberPharmacy = "";
+    state.faxNumberPharmacy = "";
     state.softwareList = null;
-    state.managerFirstName = null;
-    state.managerLastName = null;
-    state.managerPhoneNumber = null;
-    state.licenseNumber = null;
+    state.managerFirstName = "";
+    state.managerLastName = "";
+    state.managerPhoneNumber = "";
+    state.licenseNumber = "";
   }
 
   //Getters
-  String? get email => state.email?.value;
-  String? get password => state.password?.value;
-  bool? get passwordVisiblity => state.passwordVisibility;
+  String get email => state.email;
+  String get password => state.password;
+  bool get passwordVisiblity => state.passwordVisibility;
 
-  String? get firstName => state.firstName;
-  String? get lastName => state.lastName;
-  String? get phoneNumber => state.phoneNumber;
+  String get firstName => state.firstName;
+  String get lastName => state.lastName;
+  String get phoneNumber => state.phoneNumber;
   String? get position => state.position;
   Uint8List? get signatureData => state.signatureData;
 
-  String? get pharmacyName => state.pharmacyName;
-  String? get streetAddress => state.streetAddress;
-  String? get storeNumber => state.storeNumber;
-  String? get city => state.city;
-  String? get postalCode => state.postalCode;
-  String? get country => state.country;
-  String? get phoneNumberPharmacy => state.phoneNumberPharmacy;
-  String? get faxNumber => state.faxNumberPharmacy;
-  String? get accreditationProvince => state.accreditationProvince;
+  String get pharmacyName => state.pharmacyName;
+  String get streetAddress => state.streetAddress;
+  String get storeNumber => state.storeNumber;
+  String get city => state.city;
+  String get postalCode => state.postalCode;
+  String get country => state.country;
+  String get phoneNumberPharmacy => state.phoneNumberPharmacy;
+  String get faxNumber => state.faxNumberPharmacy;
+  String get accreditationProvince => state.accreditationProvince;
   List<Software?>? get softwareList => state.softwareList;
 
-  String? get managerFirstName => state.managerFirstName;
-  String? get managerLastName => state.managerLastName;
-  String? get managerPhoneNumber => state.managerPhoneNumber;
-  String? get licenseNumber => state.licenseNumber;
+  String get managerFirstName => state.managerFirstName;
+  String get managerLastName => state.managerLastName;
+  String get managerPhoneNumber => state.managerPhoneNumber;
+  String get licenseNumber => state.licenseNumber;
 
   //Setters Sign Up
   void changeEmail(String value) {
-    state = state.updatePharmacySignUp(
-      email: ValidatorModel(value.trim(),
-          (!EmailValidator.validate(value)) ? "Incorrect Format" : null),
+    state = state.copyWithPharmacySignUp(
+      email: value.trim(),
     );
   }
 
   void changePassword(String value) {
-    state = state.updatePharmacySignUp(
-      password: ValidatorModel(value.trim(),
-          (value.length < 6) ? "Must be at least 6 characters" : null),
+    state = state.copyWithPharmacySignUp(
+      password: value,
     );
   }
 
   void changePasswordVisibility(bool value) {
-    state = state.updatePharmacySignUp(passwordVisibility: value);
+    state = state.copyWithPharmacySignUp(passwordVisibility: value);
   }
 
   //Setters Account Info
   void changeFirstName(String value) {
-    state = state.updatePharmacySignUp(firstName: value.trim());
+    state = state.copyWithPharmacySignUp(firstName: value.trim());
   }
 
   void changeLastName(String value) {
-    state = state.updatePharmacySignUp(lastName: value.trim());
+    state = state.copyWithPharmacySignUp(lastName: value.trim());
   }
 
   void changePhoneNumber(String value) {
-    state = state.updatePharmacySignUp(phoneNumber: value.trim());
+    state = state.copyWithPharmacySignUp(phoneNumber: value.trim());
   }
 
   void changePosition(String? value) {
-    state = state.updatePharmacySignUp(position: value);
+    state = state.copyWithPharmacySignUp(position: value);
   }
 
   void changeSignature(Uint8List? value) {
-    state = state.updatePharmacySignUp(signatureData: value);
+    state = state.copyWithPharmacySignUp(signatureData: value);
   }
 
   //Setters Pharmacy Information
   void changePharmacyName(String value) {
-    state = state.updatePharmacySignUp(pharmacyName: value.trim());
+    state = state.copyWithPharmacySignUp(pharmacyName: value.trim());
   }
 
   void changeStreetAddress(String? value) {
-    state = state.updatePharmacySignUp(streetAddress: value?.trim());
+    state = state.copyWithPharmacySignUp(streetAddress: value?.trim());
   }
 
   void changeStoreNumber(String? value) {
-    state = state.updatePharmacySignUp(storeNumber: value?.trim());
+    state = state.copyWithPharmacySignUp(storeNumber: value?.trim());
   }
 
   void changeCity(String? value) {
-    state = state.updatePharmacySignUp(city: value?.trim());
+    state = state.copyWithPharmacySignUp(city: value?.trim());
   }
 
   void changePostalCode(String? value) {
-    state = state.updatePharmacySignUp(postalCode: value?.trim());
+    state = state.copyWithPharmacySignUp(postalCode: value?.trim());
   }
 
   void changeCountry(String? value) {
-    state = state.updatePharmacySignUp(country: value?.trim());
+    state = state.copyWithPharmacySignUp(country: value?.trim());
   }
 
   void changePhoneNumberPharmacy(String value) {
-    state = state.updatePharmacySignUp(phoneNumberPharmacy: value.trim());
+    state = state.copyWithPharmacySignUp(phoneNumberPharmacy: value.trim());
   }
 
   void changeFaxNumber(String value) {
-    state = state.updatePharmacySignUp(faxNumberPharmacy: value.trim());
+    state = state.copyWithPharmacySignUp(faxNumberPharmacy: value.trim());
   }
 
   void changeAccreditationProvince(String value) {
-    state = state.updatePharmacySignUp(accreditationProvince: value.trim());
+    state = state.copyWithPharmacySignUp(accreditationProvince: value.trim());
   }
 
   void changeSoftwareList(List<Software?> value) {
-    state = state.updatePharmacySignUp(softwareList: value);
+    state = state.copyWithPharmacySignUp(softwareList: value);
   }
 
   //Manager Information
   void changeManagerFirstName(String value) {
-    state = state.updatePharmacySignUp(managerFirstName: value.trim());
+    state = state.copyWithPharmacySignUp(managerFirstName: value.trim());
   }
 
   void changeMangagerLastName(String value) {
-    state = state.updatePharmacySignUp(managerLastName: value.trim());
+    state = state.copyWithPharmacySignUp(managerLastName: value.trim());
   }
 
   void changeManagerPhoneNumber(String value) {
-    state = state.updatePharmacySignUp(managerPhoneNumber: value.trim());
+    state = state.copyWithPharmacySignUp(managerPhoneNumber: value.trim());
   }
 
   void changeLicenseNumber(String value) {
-    state = state.updatePharmacySignUp(licenseNumber: value.trim());
+    state = state.copyWithPharmacySignUp(licenseNumber: value.trim());
   }
 }

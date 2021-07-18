@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/5pharmacistSkills.dart';
@@ -81,6 +80,12 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
     state.softwareList = null;
     state.skillList = null;
     state.languageList = null;
+    state.resumePDF = null;
+    state.frontID = null;
+    state.backID = null;
+    state.registrationCertificate = null;
+    state.profilePhoto = null;
+    state.signatureData = null;
   }
 
   //Getters
@@ -216,13 +221,11 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   void changeSignature(Uint8List? asset) {
-    //print(asset);
     state = state.copyWithPharmacistSignUp(signatureData: asset);
   }
 
   //Setters PDF and Imgages Files
   void changeResumePDF(File? asset) {
-    print("INSIDE CHANGE FUNCTION");
     state = state.copyWithPharmacistSignUp(resumePDF: asset);
   }
 

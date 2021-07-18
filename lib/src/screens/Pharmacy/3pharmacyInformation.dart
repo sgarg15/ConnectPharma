@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pharma_connect/all_used.dart';
@@ -7,7 +8,7 @@ import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
 import 'package:pharma_connect/src/Address%20Search/placeService.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/4pharmacyManagerInformation.dart';
 import 'package:uuid/uuid.dart';
-import '2accountInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/1pharmacy_signup.dart';
 
 class Software {
   final int id;
@@ -311,14 +312,15 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                     .changePhoneNumberPharmacy(phoneNumber);
               },
               validation: (value) {
-                if (value == null || value.isEmpty) {
-                  return "This field is required";
+                if (value.length < 4) {
+                  return "Phone Number is invalid";
                 }
                 return null;
               },
               initialValue: context
                   .read(pharmacySignUpProvider.notifier)
                   .phoneNumberPharmacy,
+              formatter: [MaskedInputFormatter('(###) ###-####')],
             ),
             SizedBox(height: 20),
 
@@ -333,13 +335,14 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                     .changeFaxNumber(faxNumber);
               },
               validation: (value) {
-                if (value == null || value.isEmpty) {
-                  return "This field is required";
+                if (value.length < 4) {
+                  return "Phone Number is invalid";
                 }
                 return null;
               },
               initialValue:
                   context.read(pharmacySignUpProvider.notifier).faxNumber,
+              formatter: [MaskedInputFormatter('(###) ###-####')],
             ),
             SizedBox(height: 20),
 

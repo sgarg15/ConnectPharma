@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:flutter/material.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/5pharmacistSkills.dart';
 
 class PharmacistSignUpModel {
@@ -63,11 +61,11 @@ class PharmacistSignUpModel {
     this.skillList,
     this.languageList,
     this.signatureData,
-    this.resumePDF = null,
-    this.frontID = null,
-    this.backID = null,
-    this.registrationCertificate = null,
-    this.profilePhoto = null,
+    this.resumePDF,
+    this.frontID,
+    this.backID,
+    this.registrationCertificate,
+    this.profilePhoto,
   });
 
   PharmacistSignUpModel copyWithPharmacistSignUp({
