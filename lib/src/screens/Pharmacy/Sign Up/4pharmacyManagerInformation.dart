@@ -3,9 +3,9 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharma_connect/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/1pharmacy_signup.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
-import '../../../main.dart';
+import '../../../../main.dart';
 
 class PharmacyManagerInformation extends StatefulWidget {
   PharmacyManagerInformation({Key? key}) : super(key: key);
@@ -248,28 +248,32 @@ class _PharmacyManagerInformationState
                                       await value?.user
                                           ?.sendEmailVerification()
                                           .then((_) {
-                                        final snackBar = SnackBar(
-                                          content: Text(
-                                            "A verification was sent to the email your registered with, please check your email and verify it.",
-                                          ),
-                                          action: SnackBarAction(
-                                            label: "Ok",
-                                            onPressed: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PharmaConnect()));
-                                              context
-                                                  .read(pharmacySignUpProvider
-                                                      .notifier)
-                                                  .clearAllValues();
-                                            },
-                                          ),
-                                          duration: Duration(seconds: 30),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
+                                        context
+                                            .read(
+                                                pharmacySignUpProvider.notifier)
+                                            .clearAllValues();
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PharmaConnect()));
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                                  title: Text(
+                                                      "Verification Email"),
+                                                  content: Text(
+                                                      "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
+                                                  actions: <Widget>[
+                                                    new TextButton(
+                                                      child: new Text("Ok"),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ));
                                       });
                                     });
                                   }

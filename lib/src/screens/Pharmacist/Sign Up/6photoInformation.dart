@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
-import '../../../main.dart';
+import '../../../../main.dart';
 
 class PhotoInformation extends StatefulWidget {
   PhotoInformation({Key? key}) : super(key: key);
@@ -870,29 +870,33 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                       print("DATA UPLOADED");
                                       await value?.user
                                           ?.sendEmailVerification()
-                                          .whenComplete(() {
-                                        final snackBar = SnackBar(
-                                          content: Text(
-                                            "A verification was sent to the email your registered with, please check your email and verify it.",
-                                          ),
-                                          action: SnackBarAction(
-                                            label: "Ok",
-                                            onPressed: () {
-                                              context
-                                                  .read(pharmacistSignUpProvider
-                                                      .notifier)
-                                                  .clearAllValues();
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PharmaConnect()));
-                                            },
-                                          ),
-                                          duration: Duration(seconds: 30),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
+                                          .then((_) {
+                                        context
+                                            .read(pharmacistSignUpProvider
+                                                .notifier)
+                                            .clearAllValues();
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PharmaConnect()));
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                                  title: Text(
+                                                      "Verification Email"),
+                                                  content: Text(
+                                                      "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
+                                                  actions: <Widget>[
+                                                    new TextButton(
+                                                      child: new Text("Ok"),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ));
                                       });
                                     });
                                   }

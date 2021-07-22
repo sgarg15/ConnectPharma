@@ -1,35 +1,34 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
+import 'package:pharma_connect/model/pharmacySignUpModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
-import 'package:pharma_connect/src/providers/pharmacist_signUp_provider.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/2pharmacistLocation.dart';
+import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/2accountInformation.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 
-import '../../../all_used.dart';
+import '../../../../all_used.dart';
 
-final pharmacistSignUpProvider =
-    StateNotifierProvider<PharmacistSignUpProvider, PharmacistSignUpModel>(
-        (ref) {
-  return PharmacistSignUpProvider();
+final pharmacySignUpProvider =
+    StateNotifierProvider<PharmacySignUpProvider, PharmacySignUpModel>((ref) {
+  return PharmacySignUpProvider();
 });
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
-class PharmacistSignUpPage extends StatefulWidget {
-  const PharmacistSignUpPage({Key? key}) : super(key: key);
+class PharmacySignUpPage extends StatefulWidget {
+  const PharmacySignUpPage({Key? key}) : super(key: key);
 
   @override
-  _PharmacistSignUpPageState createState() => _PharmacistSignUpPageState();
+  _PharmacySignUpPageState createState() => _PharmacySignUpPageState();
 }
 
-class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
+class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
   bool checkedValue = false;
-  bool isSwitched = true;
   bool passwordVisibility = false;
+
   //String _password, _email;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -42,7 +41,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        watch(pharmacistSignUpProvider);
+        watch(pharmacySignUpProvider);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -120,7 +119,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                           textCapitalization: TextCapitalization.none,
                           onChanged: (String emailAddress) {
                             context
-                                .read(pharmacistSignUpProvider.notifier)
+                                .read(pharmacySignUpProvider.notifier)
                                 .changeEmail(emailAddress);
                           },
                           validation: (value) {
@@ -130,7 +129,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                             return null;
                           },
                           initialValue: context
-                              .read(pharmacistSignUpProvider.notifier)
+                              .read(pharmacySignUpProvider.notifier)
                               .email,
                           inputDecoration: InputDecoration(
                             focusedErrorBorder: OutlineInputBorder(
@@ -170,7 +169,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                           keyboardStyle: TextInputType.emailAddress,
                           onChanged: (String password) {
                             context
-                                .read(pharmacistSignUpProvider.notifier)
+                                .read(pharmacySignUpProvider.notifier)
                                 .changePassword(password);
                           },
                           validation: (value) {
@@ -180,7 +179,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                             return null;
                           },
                           initialValue: context
-                              .read(pharmacistSignUpProvider.notifier)
+                              .read(pharmacySignUpProvider.notifier)
                               .password,
                           inputDecoration: InputDecoration(
                             filled: true,
@@ -283,19 +282,19 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                                 borderRadius: BorderRadius.circular(100),
                               ))),
                           onPressed: (context
-                                  .read(pharmacistSignUpProvider.notifier)
-                                  .isValidPharmacistSignUp())
+                                  .read(pharmacySignUpProvider.notifier)
+                                  .isValidSignUp())
                               ? null
                               : () async {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              PharmacistLocation()));
+                                              AccountInformationPharmacy()));
                                 },
                           child: RichText(
                             text: TextSpan(
-                              text: "Sign Up as a pharmacist",
+                              text: "Sign Up as a pharmacy",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,

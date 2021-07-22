@@ -6,11 +6,11 @@ import 'package:pharma_connect/all_used.dart';
 import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
 import 'package:pharma_connect/src/Address%20Search/placeService.dart';
 import '1pharmacistSignUp.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/3pharmacistInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/3pharmacistInformation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
-import '../../../main.dart';
+import '../../../../main.dart';
 
 class PharmacistLocation extends StatefulWidget {
   const PharmacistLocation({Key? key}) : super(key: key);

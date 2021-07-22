@@ -5,13 +5,13 @@ import 'package:pharma_connect/model/loginModel.dart';
 class LogInProvider extends StateNotifier<LogInModel> {
   LogInProvider() : super(LogInModel());
 
+  String get email => state.email;
+  String get password => state.password;
+
   bool isValid() {
-    if (state.emailErr != "" ||
-        state.passwordErr != "" ||
-        state.email == "" ||
-        state.password == "") {
+    if (EmailValidator.validate(state.email.toString()) == false ||
+        state.password.length < 6) {
       print("true");
-      print(state.emailErr);
       return true;
     } else {
       print("false");
@@ -19,22 +19,21 @@ class LogInProvider extends StateNotifier<LogInModel> {
     }
   }
 
+  void clearAllValue() {
+    state.email = "";
+    state.password = "";
+  }
+
   //Setters
   void changeEmail(String value) {
     state = state.updateLogIn(
       email: value,
-      emailErr: (!EmailValidator.validate(value)) ? "Incorrect Format" : "",
     );
   }
 
   void changePassword(String value) {
     state = state.updateLogIn(
       password: value,
-      passwordErr: (value.length < 6) ? "Must be at least 6 characters" : "",
     );
-  }
-
-  void changePasswordVisibility(bool value) {
-    state = state.updateLogIn(passwordVisibility: value);
   }
 }

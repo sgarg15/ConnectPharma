@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/5pharmacistSkills.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/5pharmacistSkills.dart';
 
 class PharmacistLegalInformation extends StatefulWidget {
   PharmacistLegalInformation({Key? key}) : super(key: key);

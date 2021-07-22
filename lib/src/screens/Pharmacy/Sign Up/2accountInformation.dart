@@ -4,11 +4,11 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharma_connect/all_used.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/1pharmacy_signup.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/3pharmacyInformation.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/3pharmacyInformation.dart';
 import 'package:signature/signature.dart';
 
-import '../../../main.dart';
+import '../../../../main.dart';
 
 class AccountInformationPharmacy extends StatefulWidget {
   const AccountInformationPharmacy({Key? key}) : super(key: key);

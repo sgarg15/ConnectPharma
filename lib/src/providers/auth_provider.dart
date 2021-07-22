@@ -7,9 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pharma_connect/model/user_model.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/1pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/1pharmacy_signup.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
 enum Status {
   Uninitialized,
@@ -175,8 +175,8 @@ class AuthProvider extends ChangeNotifier {
 
     users
         .doc(user.user?.uid.toString())
-        .collection(context.read(pharmacistSignUpProvider.notifier).firstName)
-        .doc("Sign Up Information")
+        .collection("Sign Up")
+        .doc("Information")
         .set({
       "User Type": "Pharmacist",
       "Email": context.read(pharmacistSignUpProvider.notifier).email,
@@ -255,8 +255,8 @@ class AuthProvider extends ChangeNotifier {
 
     users
         .doc(user.user?.uid.toString())
-        .collection(context.read(pharmacySignUpProvider.notifier).firstName)
-        .doc("Sign Up Information")
+        .collection("Sign Up")
+        .doc("Information")
         .set({
       "User Type": "Pharmacy",
       "Email": context.read(pharmacySignUpProvider.notifier).email,
@@ -266,12 +266,15 @@ class AuthProvider extends ChangeNotifier {
       "Position": context.read(pharmacySignUpProvider.notifier).position,
       "Pharmacy Name":
           context.read(pharmacySignUpProvider.notifier).pharmacyName,
-      "Street Address":
-          context.read(pharmacySignUpProvider.notifier).streetAddress,
-      "Store Number": context.read(pharmacySignUpProvider.notifier).storeNumber,
-      "City": context.read(pharmacySignUpProvider.notifier).city,
-      "Postal Code": context.read(pharmacySignUpProvider.notifier).postalCode,
-      "Country": context.read(pharmacySignUpProvider.notifier).country,
+      "address": {
+        "Street Address":
+            context.read(pharmacySignUpProvider.notifier).streetAddress,
+        "Store Number":
+            context.read(pharmacySignUpProvider.notifier).storeNumber,
+        "City": context.read(pharmacySignUpProvider.notifier).city,
+        "Postal Code": context.read(pharmacySignUpProvider.notifier).postalCode,
+        "Country": context.read(pharmacySignUpProvider.notifier).country,
+      },
       "Pharmacy Phone Number":
           context.read(pharmacySignUpProvider.notifier).phoneNumberPharmacy,
       "Pharmacy Fax Number":
@@ -292,19 +295,39 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //Method to handle user sign in using email and password
-  Future<UserModel?> signInWithEmailAndPassword(
+  Future<List?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
+      users.limit(10).where("capital", isEqualTo: "CA");
       _status = Status.Authenticating;
       notifyListeners();
-      final UserCredential result = await _auth.signInWithEmailAndPassword(
+      final UserCredential? result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      if (result.user!.emailVerified) {
+      if (result!.user!.emailVerified) {
         _status = Status.Authenticated;
         notifyListeners();
-        return _userFromFirebase(result.user);
+        print("User verified: " + result.user!.emailVerified.toString());
+        DocumentSnapshot user = await users
+            .doc(result.user?.uid.toString())
+            .collection("Sign Up")
+            .doc("Information")
+            .get();
+
+        String userType = user.get("User Type").toString();
+        print(userType);
+        if (userType.trim() == "Pharmacy") {
+          print("Logged in as a Pharmacy");
+          //Send to pharmacy main page
+          return [result, "Pharmacy"];
+        } else if (userType.trim() == "Pharmacist") {
+          print("Logged in as a Pharmacist");
+          //Send to pharmacist main page
+          return [result, "Pharmacist"];
+        }
       } else {
+        print("INSIDE ELSE STATEMENT");
+        signOut();
         return null;
       }
     } catch (e) {

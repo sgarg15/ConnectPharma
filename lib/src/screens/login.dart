@@ -1,11 +1,18 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:pharma_connect/main.dart';
 import 'package:pharma_connect/model/loginModel.dart';
 import 'package:pharma_connect/model/user_model.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/login_provider.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+
+import '../../all_used.dart';
 
 final logInProvider = StateNotifierProvider<LogInProvider, LogInModel>((ref) {
   return LogInProvider();
@@ -25,8 +32,8 @@ class LogInPage extends StatefulWidget {
 class _LogInPageState extends State<LogInPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // ignore: unused_field
-  late String _password, _email;
+  bool passwordVisibility = false;
+  bool logginIn = false;
 
   @override
   void initState() {
@@ -46,7 +53,7 @@ class _LogInPageState extends State<LogInPage> {
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                //Back/LogIn/SignUp Widgets
+                //Back/Sign up/Log In Widgets
                 Align(
                   alignment: Alignment(0, -0.88),
                   child: Row(
@@ -63,7 +70,7 @@ class _LogInPageState extends State<LogInPage> {
                           },
                         ),
                       ),
-                      //Log In Text
+                      //Sign Up Text
                       RichText(
                         text: TextSpan(
                           text: "Log In",
@@ -73,12 +80,16 @@ class _LogInPageState extends State<LogInPage> {
                               color: Colors.black),
                         ),
                       ),
-                      //Sign Up Text
+                      //Log In Text
                       Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: GestureDetector(
                           onTap: () {
-                            //Go to Sign Up Page
+                            //Go to Log In Page
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PharmaConnect()));
                           },
                           child: RichText(
                             text: TextSpan(
@@ -97,7 +108,7 @@ class _LogInPageState extends State<LogInPage> {
 
                 //Email/Password Widgets
                 Align(
-                  alignment: Alignment(0, -0.2),
+                  alignment: Alignment(0, -0.28),
                   child: Form(
                     key: _formKey,
                     autovalidateMode: AutovalidateMode.always,
@@ -105,146 +116,116 @@ class _LogInPageState extends State<LogInPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         //Email
-                        SizedBox(
-                          width: 324,
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: (emailAddress) {
-                              context
-                                  .read(logInProvider.notifier)
-                                  .changeEmail(emailAddress);
-                            },
-                            decoration: InputDecoration(
-                              errorText: logIn.emailErr,
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              filled: true,
-                              fillColor: Color(0xFFF6F6F6),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              focusedBorder: OutlineInputBorder(
+                        formField(
+                          hintText: "Email",
+                          decoration: false,
+                          keyboardStyle: TextInputType.emailAddress,
+                          textCapitalization: TextCapitalization.none,
+                          onChanged: (String emailAddress) {
+                            context
+                                .read(logInProvider.notifier)
+                                .changeEmail(emailAddress);
+                          },
+                          validation: (value) {
+                            if (!EmailValidator.validate(value)) {
+                              return "Incorrect Format";
+                            }
+                            return null;
+                          },
+                          initialValue:
+                              context.read(logInProvider.notifier).email,
+                          inputDecoration: InputDecoration(
+                            focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
                                 borderSide:
-                                    BorderSide(color: Color(0xFFE8E8E8)),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: 'Email',
-                              hintStyle: TextStyle(
-                                  color: Color(0xFFBDBDBD), fontSize: 16),
-                              prefixIcon: Icon(
-                                Icons.email,
-                                color: Color(0xFFBDBDBD),
-                              ),
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            filled: true,
+                            fillColor: Color(0xFFF6F6F6),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            hintText: 'Email',
+                            hintStyle: TextStyle(
+                                color: Color(0xFFBDBDBD), fontSize: 16),
+                            prefixIcon: Icon(
+                              Icons.email,
+                              color: Color(0xFFBDBDBD),
                             ),
                           ),
                         ),
 
-                        SizedBox(height: 5),
                         //Password
-                        Container(
-                          width: 324,
-                          child: TextFormField(
-                            obscureText: !logIn.passwordVisibility,
-                            keyboardType: TextInputType.visiblePassword,
-                            onChanged: (password) {
-                              context
-                                  .read(logInProvider.notifier)
-                                  .changePassword(password);
-                            },
-                            decoration: InputDecoration(
-                              errorText: logIn.passwordErr,
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              filled: true,
-                              fillColor: Color(0xFFF6F6F6),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                              focusedBorder: OutlineInputBorder(
+                        formField(
+                          hintText: "Password",
+                          obscureText: !passwordVisibility,
+                          textCapitalization: TextCapitalization.none,
+                          decoration: false,
+                          keyboardStyle: TextInputType.text,
+                          onChanged: (String password) {
+                            context
+                                .read(logInProvider.notifier)
+                                .changePassword(password);
+                          },
+                          validation: (value) {
+                            if (value!.length < 6) {
+                              return "Password must be greater than 6 characters";
+                            }
+                            return null;
+                          },
+                          initialValue:
+                              context.read(logInProvider.notifier).password,
+                          inputDecoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(0xFFF6F6F6),
+                            focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
                                 borderSide:
-                                    BorderSide(color: Color(0xFFE8E8E8)),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              hintText: 'Password',
-                              hintStyle: TextStyle(
-                                  color: Color(0xFFBDBDBD), fontSize: 16),
-                              prefixIcon: Icon(
-                                Icons.lock_outline,
-                                color: Color(0xFFBDBDBD),
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(logIn.passwordVisibility
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined),
-                                color: Color(0xFFBDBDBD),
-                                splashRadius: 1,
-                                onPressed: () {
-                                  context
-                                      .read(logInProvider.notifier)
-                                      .changePasswordVisibility(
-                                          !logIn.passwordVisibility);
-                                },
-                              ),
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE8E8E8))),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            hintText: 'Password',
+                            hintStyle: TextStyle(
+                                color: Color(0xFFBDBDBD), fontSize: 16),
+                            prefixIcon: Icon(
+                              Icons.lock_outline,
+                              color: Color(0xFFBDBDBD),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(passwordVisibility
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined),
+                              color: Color(0xFFBDBDBD),
+                              splashRadius: 1,
+                              onPressed: () {
+                                setState(() {
+                                  passwordVisibility = !passwordVisibility;
+                                });
+                              },
                             ),
                           ),
                         ),
+                        SizedBox(height: 10),
                       ],
                     ),
-                  ),
-                ),
-
-                //Google/Twitter/Facebook Icons
-                Align(
-                  alignment: Alignment(0, 0.31),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      //Google
-                      GestureDetector(
-                        onTap: () {
-                          //Log In using Google
-                        },
-                        child: SvgPicture.asset(
-                          'assets/icons/GoogleIcon.svg',
-                          width: 48,
-                          height: 48,
-                        ),
-                      ),
-                      SizedBox(width: 50),
-                      //Facebook
-                      GestureDetector(
-                          onTap: () {
-                            //Log In Using facebook
-                          },
-                          child: SvgPicture.asset(
-                              'assets/icons/FacebookIcon.svg',
-                              width: 48,
-                              height: 48)),
-                      SizedBox(width: 50),
-                      //Twitter
-                      GestureDetector(
-                          onTap: () {
-                            //Log In Using Facebook
-                          },
-                          child: SvgPicture.asset(
-                              'assets/icons/TwitterIcon.svg',
-                              width: 48,
-                              height: 48)),
-                    ],
                   ),
                 ),
 
@@ -275,29 +256,66 @@ class _LogInPageState extends State<LogInPage> {
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100),
                               ))),
-                          onPressed:
-                              (context.read(logInProvider.notifier).isValid())
-                                  ? null
-                                  : () async {
-                                      UserModel? userModel = await authModel
-                                          .signInWithEmailAndPassword(
-                                              logIn.email.toString(),
-                                              logIn.password.toString())
-                                          .then((value) {
-                                        if (value == null) {
-                                          Get.snackbar("Error!",
-                                              "There was an error Logging In the user. Please try again.");
-                                        } else {
-                                          print(value.uid);
-                                          print(value.email);
-                                          print(value.displayName);
-                                          //Get.to(LoggedInScreen());
-                                        }
-                                      });
-                                    },
+                          onPressed: (!context
+                                      .read(logInProvider.notifier)
+                                      .isValid() &&
+                                  !logginIn)
+                              ? () async {
+                                  setState(() {
+                                    logginIn = true;
+                                  });
+                                  List? user = await authModel
+                                      .signInWithEmailAndPassword(
+                                          logIn.email.toString(),
+                                          logIn.password.toString());
+                                  if (user?[0] == null) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Text("Error"),
+                                              content: Text(
+                                                  "There was an error trying to log you in. Please check your email and password and try again. If you have not verified your email, please do that first."),
+                                              actions: <Widget>[
+                                                new TextButton(
+                                                  child: new Text("Ok"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            ));
+
+                                    setState(() {
+                                      logginIn = false;
+                                    });
+                                  } else if (user?[1] == "Pharmacist") {
+                                    print("Pharmacist");
+                                    context
+                                        .read(logInProvider.notifier)
+                                        .clearAllValue();
+                                    //send to pharmacist main page
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                JobHistoryPharmacist()));
+                                  } else if (user?[1] == "Pharmacy") {
+                                    print("Pharmacy");
+                                    context
+                                        .read(logInProvider.notifier)
+                                        .clearAllValue();
+                                    //send to pharmacy main page
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                JobHistoryPharmacy()));
+                                  }
+                                }
+                              : null,
                           child: RichText(
                             text: TextSpan(
-                              text: "Log In",
+                              text: logginIn ? "Loading..." : "Log In",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,
