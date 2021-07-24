@@ -18,7 +18,7 @@ const EdgeInsetsGeometry _kHorizontalItemPadding =
     EdgeInsets.symmetric(vertical: 2, horizontal: 3);
 
 // The corner radius of the thumb.
-const Radius _kThumbRadius = Radius.circular(17);
+const Radius _kThumbRadius = Radius.circular(15);
 // The amount of space by which to expand the thumb from the size of the currently
 // selected child.
 const EdgeInsets _kThumbInsets = EdgeInsets.symmetric(horizontal: 1);

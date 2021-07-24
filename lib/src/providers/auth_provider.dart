@@ -35,6 +35,8 @@ class AuthProvider extends ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   CollectionReference users = FirebaseFirestore.instance.collection("Users");
+  CollectionReference testCollection =
+      FirebaseFirestore.instance.collection('TestCollection');
 
   //Default status
   Status _status = Status.Uninitialized;
@@ -77,7 +79,7 @@ class AuthProvider extends ChangeNotifier {
       if (asset != null) {
         Reference reference = FirebaseStorage.instance
             .ref()
-            .child(userName + " " + uidName)
+            .child(userName + uidName)
             .child(fileName);
         UploadTask uploadTask = reference.putFile(asset);
 
@@ -98,7 +100,7 @@ class AuthProvider extends ChangeNotifier {
       if (asset != null) {
         Reference reference = FirebaseStorage.instance
             .ref()
-            .child(userName + " " + uidName)
+            .child(userName + uidName)
             .child(fileName);
         UploadTask uploadTask = reference.putData(asset);
 
@@ -175,69 +177,69 @@ class AuthProvider extends ChangeNotifier {
 
     users
         .doc(user.user?.uid.toString())
-        .collection("Sign Up")
+        .collection("SignUp")
         .doc("Information")
         .set({
-      "User Type": "Pharmacist",
-      "Email": context.read(pharmacistSignUpProvider.notifier).email,
-      "First Name": context.read(pharmacistSignUpProvider.notifier).firstName,
-      "Last Name": context.read(pharmacistSignUpProvider.notifier).lastName,
-      "Address": context.read(pharmacistSignUpProvider.notifier).address,
-      "Phone Number":
+      "userType": "Pharmacist",
+      "email": context.read(pharmacistSignUpProvider.notifier).email,
+      "firstName": context.read(pharmacistSignUpProvider.notifier).firstName,
+      "lastName": context.read(pharmacistSignUpProvider.notifier).lastName,
+      "address": context.read(pharmacistSignUpProvider.notifier).address,
+      "phoneNumber":
           context.read(pharmacistSignUpProvider.notifier).phoneNumber,
-      "First Year Licensed":
+      "firstYearLicensed":
           context.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
-      "Registration Number":
+      "registrationNumber":
           context.read(pharmacistSignUpProvider.notifier).registrationNumber,
-      "Registration Province":
+      "registrationProvince":
           context.read(pharmacistSignUpProvider.notifier).registrationProvince,
-      "Gradutation Year":
+      "gradutationYear":
           context.read(pharmacistSignUpProvider.notifier).graduationYear,
-      "Institution Name":
+      "institutionName":
           context.read(pharmacistSignUpProvider.notifier).institutionName,
-      "Working Experience":
+      "workingExperience":
           context.read(pharmacistSignUpProvider.notifier).workingExperience,
-      "Willing to Move": context
+      "willingToMove": context
           .read(pharmacistSignUpProvider.notifier)
           .willingToMove
           .toString(),
-      "Entitled to Work": context
+      "entitledToWork": context
           .read(pharmacistSignUpProvider.notifier)
           .entitledToWork
           .toString(),
-      "Active Member": context
+      "activeMember": context
           .read(pharmacistSignUpProvider.notifier)
           .activeMember
           .toString(),
-      "Liability Insurance": context
+      "liabilityInsurance": context
           .read(pharmacistSignUpProvider.notifier)
           .liabilityInsurance
           .toString(),
-      "License Restricted": context
+      "licenseRestricted": context
           .read(pharmacistSignUpProvider.notifier)
           .licenseRestricted
           .toString(),
-      "MalPractice": context
+      "malPractice": context
           .read(pharmacistSignUpProvider.notifier)
           .malpractice
           .toString(),
-      "Felon": context.read(pharmacistSignUpProvider.notifier).felon.toString(),
-      "Known Software": context
+      "felon": context.read(pharmacistSignUpProvider.notifier).felon.toString(),
+      "knownSoftware": context
           .read(pharmacistSignUpProvider.notifier)
           .softwareList
           .toString(),
-      "Known Skills":
+      "knownSkills":
           context.read(pharmacistSignUpProvider.notifier).skillList.toString(),
-      "Known Languages": context
+      "knownLanguages": context
           .read(pharmacistSignUpProvider.notifier)
           .languageList
           .toString(),
-      "Resume Download URL": resumePDFURL,
-      "FrontID Download URL": frontIDURL,
-      "BackID Download URL": backIDURL,
-      "Registration Certificate Download URL": registrationCertificateURL,
-      "Profile Photo Download URL": profilePhotoURL,
-      "Signature Download URL": signaureImageURL,
+      "resumeDownloadURL": resumePDFURL,
+      "frontIDDownloadURL": frontIDURL,
+      "backIDDownloadURL": backIDURL,
+      "registrationCertificateDownloadURL": registrationCertificateURL,
+      "profilePhotoDownloadURL": profilePhotoURL,
+      "signatureDownloadURL": signaureImageURL,
     });
     return user;
   }
@@ -255,50 +257,61 @@ class AuthProvider extends ChangeNotifier {
 
     users
         .doc(user.user?.uid.toString())
-        .collection("Sign Up")
+        .collection("SignUp")
         .doc("Information")
         .set({
-      "User Type": "Pharmacy",
-      "Email": context.read(pharmacySignUpProvider.notifier).email,
-      "First Name": context.read(pharmacySignUpProvider.notifier).firstName,
-      "Last Name": context.read(pharmacySignUpProvider.notifier).lastName,
-      "Phone Number": context.read(pharmacySignUpProvider.notifier).phoneNumber,
-      "Position": context.read(pharmacySignUpProvider.notifier).position,
-      "Pharmacy Name":
+      "userType": "Pharmacy",
+      "email": context.read(pharmacySignUpProvider.notifier).email,
+      "firstName": context.read(pharmacySignUpProvider.notifier).firstName,
+      "lastName": context.read(pharmacySignUpProvider.notifier).lastName,
+      "phoneNumber": context.read(pharmacySignUpProvider.notifier).phoneNumber,
+      "position": context.read(pharmacySignUpProvider.notifier).position,
+      "pharmacyName":
           context.read(pharmacySignUpProvider.notifier).pharmacyName,
       "address": {
-        "Street Address":
+        "streetAddress":
             context.read(pharmacySignUpProvider.notifier).streetAddress,
-        "Store Number":
+        "storeNumber":
             context.read(pharmacySignUpProvider.notifier).storeNumber,
-        "City": context.read(pharmacySignUpProvider.notifier).city,
-        "Postal Code": context.read(pharmacySignUpProvider.notifier).postalCode,
-        "Country": context.read(pharmacySignUpProvider.notifier).country,
+        "city": context.read(pharmacySignUpProvider.notifier).city,
+        "postalCode": context.read(pharmacySignUpProvider.notifier).postalCode,
+        "country": context.read(pharmacySignUpProvider.notifier).country,
       },
-      "Pharmacy Phone Number":
+      "pharmacyPhoneNumber":
           context.read(pharmacySignUpProvider.notifier).phoneNumberPharmacy,
-      "Pharmacy Fax Number":
+      "pharmacyFaxNumber":
           context.read(pharmacySignUpProvider.notifier).faxNumber,
-      "Accreditation Provice":
+      "accreditationProvice":
           context.read(pharmacySignUpProvider.notifier).accreditationProvince,
-      "Manager First Name":
+      "managerFirstName":
           context.read(pharmacySignUpProvider.notifier).managerFirstName,
-      "Manager Last Name":
+      "managerLastName":
           context.read(pharmacySignUpProvider.notifier).managerLastName,
-      "Manager Phone Number":
+      "managerPhoneNumber":
           context.read(pharmacySignUpProvider.notifier).managerPhoneNumber,
-      "Manager License Number":
+      "managerLicenseNumber":
           context.read(pharmacySignUpProvider.notifier).licenseNumber,
-      "Signature Download URL": signaureImageURL,
+      "signatureDownloadURL": signaureImageURL,
     });
     return user;
   }
+
+  // Future<void> uploadTestInformaiton() {
+  //   var testVariable = "few23r232r23";
+  //   return testCollection
+  //       .doc(testVariable.toString())
+  //       .collection("Testv2")
+  //       .doc("WhatUp")
+  //       .set(
+  //           {'full_name': "Cheese Master", 'company': "Cheezits", 'age': "122"})
+  //       .then((value) => print("User Added"))
+  //       .catchError((error) => print("Failed to add user: $error"));
+  // }
 
   //Method to handle user sign in using email and password
   Future<List?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      users.limit(10).where("capital", isEqualTo: "CA");
       _status = Status.Authenticating;
       notifyListeners();
       final UserCredential? result = await _auth.signInWithEmailAndPassword(
@@ -310,11 +323,11 @@ class AuthProvider extends ChangeNotifier {
         print("User verified: " + result.user!.emailVerified.toString());
         DocumentSnapshot user = await users
             .doc(result.user?.uid.toString())
-            .collection("Sign Up")
+            .collection("SignUp")
             .doc("Information")
             .get();
 
-        String userType = user.get("User Type").toString();
+        String userType = user.get("userType").toString();
         print(userType);
         if (userType.trim() == "Pharmacy") {
           print("Logged in as a Pharmacy");

@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,9 +10,41 @@ import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.
 import 'package:pharma_connect/src/screens/login.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
+import 'src/providers/auth_provider.dart';
+
+final authProvider2 = ChangeNotifierProvider<AuthProvider>((ref) {
+  return AuthProvider();
+});
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  const bool USE_EMULATOR = false;
+
+  // ignore: dead_code
+  if (USE_EMULATOR) {
+    const localHostString = 'localhost';
+    // [Firestore | localhost:8080]
+    FirebaseFirestore.instance.settings = const Settings(
+      host: "$localHostString:8080",
+      sslEnabled: false,
+      persistenceEnabled: false,
+    );
+
+    // [Authentication | localhost:9099]
+    await FirebaseAuth.instance.useEmulator('http://$localHostString:9099');
+
+    // [Storage | localhost:9199]
+    await FirebaseStorage.instance.useStorageEmulator(
+      '$localHostString',
+      9199,
+    );
+
+    FirebaseFunctions functions = FirebaseFunctions.instance;
+    functions.useFunctionsEmulator("$localHostString", 5001);
+  }
+
   await dotenv.load();
   runApp(
     ProviderScope(
@@ -120,6 +156,32 @@ class PharmaConnect extends StatelessWidget {
                 ),
               ),
             ),
+
+            // //Button to test Cloud Functions
+            // Container(
+            //   alignment: Alignment(0, 0.8),
+            //   child: SizedBox(
+            //     width: 300,
+            //     height: 50,
+            //     child: ElevatedButton(
+            //       onPressed: () {
+            //         //Send to Pharmacy Sign Up Page
+            //         context
+            //             .read(authProvider2.notifier)
+            //             .uploadTestInformaiton();
+            //       },
+            //       child: RichText(
+            //         text: TextSpan(
+            //           text: "Test Cloud Functions",
+            //           style: TextStyle(
+            //             fontSize: 20,
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+
             //Log In Text and Button
             Container(
               alignment: Alignment(0, 0.95),
