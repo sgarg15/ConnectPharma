@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'jobHistoryPharmacist.dart';
 
 class PharmacistAvailability extends StatefulWidget {
   PharmacistAvailability({Key? key}) : super(key: key);
@@ -8,8 +12,85 @@ class PharmacistAvailability extends StatefulWidget {
 }
 
 class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
+  String bullet = "\u2022";
+  //List<PickerDateRange> dateRanges = [];
+
   @override
   Widget build(BuildContext context) {
+    void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+      //TODO: This function gets the list of ranges of dates and updates the list view of the calendar.
+      // setState(() {
+      //   dateRanges = args.value;
+      // });
+      context
+          .read(pharmacistMainProvider.notifier)
+          .changeDateRanges(args.value);
+
+      print(context.read(pharmacistMainProvider.notifier).dateRanges);
+
+      // setState(() {
+      //   if (args.value is PickerDateRange) {
+      //     print("PickerDateRange: " + args.value);
+      //     print("PickerDateRange Start Date: " + args.value.startDate);
+      //     print("PickerDateRange End Date: " + args.value.endDate);
+      //   } else if (args.value is DateTime) {
+      //     print("DateTime: " + args.value);
+      //     print("DateTime Start Date: " + args.value.startDate);
+      //     print("DateTime End Date: " + args.value.endDate);
+      //   } else if (args.value is List<DateTime>) {
+      //     print("PickerDateRange: " + args.value);
+      //   } else {
+      //     //print("Multi Range: " + args.value);
+      //     print("Multi Range StartDate First: " + args.value[0].startDate);
+      //     print("Multi Range End Date First: " + args.value[0].endDate);
+      //   }
+      // });
+    }
+
+    // final children = <Widget>[];
+    // for (var i = 0;
+    //     i < context.read(pharmacistMainProvider.notifier).dateRanges.length;
+    //     i++) {
+    //   children.add(new ListTile(
+    //     visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+    //     title: Text(bullet +
+    //         " " +
+    //         DateFormat.yMMMMd('en_US')
+    //             .format(context
+    //                 .read(pharmacistMainProvider.notifier)
+    //                 .dateRanges[i]
+    //                 .startDate as DateTime)
+    //             .toString() +
+    //         ' - ' +
+    //         DateFormat.yMMMMd('en_US')
+    //             .format(context
+    //                     .read(pharmacistMainProvider.notifier)
+    //                     .dateRanges[i]
+    //                     .endDate ??
+    //                 context
+    //                     .read(pharmacistMainProvider.notifier)
+    //                     .dateRanges[i]
+    //                     .startDate as DateTime)
+    //             .toString()),
+    //   ));
+    // }
+    // if (context.read(pharmacistMainProvider.notifier).dateRanges.isEmpty) {
+    //   children.add(
+    //     Padding(
+    //       padding: const EdgeInsets.fromLTRB(0, 10, 5, 0),
+    //       child: RichText(
+    //         textAlign: TextAlign.center,
+    //         text: TextSpan(
+    //           text: "No Dates Selected",
+    //           style: TextStyle(
+    //               fontWeight: FontWeight.w400,
+    //               fontSize: 18.0,
+    //               color: Colors.grey),
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -23,7 +104,171 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
         backgroundColor: Color(0xFFF6F6F6),
       ),
       body: Column(
-        children: <Widget>[],
+        children: <Widget>[
+          //Calendar
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
+            child: Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(30),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
+                child: SfDateRangePicker(
+                  onSelectionChanged: _onSelectionChanged,
+                  initialSelectedRanges:
+                      context.read(pharmacistMainProvider.notifier).dateRanges,
+                  view: DateRangePickerView.month,
+                  navigationDirection:
+                      DateRangePickerNavigationDirection.vertical,
+                  selectionShape: DateRangePickerSelectionShape.rectangle,
+                  selectionMode: DateRangePickerSelectionMode.multiRange,
+                  selectionTextStyle:
+                      TextStyle(color: Colors.white, fontSize: 20),
+                  selectionColor: Color(0xFF5DB075),
+                  startRangeSelectionColor: Color(0xFF228a4d),
+                  endRangeSelectionColor: Color(0xFF228a4d),
+                  rangeSelectionColor: Color(0xFF5DB075),
+                  rangeTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(30)),
+              ),
+            ),
+          ),
+
+          //List view of Calendar
+          Consumer(builder: (context, watch, child) {
+            watch(pharmacistMainProvider);
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+              child: Material(
+                elevation: 20,
+                borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  width: 350,
+                  height: 200,
+                  child: Column(
+                    children: <Widget>[
+                      //Title of conatiner
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                        child: Container(
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: "List View",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18.0,
+                                  color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ),
+                      //List view of calendar
+                      Expanded(
+                        child: ListView(
+                          //TODO: Add the system to get and display the ranges from the calendar to list view
+                          children: <Widget>[
+                            for (var i = 0;
+                                i <
+                                    context
+                                        .read(pharmacistMainProvider.notifier)
+                                        .dateRanges
+                                        .length;
+                                i++) ...[
+                              ListTile(
+                                visualDensity:
+                                    VisualDensity(horizontal: 0, vertical: -4),
+                                title: Text(bullet +
+                                    " " +
+                                    DateFormat.yMMMMd('en_US')
+                                        .format(context
+                                            .read(
+                                                pharmacistMainProvider.notifier)
+                                            .dateRanges[i]
+                                            .startDate as DateTime)
+                                        .toString() +
+                                    ' - ' +
+                                    DateFormat.yMMMMd('en_US')
+                                        .format(context
+                                                .read(pharmacistMainProvider
+                                                    .notifier)
+                                                .dateRanges[i]
+                                                .endDate ??
+                                            context
+                                                .read(pharmacistMainProvider
+                                                    .notifier)
+                                                .dateRanges[i]
+                                                .startDate as DateTime)
+                                        .toString()),
+                              )
+                            ],
+                            if (context
+                                .read(pharmacistMainProvider.notifier)
+                                .dateRanges
+                                .isEmpty) ...[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 10, 5, 0),
+                                child: RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    text: "No Dates Selected",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18.0,
+                                        color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+          //Save Button
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+            child: SizedBox(
+              width: 324,
+              height: 51,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.resolveWith<Color>((states) {
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.grey; // Disabled color
+                      }
+                      return Color(0xFF5DB075); // Regular color
+                    }),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ))),
+                onPressed: () {
+                  print("Pressed");
+                  //TODO: Start a cloud function which starts a timer for 5 min and then sends data to firestore, to prevent abuse of firestore writes and reads
+                  Navigator.pop(context);
+                },
+                child: RichText(
+                  text: TextSpan(
+                    text: "Save",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

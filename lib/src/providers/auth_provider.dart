@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -224,16 +225,11 @@ class AuthProvider extends ChangeNotifier {
           .malpractice
           .toString(),
       "felon": context.read(pharmacistSignUpProvider.notifier).felon.toString(),
-      "knownSoftware": context
-          .read(pharmacistSignUpProvider.notifier)
-          .softwareList
-          .toString(),
-      "knownSkills":
-          context.read(pharmacistSignUpProvider.notifier).skillList.toString(),
-      "knownLanguages": context
-          .read(pharmacistSignUpProvider.notifier)
-          .languageList
-          .toString(),
+      "knownSoftware":
+          context.read(pharmacistSignUpProvider.notifier).softwareList,
+      "knownSkills": context.read(pharmacistSignUpProvider.notifier).skillList,
+      "knownLanguages":
+          context.read(pharmacistSignUpProvider.notifier).languageList,
       "resumeDownloadURL": resumePDFURL,
       "frontIDDownloadURL": frontIDURL,
       "backIDDownloadURL": backIDURL,
@@ -296,17 +292,65 @@ class AuthProvider extends ChangeNotifier {
     return user;
   }
 
-  // Future<void> uploadTestInformaiton() {
-  //   var testVariable = "few23r232r23";
-  //   return testCollection
-  //       .doc(testVariable.toString())
-  //       .collection("Testv2")
-  //       .doc("WhatUp")
-  //       .set(
-  //           {'full_name': "Cheese Master", 'company': "Cheezits", 'age': "122"})
-  //       .then((value) => print("User Added"))
-  //       .catchError((error) => print("Failed to add user: $error"));
-  // }
+  Future<UserCredential?> uploadTestInformaiton(
+      UserCredential? user, BuildContext context) async {
+    if (user == null) {
+      return null;
+    }
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+
+    String getRandomString(int length) =>
+        String.fromCharCodes(Iterable.generate(
+            length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+    String resumePDFURL = "http://www.africau.edu/images/default/sample.pdf";
+    String frontIDURL = "http://www.africau.edu/images/default/sample.pdf";
+    String backIDURL = "http://www.africau.edu/images/default/sample.pdf";
+    String registrationCertificateURL =
+        "http://www.africau.edu/images/default/sample.pdf";
+    String profilePhotoURL = "http://www.africau.edu/images/default/sample.pdf";
+
+    String signaureImageURL =
+        "http://www.africau.edu/images/default/sample.pdf";
+
+    users
+        .doc(user.user?.uid.toString())
+        .collection("SignUp")
+        .doc("Information")
+        .set({
+      "userType": "Pharmacist",
+      "email": getRandomString(5),
+      "firstName": getRandomString(4),
+      "lastName": getRandomString(4),
+      "address": getRandomString(9),
+      "phoneNumber": getRandomString(8),
+      "firstYearLicensed": getRandomString(4),
+      "registrationNumber": getRandomString(6),
+      "registrationProvince": getRandomString(9),
+      "gradutationYear": getRandomString(4),
+      "institutionName": getRandomString(8),
+      "workingExperience": getRandomString(2),
+      "willingToMove": getRandomString(2),
+      "entitledToWork": getRandomString(2),
+      "activeMember": getRandomString(2),
+      "liabilityInsurance": getRandomString(2),
+      "licenseRestricted": getRandomString(2),
+      "malPractice": getRandomString(2),
+      "felon": getRandomString(2),
+      "knownSoftware": getRandomString(8),
+      "knownSkills": getRandomString(8),
+      "knownLanguages": getRandomString(8),
+      "resumeDownloadURL": resumePDFURL,
+      "frontIDDownloadURL": frontIDURL,
+      "backIDDownloadURL": backIDURL,
+      "registrationCertificateDownloadURL": registrationCertificateURL,
+      "profilePhotoDownloadURL": profilePhotoURL,
+      "signatureDownloadURL": signaureImageURL,
+    });
+    return user;
+  }
 
   //Method to handle user sign in using email and password
   Future<List?> signInWithEmailAndPassword(

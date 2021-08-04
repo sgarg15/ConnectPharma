@@ -4,15 +4,19 @@
   },
   "emulators": {
     "auth": {
+      "host": "192.168.1.93",
       "port": 9099
     },
     "functions": {
+      "host": "192.168.1.93",
       "port": 5001
     },
     "firestore": {
+      "host": "192.168.1.93",
       "port": 8080
     },
     "storage": {
+      "host": "192.168.1.93",
       "port": 9199
     },
     "ui": {

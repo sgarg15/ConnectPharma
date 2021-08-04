@@ -18,7 +18,7 @@ final logInProvider = StateNotifierProvider<LogInProvider, LogInModel>((ref) {
   return LogInProvider();
 });
 
-final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
+final authProviderLogin = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
@@ -45,7 +45,7 @@ class _LogInPageState extends State<LogInPage> {
     return Consumer(
       builder: (context, watch, child) {
         final logIn = watch(logInProvider);
-        final authModel = watch(authProvider);
+        final authModel = watch(authProviderLogin);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,

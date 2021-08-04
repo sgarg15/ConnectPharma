@@ -226,6 +226,7 @@ class _PharmacyManagerInformationState
                                     final snackBar = SnackBar(
                                       content: Text(
                                           "There was an error trying to register you. Please check your email and password and try again."),
+                                      behavior: SnackBarBehavior.floating,
                                     );
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,11 +22,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  const bool USE_EMULATOR = false;
+  const bool USE_EMULATOR = true;
 
   // ignore: dead_code
   if (USE_EMULATOR) {
-    const localHostString = 'localhost';
+    const localHostString = "192.168.1.93";
     // [Firestore | localhost:8080]
     FirebaseFirestore.instance.settings = const Settings(
       host: "$localHostString:8080",
@@ -33,11 +35,11 @@ Future<void> main() async {
     );
 
     // [Authentication | localhost:9099]
-    await FirebaseAuth.instance.useEmulator('http://$localHostString:9099');
+    await FirebaseAuth.instance.useEmulator("http://$localHostString:9099");
 
     // [Storage | localhost:9199]
     await FirebaseStorage.instance.useStorageEmulator(
-      '$localHostString',
+      "$localHostString",
       9199,
     );
 
@@ -59,6 +61,14 @@ Future<void> main() async {
 class PharmaConnect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+
+    String getRandomString(int length) =>
+        String.fromCharCodes(Iterable.generate(
+            length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
     return Scaffold(
       body: Container(
         child: Stack(
@@ -158,27 +168,100 @@ class PharmaConnect extends StatelessWidget {
             ),
 
             // //Button to test Cloud Functions
-            // Container(
-            //   alignment: Alignment(0, 0.8),
-            //   child: SizedBox(
-            //     width: 300,
-            //     height: 50,
-            //     child: ElevatedButton(
-            //       onPressed: () {
-            //         //Send to Pharmacy Sign Up Page
-            //         context
-            //             .read(authProvider2.notifier)
-            //             .uploadTestInformaiton();
-            //       },
-            //       child: RichText(
-            //         text: TextSpan(
-            //           text: "Test Cloud Functions",
-            //           style: TextStyle(
-            //             fontSize: 20,
+            // Center(
+            //   child: Consumer(
+            //     builder: (context, watch, child) {
+            //       watch(pharmacistSignUpProvider);
+            //       return SizedBox(
+            //         width: 324,
+            //         height: 51,
+            //         child: ElevatedButton(
+            //           style: ButtonStyle(
+            //               backgroundColor:
+            //                   MaterialStateProperty.resolveWith<Color>(
+            //                       (states) {
+            //                 if (states.contains(MaterialState.disabled)) {
+            //                   return Colors.grey; // Disabled color
+            //                 }
+            //                 return Color(0xFF5DB075); // Regular color
+            //               }),
+            //               shape:
+            //                   MaterialStateProperty.all<RoundedRectangleBorder>(
+            //                       RoundedRectangleBorder(
+            //                 borderRadius: BorderRadius.circular(100),
+            //               ))),
+            //           onPressed: () async {
+            //             print("Pressed");
+            //             context
+            //                 .read(authProviderLogin.notifier)
+            //                 .registerWithEmailAndPassword(
+            //                     getRandomString(5) + "@gmail.com", "Sat@2003")
+            //                 .then((value) async {
+            //               print("UPLOADING DATA");
+            //               if (value == null) {
+            //                 print("ERROR");
+            //                 final snackBar = SnackBar(
+            //                   content: Text(
+            //                       "There was an error trying to register you. Please check your email and password and try again."),
+            //                 );
+            //                 ScaffoldMessenger.of(context)
+            //                     .showSnackBar(snackBar);
+            //                 //value!.user!.delete();
+            //                 return null;
+            //               } else {
+            //                 context
+            //                     .read(authProviderLogin.notifier)
+            //                     .uploadTestInformaiton(value, context)
+            //                     .then((value) async {
+            //                   final snackBar = SnackBar(
+            //                     content: Text("User Registered"),
+            //                   );
+            //                   ScaffoldMessenger.of(context)
+            //                       .showSnackBar(snackBar);
+            //                   print("DATA UPLOADED");
+            //                   await value?.user
+            //                       ?.sendEmailVerification()
+            //                       .then((_) {
+            //                     context
+            //                         .read(pharmacistSignUpProvider.notifier)
+            //                         .clearAllValues();
+            //                     Navigator.push(
+            //                         context,
+            //                         MaterialPageRoute(
+            //                             builder: (context) => PharmaConnect()));
+            //                     showDialog(
+            //                         context: context,
+            //                         builder: (context) => AlertDialog(
+            //                               title: Text("Verification Email"),
+            //                               content: Text(
+            //                                   "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
+            //                               actions: <Widget>[
+            //                                 new TextButton(
+            //                                   child: new Text("Ok"),
+            //                                   onPressed: () {
+            //                                     Navigator.of(context).pop();
+            //                                   },
+            //                                 ),
+            //                               ],
+            //                             ));
+            //                   });
+            //                 });
+            //               }
+            //             });
+            //           },
+            //           child: RichText(
+            //             text: TextSpan(
+            //               text: "Submit",
+            //               style: TextStyle(
+            //                 fontSize: 16,
+            //                 color: Colors.white,
+            //                 fontWeight: FontWeight.bold,
+            //               ),
+            //             ),
             //           ),
             //         ),
-            //       ),
-            //     ),
+            //       );
+            //     },
             //   ),
             // ),
 

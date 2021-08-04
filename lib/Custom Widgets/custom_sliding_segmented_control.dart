@@ -317,9 +317,12 @@ class CupertinoSlidingSegmentedControl<T> extends StatefulWidget {
     this.thumbColor = _kThumbColor,
     this.padding = _kHorizontalItemPadding,
     this.backgroundColor = CupertinoColors.tertiarySystemFill,
+  // ignore: unnecessary_null_comparison
   })  : assert(children != null),
         assert(children.length >= 2),
+        // ignore: unnecessary_null_comparison
         assert(padding != null),
+        // ignore: unnecessary_null_comparison
         assert(onValueChanged != null),
         assert(
           groupValue == null || children.keys.contains(groupValue),
@@ -530,6 +533,7 @@ class _SegmentedControlState<T>
   // _Segment widget) to make the overall animation look natural when the thumb
   // is not sliding.
   void _playThumbScaleAnimation({required bool isExpanding}) {
+    // ignore: unnecessary_null_comparison
     assert(isExpanding != null);
     thumbScaleAnimation = thumbScaleController.drive(
       Tween<double>(
@@ -548,6 +552,7 @@ class _SegmentedControlState<T>
     // Additionally, start the thumb animation if the highlighted segment
     // changes. If the thumbController is already running, the render object's
     // paint method will create a new tween to drive the animation with.
+    // ignore: todo
     // TODO(LongCatIsLooong): https://github.com/flutter/flutter/issues/74356:
     // the current thumb will be painted at the same location twice (before and
     // after the new animation starts).
@@ -805,6 +810,7 @@ class _RenderSegmentedControl<T> extends RenderBox
   })  : _highlightedIndex = highlightedIndex,
         _thumbColor = thumbColor,
         _thumbScale = thumbScale,
+        // ignore: unnecessary_null_comparison
         assert(state != null);
 
   final _SegmentedControlState<T> state;
@@ -1109,6 +1115,7 @@ class _RenderSegmentedControl<T> extends RenderBox
   final Paint separatorPaint = Paint();
   void _paintSeparator(
       PaintingContext context, Offset offset, RenderBox child) {
+    // ignore: unnecessary_null_comparison
     assert(child != null);
     final _SegmentedControlContainerBoxParentData childParentData =
         child.parentData! as _SegmentedControlContainerBoxParentData;
@@ -1116,6 +1123,7 @@ class _RenderSegmentedControl<T> extends RenderBox
   }
 
   void _paintChild(PaintingContext context, Offset offset, RenderBox child) {
+    // ignore: unnecessary_null_comparison
     assert(child != null);
     final _SegmentedControlContainerBoxParentData childParentData =
         child.parentData! as _SegmentedControlContainerBoxParentData;
@@ -1158,6 +1166,7 @@ class _RenderSegmentedControl<T> extends RenderBox
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
+    // ignore: unnecessary_null_comparison
     assert(position != null);
     RenderBox? child = lastChild;
     while (child != null) {

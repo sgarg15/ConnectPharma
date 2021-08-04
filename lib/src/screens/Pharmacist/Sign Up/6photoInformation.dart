@@ -223,6 +223,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                         content: Text(
                                             'There was an error, please try again.'),
                                         duration: Duration(seconds: 3),
+                                        behavior: SnackBarBehavior.floating,
                                       );
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(snackBar);
@@ -918,6 +919,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                   },
                 ),
               ),
+              
               SizedBox(height: 15),
             ],
           ),

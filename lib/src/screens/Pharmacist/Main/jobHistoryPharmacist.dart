@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/main.dart';
+import 'package:pharma_connect/model/pharmacistMainModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
+import 'package:pharma_connect/src/providers/pharmacist_mainProvider.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Main/findShiftPharmacist.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistAvailibility.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
+});
+
+final pharmacistMainProvider =
+    StateNotifierProvider<PharmacistMainProvider, PharmacistMainModel>((ref) {
+  return PharmacistMainProvider();
 });
 
 class JobHistoryPharmacist extends StatefulWidget {
@@ -65,10 +73,18 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Icon(
-                Icons.search,
-                color: Color(0xFF5DB075),
-                size: 50,
+              GestureDetector(
+                child: Icon(
+                  Icons.search,
+                  color: Color(0xFF5DB075),
+                  size: 50,
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FindShiftForPharmacist()));
+                },
               ),
             ],
           ),
@@ -171,6 +187,69 @@ class SideMenuDrawer extends StatelessWidget {
           children: <Widget>[
             //Drawer Header
             _createDrawerHeader(),
+            //Home Button
+            ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.home,
+                    color: Colors.lightBlue,
+                    size: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Home",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17.0,
+                            color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => JobHistoryPharmacist()));
+              },
+            ),
+
+            //Profile Button
+            ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: Colors.lightBlue,
+                    size: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Profile",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17.0,
+                            color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                //TODO:Send to profile page to show and edit details
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => JobHistoryPharmacist()));
+              },
+            ),
+
             //Availability Button
             ListTile(
               title: Row(
@@ -199,6 +278,70 @@ class SideMenuDrawer extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => PharmacistAvailability()));
+              },
+            ),
+
+            //Terms of Srvice Button
+            ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: Colors.lightBlue,
+                    size: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Terms of Service",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17.0,
+                            color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                //TODO:Send to Terms of Service Page
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => PharmacistAvailability()));
+              },
+            ),
+
+            //Privacy Policy Button
+            ListTile(
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: Colors.lightBlue,
+                    size: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Privacy Policy",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17.0,
+                            color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                //TODO:Send to Privacy Policy Page
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => PharmacistAvailability()));
               },
             ),
 

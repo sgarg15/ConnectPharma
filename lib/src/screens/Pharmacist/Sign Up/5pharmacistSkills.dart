@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
-
+import '../../../../all_used.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,49 +10,6 @@ import 'package:signature/signature.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
 
-class Software {
-  final int id;
-  final String name;
-
-  Software({
-    required this.id,
-    required this.name,
-  });
-
-  @override
-  String toString() {
-    return "$name";
-  }
-}
-
-class Skill {
-  final int id;
-  final String name;
-
-  Skill({
-    required this.id,
-    required this.name,
-  });
-  @override
-  String toString() {
-    return "$name";
-  }
-}
-
-class Language {
-  final int id;
-  final String name;
-
-  Language({
-    required this.id,
-    required this.name,
-  });
-  @override
-  String toString() {
-    return "$name";
-  }
-}
-
 class PharmacistSkills extends StatefulWidget {
   PharmacistSkills({Key? key}) : super(key: key);
 
@@ -62,77 +18,13 @@ class PharmacistSkills extends StatefulWidget {
 }
 
 class _PharmacistSkillsState extends State<PharmacistSkills> {
-  static List<Software> _software = [
-    Software(id: 1, name: "A and H"),
-    Software(id: 1, name: "Applied Robotics"),
-    Software(id: 1, name: "Applied Technology"),
-    Software(id: 1, name: "Auto-Ned"),
-    Software(id: 1, name: "Centricity"),
-    Software(id: 1, name: "Cerner/Pharmnet"),
-    Software(id: 1, name: "Connexus"),
-    Software(id: 1, name: "Delta"),
-    Software(id: 1, name: "Epic"),
-    Software(id: 1, name: "Kroll"),
-  ];
-
-  static List<Skill> _skill = [
-    Skill(id: 1, name: "Additional Prescribing Authorization"),
-    Skill(id: 1, name: "Blister Pack"),
-    Skill(id: 1, name: "Cash Trained"),
-    Skill(id: 1, name: "Diabetes Education"),
-    Skill(id: 1, name: "Injection Certified"),
-    Skill(id: 1, name: "Interpreting Lab Results"),
-    Skill(id: 1, name: "Medication Review"),
-    Skill(id: 1, name: "Methadone/Suboxone"),
-    Skill(id: 1, name: "Minor Ailment Prescribing"),
-    Skill(id: 1, name: "Respiratory Education"),
-    Skill(id: 1, name: "Smoking Cessation"),
-    Skill(id: 1, name: "Speciality Compounding"),
-    Skill(id: 1, name: "Sterile IV Compounding"),
-    Skill(id: 1, name: "Travel Health Education"),
-  ];
-
-  static List<Language> _language = [
-    Language(id: 1, name: "Arabic"),
-    Language(id: 1, name: "Bengali"),
-    Language(id: 1, name: "Cantonese"),
-    Language(id: 1, name: "Chinese"),
-    Language(id: 1, name: "Chinese"),
-    Language(id: 1, name: "Croatian"),
-    Language(id: 1, name: "English"),
-    Language(id: 1, name: "French"),
-    Language(id: 1, name: "German"),
-    Language(id: 1, name: "Greek"),
-    Language(id: 1, name: "Gujarati"),
-    Language(id: 1, name: "Hindi"),
-    Language(id: 1, name: "Hungarian"),
-    Language(id: 1, name: "Italian"),
-    Language(id: 1, name: "Korean"),
-    Language(id: 1, name: "Mandarin"),
-    Language(id: 1, name: "Persian"),
-    Language(id: 1, name: "Polish"),
-    Language(id: 1, name: "Portuguese"),
-    Language(id: 1, name: "Punjabi"),
-    Language(id: 1, name: "Romanian"),
-    Language(id: 1, name: "Russian"),
-    Language(id: 1, name: "Serbian"),
-    Language(id: 1, name: "Somali"),
-    Language(id: 1, name: "Spanish"),
-    Language(id: 1, name: "Tagalog"),
-    Language(id: 1, name: "Tamil"),
-    Language(id: 1, name: "Turkish"),
-    Language(id: 1, name: "Ukrainian"),
-    Language(id: 1, name: "Urdu"),
-    Language(id: 1, name: "Vietnamese"),
-  ];
-
-  final _softwareItems = _software
+  final _softwareItems = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
   final _skillItems =
-      _skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+      skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
 
-  final _languageItems = _language
+  final _languageItems = language
       .map((language) => MultiSelectItem<Language>(language, language.name))
       .toList();
 
@@ -616,6 +508,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                     content: Text(
                                         'There was an error, please try again.'),
                                     duration: Duration(seconds: 3),
+                                    behavior: SnackBarBehavior.floating,
                                   );
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snackBar);
