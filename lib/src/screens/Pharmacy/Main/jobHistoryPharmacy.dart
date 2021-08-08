@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/main.dart';
@@ -5,6 +6,7 @@ import 'package:pharma_connect/model/pharmacyMainModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacyMainProvider.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/searchPharmacist.dart';
+import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
@@ -26,6 +28,31 @@ class JobHistoryPharmacy extends StatefulWidget {
 class _JobHistoryState extends State<JobHistoryPharmacy> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int segmentedControlGroupValue = 0;
+  CollectionReference jobsRef = FirebaseFirestore.instance.collection("Users");
+  String dataID = "";
+  Map dataMap = Map();
+
+  void getJobs() async {
+    await jobsRef
+        .doc(context.read(userProviderLogin.notifier).userUID)
+        .collection("Main")
+        .get()
+        .then((querySnapshot) => {
+              querySnapshot.docs.forEach((doc) {
+                setState(() {
+                  dataID = doc.id;
+                  dataMap[dataID] = doc.data();
+                });
+              })
+            });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getJobs();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -73,24 +100,27 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              GestureDetector(
-                child: Icon(
-                  Icons.perm_contact_calendar_outlined,
-                  color: Color(0xFF5DB075),
-                  size: 50,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 3),
+                child: GestureDetector(
+                  child: Icon(
+                    Icons.perm_contact_calendar_outlined,
+                    color: Color(0xFF5DB075),
+                    size: 50,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchPharmacistPharmacy()));
+                  },
                 ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SearchPharmacistPharmacy()));
-                },
               ),
             ],
           ),
         ),
         body: Container(
-          child: Stack(
+          child: Column(
             children: <Widget>[
               //Slider
               Container(
@@ -162,9 +192,121 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                     }),
               ),
               if (segmentedControlGroupValue == 0)
-                _createActiveJobs()
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    itemCount: dataMap.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String key = dataMap.keys.elementAt(index).toString();
+                      return new Column(
+                        children: <Widget>[
+                          if (dataMap[key]["jobStatus"] == "active")
+                            Material(
+                              elevation: 10,
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                height: 90,
+                                child: Center(
+                                  child: ListTile(
+                                    title: new Text(
+                                      "${dataMap[key]["jobStatus"]}",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ),
+                            )
+                          else if (dataMap[key]["jobStatus"] != "past")
+                            Material(
+                              elevation: 10,
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                height: 90,
+                                child: Center(
+                                  child: ListTile(
+                                    title: new Text(
+                                      "No Jobs Found",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          SizedBox(
+                            height: 10,
+                          )
+                          // new Divider(
+                          //   height: 10.0,
+                          //   thickness: 2,
+                          // ),
+                        ],
+                      );
+                    },
+                  ),
+                )
               else if (segmentedControlGroupValue == 1)
-                _createPastJobs()
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    itemCount: dataMap.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String key = dataMap.keys.elementAt(index).toString();
+                      return new Column(
+                        children: <Widget>[
+                          if (dataMap[key]["jobStatus"] == "past") ...[
+                            Material(
+                              elevation: 10,
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                height: 90,
+                                child: Center(
+                                  child: ListTile(
+                                    title: new Text(
+                                      "${dataMap[key]["jobStatus"]}",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ] else if (dataMap[key]["jobStatus"] != "active")
+                            Material(
+                              elevation: 10,
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                height: 90,
+                                child: Center(
+                                  child: ListTile(
+                                    title: new Text(
+                                      "No Jobs Found",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          SizedBox(
+                            height: 10,
+                          )
+                          // new Divider(
+                          //   height: 10.0,
+                          //   thickness: 2,
+                          // ),
+                        ],
+                      );
+                    },
+                  ),
+                )
             ],
           ),
         ),
@@ -388,49 +530,6 @@ class SideMenuDrawer extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _createPastJobs extends StatelessWidget {
-  const _createPastJobs({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(),
-    );
-  }
-}
-
-class _createActiveJobs extends StatelessWidget {
-  const _createActiveJobs({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment(-1, -0.7),
-      child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-        child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: FutureBuilder(
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                  case ConnectionState.active:
-                  case ConnectionState.done:
-                    return Text("Done...");
-                  case ConnectionState.waiting:
-                    return Text("Loading...");
-                }
-              },
-            )),
       ),
     );
   }

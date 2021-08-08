@@ -110,8 +110,8 @@ class formField extends StatelessWidget {
 }
 
 class Software {
-  final int id;
-  final String name;
+  int id;
+  String name;
 
   Software({
     required this.id,

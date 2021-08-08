@@ -1,0 +1,19 @@
+{
+  "name": "SanviaNjOhpMZzCannDur5OznpsAQg32r/Signature",
+  "bucket": "pharmaconnect-e59ba.appspot.com",
+  "contentType": "",
+  "metageneration": 1,
+  "generation": 1628129298773,
+  "storageClass": "STANDARD",
+  "etag": "someETag",
+  "contentDisposition": "inline",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "1aa000d7-9f10-44b2-bf24-62fe603dd89b"
+  ],
+  "timeCreated": "2021-08-05T02:08:18.772Z",
+  "updated": "2021-08-05T02:08:18.772Z",
+  "size": 4626,
+  "md5Hash": "KE1rl7TULLnqAJjKpKNOVg==",
+  "crc32c": "463409849"
+}

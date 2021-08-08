@@ -60,3 +60,45 @@ exports.aggregatePharmacists = functions.firestore.document("Users/{uid}/SignUp/
     
     return null;
 });
+
+exports.aggregateJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onWrite((change, context) => {
+    const beforeData = change.before.data();
+    const afterData = change.after.data();  
+
+    const aggregatedDataRef = dataBase.doc("aggregation/jobs");
+    const startDate = afterData.startDate;
+    const endDate = afterData.endDate;
+    const jobStatus = afterData.jobStatus;
+    const skillsNeeded = afterData.skillsNeeded;
+    const softwareNeeded = afterData.softwareNeeded;
+    const techOnSite = afterData.techOnSite;
+    const assistantOnSite = afterData.assistantOnSite;
+    const hourlyRate = afterData.hourlyRate;
+    const limaStatus = afterData.limaStatus;
+    const comments = afterData.comments;
+    const jobID = context.params.jobID;
+
+    const next = {
+        startDate: startDate,
+        endDate: endDate,
+        jobStatus: jobStatus,
+        skillsNeeded: skillsNeeded,
+        softwareNeeded: softwareNeeded,
+        techOnSite: techOnSite,
+        assistantOnSite: assistantOnSite,
+        hourlyRate: hourlyRate,
+        limaStatus: limaStatus,
+        comments: comments,
+        jobID: jobID,
+    }
+    
+    return aggregatedDataRef.set({[next.jobID]: next}, { merge: true })
+
+    
+    // functions.logger.log("Hello, here is the after data ON WRITE: ", afterData);
+    // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);
+    // functions.logger.log("Hello, here is the uid: ", context.params.uid);
+    
+    
+    return null;
+});

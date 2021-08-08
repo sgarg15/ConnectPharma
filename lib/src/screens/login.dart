@@ -2,13 +2,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:pharma_connect/main.dart';
 import 'package:pharma_connect/model/loginModel.dart';
 import 'package:pharma_connect/model/user_model.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/login_provider.dart';
+import 'package:pharma_connect/src/providers/user_provider.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 
@@ -17,6 +16,8 @@ import '../../all_used.dart';
 final logInProvider = StateNotifierProvider<LogInProvider, LogInModel>((ref) {
   return LogInProvider();
 });
+
+final userProviderLogin = StateNotifierProvider((ref) => UserProvider());
 
 final authProviderLogin = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
@@ -46,6 +47,7 @@ class _LogInPageState extends State<LogInPage> {
       builder: (context, watch, child) {
         final logIn = watch(logInProvider);
         final authModel = watch(authProviderLogin);
+        watch(userProviderLogin);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -293,6 +295,7 @@ class _LogInPageState extends State<LogInPage> {
                                     context
                                         .read(logInProvider.notifier)
                                         .clearAllValue();
+
                                     //send to pharmacist main page
                                     Navigator.pushReplacement(
                                         context,
@@ -301,9 +304,15 @@ class _LogInPageState extends State<LogInPage> {
                                                 JobHistoryPharmacist()));
                                   } else if (user?[1] == "Pharmacy") {
                                     print("Pharmacy");
+
                                     context
                                         .read(logInProvider.notifier)
                                         .clearAllValue();
+                                    context
+                                        .read(userProviderLogin.notifier)
+                                        .changeUserUID(
+                                            user?[0].user.uid.toString());
+
                                     //send to pharmacy main page
                                     Navigator.pushReplacement(
                                         context,

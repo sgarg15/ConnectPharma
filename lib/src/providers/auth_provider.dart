@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pharma_connect/model/user_model.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
+import 'package:pharma_connect/all_used.dart';
 
 enum Status {
   Uninitialized,
@@ -200,36 +204,29 @@ class AuthProvider extends ChangeNotifier {
           context.read(pharmacistSignUpProvider.notifier).institutionName,
       "workingExperience":
           context.read(pharmacistSignUpProvider.notifier).workingExperience,
-      "willingToMove": context
+      "willingToMove":
+          context.read(pharmacistSignUpProvider.notifier).willingToMove,
+      "entitledToWork":
+          context.read(pharmacistSignUpProvider.notifier).entitledToWork,
+      "activeMember":
+          context.read(pharmacistSignUpProvider.notifier).activeMember,
+      "liabilityInsurance":
+          context.read(pharmacistSignUpProvider.notifier).liabilityInsurance,
+      "licenseRestricted":
+          context.read(pharmacistSignUpProvider.notifier).licenseRestricted,
+      "malPractice":
+          context.read(pharmacistSignUpProvider.notifier).malpractice,
+      "felon": context.read(pharmacistSignUpProvider.notifier).felon,
+      "knownSoftware": context
           .read(pharmacistSignUpProvider.notifier)
-          .willingToMove
+          .softwareList
           .toString(),
-      "entitledToWork": context
+      "knownSkills":
+          context.read(pharmacistSignUpProvider.notifier).skillList.toString(),
+      "knownLanguages": context
           .read(pharmacistSignUpProvider.notifier)
-          .entitledToWork
+          .languageList
           .toString(),
-      "activeMember": context
-          .read(pharmacistSignUpProvider.notifier)
-          .activeMember
-          .toString(),
-      "liabilityInsurance": context
-          .read(pharmacistSignUpProvider.notifier)
-          .liabilityInsurance
-          .toString(),
-      "licenseRestricted": context
-          .read(pharmacistSignUpProvider.notifier)
-          .licenseRestricted
-          .toString(),
-      "malPractice": context
-          .read(pharmacistSignUpProvider.notifier)
-          .malpractice
-          .toString(),
-      "felon": context.read(pharmacistSignUpProvider.notifier).felon.toString(),
-      "knownSoftware":
-          context.read(pharmacistSignUpProvider.notifier).softwareList,
-      "knownSkills": context.read(pharmacistSignUpProvider.notifier).skillList,
-      "knownLanguages":
-          context.read(pharmacistSignUpProvider.notifier).languageList,
       "resumeDownloadURL": resumePDFURL,
       "frontIDDownloadURL": frontIDURL,
       "backIDDownloadURL": backIDURL,
@@ -350,6 +347,32 @@ class AuthProvider extends ChangeNotifier {
       "signatureDownloadURL": signaureImageURL,
     });
     return user;
+  }
+
+  Future<UserCredential?>? uploadAvailalibitlityData(
+      String userUID, BuildContext context) async {
+    users.doc(userUID).collection("Main").doc("Information").set({
+      "availability": context.read(pharmacistMainProvider.notifier).dateRanges,
+    });
+    return null;
+  }
+
+  Future<UserCredential?>? uploadJobToPharmacy(
+      String? userUID, BuildContext context) async {
+    users.doc(userUID).collection("Main").add({
+      "startDate": context.read(pharmacyMainProvider).startDate,
+      "endDate": context.read(pharmacyMainProvider).endDate,
+      "jobStatus": "active",
+      "skillsNeeded": context.read(pharmacyMainProvider).skillList.toString(),
+      "softwareNeeded":
+          context.read(pharmacyMainProvider).softwareList.toString(),
+      "techOnSite": context.read(pharmacyMainProvider).techOnSite,
+      "assistantOnSite": context.read(pharmacyMainProvider).assistantOnSite,
+      "hourlyRate": context.read(pharmacyMainProvider).hourlyRate,
+      "limaStatus": context.read(pharmacyMainProvider).limaStatus,
+      "comments": context.read(pharmacyMainProvider).jobComments,
+    });
+    return null;
   }
 
   //Method to handle user sign in using email and password

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/createShift.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/pharmacistProfile.dart';
 
 class AvailablePharmacists extends StatefulWidget {
   AvailablePharmacists({Key? key}) : super(key: key);
@@ -31,6 +33,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
@@ -45,6 +48,9 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
+          SizedBox(
+            height: 10,
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: dataMap.length,
@@ -52,15 +58,52 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                 String key = dataMap.keys.elementAt(index);
                 return new Column(
                   children: <Widget>[
-                    ListTile(
-                      title: new Text("$key"),
-                      subtitle: new Text("${dataMap[key]["name"]}"),
+                    Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 90,
+                        child: Center(
+                          child: ListTile(
+                            title: new Text(
+                              "${dataMap[key]["name"]}",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            subtitle: new Text(
+                              "Years of working experience: " +
+                                  "${dataMap[key]["yearsOfExperience"]}",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                dataMap[key]["profilePhoto"],
+                              ),
+                              radius: 30,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChosenPharmacistProfile(
+                                            pharmacistDataMap: dataMap[key],
+                                          )));
+                            },
+                          ),
+                        ),
+                      ),
                     ),
-                    new Divider(
-                      height: 2.0,
-                    ),
+                    SizedBox(
+                      height: 10,
+                    )
+                    // new Divider(
+                    //   height: 10.0,
+                    //   thickness: 2,
+                    // ),
                   ],
                 );
+              
               },
             ),
           ),
@@ -69,7 +112,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 25, 0, 10),
             child: SizedBox(
-              width: 340,
+              width: 370,
               height: 51,
               child: ElevatedButton(
                 style: ButtonStyle(
@@ -87,20 +130,37 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                 onPressed: () {
                   print("Pressed");
                   //TODO: Search for all pharmacist from the Aggregated pharmacist collection in Firestore with a query using the dates from the fields
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AvailablePharmacists()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CreateShift()));
                 },
-                child: RichText(
-                  text: TextSpan(
-                    text: "Look for Pharmacists",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: "Post a shift",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text:
+                            "Can’t find a pharmacist? Post a shift for a future date",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
