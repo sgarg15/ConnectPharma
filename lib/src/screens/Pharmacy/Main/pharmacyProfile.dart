@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/all_used.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/editProfile.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 
 class PharmacyProfile extends StatelessWidget {
@@ -45,7 +46,7 @@ class PharmacyProfile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                //Title Text
+                                //Title Text/Edit Button
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -61,7 +62,13 @@ class PharmacyProfile extends StatelessWidget {
                                       ),
                                     ),
                                     ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditPharmacyProfile()));
+                                      },
                                       style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all<Color>(

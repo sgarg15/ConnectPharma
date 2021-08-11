@@ -289,6 +289,19 @@ class AuthProvider extends ChangeNotifier {
     return user;
   }
 
+  Future<String?>? updatePharmacyUserInformation(
+      String userUID, Map<String, dynamic> uploadData) async {
+    try {
+      users
+          .doc(userUID)
+          .collection("SignUp")
+          .doc("Information")
+          .update(uploadData);
+    } catch (error) {
+      return "Profile Upload Failed";
+    }
+  }
+
   Future<UserCredential?> uploadTestInformaiton(
       UserCredential? user, BuildContext context) async {
     if (user == null) {

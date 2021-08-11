@@ -16,6 +16,8 @@ class formField extends StatelessWidget {
   TextCapitalization? textCapitalization;
   bool obscureText;
   List<TextInputFormatter>? formatter;
+  double containerWidth;
+  double titleFont;
 
   formField({
     this.fieldTitle,
@@ -30,6 +32,8 @@ class formField extends StatelessWidget {
     this.textCapitalization,
     this.obscureText = false,
     this.formatter,
+    this.containerWidth = 335,
+    this.titleFont = 16,
   });
 
   @override
@@ -43,14 +47,14 @@ class formField extends StatelessWidget {
           text: TextSpan(
               text: fieldTitle,
               style: GoogleFonts.questrial(
-                fontSize: 16,
+                fontSize: titleFont,
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
               )),
         ),
         SizedBox(height: 10),
         Container(
-          width: 335,
+          width: containerWidth,
           //height: 50,
           child: TextFormField(
             inputFormatters: formatter,

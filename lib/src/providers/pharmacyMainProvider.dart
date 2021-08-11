@@ -18,6 +18,18 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
     }
   }
 
+  bool isValidSearchPharmacist() {
+    if (state.startDate == null ||
+        state.endDate == null ||
+        state.softwareList == null) {
+      print("true account info");
+      return true;
+    } else {
+      print("false account info");
+      return false;
+    }
+  }
+
   void clearValues() {
     state.hourlyRate = "";
     state.jobComments = "";

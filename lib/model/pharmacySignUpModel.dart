@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/3pharmacyInformation.dart';
+import '../all_used.dart';
 
 class PharmacySignUpModel {
   String email;

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_dateTimeField.dart';
 import '../../../../all_used.dart';

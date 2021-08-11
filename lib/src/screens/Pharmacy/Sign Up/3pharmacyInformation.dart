@@ -10,16 +10,6 @@ import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/4pharmacyManagerInfo
 import 'package:uuid/uuid.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
-class Software {
-  final int id;
-  final String name;
-
-  Software({
-    required this.id,
-    required this.name,
-  });
-}
-
 class PharmacyInformation extends StatefulWidget {
   PharmacyInformation({Key? key}) : super(key: key);
 
@@ -28,20 +18,7 @@ class PharmacyInformation extends StatefulWidget {
 }
 
 class _PharmacyInformationState extends State<PharmacyInformation> {
-  static List<Software> _software = [
-    Software(id: 1, name: "A and H"),
-    Software(id: 1, name: "Applied Robotics"),
-    Software(id: 1, name: "Applied Technology"),
-    Software(id: 1, name: "Auto-Ned"),
-    Software(id: 1, name: "Centricity"),
-    Software(id: 1, name: "Cerner/Pharmnet"),
-    Software(id: 1, name: "Connexus"),
-    Software(id: 1, name: "Delta"),
-    Software(id: 1, name: "Epic"),
-    Software(id: 1, name: "Kroll"),
-  ];
-
-  final _items = _software
+  final _items = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
 

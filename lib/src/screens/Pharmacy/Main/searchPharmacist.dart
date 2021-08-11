@@ -56,7 +56,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.grey[100]),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                     child: Column(
                       children: <Widget>[
                         //Start Date
@@ -119,10 +119,21 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                             initialTime: TimeOfDay.fromDateTime(
                                                 currentValue ?? DateTime.now()),
                                           );
-
+                                          context
+                                              .read(
+                                                  pharmacyMainProvider.notifier)
+                                              .changeStartDate(
+                                                  DateTimeField.combine(
+                                                      date, time));
+                                          print(DateTimeField.combine(
+                                              date, time));
                                           return DateTimeField.combine(
                                               date, time);
                                         } else {
+                                          context
+                                              .read(
+                                                  pharmacyMainProvider.notifier)
+                                              .changeStartDate(currentValue);
                                           return currentValue;
                                         }
                                       },
@@ -183,9 +194,14 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                           (context, currentValue) async {
                                         final date = await showDatePicker(
                                             context: context,
-                                            firstDate: DateTime.now(),
-                                            initialDate:
-                                                currentValue ?? DateTime.now(),
+                                            firstDate: context
+                                                .read(pharmacyMainProvider
+                                                    .notifier)
+                                                .startDate as DateTime,
+                                            initialDate: context
+                                                .read(pharmacyMainProvider
+                                                    .notifier)
+                                                .startDate as DateTime,
                                             lastDate: DateTime(2100));
                                         if (date != null) {
                                           final time = await showTimePicker(
@@ -193,10 +209,20 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                             initialTime: TimeOfDay.fromDateTime(
                                                 currentValue ?? DateTime.now()),
                                           );
+                                          context
+                                              .read(
+                                                  pharmacyMainProvider.notifier)
+                                              .changeEndDate(
+                                                  DateTimeField.combine(
+                                                      date, time));
 
                                           return DateTimeField.combine(
                                               date, time);
                                         } else {
+                                          context
+                                              .read(
+                                                  pharmacyMainProvider.notifier)
+                                              .changeEndDate(currentValue);
                                           return currentValue;
                                         }
                                       },
@@ -418,178 +444,6 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                             ],
                           ),
                         ),
-                        //Tech On Site Check Box
-                        Padding(
-                          padding: softwareFieldEnabled
-                              ? EdgeInsets.fromLTRB(0, 15, 65, 0)
-                              : EdgeInsets.fromLTRB(0, 0, 65, 0),
-                          child: Consumer(builder: (context, watch, child) {
-                            watch(pharmacyMainProvider);
-                            return Container(
-                              width: 293,
-                              child: CheckboxListTile(
-                                title: RichText(
-                                  text: TextSpan(
-                                    text: "Technician On-Site",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 20.0,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                                activeColor: Color(0xFF5DB075),
-                                value: context
-                                    .read(pharmacyMainProvider.notifier)
-                                    .techOnSite,
-                                onChanged: (value) {
-                                  context
-                                      .read(pharmacyMainProvider.notifier)
-                                      .changeTechOnSite(value);
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .trailing, //  <-- leading Checkbox
-                              ),
-                            );
-                          }),
-                        ),
-                        //Assistant On Site Check Box
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 65, 0),
-                          child: Consumer(builder: (context, watch, child) {
-                            watch(pharmacyMainProvider);
-                            return Container(
-                              width: 293,
-                              child: CheckboxListTile(
-                                title: RichText(
-                                  text: TextSpan(
-                                    text: "Assistant On-Site",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 20.0,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                                activeColor: Color(0xFF5DB075),
-                                value: context
-                                    .read(pharmacyMainProvider.notifier)
-                                    .assistantOnSite,
-                                onChanged: (value) {
-                                  context
-                                      .read(pharmacyMainProvider.notifier)
-                                      .changeAssistantOnSite(value);
-                                },
-                                controlAffinity: ListTileControlAffinity
-                                    .trailing, //  <-- leading Checkbox
-                              ),
-                            );
-                          }),
-                        ),
-                        //Hourly Rate
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              RichText(
-                                text: TextSpan(
-                                  text: "Hourly Rate",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20.0,
-                                      color: Colors.black),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(47, 0, 0, 0),
-                                child: Material(
-                                  elevation: 7,
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Container(
-                                    height: 55,
-                                    width: 174,
-                                    alignment: Alignment.center,
-                                    child: TextField(
-                                      keyboardType: TextInputType.number,
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 17,
-                                      ),
-                                      decoration: InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.black, width: 1.5),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.black, width: 1.5),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                      ),
-                                      inputFormatters: [
-                                        MaskedInputFormatter('\$##.##')
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        //Comments section
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 24, 0, 0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              RichText(
-                                text: TextSpan(
-                                  text: "Comments",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20.0,
-                                      color: Colors.black),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: Container(
-                                  color: Colors.white,
-                                  width: 324,
-                                  constraints: BoxConstraints(minHeight: 60),
-                                  child: TextField(
-                                    maxLines: 3,
-                                    keyboardType: TextInputType.text,
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 18,
-                                    ),
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          "Include any important comments for the pharmacist...",
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 1.5),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 1.5),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
                         SizedBox(
                           height: 30,
                         )
@@ -600,7 +454,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
               ),
             ),
             //Search Button
-            Center(
+            Align(
+              alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
                 child: SizedBox(
@@ -622,7 +477,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                         ))),
                     onPressed: (!context
                             .read(pharmacyMainProvider.notifier)
-                            .isValidCreateShift())
+                            .isValidSearchPharmacist())
                         ? () {
                             print("Pressed");
                             //TODO: Search for all pharmacist from the Aggregated pharmacist collection in Firestore with a query using the dates from the fields

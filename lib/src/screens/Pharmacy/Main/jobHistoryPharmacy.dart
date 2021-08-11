@@ -8,13 +8,10 @@ import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacyMainProvider.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/pharmacyProfile.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/searchPharmacist.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
-
-final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
-  return AuthProvider();
-});
 
 final pharmacyMainProvider =
     StateNotifierProvider<PharmacyMainProvider, PharmacyMainModel>((ref) {
