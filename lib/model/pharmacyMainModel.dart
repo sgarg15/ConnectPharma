@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import '../all_used.dart';
 
 class PharmacyMainModel {
@@ -12,6 +10,7 @@ class PharmacyMainModel {
   bool? limaStatus;
   String? hourlyRate;
   String? jobComments;
+  Map<String, dynamic>? userData;
 
   PharmacyMainModel({
     this.startDate = null,
@@ -23,6 +22,7 @@ class PharmacyMainModel {
     this.limaStatus = false,
     this.hourlyRate = "",
     this.jobComments = "",
+    this.userData = null,
   });
 
   PharmacyMainModel copyWithPharmacyMain({
@@ -35,6 +35,7 @@ class PharmacyMainModel {
     bool? limaStatus,
     String? hourlyRate,
     String? jobComments,
+    Map<String, dynamic>? userData,
   }) {
     return PharmacyMainModel(
       startDate: startDate ?? this.startDate,
@@ -46,6 +47,7 @@ class PharmacyMainModel {
       limaStatus: limaStatus ?? this.limaStatus,
       hourlyRate: hourlyRate ?? this.hourlyRate,
       jobComments: jobComments ?? this.jobComments,
+      userData: userData ?? this.userData,
     );
   }
 }

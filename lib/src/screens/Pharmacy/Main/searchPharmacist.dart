@@ -8,7 +8,6 @@ import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart
 import '../../../../Custom Widgets/custom_dateTimeField.dart';
 import '../../../../all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../Custom Widgets/custom_multiSelect_field.dart';
 
 class SearchPharmacistPharmacy extends StatefulWidget {
   SearchPharmacistPharmacy({Key? key}) : super(key: key);
@@ -621,14 +620,19 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                 RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100),
                         ))),
-                    onPressed: () {
-                      print("Pressed");
-                      //TODO: Search for all pharmacist from the Aggregated pharmacist collection in Firestore with a query using the dates from the fields
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AvailablePharmacists()));
-                    },
+                    onPressed: (!context
+                            .read(pharmacyMainProvider.notifier)
+                            .isValidCreateShift())
+                        ? () {
+                            print("Pressed");
+                            //TODO: Search for all pharmacist from the Aggregated pharmacist collection in Firestore with a query using the dates from the fields
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AvailablePharmacists()));
+                          }
+                        : null,
                     child: RichText(
                       text: TextSpan(
                         text: "Look for Pharmacists",

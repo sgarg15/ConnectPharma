@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
-import 'package:pharma_connect/all_used.dart';
 
 enum Status {
   Uninitialized,
@@ -285,6 +283,8 @@ class AuthProvider extends ChangeNotifier {
       "managerLicenseNumber":
           context.read(pharmacySignUpProvider.notifier).licenseNumber,
       "signatureDownloadURL": signaureImageURL,
+      "softwareList":
+          context.read(pharmacySignUpProvider.notifier).softwareList.toString(),
     });
     return user;
   }

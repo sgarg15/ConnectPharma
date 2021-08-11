@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/5pharmacistSkills.dart';
 import '../all_used.dart';
 
 class PharmacistSignUpModel {

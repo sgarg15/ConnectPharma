@@ -34,6 +34,7 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   bool? get limaStatus => state.limaStatus;
   String? get hourlyRate => state.hourlyRate;
   String? get jobComments => state.jobComments;
+  Map<String, dynamic>? get userData => state.userData;
 
   void changeStartDate(DateTime? value) {
     state = state.copyWithPharmacyMain(startDate: value);
@@ -69,5 +70,9 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
 
   void changeComments(String value) {
     state = state.copyWithPharmacyMain(jobComments: value);
+  }
+
+  void changeUserDataMap(Map<String, dynamic>? data) {
+    state = state.copyWithPharmacyMain(userData: data);
   }
 }

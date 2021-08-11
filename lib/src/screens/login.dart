@@ -1,10 +1,8 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/main.dart';
 import 'package:pharma_connect/model/loginModel.dart';
-import 'package:pharma_connect/model/user_model.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/login_provider.dart';
 import 'package:pharma_connect/src/providers/user_provider.dart';

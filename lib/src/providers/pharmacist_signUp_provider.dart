@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/5pharmacistSkills.dart';
 import '../../all_used.dart';
 class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   PharmacistSignUpProvider() : super(PharmacistSignUpModel());

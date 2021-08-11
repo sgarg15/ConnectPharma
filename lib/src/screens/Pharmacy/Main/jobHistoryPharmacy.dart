@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pharma_connect/all_used.dart';
 import 'package:pharma_connect/main.dart';
 import 'package:pharma_connect/model/pharmacyMainModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacyMainProvider.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/pharmacyProfile.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/searchPharmacist.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
+import 'package:intl/intl.dart';
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
@@ -30,7 +33,8 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   int segmentedControlGroupValue = 0;
   CollectionReference jobsRef = FirebaseFirestore.instance.collection("Users");
   String dataID = "";
-  Map dataMap = Map();
+  Map jobDataMap = Map();
+  Map<String, dynamic>? userDataMap = Map();
 
   void getJobs() async {
     await jobsRef
@@ -41,16 +45,32 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
               querySnapshot.docs.forEach((doc) {
                 setState(() {
                   dataID = doc.id;
-                  dataMap[dataID] = doc.data();
+                  jobDataMap[dataID] = doc.data();
                 });
               })
             });
+  }
+
+  void getUserData() async {
+    await jobsRef
+        .doc(context.read(userProviderLogin.notifier).userUID)
+        .collection("SignUp")
+        .doc("Information")
+        .get()
+        .then((querySnapshot) => {
+              setState(() {
+                userDataMap = querySnapshot.data();
+              })
+            });
+
+    context.read(pharmacyMainProvider.notifier).changeUserDataMap(userDataMap);
   }
 
   @override
   void initState() {
     super.initState();
     getJobs();
+    getUserData();
   }
 
   @override
@@ -192,16 +212,36 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                     }),
               ),
               if (segmentedControlGroupValue == 0)
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    itemCount: dataMap.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String key = dataMap.keys.elementAt(index).toString();
-                      return new Column(
-                        children: <Widget>[
-                          if (dataMap[key]["jobStatus"] == "active")
-                            Material(
+                if (jobDataMap.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 50,
+                        child: Center(
+                            child: Text(
+                          "No active jobs found",
+                          style: TextStyle(color: Colors.grey, fontSize: 20),
+                        )),
+                      ),
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      itemCount: jobDataMap.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String key =
+                            jobDataMap.keys.elementAt(index).toString();
+
+                        if (jobDataMap[key]["jobStatus"] == "active")
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
                               elevation: 10,
                               borderRadius: BorderRadius.circular(20),
                               child: Container(
@@ -210,16 +250,33 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                 child: Center(
                                   child: ListTile(
                                     title: new Text(
-                                      "${dataMap[key]["jobStatus"]}",
+                                      DateFormat("MMMM d, y hh:mm a").format(
+                                              DateTime.parse(jobDataMap[key]
+                                                      ["startDate"]
+                                                  .toDate()
+                                                  .toString())) +
+                                          " to " +
+                                          DateFormat("MMMM d, y hh:mm a")
+                                              .format(DateTime.parse(
+                                                  jobDataMap[key]["endDate"]
+                                                      .toDate()
+                                                      .toString())),
                                       style: TextStyle(fontSize: 18),
+                                    ),
+                                    subtitle: Text(
+                                      jobDataMap[key]["hourlyRate"] + "/hr",
+                                      style: TextStyle(fontSize: 16),
                                     ),
                                     onTap: () {},
                                   ),
                                 ),
                               ),
-                            )
-                          else if (dataMap[key]["jobStatus"] != "past")
-                            Material(
+                            ),
+                          );
+                        else if (jobDataMap.isEmpty)
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
                               elevation: 10,
                               borderRadius: BorderRadius.circular(20),
                               child: Container(
@@ -236,30 +293,42 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                 ),
                               ),
                             ),
-
-                          SizedBox(
-                            height: 10,
-                          )
-                          // new Divider(
-                          //   height: 10.0,
-                          //   thickness: 2,
-                          // ),
-                        ],
-                      );
-                    },
-                  ),
-                )
+                          );
+                        else
+                          return Container();
+                      },
+                    ),
+                  )
               else if (segmentedControlGroupValue == 1)
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    itemCount: dataMap.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String key = dataMap.keys.elementAt(index).toString();
-                      return new Column(
-                        children: <Widget>[
-                          if (dataMap[key]["jobStatus"] == "past") ...[
-                            Material(
+                if (jobDataMap.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 50,
+                        child: Center(
+                            child: Text(
+                          "No past jobs found",
+                          style: TextStyle(color: Colors.grey, fontSize: 20),
+                        )),
+                      ),
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      itemCount: jobDataMap.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String key =
+                            jobDataMap.keys.elementAt(index).toString();
+                        if (jobDataMap[key]["jobStatus"] == "past")
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Material(
                               elevation: 10,
                               borderRadius: BorderRadius.circular(20),
                               child: Container(
@@ -268,45 +337,57 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                 child: Center(
                                   child: ListTile(
                                     title: new Text(
-                                      "${dataMap[key]["jobStatus"]}",
+                                      DateFormat("MMMM d, y hh:mm a").format(
+                                              DateTime.parse(jobDataMap[key]
+                                                      ["startDate"]
+                                                  .toDate()
+                                                  .toString())) +
+                                          " to " +
+                                          DateFormat("MMMM d, y hh:mm a")
+                                              .format(DateTime.parse(
+                                                  jobDataMap[key]["endDate"]
+                                                      .toDate()
+                                                      .toString())),
                                       style: TextStyle(fontSize: 18),
+                                    ),
+                                    subtitle: Text(
+                                      jobDataMap[key]["hourlyRate"] + "/hr",
+                                      style: TextStyle(fontSize: 16),
                                     ),
                                     onTap: () {},
                                   ),
                                 ),
                               ),
                             ),
-                          ] else if (dataMap[key]["jobStatus"] != "active")
-                            Material(
+                          );
+                        else if (jobDataMap.isEmpty)
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            child: Material(
                               elevation: 10,
                               borderRadius: BorderRadius.circular(20),
                               child: Container(
                                 width: MediaQuery.of(context).size.width * 0.95,
-                                height: 90,
+                                height: 50,
                                 child: Center(
-                                  child: ListTile(
-                                    title: new Text(
-                                      "No Jobs Found",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                ),
+                                    child: Text(
+                                  "No past jobs found",
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 20),
+                                )),
                               ),
                             ),
+                          );
+                        else
+                          return Container();
 
-                          SizedBox(
-                            height: 10,
-                          )
-                          // new Divider(
-                          //   height: 10.0,
-                          //   thickness: 2,
-                          // ),
-                        ],
-                      );
-                    },
-                  ),
-                )
+                        // new Divider(
+                        //   height: 10.0,
+                        //   thickness: 2,
+                        // ),
+                      },
+                    ),
+                  )
             ],
           ),
         ),
@@ -385,10 +466,8 @@ class SideMenuDrawer extends StatelessWidget {
               ),
               onTap: () {
                 //TODO:Send to profile page to show and edit details
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => JobHistoryPharmacist()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PharmacyProfile()));
               },
             ),
 
@@ -553,10 +632,24 @@ class _createDrawerHeader extends StatelessWidget {
           children: <Widget>[
             //Profile Photo
             CircleAvatar(
-              radius: 30.0,
-              backgroundColor: const Color(0xFF778899),
-              //Change to retrieve photo from firestore
-              backgroundImage: NetworkImage("https://picsum.photos/200"),
+              radius: 32,
+              backgroundColor: Color(0xFF5DB075),
+              child: CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.grey,
+                child: Text(
+                    getInitials(
+                        context
+                            .read(pharmacyMainProvider.notifier)
+                            .userData?["firstName"],
+                        context
+                            .read(pharmacyMainProvider.notifier)
+                            .userData?["lastName"]),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold)),
+              ),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,

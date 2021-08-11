@@ -215,3 +215,18 @@ List<Language> language = [
   Language(id: 1, name: "Urdu"),
   Language(id: 1, name: "Vietnamese"),
 ];
+
+String getInitials(String? firstName, String? lastName) {
+  String initials = "";
+  if (firstName == null || lastName == null) {
+    return "N/A";
+  }
+  int numWords = 2;
+
+  if (numWords < firstName.length) {
+    numWords = firstName.length;
+  }
+  initials = firstName[0] + lastName[0];
+
+  return initials;
+}

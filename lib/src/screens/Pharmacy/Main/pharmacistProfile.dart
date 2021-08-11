@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 
 // ignore: must_be_immutable
@@ -17,7 +16,6 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final pharmacistKnownSoftwareString =
         widget.pharmacistDataMap!["knownSoftware"];
