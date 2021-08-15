@@ -293,6 +293,10 @@ class _LogInPageState extends State<LogInPage> {
                                     context
                                         .read(logInProvider.notifier)
                                         .clearAllValue();
+                                    context
+                                        .read(userProviderLogin.notifier)
+                                        .changeUserUID(
+                                            user?[0].user.uid.toString());
 
                                     //send to pharmacist main page
                                     Navigator.pushReplacement(

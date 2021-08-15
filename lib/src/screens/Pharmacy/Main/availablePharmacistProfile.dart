@@ -319,6 +319,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                   ],
                                 ),
                               ),
+                              
                               //Availability
                               Padding(
                                 padding:

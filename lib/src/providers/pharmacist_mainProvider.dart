@@ -6,8 +6,13 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
   PharmacistMainProvider() : super(PharmacistMainModel());
 
   List<PickerDateRange> get dateRanges => state.dateRanges;
+  Map<String, dynamic>? get userDataMap => state.userData;
 
   void changeDateRanges(List<PickerDateRange> dateRanges) {
     state = state.copyWithPharmacistMain(dateRanges: dateRanges);
+  }
+
+  void changeUserDataMap(Map<String, dynamic>? data) {
+    state = state.copyWithPharmacistMain(userData: data);
   }
 }

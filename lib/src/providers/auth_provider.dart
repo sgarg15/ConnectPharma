@@ -302,6 +302,19 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<String?>? updatePharmacistUserInformation(
+      String userUID, Map<String, dynamic> uploadData) async {
+    try {
+      users
+          .doc(userUID)
+          .collection("SignUp")
+          .doc("Information")
+          .update(uploadData);
+    } catch (error) {
+      return "Profile Upload Failed";
+    }
+  }
+
   Future<UserCredential?> uploadTestInformaiton(
       UserCredential? user, BuildContext context) async {
     if (user == null) {
@@ -363,10 +376,10 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<UserCredential?>? uploadAvailalibitlityData(
-      String userUID, BuildContext context) async {
-    users.doc(userUID).collection("Main").doc("Information").set({
-      "availability": context.read(pharmacistMainProvider.notifier).dateRanges,
-    });
+      String userUID, Map dataUpload) async {
+    users.doc(userUID).collection("SignUp").doc("Information").set({
+      "availability": dataUpload,
+    }, SetOptions(merge: true));
     return null;
   }
 

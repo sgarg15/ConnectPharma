@@ -34,7 +34,7 @@ exports.aggregatePharmacists = functions.firestore.document("Users/{uid}/SignUp/
         const knownSoftware = afterData.knownSoftware;
         const knownSkills = afterData.knownSkills;
         const knownLanguages = afterData.knownLanguages;
-        const availability = afterData.availability;
+        const availability = afterData.availability ?? "";
         const resume = afterData.resumeDownloadURL;
         const uid = context.params.uid;
 
@@ -46,6 +46,7 @@ exports.aggregatePharmacists = functions.firestore.document("Users/{uid}/SignUp/
             knownLanguages: knownLanguages,
             resume: resume,
             profilePhoto: profilePhoto,
+            availability: availability,
             uid: uid
         }
         

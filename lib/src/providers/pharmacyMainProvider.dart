@@ -21,13 +21,21 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   bool isValidSearchPharmacist() {
     if (state.startDate == null ||
         state.endDate == null ||
-        state.softwareList == null) {
-      print("true account info");
+        state.skillList!.isEmpty) {
+      print("true search pharmacist");
       return true;
     } else {
-      print("false account info");
+      print(state.startDate);
+      print(state.endDate);
+      print(state.skillList);
+      print("false search pharmacist");
       return false;
     }
+  }
+
+  void clearDateValues() {
+    state.startDate = null;
+    state.endDate = null;
   }
 
   void clearValues() {

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/createShift.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/pharmacistProfile.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/availablePharmacistProfile.dart';
 
 class AvailablePharmacists extends StatefulWidget {
   AvailablePharmacists({Key? key}) : super(key: key);

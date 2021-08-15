@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Sign%20Up/1pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/login.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +15,8 @@ class PharmacistAvailability extends StatefulWidget {
 
 class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
   String bullet = "\u2022";
-  //List<PickerDateRange> dateRanges = [];
+  Map dateRangesTemp = Map();
+  Map dateRangesToUpload = Map();
 
   @override
   Widget build(BuildContext context) {
@@ -25,26 +28,20 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
       context
           .read(pharmacistMainProvider.notifier)
           .changeDateRanges(args.value);
-
-      print(context.read(pharmacistMainProvider.notifier).dateRanges);
-
-      // setState(() {
-      //   if (args.value is PickerDateRange) {
-      //     print("PickerDateRange: " + args.value);
-      //     print("PickerDateRange Start Date: " + args.value.startDate);
-      //     print("PickerDateRange End Date: " + args.value.endDate);
-      //   } else if (args.value is DateTime) {
-      //     print("DateTime: " + args.value);
-      //     print("DateTime Start Date: " + args.value.startDate);
-      //     print("DateTime End Date: " + args.value.endDate);
-      //   } else if (args.value is List<DateTime>) {
-      //     print("PickerDateRange: " + args.value);
-      //   } else {
-      //     //print("Multi Range: " + args.value);
-      //     print("Multi Range StartDate First: " + args.value[0].startDate);
-      //     print("Multi Range End Date First: " + args.value[0].endDate);
-      //   }
-      // });
+      dateRangesTemp.clear();
+      for (var i = 0;
+          i < context.read(pharmacistMainProvider.notifier).dateRanges.length;
+          i++) {
+        dateRangesTemp[i.toString()] = {
+          "startDate": args.value[i].startDate,
+          "endDate": args.value[i].endDate
+        };
+      }
+      setState(() {
+        dateRangesToUpload = dateRangesTemp;
+      });
+      print(dateRangesToUpload);
+      //print(context.read(pharmacistMainProvider.notifier).dateRanges);
     }
 
     // final children = <Widget>[];
@@ -250,11 +247,20 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                         RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
                     ))),
-                onPressed: () {
-                  print("Pressed");
-                  //TODO: Start a cloud function which starts a timer for 5 min and then sends data to firestore, to prevent abuse of firestore writes and reads
-                  Navigator.pop(context);
-                },
+                onPressed: dateRangesToUpload.isNotEmpty
+                    ? () {
+                        print("Pressed");
+                        context
+                            .read(authProvider.notifier)
+                            .uploadAvailalibitlityData(
+                                context
+                                    .read(userProviderLogin.notifier)
+                                    .userUID,
+                                dateRangesToUpload);
+                        //TODO: Start a cloud function which starts a timer for 5 min and then sends data to firestore, to prevent abuse of firestore writes and reads
+                        Navigator.pop(context);
+                      }
+                    : null,
                 child: RichText(
                   text: TextSpan(
                     text: "Save",

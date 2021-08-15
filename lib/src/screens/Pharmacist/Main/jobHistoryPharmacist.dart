@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/main.dart';
@@ -6,9 +7,11 @@ import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacist_mainProvider.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/findShiftPharmacist.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistAvailibility.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistProfile.dart';
+import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 
-final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
+final authProviderMain = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
@@ -27,6 +30,32 @@ class JobHistoryPharmacist extends StatefulWidget {
 class _JobHistoryState extends State<JobHistoryPharmacist> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int segmentedControlGroupValue = 0;
+  CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
+  Map<String, dynamic>? userDataMap = Map();
+
+  void getUserData() async {
+    await userRef
+        .doc(context.read(userProviderLogin.notifier).userUID)
+        .collection("SignUp")
+        .doc("Information")
+        .get()
+        .then((querySnapshot) => {
+              setState(() {
+                userDataMap = querySnapshot.data();
+              })
+            });
+
+    context
+        .read(pharmacistMainProvider.notifier)
+        .changeUserDataMap(userDataMap);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -243,10 +272,10 @@ class SideMenuDrawer extends StatelessWidget {
               ),
               onTap: () {
                 //TODO:Send to profile page to show and edit details
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => JobHistoryPharmacist()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PharmacistProfile()));
               },
             ),
 
@@ -377,7 +406,7 @@ class SideMenuDrawer extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                context.read(authProvider.notifier).signOut();
+                context.read(authProviderMain.notifier).signOut();
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => PharmaConnect()),
                     result: Navigator.pushReplacement(
@@ -454,11 +483,12 @@ class _createDrawerHeader extends StatelessWidget {
           children: <Widget>[
             //Profile Photo
             CircleAvatar(
-              radius: 30.0,
-              backgroundColor: const Color(0xFF778899),
-              //Change to retrieve photo from firestore
-              backgroundImage: NetworkImage("https://picsum.photos/200"),
-            ),
+                radius: 30.0,
+                backgroundColor: const Color(0xFF778899),
+                //Change to retrieve photo from firestore
+                backgroundImage: NetworkImage(context
+                    .read(pharmacistMainProvider.notifier)
+                    .userDataMap?["profilePhotoDownloadURL"])),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
