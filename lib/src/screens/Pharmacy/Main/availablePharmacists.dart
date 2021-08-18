@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/createShift.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/availablePharmacistProfile.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 
 class AvailablePharmacists extends StatefulWidget {
   AvailablePharmacists({Key? key}) : super(key: key);
@@ -14,7 +16,8 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
   CollectionReference aggregationRef =
       FirebaseFirestore.instance.collection("aggregation");
 
-  Map dataMap = Map();
+  Map pharmacistDataMap = Map();
+  Map pharmacistDataMapTemp = Map();
   @override
   void initState() {
     super.initState();
@@ -25,8 +28,46 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
     DocumentReference pharmacistData = aggregationRef.doc("pharmacists");
     pharmacistData.get().then((pharmacistData) {
       setState(() {
-        dataMap = pharmacistData.data() as Map;
+        pharmacistDataMapTemp = pharmacistData.data() as Map;
       });
+      pharmacistDataMapTemp.forEach((key, value) {
+        print(value["uid"]);
+        print("--------------------------------------------");
+        for (var i = 0; i < value["availability"].length; i++) {
+          if (((value["availability"][i.toString()]["startDate"] as Timestamp)
+                      .toDate()
+                      .isAfter(context
+                          .read(pharmacyMainProvider.notifier)
+                          .startDate as DateTime) &&
+                  ((value["availability"][i.toString()]["startDate"] as Timestamp)
+                      .toDate()
+                      .isBefore(context.read(pharmacyMainProvider.notifier).endDate
+                          as DateTime))) ||
+              ((value["availability"][i.toString()]["endDate"] as Timestamp)
+                      .toDate()
+                      .isAfter(context
+                          .read(pharmacyMainProvider.notifier)
+                          .startDate as DateTime) &&
+                  ((value["availability"][i.toString()]["endDate"] as Timestamp)
+                      .toDate()
+                      .isBefore(context.read(pharmacyMainProvider.notifier).endDate as DateTime)))) {
+            print(value["uid"]);
+            pharmacistDataMap[key] = value;
+            print(pharmacistDataMap.keys);
+
+            print("YESR");
+          } else {
+            print(value["uid"]);
+
+            print("NO");
+          }
+          //print(value["availability"][i.toString()]["endDate"]);
+        }
+      });
+      print(pharmacistDataMap);
+      // for (var i = 0; i < pharmacistDataMapTemp.length; i++) {
+      //   print(pharmacistDataMapTemp[i]["availability"]);
+      // }
     });
   }
 
@@ -51,62 +92,86 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
           SizedBox(
             height: 10,
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: dataMap.length,
-              itemBuilder: (BuildContext context, int index) {
-                String key = dataMap.keys.elementAt(index);
-                return new Column(
-                  children: <Widget>[
-                    Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.95,
-                        height: 90,
-                        child: Center(
-                          child: ListTile(
-                            title: new Text(
-                              "${dataMap[key]["name"]}",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            subtitle: new Text(
-                              "Years of working experience: " +
-                                  "${dataMap[key]["yearsOfExperience"]}",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                dataMap[key]["profilePhoto"],
+
+          pharmacistDataMap.isNotEmpty
+              ? Expanded(
+                  child: ListView.builder(
+                    itemCount: pharmacistDataMap.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String key = pharmacistDataMap.keys.elementAt(index);
+
+                      return new Column(
+                        children: <Widget>[
+                          Material(
+                            elevation: 10,
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.95,
+                              height: 90,
+                              child: Center(
+                                child: ListTile(
+                                  title: new Text(
+                                    "${pharmacistDataMap[key]["name"]}",
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  subtitle: new Text(
+                                    "Years of working experience: " +
+                                        "${pharmacistDataMap[key]["yearsOfExperience"]}",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      pharmacistDataMap[key]["profilePhoto"],
+                                    ),
+                                    radius: 30,
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChosenPharmacistProfile(
+                                                  pharmacistDataMap:
+                                                      pharmacistDataMap[key],
+                                                )));
+                                  },
+                                ),
                               ),
-                              radius: 30,
                             ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChosenPharmacistProfile(
-                                            pharmacistDataMap: dataMap[key],
-                                          )));
-                            },
+                          ),
+                          SizedBox(height: 10)
+
+                          // new Divider(
+                          //   height: 10.0,
+                          //   thickness: 2,
+                          // ),
+                        ],
+                      );
+                    },
+                  ),
+                )
+              : Center(
+                  child: Material(
+                    elevation: 15,
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 65,
+                      child: Center(
+                        child: RichText(
+                          text: TextSpan(
+                            text: "No pharmacists found...",
+                            style: TextStyle(
+                              fontSize: 22,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    )
-                    // new Divider(
-                    //   height: 10.0,
-                    //   thickness: 2,
-                    // ),
-                  ],
-                );
-              
-              },
-            ),
-          ),
+                  ),
+                ),
 
           //Search Button
           Padding(

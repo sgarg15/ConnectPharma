@@ -244,7 +244,7 @@ class PharmacyProfile extends StatelessWidget {
                                                                   pharmacyMainProvider
                                                                       .notifier)
                                                               .userData?[
-                                                          "signatureDownoadURL"] !=
+                                                          "signatureDownloadURL"] !=
                                                       null
                                                   ? () {
                                                       showDialog(

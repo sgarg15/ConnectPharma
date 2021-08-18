@@ -17,6 +17,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
   @override
   void initState() {
     super.initState();
+    print(widget.pharmacistDataMap);
     final pharmacistKnownSoftwareString =
         widget.pharmacistDataMap!["knownSoftware"];
     knownSoftwareList = pharmacistKnownSoftwareString
@@ -55,7 +56,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                     alignment: Alignment.center,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
-                        widget.pharmacistDataMap!["profilePhoto"],
+                        widget.pharmacistDataMap?["profilePhoto"],
                       ),
                       radius: 70,
                     ),
@@ -319,7 +320,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                   ],
                                 ),
                               ),
-                              
+
                               //Availability
                               Padding(
                                 padding:
@@ -357,14 +358,25 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                       RichText(
                                         textAlign: TextAlign.start,
                                         text: TextSpan(
-                                          text: widget.pharmacistDataMap![
-                                              "availability"],
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
+                                            text: "View Availability",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () async {
+                                                showDateRangePicker(
+                                                  context: context,
+                                                  firstDate:
+                                                      DateTime(2019, 12, 05),
+                                                  lastDate:
+                                                      DateTime(2029, 12, 05),
+                                                  initialEntryMode:
+                                                      DatePickerEntryMode
+                                                          .calendarOnly,
+                                                );
+                                              }),
                                       ),
                                     ],
                                   ],
@@ -474,6 +486,22 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                       ))),
                   onPressed: () {
                     print("Pressed");
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text(widget.pharmacistDataMap?["name"]),
+                              content: Text(
+                                "Email: " + widget.pharmacistDataMap?["email"],
+                              ),
+                              actions: <Widget>[
+                                new TextButton(
+                                  child: new Text("Ok"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ));
 
                     // Navigator.push(
                     //     context,

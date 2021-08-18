@@ -17,6 +17,44 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
   String bullet = "\u2022";
   Map dateRangesTemp = Map();
   Map dateRangesToUpload = Map();
+  List<PickerDateRange> dateRangesFromFirestore = [];
+
+  void changeAvailabilityToCalendar() {
+    List<PickerDateRange> dateRangesCalendarTemp = [];
+    for (var i = 0;
+        i <
+            context
+                .read(pharmacistMainProvider.notifier)
+                .userDataMap?["availability"]
+                .length;
+        i++) {
+      dateRangesCalendarTemp.add(PickerDateRange(
+          context
+              .read(pharmacistMainProvider.notifier)
+              .userDataMap?["availability"][i.toString()]["startDate"]
+              .toDate(),
+          context
+              .read(pharmacistMainProvider.notifier)
+              .userDataMap?["availability"][i.toString()]["endDate"]
+              .toDate()));
+    }
+    setState(() {
+      dateRangesFromFirestore = dateRangesCalendarTemp;
+      dateRangesFromFirestore
+          .sort((a, b) => a.startDate!.compareTo(b.startDate as DateTime));
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    changeAvailabilityToCalendar();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      context
+          .read(pharmacistMainProvider.notifier)
+          .changeDateRanges(dateRangesFromFirestore);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +66,11 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
       context
           .read(pharmacistMainProvider.notifier)
           .changeDateRanges(args.value);
+
+      context
+          .read(pharmacistMainProvider.notifier)
+          .dateRanges
+          .sort((a, b) => a.startDate!.compareTo(b.startDate as DateTime));
       dateRangesTemp.clear();
       for (var i = 0;
           i < context.read(pharmacistMainProvider.notifier).dateRanges.length;
@@ -44,50 +87,6 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
       //print(context.read(pharmacistMainProvider.notifier).dateRanges);
     }
 
-    // final children = <Widget>[];
-    // for (var i = 0;
-    //     i < context.read(pharmacistMainProvider.notifier).dateRanges.length;
-    //     i++) {
-    //   children.add(new ListTile(
-    //     visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-    //     title: Text(bullet +
-    //         " " +
-    //         DateFormat.yMMMMd('en_US')
-    //             .format(context
-    //                 .read(pharmacistMainProvider.notifier)
-    //                 .dateRanges[i]
-    //                 .startDate as DateTime)
-    //             .toString() +
-    //         ' - ' +
-    //         DateFormat.yMMMMd('en_US')
-    //             .format(context
-    //                     .read(pharmacistMainProvider.notifier)
-    //                     .dateRanges[i]
-    //                     .endDate ??
-    //                 context
-    //                     .read(pharmacistMainProvider.notifier)
-    //                     .dateRanges[i]
-    //                     .startDate as DateTime)
-    //             .toString()),
-    //   ));
-    // }
-    // if (context.read(pharmacistMainProvider.notifier).dateRanges.isEmpty) {
-    //   children.add(
-    //     Padding(
-    //       padding: const EdgeInsets.fromLTRB(0, 10, 5, 0),
-    //       child: RichText(
-    //         textAlign: TextAlign.center,
-    //         text: TextSpan(
-    //           text: "No Dates Selected",
-    //           style: TextStyle(
-    //               fontWeight: FontWeight.w400,
-    //               fontSize: 18.0,
-    //               color: Colors.grey),
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -112,8 +111,7 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                 padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
                 child: SfDateRangePicker(
                   onSelectionChanged: _onSelectionChanged,
-                  initialSelectedRanges:
-                      context.read(pharmacistMainProvider.notifier).dateRanges,
+                  initialSelectedRanges: dateRangesFromFirestore,
                   view: DateRangePickerView.month,
                   navigationDirection:
                       DateRangePickerNavigationDirection.vertical,

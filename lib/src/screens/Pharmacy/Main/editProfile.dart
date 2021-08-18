@@ -29,6 +29,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
         Colors.white, //set the color you want to see in final result
   );
   Map<String, dynamic> uploadDataMap = Map();
+  List<Software?> softwareList = [];
 
   final _items = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
@@ -41,6 +42,46 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
     } else {
       uploadDataMap[firestoreVal] = currentVal;
     }
+  }
+
+  List<Software?> changeSoftwareToList(String? stringList) {
+    int indexOfOpenBracket = stringList!.indexOf("[");
+    int indexOfLastBracket = stringList.lastIndexOf("]");
+    var noBracketString =
+        stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
+    var list = noBracketString.split(", ");
+    List<Software?> softwareListTemp = [];
+    for (var i = 0; i < list.length; i++) {
+      softwareListTemp.add(Software(id: 0, name: list[i]));
+    }
+    return softwareListTemp;
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      setState(() {
+        context.read(pharmacySignUpProvider.notifier).changeStreetAddress(
+            context.read(pharmacyMainProvider.notifier).userData?["address"]
+                ["streetAddress"]);
+        context.read(pharmacySignUpProvider.notifier).changeCity(context
+            .read(pharmacyMainProvider.notifier)
+            .userData?["address"]["city"]);
+        context.read(pharmacySignUpProvider.notifier).changePostalCode(context
+            .read(pharmacyMainProvider.notifier)
+            .userData?["address"]["postalCode"]);
+        context.read(pharmacySignUpProvider.notifier).changeCountry(context
+            .read(pharmacyMainProvider.notifier)
+            .userData?["address"]["country"]);
+        context.read(pharmacySignUpProvider.notifier).changeSoftwareList(
+            changeSoftwareToList(context
+                .read(pharmacyMainProvider.notifier)
+                .userData?["softwareList"]));
+      });
+    });
+
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -786,6 +827,10 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
                                                 .changeSoftwareList(values);
+                                            print(context
+                                                .read(pharmacySignUpProvider
+                                                    .notifier)
+                                                .softwareList);
                                             uploadDataMap["softwareList"] =
                                                 values.toString();
                                             checkIfChanged(values.toString(),

@@ -210,7 +210,7 @@ class SideMenuDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 250,
+      constraints: BoxConstraints(minWidth: 250, maxWidth: 290),
       child: Drawer(
         child: Column(
           children: <Widget>[
@@ -498,7 +498,13 @@ class _createDrawerHeader extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       //change to retrieve name from Firestore
-                      text: "Satvik Garg",
+                      text: context
+                              .read(pharmacistMainProvider.notifier)
+                              .userDataMap?["firstName"] +
+                          " " +
+                          context
+                              .read(pharmacistMainProvider.notifier)
+                              .userDataMap?["lastName"],
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 18.0,
@@ -511,7 +517,9 @@ class _createDrawerHeader extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       //change to retrieve email from firestore
-                      text: "sat.garg03@gmail.com",
+                      text: context
+                          .read(pharmacistMainProvider.notifier)
+                          .userDataMap?["email"],
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 13.0,

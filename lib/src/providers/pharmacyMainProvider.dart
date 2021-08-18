@@ -21,7 +21,7 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   bool isValidSearchPharmacist() {
     if (state.startDate == null ||
         state.endDate == null ||
-        state.skillList!.isEmpty) {
+        state.skillList == null) {
       print("true search pharmacist");
       return true;
     } else {
