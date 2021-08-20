@@ -4,6 +4,8 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:pharma_connect/Custom%20Widgets/custom_multiSelect_field.dart';
+import 'package:pharma_connect/Custom%20Widgets/custom_multi_select_display.dart';
 import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
 import 'package:pharma_connect/src/Address%20Search/placeService.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
@@ -29,7 +31,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
         Colors.white, //set the color you want to see in final result
   );
   Map<String, dynamic> uploadDataMap = Map();
-  List<Software?> softwareList = [];
+  List<Software?>? softwareList = null;
+  List<Software?>? softwareListToUpload = [];
 
   final _items = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
@@ -44,22 +47,31 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
     }
   }
 
-  List<Software?> changeSoftwareToList(String? stringList) {
+  void changeSoftwareToList(String? stringList) {
     int indexOfOpenBracket = stringList!.indexOf("[");
     int indexOfLastBracket = stringList.lastIndexOf("]");
     var noBracketString =
         stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
+    List<Software?>? templist = [];
     var list = noBracketString.split(", ");
-    List<Software?> softwareListTemp = [];
     for (var i = 0; i < list.length; i++) {
-      softwareListTemp.add(Software(id: 0, name: list[i]));
+      templist.add(Software(id: 1, name: list[i].toString()));
     }
-    return softwareListTemp;
+    setState(() {
+      softwareList = templist;
+    });
   }
 
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
+      changeSoftwareToList(context
+          .read(pharmacyMainProvider.notifier)
+          .userData?["softwareList"]);
+      context
+          .read(pharmacySignUpProvider.notifier)
+          .changeSoftwareList(softwareList as List<Software?>);
+
       setState(() {
         context.read(pharmacySignUpProvider.notifier).changeStreetAddress(
             context.read(pharmacyMainProvider.notifier).userData?["address"]
@@ -73,10 +85,6 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
         context.read(pharmacySignUpProvider.notifier).changeCountry(context
             .read(pharmacyMainProvider.notifier)
             .userData?["address"]["country"]);
-        context.read(pharmacySignUpProvider.notifier).changeSoftwareList(
-            changeSoftwareToList(context
-                .read(pharmacyMainProvider.notifier)
-                .userData?["softwareList"]));
       });
     });
 
@@ -107,853 +115,854 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
         ),
         backgroundColor: Color(0xFFF6F6F6),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            //Account Owner Information
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: Center(
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.95,
-                    constraints: BoxConstraints(minHeight: 320),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        //Title
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: RichText(
-                            textAlign: TextAlign.start,
-                            text: TextSpan(
-                              text: "Account Owner Information",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 24.0,
-                                  color: Colors.black),
+      body: Consumer(builder: (context, watch, child) {
+        watch(pharmacySignUpProvider);
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              //Account Owner Information
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: Center(
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.95,
+                      constraints: BoxConstraints(minHeight: 320),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          //Title
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: RichText(
+                              textAlign: TextAlign.start,
+                              text: TextSpan(
+                                text: "Account Owner Information",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 24.0,
+                                    color: Colors.black),
+                              ),
                             ),
                           ),
-                        ),
-                        Divider(
-                          height: 0,
-                          thickness: 2,
-                          color: Color(0xFF5DB075),
-                        ),
-                        //First Name
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(11, 10, 0, 0),
-                          child: formField(
-                            fieldTitle: "First Name",
-                            hintText: "Enter your First Name...",
-                            keyboardStyle: TextInputType.name,
-                            containerWidth: 345,
-                            titleFont: 22,
-                            onChanged: (String firstName) {
-                              context
-                                  .read(pharmacySignUpProvider.notifier)
-                                  .changeFirstName(firstName);
-                              checkIfChanged(firstName, "firstName");
-                            },
-                            validation: (value) {
-                              if (!RegExp(
-                                      r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
-                                  .hasMatch(value)) {
-                                return "Invalid field";
-                              }
-                              return null;
-                            },
-                            initialValue: context
-                                .read(pharmacyMainProvider.notifier)
-                                .userData?["firstName"],
+                          Divider(
+                            height: 0,
+                            thickness: 2,
+                            color: Color(0xFF5DB075),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        //Last Name
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                          child: formField(
-                            fieldTitle: "Last Name",
-                            hintText: "Enter your Last Name...",
-                            keyboardStyle: TextInputType.name,
-                            containerWidth: 345,
-                            titleFont: 22,
-                            onChanged: (String lastName) {
-                              context
-                                  .read(pharmacySignUpProvider.notifier)
-                                  .changeLastName(lastName);
-                              checkIfChanged(lastName, "lastName");
-                            },
-                            validation: (value) {
-                              if (!RegExp(
-                                      r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
-                                  .hasMatch(value)) {
-                                return "Invalid field";
-                              }
-                              return null;
-                            },
-                            initialValue: context
-                                .read(pharmacyMainProvider.notifier)
-                                .userData?["lastName"],
+                          //First Name
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(11, 10, 0, 0),
+                            child: formField(
+                              fieldTitle: "First Name",
+                              hintText: "Enter your First Name...",
+                              keyboardStyle: TextInputType.name,
+                              containerWidth: 345,
+                              titleFont: 22,
+                              onChanged: (String firstName) {
+                                context
+                                    .read(pharmacySignUpProvider.notifier)
+                                    .changeFirstName(firstName);
+                                checkIfChanged(firstName, "firstName");
+                              },
+                              validation: (value) {
+                                if (!RegExp(
+                                        r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                                    .hasMatch(value)) {
+                                  return "Invalid field";
+                                }
+                                return null;
+                              },
+                              initialValue: context
+                                  .read(pharmacyMainProvider.notifier)
+                                  .userData?["firstName"],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        //Phone Number
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                          child: formField(
-                            fieldTitle: "Phone Number",
-                            hintText: "Enter your Phone Number...",
-                            keyboardStyle: TextInputType.number,
-                            containerWidth: 345,
-                            titleFont: 22,
-                            onChanged: (String phoneNumber) {
-                              context
-                                  .read(pharmacySignUpProvider.notifier)
-                                  .changePhoneNumber(phoneNumber);
-                              checkIfChanged(phoneNumber, "phoneNumber");
-                            },
-                            validation: (value) {
-                              if (value.length < 4) {
-                                return "Phone is invalid";
-                              }
-                              return null;
-                            },
-                            initialValue: context
-                                .read(pharmacyMainProvider.notifier)
-                                .userData?["phoneNumber"],
-                            formatter: [MaskedInputFormatter('(###) ###-####')],
+                          SizedBox(height: 20),
+                          //Last Name
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                            child: formField(
+                              fieldTitle: "Last Name",
+                              hintText: "Enter your Last Name...",
+                              keyboardStyle: TextInputType.name,
+                              containerWidth: 345,
+                              titleFont: 22,
+                              onChanged: (String lastName) {
+                                context
+                                    .read(pharmacySignUpProvider.notifier)
+                                    .changeLastName(lastName);
+                                checkIfChanged(lastName, "lastName");
+                              },
+                              validation: (value) {
+                                if (!RegExp(
+                                        r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                                    .hasMatch(value)) {
+                                  return "Invalid field";
+                                }
+                                return null;
+                              },
+                              initialValue: context
+                                  .read(pharmacyMainProvider.notifier)
+                                  .userData?["lastName"],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        //Email Address
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                          child: formField(
-                            fieldTitle: "Email",
-                            hintText: "Enter your email address...",
-                            keyboardStyle: TextInputType.name,
-                            containerWidth: 345,
-                            titleFont: 22,
-                            onChanged: (String email) {
-                              context
-                                  .read(pharmacySignUpProvider.notifier)
-                                  .changeEmail(email);
-                              checkIfChanged(email, "email");
-                            },
-                            validation: (value) {
-                              if (!EmailValidator.validate(value)) {
-                                return "Incorrect Format";
-                              }
-                              return null;
-                            },
-                            initialValue: context
-                                .read(pharmacyMainProvider.notifier)
-                                .userData?["email"],
+                          SizedBox(height: 20),
+                          //Phone Number
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                            child: formField(
+                              fieldTitle: "Phone Number",
+                              hintText: "Enter your Phone Number...",
+                              keyboardStyle: TextInputType.number,
+                              containerWidth: 345,
+                              titleFont: 22,
+                              onChanged: (String phoneNumber) {
+                                context
+                                    .read(pharmacySignUpProvider.notifier)
+                                    .changePhoneNumber(phoneNumber);
+                                checkIfChanged(phoneNumber, "phoneNumber");
+                              },
+                              validation: (value) {
+                                if (value.length < 4) {
+                                  return "Phone is invalid";
+                                }
+                                return null;
+                              },
+                              initialValue: context
+                                  .read(pharmacyMainProvider.notifier)
+                                  .userData?["phoneNumber"],
+                              formatter: [
+                                MaskedInputFormatter('(###) ###-####')
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        //Position
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              RichText(
-                                textAlign: TextAlign.left,
-                                text: TextSpan(
-                                    text: "Position",
-                                    style: GoogleFonts.questrial(
-                                      fontSize: 22,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                    )),
-                              ),
-                              SizedBox(height: 10),
-                              Container(
-                                width: 335,
-                                constraints: BoxConstraints(
-                                    maxHeight: 60, minHeight: 50),
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        offset: Offset(0.3, 5),
-                                        blurRadius: 3.0,
-                                        spreadRadius: 0.5,
-                                        color: Colors.grey.shade400)
-                                  ],
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.grey.shade200,
+                          SizedBox(height: 20),
+                          //Position
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                RichText(
+                                  textAlign: TextAlign.left,
+                                  text: TextSpan(
+                                      text: "Position",
+                                      style: GoogleFonts.questrial(
+                                        fontSize: 22,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      )),
                                 ),
-                                child: DropdownButtonFormField<String>(
-                                    hint: Text(
-                                      "Select your Position...",
-                                      style: GoogleFonts.inter(
-                                          color: Color(0xFFBDBDBD),
-                                          fontSize: 16),
-                                    ),
-                                    value: context
-                                        .read(pharmacyMainProvider.notifier)
-                                        .userData?["position"],
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Color(0xFFF0F0F0),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: BorderSide(
-                                              color: Color(0xFFE8E8E8))),
-                                    ),
-                                    items: <String>[
-                                      'Pharmacy',
-                                      'Pharmacist',
-                                      'Technician',
-                                    ].map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                          child: Text(value), value: value);
-                                    }).toList(),
-                                    onChanged: (String? value) {
-                                      context
-                                          .read(pharmacySignUpProvider.notifier)
-                                          .changePosition(value);
-                                      checkIfChanged(value, "position");
-                                    },
-                                    style: GoogleFonts.questrial(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                    )),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        //Signature Overlay
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                          child: RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                                text: "E-Signature",
-                                style: GoogleFonts.questrial(
-                                  fontSize: 22,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                )),
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                          child: SignatureBox(sigController: _sigController),
-                        ),
-                        SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            //Pharmacy Information
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: Center(
-                child: Material(
-                  elevation: 10,
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.95,
-                    constraints: BoxConstraints(minHeight: 320),
-                    child: Consumer(
-                      builder: (context, watch, child) {
-                        watch(pharmacySignUpProvider);
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            //Title
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: RichText(
-                                textAlign: TextAlign.start,
-                                text: TextSpan(
-                                  text: "Pharmacy Information",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 24.0,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            Divider(
-                              height: 0,
-                              thickness: 2,
-                              color: Color(0xFF5DB075),
-                            ),
-
-                            //Pharmacy Name
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 10, 0, 0),
-                              child: formField(
-                                fieldTitle: "Pharmacy Name",
-                                hintText: "Enter the pharmacy name...",
-                                keyboardStyle: TextInputType.name,
-                                containerWidth: 345,
-                                titleFont: 22,
-                                onChanged: (String value) {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changePharmacyName(value);
-                                  checkIfChanged(value, "pharmacyName");
-                                },
-                                validation: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                  return null;
-                                },
-                                initialValue: context
-                                    .read(pharmacyMainProvider.notifier)
-                                    .userData?["pharmacyName"],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //Street Address
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  RichText(
-                                    textAlign: TextAlign.left,
-                                    text: TextSpan(
-                                        text: "Street Address",
-                                        style: GoogleFonts.questrial(
-                                          fontSize: 22,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                        )),
+                                SizedBox(height: 10),
+                                Container(
+                                  width: 335,
+                                  constraints: BoxConstraints(
+                                      maxHeight: 60, minHeight: 50),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0.3, 5),
+                                          blurRadius: 3.0,
+                                          spreadRadius: 0.5,
+                                          color: Colors.grey.shade400)
+                                    ],
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.grey.shade200,
                                   ),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    width: 345,
-
-                                    //height: 50,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0.3, 5),
-                                            blurRadius: 3.0,
-                                            spreadRadius: 0.5,
-                                            color: Colors.grey.shade400)
-                                      ],
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.grey.shade200,
-                                    ),
-                                    child: TextFormField(
-                                      readOnly: true,
-                                      controller: streetAddress,
-                                      onTap: () async {
-                                        final sessionToken = Uuid().v4();
-                                        final Suggestion? result =
-                                            await showSearch<Suggestion?>(
-                                          context: context,
-                                          delegate: AddressSearch(sessionToken),
-                                        );
-
-                                        if (result != null) {
-                                          final placeDetails =
-                                              await PlaceApiProvider(
-                                                      sessionToken)
-                                                  .getPlaceDetailFromId(
-                                                      result.placeId);
-                                          context
-                                              .read(pharmacySignUpProvider
-                                                  .notifier)
-                                              .changeStreetAddress(
-                                                  placeDetails.streetNumber! +
-                                                      " " +
-                                                      placeDetails.street
-                                                          .toString());
-                                          context
-                                              .read(pharmacySignUpProvider
-                                                  .notifier)
-                                              .changeCity(placeDetails.city);
-                                          context
-                                              .read(pharmacySignUpProvider
-                                                  .notifier)
-                                              .changePostalCode(
-                                                  placeDetails.zipCode);
-                                          context
-                                              .read(pharmacySignUpProvider
-                                                  .notifier)
-                                              .changeCountry(
-                                                  placeDetails.country);
-                                          uploadDataMap["address"] = {
-                                            "streetAddress": placeDetails
-                                                    .streetNumber! +
-                                                " " +
-                                                placeDetails.street.toString(),
-                                            "postalCode":
-                                                placeDetails.zipCode.toString(),
-                                            "country":
-                                                placeDetails.country.toString(),
-                                            "city": placeDetails.city.toString()
-                                          };
-
-                                          setState(() {
-                                            streetAddress.text = placeDetails
-                                                    .streetNumber! +
-                                                " " +
-                                                placeDetails.street.toString();
-                                            postalCode.text =
-                                                placeDetails.zipCode.toString();
-                                            country.text =
-                                                placeDetails.country.toString();
-                                            city.text =
-                                                placeDetails.city.toString();
-                                          });
-                                        }
-                                      },
+                                  child: DropdownButtonFormField<String>(
+                                      hint: Text(
+                                        "Select your Position...",
+                                        style: GoogleFonts.inter(
+                                            color: Color(0xFFBDBDBD),
+                                            fontSize: 16),
+                                      ),
+                                      value: context
+                                          .read(pharmacyMainProvider.notifier)
+                                          .userData?["position"],
                                       decoration: InputDecoration(
-                                        errorStyle: TextStyle(
-                                            fontWeight: FontWeight.w500),
-                                        contentPadding:
-                                            EdgeInsets.fromLTRB(10, 0, 0, 30),
                                         filled: true,
                                         fillColor: Color(0xFFF0F0F0),
-                                        // focusedErrorBorder: OutlineInputBorder(
-                                        //     borderRadius: BorderRadius.circular(8),
-                                        //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                                        // errorBorder: OutlineInputBorder(
-                                        //     borderRadius: BorderRadius.circular(8),
-                                        //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                                         enabledBorder: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             borderSide: BorderSide(
                                                 color: Color(0xFFE8E8E8))),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFFE8E8E8)),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                        hintText: "Enter the street address...",
-                                        hintStyle: GoogleFonts.inter(
-                                            color: Color(0xFFBDBDBD),
-                                            fontSize: 16),
                                       ),
-                                      style: GoogleFonts.inter(
-                                          color: Colors.black, fontSize: 16),
+                                      items: <String>[
+                                        'Pharmacy',
+                                        'Pharmacist',
+                                        'Technician',
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                            child: Text(value), value: value);
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        context
+                                            .read(
+                                                pharmacySignUpProvider.notifier)
+                                            .changePosition(value);
+                                        checkIfChanged(value, "position");
+                                      },
+                                      style: GoogleFonts.questrial(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              //Pharmacy Information
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: Center(
+                  child: Material(
+                    elevation: 10,
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.95,
+                      constraints: BoxConstraints(minHeight: 320),
+                      child: Consumer(
+                        builder: (context, watch, child) {
+                          watch(pharmacySignUpProvider);
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              //Title
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: RichText(
+                                  textAlign: TextAlign.start,
+                                  text: TextSpan(
+                                    text: "Pharmacy Information",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 24.0,
+                                        color: Colors.black),
+                                  ),
+                                ),
+                              ),
+                              Divider(
+                                height: 0,
+                                thickness: 2,
+                                color: Color(0xFF5DB075),
+                              ),
+
+                              //Pharmacy Name
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(11, 10, 0, 0),
+                                child: formField(
+                                  fieldTitle: "Pharmacy Name",
+                                  hintText: "Enter the pharmacy name...",
+                                  keyboardStyle: TextInputType.name,
+                                  containerWidth: 345,
+                                  titleFont: 22,
+                                  onChanged: (String value) {
+                                    context
+                                        .read(pharmacySignUpProvider.notifier)
+                                        .changePharmacyName(value);
+                                    checkIfChanged(value, "pharmacyName");
+                                  },
+                                  validation: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: context
+                                      .read(pharmacyMainProvider.notifier)
+                                      .userData?["pharmacyName"],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //Street Address
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                          text: "Street Address",
+                                          style: GoogleFonts.questrial(
+                                            fontSize: 22,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          )),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
+                                    SizedBox(height: 10),
+                                    Container(
+                                      width: 345,
 
-                            //Store Number
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: formField(
-                                fieldTitle: "Store Number",
-                                hintText: "Enter the Store Number...",
-                                keyboardStyle: TextInputType.streetAddress,
-                                containerWidth: 345,
-                                titleFont: 22,
-                                onChanged: (String storeNumber) {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changeStoreNumber(storeNumber);
-                                  uploadDataMap["address"]["storeNumber"] =
-                                      storeNumber;
-                                },
-                                validation: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                  return null;
-                                },
-                                initialValue: context
-                                    .read(pharmacyMainProvider.notifier)
-                                    .userData?["address"]["storeNumber"],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //City
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: formField(
-                                fieldTitle: "City",
-                                hintText: "Enter the city...",
-                                keyboardStyle: TextInputType.streetAddress,
-                                containerWidth: 345,
-                                titleFont: 22,
-                                onChanged: (String city) {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changeCity(city);
-                                  uploadDataMap["address"]["city"] = city;
-                                },
-                                validation: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                  return null;
-                                },
-                                controller: city,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //Postal Code
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: formField(
-                                fieldTitle: "Postal Code",
-                                hintText: "Enter the postal code...",
-                                keyboardStyle: TextInputType.streetAddress,
-                                containerWidth: 345,
-                                titleFont: 22,
-                                onChanged: (String postalCode) {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changePostalCode(postalCode);
-                                  uploadDataMap["address"]["postalCode"] =
-                                      postalCode;
-                                },
-                                validation: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                  return null;
-                                },
-                                controller: postalCode,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //Country
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: formField(
-                                fieldTitle: "Country",
-                                hintText: "Enter the country...",
-                                keyboardStyle: TextInputType.streetAddress,
-                                containerWidth: 345,
-                                titleFont: 22,
-                                onChanged: (String country) {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changeCountry(country);
-
-                                  uploadDataMap["address"]["country"] = country;
-                                },
-                                validation: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                  return null;
-                                },
-                                controller: country,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //Phone Number
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: formField(
-                                fieldTitle: "Pharmacy Phone Number",
-                                hintText: "Enter the pharmacy phone Number...",
-                                keyboardStyle: TextInputType.number,
-                                containerWidth: 345,
-                                titleFont: 22,
-                                onChanged: (String phoneNumber) {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changePhoneNumberPharmacy(phoneNumber);
-
-                                  checkIfChanged(
-                                      phoneNumber, "pharmacyPhoneNumber");
-                                },
-                                validation: (value) {
-                                  if (value.length < 4) {
-                                    return "Phone Number is invalid";
-                                  }
-                                  return null;
-                                },
-                                initialValue: context
-                                    .read(pharmacyMainProvider.notifier)
-                                    .userData?["pharmacyPhoneNumber"],
-                                formatter: [
-                                  MaskedInputFormatter('(###) ###-####')
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //Fax Number
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: formField(
-                                fieldTitle: "Pharmacy Fax Number",
-                                hintText: "Enter the pharmacy fax Number...",
-                                keyboardStyle: TextInputType.number,
-                                containerWidth: 345,
-                                titleFont: 22,
-                                onChanged: (String faxNumber) {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changeFaxNumber(faxNumber);
-                                  uploadDataMap["pharmacyFaxNumber"] =
-                                      faxNumber;
-                                  checkIfChanged(
-                                      faxNumber, "pharmacyFaxNumber");
-                                },
-                                validation: (value) {
-                                  if (value.length < 4) {
-                                    return "Phone Number is invalid";
-                                  }
-                                  return null;
-                                },
-                                initialValue: context
-                                    .read(pharmacyMainProvider.notifier)
-                                    .userData?["pharmacyFaxNumber"],
-                                formatter: [
-                                  MaskedInputFormatter('(###) ###-####')
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //Accreditation Province
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: formField(
-                                fieldTitle: "Accreditation Province",
-                                hintText: "Enter the accreditation province...",
-                                keyboardStyle: TextInputType.streetAddress,
-                                containerWidth: 345,
-                                titleFont: 22,
-                                onChanged: (String accreditationProvince) {
-                                  context
-                                      .read(pharmacySignUpProvider.notifier)
-                                      .changeAccreditationProvince(
-                                          accreditationProvince);
-
-                                  checkIfChanged(accreditationProvince,
-                                      "accreditationProvice");
-                                },
-                                validation: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                  return null;
-                                },
-                                initialValue: context
-                                    .read(pharmacyMainProvider.notifier)
-                                    .userData?["accreditationProvice"],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-
-                            //Pharmacy Software
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  RichText(
-                                    textAlign: TextAlign.left,
-                                    text: TextSpan(
-                                        text: "Pharmacy Software",
-                                        style: GoogleFonts.questrial(
-                                          fontSize: 22,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                        )),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    width: 345,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0.3, 3),
-                                            blurRadius: 3.0,
-                                            spreadRadius: 0.5,
-                                            color: Colors.grey.shade400)
-                                      ],
-                                      color: Color(0xFFF0F0F0),
-                                      border: Border.all(
-                                        color: Color(0xFFE8E8E8),
-                                        width: 2,
+                                      //height: 50,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0.3, 5),
+                                              blurRadius: 3.0,
+                                              spreadRadius: 0.5,
+                                              color: Colors.grey.shade400)
+                                        ],
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Colors.grey.shade200,
                                       ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Column(
-                                      children: <Widget>[
-                                        MultiSelectBottomSheetField<Software?>(
-                                          selectedColor: Color(0xFF5DB075),
-                                          selectedItemsTextStyle:
-                                              TextStyle(color: Colors.white),
-                                          initialChildSize: 0.4,
-                                          decoration: BoxDecoration(),
-                                          listType: MultiSelectListType.CHIP,
-                                          initialValue: context
-                                              .read(pharmacySignUpProvider
-                                                  .notifier)
-                                              .softwareList,
-                                          searchable: true,
-                                          items: _items,
-                                          buttonText: Text(
-                                              "Select Pharmacy Software...",
-                                              style: GoogleFonts.inter(
-                                                  color: Color(0xFFBDBDBD),
-                                                  fontSize: 16)),
-                                          onConfirm: (values) {
+                                      child: TextFormField(
+                                        readOnly: true,
+                                        controller: streetAddress,
+                                        onTap: () async {
+                                          final sessionToken = Uuid().v4();
+                                          final Suggestion? result =
+                                              await showSearch<Suggestion?>(
+                                            context: context,
+                                            delegate:
+                                                AddressSearch(sessionToken),
+                                          );
+
+                                          if (result != null) {
+                                            final placeDetails =
+                                                await PlaceApiProvider(
+                                                        sessionToken)
+                                                    .getPlaceDetailFromId(
+                                                        result.placeId);
                                             context
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
-                                                .changeSoftwareList(values);
-                                            print(context
+                                                .changeStreetAddress(
+                                                    placeDetails.streetNumber! +
+                                                        " " +
+                                                        placeDetails.street
+                                                            .toString());
+                                            context
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
-                                                .softwareList);
-                                            uploadDataMap["softwareList"] =
-                                                values.toString();
-                                            checkIfChanged(values.toString(),
-                                                "softwareList");
-                                          },
-                                          chipDisplay: MultiSelectChipDisplay(
-                                            items: context
+                                                .changeCity(placeDetails.city);
+                                            context
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
-                                                .softwareList
-                                                ?.map((e) => MultiSelectItem(
-                                                    e, e.toString()))
-                                                .toList(),
-                                            chipColor: Color(0xFF5DB075),
-                                            onTap: (value) {
+                                                .changePostalCode(
+                                                    placeDetails.zipCode);
+                                            context
+                                                .read(pharmacySignUpProvider
+                                                    .notifier)
+                                                .changeCountry(
+                                                    placeDetails.country);
+                                            uploadDataMap["address"] = {
+                                              "streetAddress":
+                                                  placeDetails.streetNumber! +
+                                                      " " +
+                                                      placeDetails.street
+                                                          .toString(),
+                                              "postalCode": placeDetails.zipCode
+                                                  .toString(),
+                                              "country": placeDetails.country
+                                                  .toString(),
+                                              "city":
+                                                  placeDetails.city.toString()
+                                            };
+
+                                            setState(() {
+                                              streetAddress.text =
+                                                  placeDetails.streetNumber! +
+                                                      " " +
+                                                      placeDetails.street
+                                                          .toString();
+                                              postalCode.text = placeDetails
+                                                  .zipCode
+                                                  .toString();
+                                              country.text = placeDetails
+                                                  .country
+                                                  .toString();
+                                              city.text =
+                                                  placeDetails.city.toString();
+                                            });
+                                          }
+                                        },
+                                        decoration: InputDecoration(
+                                          errorStyle: TextStyle(
+                                              fontWeight: FontWeight.w500),
+                                          contentPadding:
+                                              EdgeInsets.fromLTRB(10, 0, 0, 30),
+                                          filled: true,
+                                          fillColor: Color(0xFFF0F0F0),
+                                          // focusedErrorBorder: OutlineInputBorder(
+                                          //     borderRadius: BorderRadius.circular(8),
+                                          //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                                          // errorBorder: OutlineInputBorder(
+                                          //     borderRadius: BorderRadius.circular(8),
+                                          //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: BorderSide(
+                                                  color: Color(0xFFE8E8E8))),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color(0xFFE8E8E8)),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          hintText:
+                                              "Enter the street address...",
+                                          hintStyle: GoogleFonts.inter(
+                                              color: Color(0xFFBDBDBD),
+                                              fontSize: 16),
+                                        ),
+                                        style: GoogleFonts.inter(
+                                            color: Colors.black, fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //Store Number
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: formField(
+                                  fieldTitle: "Store Number",
+                                  hintText: "Enter the Store Number...",
+                                  keyboardStyle: TextInputType.streetAddress,
+                                  containerWidth: 345,
+                                  titleFont: 22,
+                                  onChanged: (String storeNumber) {
+                                    context
+                                        .read(pharmacySignUpProvider.notifier)
+                                        .changeStoreNumber(storeNumber);
+                                    uploadDataMap["address"]["storeNumber"] =
+                                        storeNumber;
+                                  },
+                                  validation: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: context
+                                      .read(pharmacyMainProvider.notifier)
+                                      .userData?["address"]["storeNumber"],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //City
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: formField(
+                                  fieldTitle: "City",
+                                  hintText: "Enter the city...",
+                                  keyboardStyle: TextInputType.streetAddress,
+                                  containerWidth: 345,
+                                  titleFont: 22,
+                                  onChanged: (String city) {
+                                    context
+                                        .read(pharmacySignUpProvider.notifier)
+                                        .changeCity(city);
+                                    uploadDataMap["address"]["city"] = city;
+                                  },
+                                  validation: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                    return null;
+                                  },
+                                  controller: city,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //Postal Code
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: formField(
+                                  fieldTitle: "Postal Code",
+                                  hintText: "Enter the postal code...",
+                                  keyboardStyle: TextInputType.streetAddress,
+                                  containerWidth: 345,
+                                  titleFont: 22,
+                                  onChanged: (String postalCode) {
+                                    context
+                                        .read(pharmacySignUpProvider.notifier)
+                                        .changePostalCode(postalCode);
+                                    uploadDataMap["address"]["postalCode"] =
+                                        postalCode;
+                                  },
+                                  validation: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                    return null;
+                                  },
+                                  controller: postalCode,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //Country
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: formField(
+                                  fieldTitle: "Country",
+                                  hintText: "Enter the country...",
+                                  keyboardStyle: TextInputType.streetAddress,
+                                  containerWidth: 345,
+                                  titleFont: 22,
+                                  onChanged: (String country) {
+                                    context
+                                        .read(pharmacySignUpProvider.notifier)
+                                        .changeCountry(country);
+
+                                    uploadDataMap["address"]["country"] =
+                                        country;
+                                  },
+                                  validation: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                    return null;
+                                  },
+                                  controller: country,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //Phone Number
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: formField(
+                                  fieldTitle: "Pharmacy Phone Number",
+                                  hintText:
+                                      "Enter the pharmacy phone Number...",
+                                  keyboardStyle: TextInputType.number,
+                                  containerWidth: 345,
+                                  titleFont: 22,
+                                  onChanged: (String phoneNumber) {
+                                    context
+                                        .read(pharmacySignUpProvider.notifier)
+                                        .changePhoneNumberPharmacy(phoneNumber);
+
+                                    checkIfChanged(
+                                        phoneNumber, "pharmacyPhoneNumber");
+                                  },
+                                  validation: (value) {
+                                    if (value.length < 4) {
+                                      return "Phone Number is invalid";
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: context
+                                      .read(pharmacyMainProvider.notifier)
+                                      .userData?["pharmacyPhoneNumber"],
+                                  formatter: [
+                                    MaskedInputFormatter('(###) ###-####')
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //Fax Number
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: formField(
+                                  fieldTitle: "Pharmacy Fax Number",
+                                  hintText: "Enter the pharmacy fax Number...",
+                                  keyboardStyle: TextInputType.number,
+                                  containerWidth: 345,
+                                  titleFont: 22,
+                                  onChanged: (String faxNumber) {
+                                    context
+                                        .read(pharmacySignUpProvider.notifier)
+                                        .changeFaxNumber(faxNumber);
+                                    uploadDataMap["pharmacyFaxNumber"] =
+                                        faxNumber;
+                                    checkIfChanged(
+                                        faxNumber, "pharmacyFaxNumber");
+                                  },
+                                  validation: (value) {
+                                    if (value.length < 4) {
+                                      return "Phone Number is invalid";
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: context
+                                      .read(pharmacyMainProvider.notifier)
+                                      .userData?["pharmacyFaxNumber"],
+                                  formatter: [
+                                    MaskedInputFormatter('(###) ###-####')
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //Accreditation Province
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: formField(
+                                  fieldTitle: "Accreditation Province",
+                                  hintText:
+                                      "Enter the accreditation province...",
+                                  keyboardStyle: TextInputType.streetAddress,
+                                  containerWidth: 345,
+                                  titleFont: 22,
+                                  onChanged: (String accreditationProvince) {
+                                    context
+                                        .read(pharmacySignUpProvider.notifier)
+                                        .changeAccreditationProvince(
+                                            accreditationProvince);
+
+                                    checkIfChanged(accreditationProvince,
+                                        "accreditationProvice");
+                                  },
+                                  validation: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: context
+                                      .read(pharmacyMainProvider.notifier)
+                                      .userData?["accreditationProvice"],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+                              //Pharmacy Software
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                          text: "Pharmacy Software",
+                                          style: GoogleFonts.questrial(
+                                            fontSize: 22,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          )),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Container(
+                                      width: 345,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0.3, 3),
+                                              blurRadius: 3.0,
+                                              spreadRadius: 0.5,
+                                              color: Colors.grey.shade400)
+                                        ],
+                                        color: Color(0xFFF0F0F0),
+                                        border: Border.all(
+                                          color: Color(0xFFE8E8E8),
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          CustomMultiSelectBottomSheetField<
+                                              Software?>(
+                                            selectedColor: Color(0xFF5DB075),
+                                            selectedItemsTextStyle:
+                                                TextStyle(color: Colors.white),
+                                            initialChildSize: 0.4,
+                                            decoration: BoxDecoration(),
+                                            listType: MultiSelectListType.CHIP,
+                                            initialValue: context
+                                                .read(pharmacySignUpProvider
+                                                    .notifier)
+                                                .softwareList,
+                                            searchable: true,
+                                            items: _items,
+                                            buttonText: Text(
+                                                "Select Pharmacy Software...",
+                                                style: GoogleFonts.inter(
+                                                    color: Color(0xFFBDBDBD),
+                                                    fontSize: 16)),
+                                            onConfirm: (values) {
+                                              softwareListToUpload
+                                                  ?.addAll(values);
                                               context
                                                   .read(pharmacySignUpProvider
                                                       .notifier)
-                                                  .softwareList
-                                                  ?.remove(value);
-
-                                              return context
+                                                  .changeSoftwareList(values);
+                                            },
+                                            chipDisplay:
+                                                CustomMultiSelectChipDisplay(
+                                              items: context
                                                   .read(pharmacySignUpProvider
                                                       .notifier)
-                                                  .softwareList;
-                                            },
-                                            textStyle:
-                                                TextStyle(color: Colors.white),
+                                                  .softwareList
+                                                  ?.map((e) => MultiSelectItem(
+                                                      e, e.toString()))
+                                                  .toList(),
+                                              chipColor: Color(0xFF5DB075),
+                                              onTap: (value) {
+                                                softwareListToUpload
+                                                    ?.remove(value);
+                                                softwareListToUpload
+                                                    ?.removeWhere((element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
+                                                context
+                                                    .read(pharmacySignUpProvider
+                                                        .notifier)
+                                                    .softwareList
+                                                    ?.cast()
+                                                    .remove(value);
+                                                context
+                                                    .read(pharmacySignUpProvider
+                                                        .notifier)
+                                                    .softwareList
+                                                    ?.removeWhere((element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
+
+                                                return context
+                                                    .read(pharmacySignUpProvider
+                                                        .notifier)
+                                                    .softwareList;
+                                              },
+                                              textStyle: TextStyle(
+                                                  color: Colors.white),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
 
-                            SizedBox(height: 20),
-                            //Next Button
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(height: 20),
-            Center(
-              child: SizedBox(
-                width: 324,
-                height: 51,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Color(0xFF5DB075);
-                          else if (states.contains(MaterialState.disabled))
-                            return Colors.grey;
-                          return Color(
-                              0xFF5DB075); // Use the component's default.
+                              SizedBox(height: 20),
+                              //Next Button
+                            ],
+                          );
                         },
                       ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ))),
-                  onPressed: () async {
-                    print(uploadDataMap);
-                    String? result = await context
-                        .read(authProvider.notifier)
-                        .updatePharmacyUserInformation(
-                            context.read(userProviderLogin.notifier).userUID,
-                            uploadDataMap);
+                    ),
+                  ),
+                ),
+              ),
 
-                    if (result == "Profile Upload Failed") {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Important!"),
-                              content: Text(
-                                  "There was an error trying to update your profile. Please try again."),
-                              actions: [
-                                TextButton(
-                                  child: Text(
-                                    "Ok",
-                                    style: TextStyle(color: Color(0xFF5DB075)),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                )
-                              ],
-                            );
-                          });
-                    } else {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => JobHistoryPharmacy()));
-                    }
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Save",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+              SizedBox(height: 20),
+              Center(
+                child: SizedBox(
+                  width: 324,
+                  height: 51,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Color(0xFF5DB075);
+                            else if (states.contains(MaterialState.disabled))
+                              return Colors.grey;
+                            return Color(
+                                0xFF5DB075); // Use the component's default.
+                          },
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ))),
+                    onPressed: (uploadDataMap.isNotEmpty ||
+                            softwareListToUpload!.isNotEmpty)
+                        ? () async {
+                            print(uploadDataMap);
+                            if (context
+                                    .read(pharmacySignUpProvider.notifier)
+                                    .softwareList !=
+                                null) {
+                              uploadDataMap["softwareList"] = context
+                                  .read(pharmacySignUpProvider.notifier)
+                                  .softwareList
+                                  .toString();
+                            }
+                            print("Upload Data Map: $uploadDataMap");
+                            String? result = await context
+                                .read(authProvider.notifier)
+                                .updatePharmacyUserInformation(
+                                    context
+                                        .read(userProviderLogin.notifier)
+                                        .userUID,
+                                    uploadDataMap);
+
+                            if (result == "Profile Upload Failed") {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Important!"),
+                                      content: Text(
+                                          "There was an error trying to update your profile. Please try again."),
+                                      actions: [
+                                        TextButton(
+                                          child: Text(
+                                            "Ok",
+                                            style: TextStyle(
+                                                color: Color(0xFF5DB075)),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          JobHistoryPharmacy()));
+                            }
+                          }
+                        : null,
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Save",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            SizedBox(height: 20),
-          ],
-        ),
-      ),
+              SizedBox(height: 20),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

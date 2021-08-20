@@ -81,6 +81,8 @@ exports.aggregateJobs = functions.firestore.document("Users/{uid}/Main/{jobID}")
     const hourlyRate = afterData.hourlyRate;
     const limaStatus = afterData.limaStatus;
     const comments = afterData.comments;
+    const pharmacyName = afterData.pharmacyName;
+    const pharmacyAddress = afterData.pharmacyAddress;
     const jobID = context.params.jobID;
 
     const next = {
@@ -94,13 +96,16 @@ exports.aggregateJobs = functions.firestore.document("Users/{uid}/Main/{jobID}")
         hourlyRate: hourlyRate,
         limaStatus: limaStatus,
         comments: comments,
+        pharmacyAddress: pharmacyAddress,
+        pharmacyName:pharmacyName,
         jobID: jobID,
     }
+    functions.logger.log("Hello, here is the after data: ", afterData);
+
     
     return aggregatedDataRef.set({[next.jobID]: next}, { merge: true })
 
     
-    // functions.logger.log("Hello, here is the after data ON WRITE: ", afterData);
     // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);
     // functions.logger.log("Hello, here is the uid: ", context.params.uid);
     

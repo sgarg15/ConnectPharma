@@ -389,6 +389,10 @@ class AuthProvider extends ChangeNotifier {
     users.doc(userUID).collection("Main").add({
       "startDate": context.read(pharmacyMainProvider).startDate,
       "endDate": context.read(pharmacyMainProvider).endDate,
+      "pharmacyName":
+          context.read(pharmacyMainProvider).userData?["pharmacyName"],
+      "pharmacyAddress":
+          context.read(pharmacyMainProvider).userData?["address"],
       "jobStatus": "active",
       "skillsNeeded": context.read(pharmacyMainProvider).skillList.toString(),
       "softwareNeeded":

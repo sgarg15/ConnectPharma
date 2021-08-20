@@ -1,16 +1,15 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
+
+import 'custom_multi_select_bottom_display.dart';
+import 'custom_multi_select_display.dart';
 
 /// A customizable InkWell widget that opens the MultiSelectBottomSheet
 // ignore: must_be_immutable
 class CustomMultiSelectBottomSheetField<V> extends FormField<List<V>> {
   /// Style the Container that makes up the field.
   final BoxDecoration? decoration;
-
-  // Disable field
-  final bool enabled;
 
   /// Set text that is displayed on the button.
   final Text? buttonText;
@@ -66,9 +65,9 @@ class CustomMultiSelectBottomSheetField<V> extends FormField<List<V>> {
   /// Set the color of the space outside the BottomSheet.
   final Color? barrierColor;
 
-  /// Overrides the default MultiSelectChipDisplay attached to this field.
-  /// If you want to remove it, use MultiSelectChipDisplay.none().
-  final MultiSelectChipDisplay<V>? chipDisplay;
+  /// Overrides the default CustomMultiSelectChipDisplay attached to this field.
+  /// If you want to remove it, use CustomMultiSelectChipDisplay.none().
+  final CustomMultiSelectChipDisplay<V>? chipDisplay;
 
   /// A function that sets the color of selected items based on their value.
   /// It will either set the chip color, or the checkbox color depending on the list type.
@@ -142,13 +141,12 @@ class CustomMultiSelectBottomSheetField<V> extends FormField<List<V>> {
     this.onSaved,
     this.validator,
     this.autovalidateMode = AutovalidateMode.disabled,
-    this.enabled = false,
   }) : super(
             key: key,
             onSaved: onSaved,
             validator: validator,
             autovalidateMode: autovalidateMode,
-            initialValue: initialValue ?? [],
+            initialValue: initialValue,
             builder: (FormFieldState<List<V>> state) {
               _MultiSelectBottomSheetFieldView view =
                   _MultiSelectBottomSheetFieldView<V>(
@@ -182,7 +180,6 @@ class CustomMultiSelectBottomSheetField<V> extends FormField<List<V>> {
                 selectedColor: selectedColor,
                 shape: shape,
                 checkColor: checkColor,
-                enabled: enabled,
               );
               return _MultiSelectBottomSheetFieldView<V?>._withState(
                   view as _MultiSelectBottomSheetFieldView<V?>, state);
@@ -210,7 +207,7 @@ class _MultiSelectBottomSheetFieldView<V> extends StatefulWidget {
   final double? maxChildSize;
   final ShapeBorder? shape;
   final Color? barrierColor;
-  final MultiSelectChipDisplay<V>? chipDisplay;
+  final CustomMultiSelectChipDisplay<V>? chipDisplay;
   final Color Function(V)? colorator;
   final Color? backgroundColor;
   final Color? unselectedColor;
@@ -222,7 +219,6 @@ class _MultiSelectBottomSheetFieldView<V> extends StatefulWidget {
   final TextStyle? searchHintStyle;
   final Color? checkColor;
   FormFieldState<List<V>>? state;
-  bool enabled;
 
   _MultiSelectBottomSheetFieldView({
     required this.items,
@@ -255,7 +251,6 @@ class _MultiSelectBottomSheetFieldView<V> extends StatefulWidget {
     this.searchHintStyle,
     this.selectedItemsTextStyle,
     this.checkColor,
-    this.enabled = false,
   });
 
   /// This constructor allows a FormFieldState to be passed in. Called by MultiSelectBottomSheetField.
@@ -291,7 +286,6 @@ class _MultiSelectBottomSheetFieldView<V> extends StatefulWidget {
         searchTextStyle = field.searchTextStyle,
         selectedItemsTextStyle = field.selectedItemsTextStyle,
         checkColor = field.checkColor,
-        enabled = field.enabled,
         state = state;
 
   @override
@@ -313,16 +307,20 @@ class __MultiSelectBottomSheetFieldViewState<V>
   Widget _buildInheritedChipDisplay() {
     List<MultiSelectItem<V>?> chipDisplayItems = [];
     chipDisplayItems = _selectedItems
-        .map((e) =>
-            widget.items.firstWhereOrNull((element) => e == element.value))
+        .map((e) => widget.items.firstWhereOrNull((element) {
+              return e.toString() == element.value.toString();
+            }))
         .toList();
+    //print(chipDisplayItems);
+
     chipDisplayItems.removeWhere((element) => element == null);
     if (widget.chipDisplay != null) {
       // if user has specified a chipDisplay, use its params
       if (widget.chipDisplay!.disabled!) {
         return Container();
       } else {
-        return MultiSelectChipDisplay<V>(
+        //print("Chip Display Items: $chipDisplayItems");
+        return CustomMultiSelectChipDisplay<V>(
           items: chipDisplayItems,
           colorator: widget.chipDisplay!.colorator ?? widget.colorator,
           onTap: (item) {
@@ -356,7 +354,7 @@ class __MultiSelectBottomSheetFieldViewState<V>
       }
     } else {
       // user didn't specify a chipDisplay, build the default
-      return MultiSelectChipDisplay<V>(
+      return CustomMultiSelectChipDisplay<V>(
         items: chipDisplayItems,
         colorator: widget.colorator,
         chipColor: (widget.selectedColor != null &&
@@ -378,7 +376,7 @@ class __MultiSelectBottomSheetFieldViewState<V>
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return MultiSelectBottomSheet<V>(
+          return CustomMultiSelectBottomSheet<V>(
             checkColor: widget.checkColor,
             selectedItemsTextStyle: widget.selectedItemsTextStyle,
             searchTextStyle: widget.searchTextStyle,

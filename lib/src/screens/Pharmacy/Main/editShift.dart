@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:pharma_connect/Custom%20Widgets/custom_multiSelect_field.dart';
+import 'package:pharma_connect/Custom%20Widgets/custom_multi_select_display.dart';
 
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
@@ -11,27 +14,100 @@ import '../../../../Custom Widgets/custom_dateTimeField.dart';
 import '../../../../all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateShift extends StatefulWidget {
-  CreateShift({Key? key}) : super(key: key);
+// ignore: must_be_immutable
+class EditShift extends StatefulWidget {
+  Map? jobDataMap = Map();
+
+  EditShift({Key? key, this.jobDataMap}) : super(key: key);
 
   @override
-  _CreateShiftPharmacyState createState() => _CreateShiftPharmacyState();
+  _EditShiftPharmacyState createState() => _EditShiftPharmacyState();
 }
 
-class _CreateShiftPharmacyState extends State<CreateShift> {
+class _EditShiftPharmacyState extends State<EditShift> {
   final _softwareItems = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
   final _skillItems =
       skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
 
+  List<Skill?>? skillList = null;
+  List<Software?>? softwareList = null;
   bool softwareFieldEnabled = false;
+
+  void changeSkillToList(String? stringList) {
+    int indexOfOpenBracket = stringList!.indexOf("[");
+    int indexOfLastBracket = stringList.lastIndexOf("]");
+    var noBracketString =
+        stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
+    List<Skill?>? templist = [];
+    var list = noBracketString.split(", ");
+    for (var i = 0; i < list.length; i++) {
+      templist.add(Skill(id: 1, name: list[i].toString()));
+    }
+    setState(() {
+      skillList = templist;
+    });
+  }
+
+  void changeSoftwareToList(String? stringList) {
+    int indexOfOpenBracket = stringList!.indexOf("[");
+    int indexOfLastBracket = stringList.lastIndexOf("]");
+    var noBracketString =
+        stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
+    List<Software?>? templist = [];
+    var list = noBracketString.split(", ");
+    for (var i = 0; i < list.length; i++) {
+      templist.add(Software(id: 1, name: list[i].toString()));
+    }
+    setState(() {
+      softwareList = templist;
+    });
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      changeSkillToList(widget.jobDataMap?["skillsNeeded"]);
+      changeSoftwareToList(widget.jobDataMap?["softwareNeeded"]);
+      if (skillList != null) {
+        context
+            .read(pharmacyMainProvider.notifier)
+            .changeSkillList(skillList as List<Skill?>);
+      }
+      if (softwareList != null) {
+        context
+            .read(pharmacyMainProvider.notifier)
+            .changeSoftwareList(softwareList as List<Software?>);
+      }
+
+      context
+          .read(pharmacyMainProvider.notifier)
+          .changeTechOnSite(widget.jobDataMap?["techOnSite"]);
+      print(widget.jobDataMap?["assistantOnSite"]);
+      context
+          .read(pharmacyMainProvider.notifier)
+          .changeAssistantOnSite(widget.jobDataMap?["assistantOnSite"]);
+      context
+          .read(pharmacyMainProvider.notifier)
+          .changeHourlyRate(widget.jobDataMap?["hourlyRate"]);
+      print(
+          "Hourly Rate: ${context.read(pharmacyMainProvider.notifier).hourlyRate}");
+      context
+          .read(pharmacyMainProvider.notifier)
+          .changeLIMAStatus(widget.jobDataMap?["limaStatus"]);
+      context
+          .read(pharmacyMainProvider.notifier)
+          .changeComments(widget.jobDataMap?["comments"]);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        context.read(pharmacyMainProvider.notifier).clearValues();
+        //context.read(pharmacyMainProvider.notifier).clearValues();
         return true;
       },
       child: Scaffold(
@@ -40,7 +116,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 12,
           title: Text(
-            "Create Shift",
+            "Edit Shift",
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
           ),
@@ -55,7 +131,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                     child: Material(
                       elevation: 5,
                       borderRadius: BorderRadius.circular(60),
@@ -95,6 +171,9 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                           height: 55,
                                           width: 200,
                                           child: DateTimeField(
+                                            initialValue: (widget
+                                                    .jobDataMap?["startDate"])
+                                                .toDate(),
                                             format: DateFormat(
                                                 "MM/dd/yyyy hh:mm a"),
                                             textAlign: TextAlign.center,
@@ -120,38 +199,70 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                             ),
                                             onShowPicker:
                                                 (context, currentValue) async {
-                                              final date = await showDatePicker(
-                                                  context: context,
-                                                  firstDate: DateTime.now(),
-                                                  initialDate: currentValue ??
-                                                      DateTime.now(),
-                                                  lastDate: DateTime(2100));
-                                              if (date != null) {
-                                                final time =
-                                                    await showTimePicker(
-                                                  context: context,
-                                                  initialTime:
-                                                      TimeOfDay.fromDateTime(
-                                                          currentValue ??
-                                                              DateTime.now()),
-                                                );
-                                                context
-                                                    .read(pharmacyMainProvider
-                                                        .notifier)
-                                                    .changeStartDate(
-                                                        DateTimeField.combine(
-                                                            date, time));
-                                                print(DateTimeField.combine(
-                                                    date, time));
-                                                return DateTimeField.combine(
-                                                    date, time);
+                                              if ((widget.jobDataMap?[
+                                                      "startDate"] as Timestamp)
+                                                  .toDate()
+                                                  .isBefore(DateTime.now()
+                                                      .subtract(Duration(
+                                                          hours: TimeOfDay.now()
+                                                              .hour)))) {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: Text("Error"),
+                                                          content: Text(
+                                                              "Dates past today's date cannot be edited."),
+                                                          actions: <Widget>[
+                                                            new TextButton(
+                                                              child: new Text(
+                                                                  "Ok"),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ));
                                               } else {
-                                                context
-                                                    .read(pharmacyMainProvider
-                                                        .notifier)
-                                                    .changeStartDate(
-                                                        currentValue);
-                                                return currentValue;
+                                                final date =
+                                                    await showDatePicker(
+                                                        context: context,
+                                                        firstDate:
+                                                            DateTime.now(),
+                                                        initialDate:
+                                                            currentValue ??
+                                                                DateTime.now(),
+                                                        lastDate:
+                                                            DateTime(2100));
+                                                if (date != null) {
+                                                  final time =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                        TimeOfDay.fromDateTime(
+                                                            currentValue ??
+                                                                DateTime.now()),
+                                                  );
+                                                  context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .changeStartDate(
+                                                          DateTimeField.combine(
+                                                              date, time));
+                                                  print(DateTimeField.combine(
+                                                      date, time));
+                                                  return DateTimeField.combine(
+                                                      date, time);
+                                                } else {
+                                                  context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .changeStartDate(
+                                                          currentValue);
+                                                  return currentValue;
+                                                }
                                               }
                                             },
                                           ),
@@ -188,6 +299,9 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                           height: 55,
                                           width: 200,
                                           child: DateTimeField(
+                                            initialValue:
+                                                (widget.jobDataMap?["endDate"])
+                                                    .toDate(),
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 17,
@@ -213,42 +327,72 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                             ),
                                             onShowPicker:
                                                 (context, currentValue) async {
-                                              final date = await showDatePicker(
-                                                  context: context,
-                                                  firstDate: context
-                                                      .read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .startDate as DateTime,
-                                                  initialDate: context
-                                                      .read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .startDate as DateTime,
-                                                  lastDate: DateTime(2100));
-                                              if (date != null) {
-                                                final time =
-                                                    await showTimePicker(
-                                                  context: context,
-                                                  initialTime:
-                                                      TimeOfDay.fromDateTime(
-                                                          currentValue ??
-                                                              DateTime.now()),
-                                                );
-                                                context
-                                                    .read(pharmacyMainProvider
-                                                        .notifier)
-                                                    .changeEndDate(
-                                                        DateTimeField.combine(
-                                                            date, time));
-
-                                                return DateTimeField.combine(
-                                                    date, time);
+                                              if ((widget.jobDataMap?[
+                                                      "startDate"] as Timestamp)
+                                                  .toDate()
+                                                  .isBefore(DateTime.now()
+                                                      .subtract(Duration(
+                                                          hours: TimeOfDay.now()
+                                                              .hour)))) {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: Text("Error"),
+                                                          content: Text(
+                                                              "Dates past today's date cannot be edited."),
+                                                          actions: <Widget>[
+                                                            new TextButton(
+                                                              child: new Text(
+                                                                  "Ok"),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ));
                                               } else {
-                                                context
-                                                    .read(pharmacyMainProvider
-                                                        .notifier)
-                                                    .changeEndDate(
-                                                        currentValue);
-                                                return currentValue;
+                                                final date = await showDatePicker(
+                                                    context: context,
+                                                    firstDate: context
+                                                        .read(
+                                                            pharmacyMainProvider
+                                                                .notifier)
+                                                        .startDate as DateTime,
+                                                    initialDate: context
+                                                        .read(
+                                                            pharmacyMainProvider
+                                                                .notifier)
+                                                        .startDate as DateTime,
+                                                    lastDate: DateTime(2100));
+                                                if (date != null) {
+                                                  final time =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                        TimeOfDay.fromDateTime(
+                                                            currentValue ??
+                                                                DateTime.now()),
+                                                  );
+                                                  context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .changeEndDate(
+                                                          DateTimeField.combine(
+                                                              date, time));
+
+                                                  return DateTimeField.combine(
+                                                      date, time);
+                                                } else {
+                                                  context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .changeEndDate(
+                                                          currentValue);
+                                                  return currentValue;
+                                                }
                                               }
                                             },
                                           ),
@@ -298,7 +442,8 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                       ),
                                       child: Column(
                                         children: <Widget>[
-                                          MultiSelectBottomSheetField<Skill?>(
+                                          CustomMultiSelectBottomSheetField<
+                                              Skill?>(
                                             selectedColor: Color(0xFF5DB075),
                                             selectedItemsTextStyle:
                                                 TextStyle(color: Colors.white),
@@ -322,7 +467,8 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                       .notifier)
                                                   .changeSkillList(values);
                                             },
-                                            chipDisplay: MultiSelectChipDisplay(
+                                            chipDisplay:
+                                                CustomMultiSelectChipDisplay(
                                               items: context
                                                   .read(pharmacyMainProvider
                                                       .notifier)
@@ -417,7 +563,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                       child: Column(
                                         children: <Widget>[
                                           softwareFieldEnabled
-                                              ? MultiSelectBottomSheetField<
+                                              ? CustomMultiSelectBottomSheetField<
                                                   Software?>(
                                                   //enabled: softwareFieldEnabled,
                                                   selectedColor:
@@ -450,7 +596,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                             values);
                                                   },
                                                   chipDisplay:
-                                                      MultiSelectChipDisplay(
+                                                      CustomMultiSelectChipDisplay(
                                                     items: context
                                                         .read(
                                                             pharmacyMainProvider
@@ -572,7 +718,11 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                           height: 55,
                                           width: 174,
                                           alignment: Alignment.center,
-                                          child: TextField(
+                                          child: TextFormField(
+                                            initialValue: context
+                                                .read(pharmacyMainProvider
+                                                    .notifier)
+                                                .hourlyRate,
                                             onChanged: (value) {
                                               context
                                                   .read(pharmacyMainProvider
@@ -664,15 +814,19 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                         width: 324,
                                         constraints:
                                             BoxConstraints(minHeight: 60),
-                                        child: TextField(
+                                        child: TextFormField(
+                                          initialValue: context
+                                              .read(
+                                                  pharmacyMainProvider.notifier)
+                                              .jobComments,
                                           maxLines: 3,
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.start,
-                                          onSubmitted: (value) {
+                                          onSaved: (value) {
                                             context
                                                 .read(pharmacyMainProvider
                                                     .notifier)
-                                                .changeComments(value);
+                                                .changeComments(value!);
                                           },
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -711,7 +865,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                       ),
                     ),
                   ),
-                  //Search Button
+                  //Edit Shift Button
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),

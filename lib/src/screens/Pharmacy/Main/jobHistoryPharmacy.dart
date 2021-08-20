@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +8,7 @@ import 'package:pharma_connect/main.dart';
 import 'package:pharma_connect/model/pharmacyMainModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacyMainProvider.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/editShift.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/pharmacyProfile.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/searchPharmacist.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
@@ -31,6 +34,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   CollectionReference jobsRef = FirebaseFirestore.instance.collection("Users");
   String dataID = "";
   Map jobDataMap = Map();
+  Map sortedJobDataMap = Map();
   Map<String, dynamic>? userDataMap = Map();
 
   void getJobs() async {
@@ -46,6 +50,11 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                 });
               })
             });
+    setState(() {
+      sortedJobDataMap = Map.fromEntries(jobDataMap.entries.toList()
+        ..sort((e1, e2) =>
+            e1.value["startDate"].compareTo(e2.value["startDate"])));
+    });
   }
 
   void getUserData() async {
@@ -229,13 +238,13 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                 else
                   Expanded(
                     child: ListView.builder(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      itemCount: jobDataMap.length,
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      itemCount: sortedJobDataMap.length,
                       itemBuilder: (BuildContext context, int index) {
                         String key =
-                            jobDataMap.keys.elementAt(index).toString();
+                            sortedJobDataMap.keys.elementAt(index).toString();
 
-                        if (jobDataMap[key]["jobStatus"] == "active")
+                        if (sortedJobDataMap[key]["jobStatus"] == "active")
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Material(
@@ -248,23 +257,34 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                   child: ListTile(
                                     title: new Text(
                                       DateFormat("MMMM d, y hh:mm a").format(
-                                              DateTime.parse(jobDataMap[key]
-                                                      ["startDate"]
-                                                  .toDate()
-                                                  .toString())) +
+                                              DateTime.parse(
+                                                  sortedJobDataMap[key]
+                                                          ["startDate"]
+                                                      .toDate()
+                                                      .toString())) +
                                           " to " +
                                           DateFormat("MMMM d, y hh:mm a")
                                               .format(DateTime.parse(
-                                                  jobDataMap[key]["endDate"]
+                                                  sortedJobDataMap[key]
+                                                          ["endDate"]
                                                       .toDate()
                                                       .toString())),
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     subtitle: Text(
-                                      jobDataMap[key]["hourlyRate"] + "/hr",
+                                      sortedJobDataMap[key]["hourlyRate"] +
+                                          "/hr",
                                       style: TextStyle(fontSize: 16),
                                     ),
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => EditShift(
+                                                    jobDataMap:
+                                                        sortedJobDataMap[key],
+                                                  )));
+                                    },
                                   ),
                                 ),
                               ),
@@ -318,11 +338,11 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                   Expanded(
                     child: ListView.builder(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      itemCount: jobDataMap.length,
+                      itemCount: sortedJobDataMap.length,
                       itemBuilder: (BuildContext context, int index) {
                         String key =
-                            jobDataMap.keys.elementAt(index).toString();
-                        if (jobDataMap[key]["jobStatus"] == "past")
+                            sortedJobDataMap.keys.elementAt(index).toString();
+                        if (sortedJobDataMap[key]["jobStatus"] == "past")
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Material(
@@ -335,20 +355,23 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                   child: ListTile(
                                     title: new Text(
                                       DateFormat("MMMM d, y hh:mm a").format(
-                                              DateTime.parse(jobDataMap[key]
-                                                      ["startDate"]
-                                                  .toDate()
-                                                  .toString())) +
+                                              DateTime.parse(
+                                                  sortedJobDataMap[key]
+                                                          ["startDate"]
+                                                      .toDate()
+                                                      .toString())) +
                                           " to " +
                                           DateFormat("MMMM d, y hh:mm a")
                                               .format(DateTime.parse(
-                                                  jobDataMap[key]["endDate"]
+                                                  sortedJobDataMap[key]
+                                                          ["endDate"]
                                                       .toDate()
                                                       .toString())),
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     subtitle: Text(
-                                      jobDataMap[key]["hourlyRate"] + "/hr",
+                                      sortedJobDataMap[key]["hourlyRate"] +
+                                          "/hr",
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     onTap: () {},
@@ -357,7 +380,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                               ),
                             ),
                           );
-                        else if (jobDataMap.isEmpty)
+                        else if (sortedJobDataMap.isEmpty)
                           return Padding(
                             padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                             child: Material(

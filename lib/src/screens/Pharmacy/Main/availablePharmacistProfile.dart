@@ -1,6 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
 class ChosenPharmacistProfile extends StatefulWidget {
@@ -13,10 +16,97 @@ class ChosenPharmacistProfile extends StatefulWidget {
 
 class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
   List knownSoftwareList = [];
+  DateRangePickerController _controller = DateRangePickerController();
+  List<DateTime> _blackoutDateCollection = <DateTime>[];
+  List<PickerDateRange> availabilityPharmacist = [];
+
+  List<DateTime> getDaysInBeteween(DateTime startDate, DateTime endDate) {
+    List<DateTime> days = [];
+    for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+      days.add(startDate.add(Duration(days: i)));
+    }
+    return days;
+  }
+
+  void changeAvailabilityToCalendar() {
+    List<PickerDateRange> dateRangesCalendarTemp = [];
+    for (var i = 0; i < widget.pharmacistDataMap?["availability"].length; i++) {
+      dateRangesCalendarTemp.add(PickerDateRange(
+          widget.pharmacistDataMap?["availability"][i.toString()]["startDate"]
+              .toDate(),
+          widget.pharmacistDataMap?["availability"][i.toString()]["endDate"]
+              .toDate()));
+    }
+    setState(() {
+      availabilityPharmacist = dateRangesCalendarTemp;
+      availabilityPharmacist
+          .sort((a, b) => a.startDate!.compareTo(b.startDate as DateTime));
+    });
+  }
+
+  void viewChanged(DateRangePickerViewChangedArgs args) {
+    DateTime date;
+    DateTime startDate = args.visibleDateRange.startDate as DateTime;
+    DateTime endDate = args.visibleDateRange.endDate as DateTime;
+    print("Start Date: $startDate");
+    print("End Date: $endDate");
+
+    List<DateTime> _blackDates = <DateTime>[];
+    for (date = startDate;
+        date.isBefore(endDate) || date == endDate;
+        date = date.add(const Duration(days: 1))) {
+      if (availabilityPharmacist.contains(date)) {
+        continue;
+      }
+      _blackDates.add(date);
+    }
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      setState(() {
+        _blackoutDateCollection = _blackDates;
+      });
+    });
+    // date = startDate;
+    // for (var i = 0; i < 29; i++) {
+    //   date = date.add(const Duration(days: 1));
+    //   if (availabilityPharmacist[i].startDate == date) {
+    //     continue;
+    //   }
+    //   _blackDates.add(date);
+    // }
+    // int i = 0;
+    // for (date = startDate;
+    //     date.isBefore(endDate) || date == endDate;
+    //     date = date.add(const Duration(days: 1))) {
+    //   i++;
+    //   print(availabilityPharmacist.length);
+    //   if (i < availabilityPharmacist.length) {
+    //     print("StartDate: ${availabilityPharmacist[i].startDate}");
+    //     print("DATE: ${date}");
+    //     print("CHECK: ${availabilityPharmacist[i].startDate == date}");
+    //     if (availabilityPharmacist[i].startDate == date) {
+    //       continue;
+    //     }
+    //   } else {
+    //     i = 0;
+    //   }
+    //   _blackDates.add(date);
+    // }
+    // print("Dates: ${availabilityPharmacist}");
+    // print("BlackOutDates: $_blackoutDateCollection");
+  }
+
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+    setState(() {
+      _controller.selectedRanges = availabilityPharmacist;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    changeAvailabilityToCalendar();
+    print("Dates: ${availabilityPharmacist}");
+    print("BlackOutDates: $_blackoutDateCollection");
     print(widget.pharmacistDataMap);
     final pharmacistKnownSoftwareString =
         widget.pharmacistDataMap!["knownSoftware"];
@@ -366,15 +456,45 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                             ),
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () async {
-                                                showDateRangePicker(
+                                                print("PRESSED");
+                                                showDialog(
                                                   context: context,
-                                                  firstDate:
-                                                      DateTime(2019, 12, 05),
-                                                  lastDate:
-                                                      DateTime(2029, 12, 05),
-                                                  initialEntryMode:
-                                                      DatePickerEntryMode
-                                                          .calendarOnly,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      20.0))),
+                                                      titlePadding:
+                                                          EdgeInsets.all(0),
+                                                      title: Text(''),
+                                                      contentPadding:
+                                                          EdgeInsets.fromLTRB(
+                                                              10, 0, 10, 0),
+                                                      content: Container(
+                                                          height: 300,
+                                                          width: 500,
+                                                          child:
+                                                              ShowAvailability()),
+                                                      actionsPadding:
+                                                          EdgeInsets.all(0),
+                                                      actions: [
+                                                        Center(
+                                                          child: TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text("Ok",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFF228a4d)))),
+                                                        )
+                                                      ],
+                                                    );
+                                                  },
                                                 );
                                               }),
                                       ),
@@ -427,6 +547,10 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () async {
                                                 print("PRESSED");
+                                                print(
+                                                    "Dates: $availabilityPharmacist");
+                                                print(
+                                                    "BlackOutDates: $_blackoutDateCollection");
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute<dynamic>(
@@ -525,6 +649,39 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
               height: 20,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container ShowAvailability() {
+    return Container(
+      height: 350,
+      width: 350,
+      child: Material(
+        elevation: 10,
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
+          child: SfDateRangePicker(
+            controller: _controller,
+            view: DateRangePickerView.month,
+            selectionMode: DateRangePickerSelectionMode.multiRange,
+            selectionShape: DateRangePickerSelectionShape.rectangle,
+            initialSelectedRanges: availabilityPharmacist,
+            startRangeSelectionColor: Color(0xFF228a4d),
+            endRangeSelectionColor: Color(0xFF228a4d),
+            rangeSelectionColor: Color(0xFF5DB075),
+            onSelectionChanged: selectionChanged,
+            monthViewSettings: DateRangePickerMonthViewSettings(
+              blackoutDates: _blackoutDateCollection,
+            ),
+            monthCellStyle: DateRangePickerMonthCellStyle(
+                blackoutDateTextStyle: TextStyle(
+                    color: Colors.black87, fontSize: 16, fontFamily: 'Roboto')),
+            onViewChanged: viewChanged,
+          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
         ),
       ),
     );
