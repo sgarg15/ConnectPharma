@@ -17,14 +17,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ignore: must_be_immutable
 class EditShift extends StatefulWidget {
   Map? jobDataMap = Map();
+  String? jobUID = "";
 
-  EditShift({Key? key, this.jobDataMap}) : super(key: key);
+  EditShift({Key? key, this.jobDataMap, this.jobUID}) : super(key: key);
 
   @override
   _EditShiftPharmacyState createState() => _EditShiftPharmacyState();
 }
 
 class _EditShiftPharmacyState extends State<EditShift> {
+  Map<String, dynamic> uploadDataMap = Map();
+  List<Software?>? softwareListToUpload = [];
+  List<Skill?>? skillListToUpload = [];
+
   final _softwareItems = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
@@ -34,6 +39,14 @@ class _EditShiftPharmacyState extends State<EditShift> {
   List<Skill?>? skillList = null;
   List<Software?>? softwareList = null;
   bool softwareFieldEnabled = false;
+  void checkIfChanged(final currentVal, String firestoreVal) {
+    if (currentVal ==
+        context.read(pharmacyMainProvider.notifier).userData?[firestoreVal]) {
+      uploadDataMap.remove(firestoreVal);
+    } else {
+      uploadDataMap[firestoreVal] = currentVal;
+    }
+  }
 
   void changeSkillToList(String? stringList) {
     int indexOfOpenBracket = stringList!.indexOf("[");
@@ -105,6 +118,9 @@ class _EditShiftPharmacyState extends State<EditShift> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController commentsController = TextEditingController(
+        text: context.read(pharmacyMainProvider.notifier).jobComments);
+
     return WillPopScope(
       onWillPop: () async {
         //context.read(pharmacyMainProvider.notifier).clearValues();
@@ -245,6 +261,10 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                             currentValue ??
                                                                 DateTime.now()),
                                                   );
+                                                  checkIfChanged(
+                                                      DateTimeField.combine(
+                                                          date, time),
+                                                      "startDate");
                                                   context
                                                       .read(pharmacyMainProvider
                                                           .notifier)
@@ -376,6 +396,10 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                             currentValue ??
                                                                 DateTime.now()),
                                                   );
+                                                  checkIfChanged(
+                                                      DateTimeField.combine(
+                                                          date, time),
+                                                      "endDate");
                                                   context
                                                       .read(pharmacyMainProvider
                                                           .notifier)
@@ -462,6 +486,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                     color: Color(0xFFBDBDBD),
                                                     fontSize: 16)),
                                             onConfirm: (values) {
+                                              skillListToUpload?.addAll(values);
                                               context
                                                   .read(pharmacyMainProvider
                                                       .notifier)
@@ -478,11 +503,27 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                   .toList(),
                                               chipColor: Color(0xFF5DB075),
                                               onTap: (value) {
+                                                skillListToUpload
+                                                    ?.remove(value);
+                                                skillListToUpload?.removeWhere(
+                                                    (element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
                                                 context
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .skillList
-                                                    ?.remove(value);
+                                                    ?.cast()
+                                                    .remove(value);
+                                                context
+                                                    .read(pharmacyMainProvider
+                                                        .notifier)
+                                                    .skillList
+                                                    ?.removeWhere((element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
                                                 return context
                                                     .read(pharmacyMainProvider
                                                         .notifier)
@@ -565,7 +606,6 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                           softwareFieldEnabled
                                               ? CustomMultiSelectBottomSheetField<
                                                   Software?>(
-                                                  //enabled: softwareFieldEnabled,
                                                   selectedColor:
                                                       Color(0xFF5DB075),
                                                   selectedItemsTextStyle:
@@ -588,6 +628,8 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                               Color(0xFFBDBDBD),
                                                           fontSize: 16)),
                                                   onConfirm: (values) {
+                                                    softwareListToUpload
+                                                        ?.addAll(values);
                                                     context
                                                         .read(
                                                             pharmacyMainProvider
@@ -609,12 +651,30 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                     chipColor:
                                                         Color(0xFF5DB075),
                                                     onTap: (value) {
+                                                      softwareListToUpload
+                                                          ?.remove(value);
+                                                      softwareListToUpload
+                                                          ?.removeWhere((element) =>
+                                                              element?.name
+                                                                  .toString() ==
+                                                              value.toString());
                                                       context
                                                           .read(
                                                               pharmacyMainProvider
                                                                   .notifier)
                                                           .softwareList
-                                                          ?.remove(value);
+                                                          ?.cast()
+                                                          .remove(value);
+                                                      context
+                                                          .read(
+                                                              pharmacyMainProvider
+                                                                  .notifier)
+                                                          .softwareList
+                                                          ?.removeWhere((element) =>
+                                                              element?.name
+                                                                  .toString() ==
+                                                              value.toString());
+
                                                       return context
                                                           .read(
                                                               pharmacyMainProvider
@@ -654,6 +714,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                         .read(pharmacyMainProvider.notifier)
                                         .techOnSite,
                                     onChanged: (value) {
+                                      checkIfChanged(value, "techOnSite");
                                       context
                                           .read(pharmacyMainProvider.notifier)
                                           .changeTechOnSite(value);
@@ -683,6 +744,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                         .read(pharmacyMainProvider.notifier)
                                         .assistantOnSite,
                                     onChanged: (value) {
+                                      checkIfChanged(value, "assistantOnSite");
                                       context
                                           .read(pharmacyMainProvider.notifier)
                                           .changeAssistantOnSite(value);
@@ -724,6 +786,8 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                     .notifier)
                                                 .hourlyRate,
                                             onChanged: (value) {
+                                              checkIfChanged(
+                                                  value, "hourlyRate");
                                               context
                                                   .read(pharmacyMainProvider
                                                       .notifier)
@@ -781,6 +845,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                         .read(pharmacyMainProvider.notifier)
                                         .limaStatus,
                                     onChanged: (value) {
+                                      checkIfChanged(value, "limaStatus");
                                       context
                                           .read(pharmacyMainProvider.notifier)
                                           .changeLIMAStatus(value);
@@ -814,19 +879,17 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                         width: 324,
                                         constraints:
                                             BoxConstraints(minHeight: 60),
-                                        child: TextFormField(
-                                          initialValue: context
-                                              .read(
-                                                  pharmacyMainProvider.notifier)
-                                              .jobComments,
+                                        child: TextField(
+                                          controller: commentsController,
                                           maxLines: 3,
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.start,
-                                          onSaved: (value) {
+                                          onChanged: (value) {
                                             context
                                                 .read(pharmacyMainProvider
                                                     .notifier)
-                                                .changeComments(value!);
+                                                .changeComments(value);
+                                            checkIfChanged(value, "comments");
                                           },
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -887,26 +950,70 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100),
                               ))),
-                          onPressed: (!context
-                                  .read(pharmacyMainProvider.notifier)
-                                  .isValidCreateShift())
-                              ? () {
+                          onPressed: (uploadDataMap.isNotEmpty ||
+                                  softwareListToUpload!.isNotEmpty ||
+                                  skillListToUpload!.isNotEmpty)
+                              ? () async {
                                   print("Pressed");
+                                  if (context
+                                          .read(pharmacyMainProvider.notifier)
+                                          .softwareList !=
+                                      null) {
+                                    uploadDataMap["softwareList"] = context
+                                        .read(pharmacyMainProvider.notifier)
+                                        .softwareList
+                                        .toString();
+                                  }
+                                  if (context
+                                          .read(pharmacyMainProvider.notifier)
+                                          .skillList !=
+                                      null) {
+                                    uploadDataMap["skillList"] = context
+                                        .read(pharmacyMainProvider.notifier)
+                                        .skillList
+                                        .toString();
+                                  }
+                                  print(uploadDataMap);
 
-                                  context
+                                  String? result = await context
                                       .read(authProvider.notifier)
-                                      .uploadJobToPharmacy(
+                                      .updateJobInformation(
                                           context
                                               .read(userProviderLogin.notifier)
                                               .userUID,
-                                          context);
+                                          uploadDataMap,
+                                          widget.jobUID);
                                   //TODO: Send job data to under the pharmacy job collection and in the job aggregated data
 
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              JobHistoryPharmacy()));
+                                  if (result == "Profile Upload Failed") {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text("Important!"),
+                                            content: Text(
+                                                "There was an error trying to update your profile. Please try again."),
+                                            actions: [
+                                              TextButton(
+                                                child: Text(
+                                                  "Ok",
+                                                  style: TextStyle(
+                                                      color: Color(0xFF5DB075)),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        });
+                                  } else {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                JobHistoryPharmacy()));
+                                  }
                                 }
                               : null,
                           child: RichText(

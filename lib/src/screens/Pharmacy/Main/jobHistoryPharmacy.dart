@@ -256,15 +256,15 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                 child: Center(
                                   child: ListTile(
                                     title: new Text(
-                                      DateFormat("MMMM d, y hh:mm a").format(
+                                      DateFormat("MMMM d, y").format(
                                               DateTime.parse(
                                                   sortedJobDataMap[key]
                                                           ["startDate"]
                                                       .toDate()
                                                       .toString())) +
                                           " to " +
-                                          DateFormat("MMMM d, y hh:mm a")
-                                              .format(DateTime.parse(
+                                          DateFormat("MMMM d, y").format(
+                                              DateTime.parse(
                                                   sortedJobDataMap[key]
                                                           ["endDate"]
                                                       .toDate()
@@ -272,9 +272,13 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     subtitle: Text(
-                                      sortedJobDataMap[key]["hourlyRate"] +
-                                          "/hr",
-                                      style: TextStyle(fontSize: 16),
+                                      "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["startDate"].toDate().toString()))} - "
+                                      "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                                      "${sortedJobDataMap[key]["hourlyRate"] + "/hr"}",
+                                      style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     onTap: () {
                                       Navigator.push(
@@ -283,6 +287,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                               builder: (context) => EditShift(
                                                     jobDataMap:
                                                         sortedJobDataMap[key],
+                                                    jobUID: key,
                                                   )));
                                     },
                                   ),
@@ -354,15 +359,15 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                 child: Center(
                                   child: ListTile(
                                     title: new Text(
-                                      DateFormat("MMMM d, y hh:mm a").format(
+                                      DateFormat("MMMM d, y").format(
                                               DateTime.parse(
                                                   sortedJobDataMap[key]
                                                           ["startDate"]
                                                       .toDate()
                                                       .toString())) +
                                           " to " +
-                                          DateFormat("MMMM d, y hh:mm a")
-                                              .format(DateTime.parse(
+                                          DateFormat("MMMM d, y").format(
+                                              DateTime.parse(
                                                   sortedJobDataMap[key]
                                                           ["endDate"]
                                                       .toDate()
@@ -370,11 +375,15 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     subtitle: Text(
-                                      sortedJobDataMap[key]["hourlyRate"] +
-                                          "/hr",
-                                      style: TextStyle(fontSize: 16),
+                                      "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["startDate"].toDate().toString()))} - "
+                                      "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                                      "${sortedJobDataMap[key]["hourlyRate"] + "/hr"}",
+                                      style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    onTap: () {},
+                                    onTap: null,
                                   ),
                                 ),
                               ),

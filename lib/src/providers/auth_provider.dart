@@ -389,6 +389,7 @@ class AuthProvider extends ChangeNotifier {
     users.doc(userUID).collection("Main").add({
       "startDate": context.read(pharmacyMainProvider).startDate,
       "endDate": context.read(pharmacyMainProvider).endDate,
+      "pharmacyUID": userUID,
       "pharmacyName":
           context.read(pharmacyMainProvider).userData?["pharmacyName"],
       "pharmacyAddress":
@@ -402,8 +403,18 @@ class AuthProvider extends ChangeNotifier {
       "hourlyRate": context.read(pharmacyMainProvider).hourlyRate,
       "limaStatus": context.read(pharmacyMainProvider).limaStatus,
       "comments": context.read(pharmacyMainProvider).jobComments,
+      "email": context.read(pharmacyMainProvider).userData?["email"],
     });
     return null;
+  }
+
+  Future<String?>? updateJobInformation(
+      String userUID, Map<String, dynamic> uploadData, String? jobUID) async {
+    try {
+      users.doc(userUID).collection("Main").doc(jobUID).update(uploadData);
+    } catch (error) {
+      return "Profile Upload Failed";
+    }
   }
 
   //Method to handle user sign in using email and password
