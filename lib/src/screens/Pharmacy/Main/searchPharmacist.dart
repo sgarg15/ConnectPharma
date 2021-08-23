@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -508,7 +507,6 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   .isValidSearchPharmacist())
                               ? () {
                                   print("Pressed");
-                                  //TODO: Search for all pharmacist from the Aggregated pharmacist collection in Firestore with a query using the dates from the fields
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

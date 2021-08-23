@@ -746,7 +746,6 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                               .read(userProviderLogin.notifier)
                                               .userUID,
                                           context);
-                                  //TODO: Send job data to under the pharmacy job collection and in the job aggregated data
 
                                   Navigator.push(
                                       context,

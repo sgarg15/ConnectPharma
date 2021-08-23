@@ -32,7 +32,6 @@ class _AccountInformationPharmacyState
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        //TODO: REMOVE THIS ONCE EVERYTHING WORKS AND REPLACE IT INSIDE THE SIDE MENU
         showDialog(
             context: context,
             builder: (BuildContext context) {

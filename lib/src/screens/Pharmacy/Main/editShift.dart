@@ -983,7 +983,6 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                               .userUID,
                                           uploadDataMap,
                                           widget.jobUID);
-                                  //TODO: Send job data to under the pharmacy job collection and in the job aggregated data
 
                                   if (result == "Profile Upload Failed") {
                                     showDialog(

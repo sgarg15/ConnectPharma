@@ -1,4 +1,3 @@
-import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/all_used.dart';
 import 'package:pharma_connect/main.dart';
 import 'package:pharma_connect/model/pharmacyMainModel.dart';
-import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacyMainProvider.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/editShift.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/pharmacyProfile.dart';

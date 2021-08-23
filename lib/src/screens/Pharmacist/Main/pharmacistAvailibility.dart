@@ -59,10 +59,7 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
   @override
   Widget build(BuildContext context) {
     void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-      //TODO: This function gets the list of ranges of dates and updates the list view of the calendar.
-      // setState(() {
-      //   dateRanges = args.value;
-      // });
+
       context
           .read(pharmacistMainProvider.notifier)
           .changeDateRanges(args.value);
@@ -163,7 +160,6 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                       //List view of calendar
                       Expanded(
                         child: ListView(
-                          //TODO: Add the system to get and display the ranges from the calendar to list view
                           children: <Widget>[
                             for (var i = 0;
                                 i <
@@ -255,7 +251,6 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                                     .read(userProviderLogin.notifier)
                                     .userUID,
                                 dateRangesToUpload);
-                        //TODO: Start a cloud function which starts a timer for 5 min and then sends data to firestore, to prevent abuse of firestore writes and reads
                         Navigator.pop(context);
                       }
                     : null,

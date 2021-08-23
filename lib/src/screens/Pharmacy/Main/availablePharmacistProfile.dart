@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
 class ChosenPharmacistProfile extends StatefulWidget {
@@ -65,34 +64,6 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
         _blackoutDateCollection = _blackDates;
       });
     });
-    // date = startDate;
-    // for (var i = 0; i < 29; i++) {
-    //   date = date.add(const Duration(days: 1));
-    //   if (availabilityPharmacist[i].startDate == date) {
-    //     continue;
-    //   }
-    //   _blackDates.add(date);
-    // }
-    // int i = 0;
-    // for (date = startDate;
-    //     date.isBefore(endDate) || date == endDate;
-    //     date = date.add(const Duration(days: 1))) {
-    //   i++;
-    //   print(availabilityPharmacist.length);
-    //   if (i < availabilityPharmacist.length) {
-    //     print("StartDate: ${availabilityPharmacist[i].startDate}");
-    //     print("DATE: ${date}");
-    //     print("CHECK: ${availabilityPharmacist[i].startDate == date}");
-    //     if (availabilityPharmacist[i].startDate == date) {
-    //       continue;
-    //     }
-    //   } else {
-    //     i = 0;
-    //   }
-    //   _blackDates.add(date);
-    // }
-    // print("Dates: ${availabilityPharmacist}");
-    // print("BlackOutDates: $_blackoutDateCollection");
   }
 
   void selectionChanged(DateRangePickerSelectionChangedArgs args) {

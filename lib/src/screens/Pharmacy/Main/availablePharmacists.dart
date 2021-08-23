@@ -18,11 +18,6 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
 
   Map pharmacistDataMap = Map();
   Map pharmacistDataMapTemp = Map();
-  @override
-  void initState() {
-    super.initState();
-    getAggregatedPharmacists();
-  }
 
   void getAggregatedPharmacists() async {
     DocumentReference pharmacistData = aggregationRef.doc("pharmacists");
@@ -65,10 +60,13 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
         }
       });
       print(pharmacistDataMap);
-      // for (var i = 0; i < pharmacistDataMapTemp.length; i++) {
-      //   print(pharmacistDataMapTemp[i]["availability"]);
-      // }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getAggregatedPharmacists();
   }
 
   @override
@@ -194,7 +192,6 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                     ))),
                 onPressed: () {
                   print("Pressed");
-                  //TODO: Search for all pharmacist from the Aggregated pharmacist collection in Firestore with a query using the dates from the fields
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => CreateShift()));
                 },

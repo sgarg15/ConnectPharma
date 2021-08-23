@@ -271,7 +271,6 @@ class SideMenuDrawer extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                //TODO:Send to profile page to show and edit details
                 Navigator.push(
                     context,
                     MaterialPageRoute(

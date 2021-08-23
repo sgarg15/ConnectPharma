@@ -1,4 +1,3 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,8 +86,6 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
             .userData?["address"]["country"]);
       });
     });
-
-    // TODO: implement initState
     super.initState();
   }
 

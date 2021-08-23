@@ -6,8 +6,10 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:dio/dio.dart';
+
+//TODO: Look at job details upon clicking job
+//TODO: Figure out what to do with Pharmacist Job History
 
 class FindShiftForPharmacist extends StatefulWidget {
   FindShiftForPharmacist({Key? key}) : super(key: key);
@@ -56,6 +58,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   }
 
   Future getDistance(Map pharmacyData, String pharmacistAddress) async {
+    var distance = "";
     Location startingLocation = await getLocationFromAddress(
         pharmacyData["pharmacyAddress"]["streetAddress"] +
             " " +
@@ -64,11 +67,15 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
             pharmacyData["pharmacyAddress"]["country"]);
     Location endingLocation = await getLocationFromAddress(pharmacistAddress);
     Response response = await dio.get(
-        "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startingLocation.latitude},${startingLocation.longitude}&destinations=${endingLocation.latitude},${endingLocation.longitude}&key=AIzaSyCEgFeFR3rIx6KWZrKL1VPzjCZaPgR7mzk");
-
-    var distance = double.parse(
-            "${response.data["rows"][0]["elements"][0]["distance"]["value"] / 1000}")
-        .toStringAsFixed(2);
+        "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startingLocation.latitude},${startingLocation.longitude}&destinations=${endingLocation.latitude},${endingLocation.longitude}&key=${apiKey}");
+    print(response);
+    if (response.data != null) {
+      distance = double.parse(
+              "${response.data["rows"][0]["elements"][0]["distance"]["value"] / 1000}")
+          .toStringAsFixed(2);
+    } else {
+      distance = "";
+    }
     print(distance);
 
     if (distance == "0.00") {
@@ -120,7 +127,6 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   @override
   void initState() {
     print(context.read(pharmacistMainProvider.notifier).startDate);
-    // TODO: implement initState
     super.initState();
   }
 
@@ -409,7 +415,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                                                     .black,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .bold,
+                                                                        .w600,
                                                                 fontSize: 15)),
                                                         TextSpan(
                                                             text:
@@ -420,7 +426,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                                                     .black,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .bold,
+                                                                        .w600,
                                                                 fontSize: 15)),
                                                         TextSpan(
                                                             text:
@@ -436,7 +442,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                                       "Pharmacist",
                                                       style: TextStyle(
                                                           fontWeight:
-                                                              FontWeight.bold),
+                                                              FontWeight.w600),
                                                     ),
                                                     onTap: () {
                                                       // Navigator.push(
@@ -456,7 +462,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                             SizedBox(height: 10)
                                           ],
                                         );
-                                        ;
+                                       
                                       },
                                     );
                                   },
