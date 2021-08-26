@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
@@ -233,4 +236,63 @@ String getInitials(String? firstName, String? lastName) {
   initials = firstName[0] + lastName[0];
 
   return initials;
+}
+
+Dio dio = new Dio();
+final String? googleMapsKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
+final apiKey = googleMapsKey;
+
+Future<Location> getLocationFromAddress(String address) async {
+  List<Location> locations = await locationFromAddress(address);
+  print(address);
+  print(locations.first);
+  return locations.first;
+}
+
+Future<Response> getDistanceBetweenLocation(double startLatitude,
+    double startLongitude, double endLatitude, double endLongitude) async {
+  Response response = await dio.get(
+      "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startLatitude},${startLongitude}&destinations=${endLatitude},${endLongitude}&key=${apiKey}");
+  return response.data;
+}
+
+List<String> getHourDiff(TimeOfDay tod1, TimeOfDay tod2) {
+  var totalDifferenceInMin =
+      (tod1.hour * 60 + tod1.minute) - (tod2.hour * 60 + tod2.minute);
+  var leftOverminutes = (totalDifferenceInMin % 60);
+  var totalHours =
+      ((totalDifferenceInMin - leftOverminutes) / 60).toStringAsFixed(0);
+  if (leftOverminutes == 0) {
+    return [totalHours, ""];
+  } else {
+    return [totalHours, " " + leftOverminutes.toString() + " mins"];
+  }
+}
+
+Future getDistance(Map pharmacyData, String pharmacistAddress) async {
+  var distance = "";
+  Location startingLocation = await getLocationFromAddress(
+      pharmacyData["pharmacyAddress"]["streetAddress"] +
+          " " +
+          pharmacyData["pharmacyAddress"]["city"] +
+          " " +
+          pharmacyData["pharmacyAddress"]["country"]);
+  Location endingLocation = await getLocationFromAddress(pharmacistAddress);
+  Response response = await dio.get(
+      "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startingLocation.latitude},${startingLocation.longitude}&destinations=${endingLocation.latitude},${endingLocation.longitude}&key=${apiKey}");
+  print(response);
+  if (response.data != null) {
+    distance = double.parse(
+            "${response.data["rows"][0]["elements"][0]["distance"]["value"] / 1000}")
+        .toStringAsFixed(2);
+  } else {
+    distance = "";
+  }
+  print(distance);
+
+  if (distance == "0.00") {
+    return "Close by in ";
+  } else {
+    return distance + "km away in ";
+  }
 }

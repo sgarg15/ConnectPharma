@@ -4,11 +4,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Main/jobDetails.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:dio/dio.dart';
 
-//TODO: Look at job details upon clicking job
+import '../../../../all_used.dart';
+
 //TODO: Figure out what to do with Pharmacist Job History
 
 class FindShiftForPharmacist extends StatefulWidget {
@@ -26,64 +28,6 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   Map jobsDataMap = Map();
   Map jobsDataMapTemp = Map();
   Map sortedJobsDataMap = Map();
-  Dio dio = new Dio();
-  static final String? googleMapsKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
-  final apiKey = googleMapsKey;
-
-  Future<Location> getLocationFromAddress(String address) async {
-    List<Location> locations = await locationFromAddress(address);
-    print(address);
-    print(locations.first);
-    return locations.first;
-  }
-
-  Future<Response> getDistanceBetweenLocation(double startLatitude,
-      double startLongitude, double endLatitude, double endLongitude) async {
-    Response response = await dio.get(
-        "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startLatitude},${startLongitude}&destinations=${endLatitude},${endLongitude}&key=${apiKey}");
-    return response.data;
-  }
-
-  List<String> getHourDiff(TimeOfDay tod1, TimeOfDay tod2) {
-    var totalDifferenceInMin =
-        (tod1.hour * 60 + tod1.minute) - (tod2.hour * 60 + tod2.minute);
-    var leftOverminutes = (totalDifferenceInMin % 60);
-    var totalHours =
-        ((totalDifferenceInMin - leftOverminutes) / 60).toStringAsFixed(0);
-    if (leftOverminutes == 0) {
-      return [totalHours, ""];
-    } else {
-      return [totalHours, " " + leftOverminutes.toString() + " mins"];
-    }
-  }
-
-  Future getDistance(Map pharmacyData, String pharmacistAddress) async {
-    var distance = "";
-    Location startingLocation = await getLocationFromAddress(
-        pharmacyData["pharmacyAddress"]["streetAddress"] +
-            " " +
-            pharmacyData["pharmacyAddress"]["city"] +
-            " " +
-            pharmacyData["pharmacyAddress"]["country"]);
-    Location endingLocation = await getLocationFromAddress(pharmacistAddress);
-    Response response = await dio.get(
-        "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startingLocation.latitude},${startingLocation.longitude}&destinations=${endingLocation.latitude},${endingLocation.longitude}&key=${apiKey}");
-    print(response);
-    if (response.data != null) {
-      distance = double.parse(
-              "${response.data["rows"][0]["elements"][0]["distance"]["value"] / 1000}")
-          .toStringAsFixed(2);
-    } else {
-      distance = "";
-    }
-    print(distance);
-
-    if (distance == "0.00") {
-      return "Close by in ";
-    } else {
-      return distance + "km away in ";
-    }
-  }
 
   void getAllJobs() async {
     DocumentReference jobsData = aggregationRef.doc("jobs");
@@ -340,6 +284,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                               ),
                             ),
                           )
+                        
                         ],
                       ),
                       decoration: BoxDecoration(
@@ -445,15 +390,15 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                                               FontWeight.w600),
                                                     ),
                                                     onTap: () {
-                                                      // Navigator.push(
-                                                      //     context,
-                                                      //     MaterialPageRoute(
-                                                      //         builder: (context) =>
-                                                      //             ChosenPharmacistProfile(
-                                                      //               pharmacistDataMap:
-                                                      //                   pharmacistDataMap[
-                                                      //                       key],
-                                                      //             )));
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      JobDetails(
+                                                                        jobDetails:
+                                                                            sortedJobsDataMap[key],
+                                                                      )));
                                                     },
                                                   ),
                                                 ),
@@ -462,7 +407,6 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                             SizedBox(height: 10)
                                           ],
                                         );
-                                       
                                       },
                                     );
                                   },
@@ -476,7 +420,6 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                   constraints: BoxConstraints(
                                     minHeight: 60,
                                   ),
-                                  //TODO:Get a list of all available shifts within the time period from the aggregated jobs collection on firestore and display here
                                   child: Center(
                                     child: RichText(
                                       text: TextSpan(

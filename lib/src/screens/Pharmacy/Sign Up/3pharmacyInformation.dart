@@ -147,11 +147,26 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                         final placeDetails =
                             await PlaceApiProvider(sessionToken)
                                 .getPlaceDetailFromId(result.placeId);
-                        context
-                            .read(pharmacySignUpProvider.notifier)
-                            .changeStreetAddress(placeDetails.streetNumber! +
-                                " " +
-                                placeDetails.street.toString());
+                        print(
+                            "${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
+                        if (placeDetails.streetNumber != null) {
+                          print(
+                              "${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
+                          print("Not null");
+                          context
+                              .read(pharmacySignUpProvider.notifier)
+                              .changeStreetAddress(
+                                  "${placeDetails.streetNumber} ${placeDetails.street.toString()}");
+                        } else {
+                          print(
+                              "${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
+                          print("null");
+                          context
+                              .read(pharmacySignUpProvider.notifier)
+                              .changeStreetAddress(
+                                  "${placeDetails.street.toString()}");
+                        }
+
                         context
                             .read(pharmacySignUpProvider.notifier)
                             .changeCity(placeDetails.city);
@@ -161,9 +176,8 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                         context
                             .read(pharmacySignUpProvider.notifier)
                             .changeCountry(placeDetails.country);
-                        streetAddress.text = placeDetails.streetNumber! +
-                            " " +
-                            placeDetails.street.toString();
+                        streetAddress.text =
+                            "${placeDetails.streetNumber.toString()} ${placeDetails.street.toString()}";
                         postalCode.text = placeDetails.zipCode.toString();
                         country.text = placeDetails.country.toString();
                         city.text = placeDetails.city.toString();
@@ -336,6 +350,8 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               validation: (value) {
                 if (value == null || value.isEmpty) {
                   return "This field is required";
+                } else if ((value as String).length < 4) {
+                  return "Please type the full province name";
                 }
                 return null;
               },

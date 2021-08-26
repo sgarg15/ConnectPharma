@@ -389,6 +389,8 @@ class AuthProvider extends ChangeNotifier {
       "startDate": context.read(pharmacyMainProvider).startDate,
       "endDate": context.read(pharmacyMainProvider).endDate,
       "pharmacyUID": userUID,
+      "pharmacyNumber":
+          context.read(pharmacyMainProvider).userData?["pharmacyPhoneNumber"],
       "pharmacyName":
           context.read(pharmacyMainProvider).userData?["pharmacyName"],
       "pharmacyAddress":
