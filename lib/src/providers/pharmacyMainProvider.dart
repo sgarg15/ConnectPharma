@@ -7,13 +7,18 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   bool isValidCreateShift() {
     if (state.startDate == null ||
         state.endDate == null ||
-        state.softwareList == null ||
+        state.skillList == null ||
         state.hourlyRate == "" ||
         state.jobComments == "") {
-      print("true account info");
+      print("true create shift");
+      // print("StartDate: ${state.startDate}");
+      // print("EndDate: ${state.endDate}");
+      // print("SoftwareList: ${state.softwareList}");
+      // print("hourlyRate: ${state.hourlyRate}");
+      // print("JobComments: ${state.jobComments}");
       return true;
     } else {
-      print("false account info");
+      print("false create shift");
       return false;
     }
   }

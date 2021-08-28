@@ -28,6 +28,12 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
   bool softwareFieldEnabled = false;
 
   @override
+  void initState() {
+    super.initState();
+    context.read(pharmacyMainProvider.notifier).clearValues();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -429,10 +435,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                   decoration: BoxDecoration(),
                                                   listType:
                                                       MultiSelectListType.CHIP,
-                                                  initialValue: context
-                                                      .read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .softwareList,
+
                                                   searchable: true,
                                                   items: _softwareItems,
                                                   buttonText: Text(
@@ -668,7 +671,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                           maxLines: 3,
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.start,
-                                          onSubmitted: (value) {
+                                          onChanged: (value) {
                                             context
                                                 .read(pharmacyMainProvider
                                                     .notifier)

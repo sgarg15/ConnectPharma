@@ -53,7 +53,23 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   @override
   void initState() {
     super.initState();
-    getUserData();
+
+    userRef
+        .doc(context.read(userProviderLogin.notifier).userUID)
+        .collection("SignUp")
+        .doc("Information")
+        .snapshots()
+        .listen((docData) {
+      setState(() {
+        userDataMap = docData.data();
+      });
+      context
+          .read(pharmacistMainProvider.notifier)
+          .changeUserDataMap(userDataMap);
+      //print(context.read(pharmacistMainProvider.notifier).userDataMap);
+    });
+
+    //getUserData();
   }
 
   @override

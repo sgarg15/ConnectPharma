@@ -291,8 +291,8 @@ Future getDistance(Map pharmacyData, String pharmacistAddress) async {
   print(distance);
 
   if (distance == "0.00") {
-    return "Close by in ";
+    return "Close by in ${pharmacyData["pharmacyAddress"]["city"]}";
   } else {
-    return distance + "km away in ";
+    return distance + " km";
   }
 }

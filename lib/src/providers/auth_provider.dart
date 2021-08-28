@@ -409,10 +409,22 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
+  Future<String?>? deleteJob(String userUID, String? jobUID) async {
+    try {
+      await users.doc(userUID).collection("Main").doc(jobUID).delete();
+    } catch (e) {
+      return "Job Delete Failed";
+    }
+  }
+
   Future<String?>? updateJobInformation(
       String userUID, Map<String, dynamic> uploadData, String? jobUID) async {
     try {
-      users.doc(userUID).collection("Main").doc(jobUID).update(uploadData);
+      await users
+          .doc(userUID)
+          .collection("Main")
+          .doc(jobUID)
+          .update(uploadData);
     } catch (error) {
       return "Profile Upload Failed";
     }

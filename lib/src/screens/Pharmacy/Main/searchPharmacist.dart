@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:pharma_connect/Custom%20Widgets/custom_multiSelect_field.dart';
+import 'package:pharma_connect/Custom%20Widgets/custom_multi_select_display.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/availablePharmacists.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import '../../../../Custom Widgets/custom_dateTimeField.dart';
@@ -289,7 +291,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   ),
                                   child: Column(
                                     children: <Widget>[
-                                      MultiSelectBottomSheetField<Skill?>(
+                                      CustomMultiSelectBottomSheetField<Skill?>(
                                         selectedColor: Color(0xFF5DB075),
                                         selectedItemsTextStyle:
                                             TextStyle(color: Colors.white),
@@ -312,7 +314,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                                   pharmacyMainProvider.notifier)
                                               .changeSkillList(values);
                                         },
-                                        chipDisplay: MultiSelectChipDisplay(
+                                        chipDisplay:
+                                            CustomMultiSelectChipDisplay(
                                           items: context
                                               .read(
                                                   pharmacyMainProvider.notifier)
@@ -326,7 +329,16 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                                 .read(pharmacyMainProvider
                                                     .notifier)
                                                 .skillList
-                                                ?.remove(value);
+                                                ?.cast()
+                                                .remove(value);
+                                            context
+                                                .read(pharmacyMainProvider
+                                                    .notifier)
+                                                .skillList
+                                                ?.removeWhere((element) =>
+                                                    element?.name.toString() ==
+                                                    value.toString());
+
                                             return context
                                                 .read(pharmacyMainProvider
                                                     .notifier)

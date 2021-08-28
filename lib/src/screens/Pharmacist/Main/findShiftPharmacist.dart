@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/jobDetails.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:dio/dio.dart';
 
 import '../../../../all_used.dart';
 
@@ -284,7 +282,6 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                               ),
                             ),
                           )
-                        
                         ],
                       ),
                       decoration: BoxDecoration(
@@ -375,7 +372,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                                                 fontSize: 15)),
                                                         TextSpan(
                                                             text:
-                                                                "${snapshot.data}${sortedJobsDataMap[key]["pharmacyAddress"]["city"]}",
+                                                                "${snapshot.data}",
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,

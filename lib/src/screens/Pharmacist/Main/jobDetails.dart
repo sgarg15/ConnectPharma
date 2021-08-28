@@ -348,8 +348,7 @@ class JobDetails extends StatelessWidget {
                                           return RichText(
                                             textAlign: TextAlign.start,
                                             text: TextSpan(
-                                              text:
-                                                  "${snapshot.data}${jobDetails?["pharmacyAddress"]["city"]}",
+                                              text: "${snapshot.data}",
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 color: Colors.black,
@@ -425,7 +424,7 @@ class JobDetails extends StatelessWidget {
                                               size: 30,
                                             )
                                           : Icon(
-                                              Icons.check,
+                                              Icons.close,
                                               color: Colors.red,
                                               size: 30,
                                             ),
@@ -461,21 +460,31 @@ class JobDetails extends StatelessWidget {
                             ),
                             RichText(
                               textAlign: TextAlign.start,
-                              text: TextSpan(
-                                text: jobDetails?["softwareNeeded"]
-                                    .toString()
-                                    .substring(
-                                        jobDetails?["softwareNeeded"]
-                                                .indexOf("[") +
-                                            1,
-                                        jobDetails?["softwareNeeded"]
-                                            .lastIndexOf("]")),
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              text: (jobDetails?["softwareNeeded"] == "null" ||
+                                      jobDetails?["softwareNeeded"] == "[]")
+                                  ? TextSpan(
+                                      text: "No software skills needed!",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  : TextSpan(
+                                      text: jobDetails?["softwareNeeded"]
+                                          .toString()
+                                          .substring(
+                                              jobDetails?["softwareNeeded"]
+                                                      .indexOf("[") +
+                                                  1,
+                                              jobDetails?["softwareNeeded"]
+                                                  .lastIndexOf("]")),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             ),
                           ],
                         ),

@@ -63,26 +63,43 @@ class _EditShiftPharmacyState extends State<EditShift> {
     });
   }
 
-  void changeSoftwareToList(String? stringList) {
-    int indexOfOpenBracket = stringList!.indexOf("[");
+  void changeSoftwareToList(String stringList) {
+    int indexOfOpenBracket = stringList.indexOf("[");
     int indexOfLastBracket = stringList.lastIndexOf("]");
+    print("String list: $stringList");
+
+    print(
+        "SubString: ${stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket)}");
     var noBracketString =
         stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
     List<Software?>? templist = [];
     var list = noBracketString.split(", ");
     for (var i = 0; i < list.length; i++) {
       templist.add(Software(id: 1, name: list[i].toString()));
+
+      setState(() {
+        softwareList = templist;
+      });
     }
-    setState(() {
-      softwareList = templist;
-    });
   }
 
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      changeSkillToList(widget.jobDataMap?["skillsNeeded"]);
-      changeSoftwareToList(widget.jobDataMap?["softwareNeeded"]);
+      if (widget.jobDataMap?["skillsNeeded"] != "null") {
+        changeSkillToList(widget.jobDataMap?["skillsNeeded"]);
+      } else {
+        setState(() {
+          skillList = [];
+        });
+      }
+      if (widget.jobDataMap?["softwareNeeded"] != "null") {
+        changeSoftwareToList(widget.jobDataMap?["softwareNeeded"]);
+      } else {
+        setState(() {
+          softwareList = [];
+        });
+      }
       if (skillList != null) {
         context
             .read(pharmacyMainProvider.notifier)
@@ -147,7 +164,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
                     child: Material(
                       elevation: 5,
                       borderRadius: BorderRadius.circular(60),
@@ -1029,6 +1046,106 @@ class _EditShiftPharmacyState extends State<EditShift> {
                       ),
                     ),
                   ),
+                  //Edit Shift Button
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+                      child: SizedBox(
+                        width: 150,
+                        height: 40,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                      (states) {
+                                if (states.contains(MaterialState.disabled)) {
+                                  return Colors.grey; // Disabled color
+                                }
+                                return Colors.red; // Regular color
+                              }),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ))),
+                          onPressed: () {
+                            print("Pressed");
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Important!"),
+                                    content: Text(
+                                        "This job will be deleted and cannot be retrieved once deleted."),
+                                    actions: [
+                                      TextButton(
+                                        child: Text(
+                                          "Ok",
+                                          style: TextStyle(
+                                              color: Color(0xFF5DB075)),
+                                        ),
+                                        onPressed: () async {
+                                          String? result = await context
+                                              .read(authProvider.notifier)
+                                              .deleteJob(
+                                                  context
+                                                      .read(userProviderLogin
+                                                          .notifier)
+                                                      .userUID,
+                                                  widget.jobUID);
+                                          if (result == "Job Delete Failed") {
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Text("Important!"),
+                                                    content: Text(
+                                                        "There was an error trying to delete this job. Please try again in a few minutes."),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: Text(
+                                                          "Ok",
+                                                          style: TextStyle(
+                                                              color: Color(
+                                                                  0xFF5DB075)),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      )
+                                                    ],
+                                                  );
+                                                });
+                                          } else {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        JobHistoryPharmacy()));
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Delete shift",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   SizedBox(
                     height: 20,
                   )

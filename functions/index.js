@@ -12,9 +12,8 @@ exports.testCollection = functions.firestore.document("TestCollection/{randomStr
     console.log(context.params.randomString);
 });
 
-exports.aggregateCreatePharmacists = functions.firestore.document("Users/{uid}/SignUp/Information").onCreate((change, context) => {
-    const beforeData = change.before.data();
-    const afterData = change.after.data();  
+exports.aggregateCreatePharmacists = functions.firestore.document("Users/{uid}/SignUp/Information").onCreate((snapshot, context) => {
+    const afterData = snapshot.data();  
 
     
     if(afterData.userType == "Pharmacist"){
@@ -54,7 +53,7 @@ exports.aggregateCreatePharmacists = functions.firestore.document("Users/{uid}/S
             uid: uid
         }
         
-        return aggregatedDataRef.set({[next.uid]: next})
+        return aggregatedDataRef.set({[next.uid]: next}, {merge: true})
 
     }
     
@@ -108,7 +107,7 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
             uid: uid
         }
         
-        return aggregatedDataRef.update({[next.uid]: next}, { merge: true })
+        return aggregatedDataRef.update({[next.uid]: next})
 
     }
     
@@ -120,9 +119,9 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
     return null;
 });
 
-exports.aggregateCreateJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onCreate((change, context) => {
-    const beforeData = change.before.data();
-    const afterData = change.after.data();  
+exports.aggregateCreateJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onCreate((snapshot, context) => {
+    //const beforeData = change.before.data();
+    const afterData = snapshot.data();
 
     const aggregatedDataRef = dataBase.doc("aggregation/jobs");
     const startDate = afterData.startDate;
@@ -160,10 +159,10 @@ exports.aggregateCreateJobs = functions.firestore.document("Users/{uid}/Main/{jo
         jobID: jobID,
         phoneNumber: phoneNumber,
     }
-    //functions.logger.log("Hello, here is the after data: ");
+    // //functions.logger.log("Hello, here is the after data: ");
 
     
-    return aggregatedDataRef.set({[next.jobID]: next})
+    return aggregatedDataRef.set({[next.jobID]: next}, {merge: true})
 
     
     // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);
@@ -221,9 +220,20 @@ exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jo
     
     // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);
     // functions.logger.log("Hello, here is the uid: ", context.params.uid);
+});
+
+exports.deleteJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onDelete((snapShot, context) => {
+    const afterData = snapShot.data();  
+    const FieldValue = admin.firestore.FieldValue;
+
+    const aggregatedDataRef = dataBase.doc(`aggregation/jobs`);
+    //functions.logger.log("Hello, here is the after data: ", afterData);
     
+    return aggregatedDataRef.update({[context.params.jobID] : FieldValue.delete()});
+
     
-    return null;
+    // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);
+    // functions.logger.log("Hello, here is the uid: ", context.params.uid);
 });
 
 exports.updateJobStatus = functions.runWith({memory: '2GB'}).pubsub.schedule(`0 0 * * *`).onRun(async context => {
