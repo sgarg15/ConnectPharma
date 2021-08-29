@@ -585,10 +585,56 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                         context: context,
                         builder: (context) => AlertDialog(
                               title: Text(widget.pharmacistDataMap?["name"]),
-                              content: Text(
-                                "Email: " + widget.pharmacistDataMap?["email"],
+                              content: RichText(
+                                text: TextSpan(
+                                    text:
+                                        "Email: ${widget.pharmacistDataMap?["email"]}\n\n\n",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "Please do not spam the pharmacist email, you can and will be reported for such actions. Resulting in withrawal from this service.",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ]),
                               ),
                               actions: <Widget>[
+                                TextButton(
+                                  child: new Text("Report Pharmacist",
+                                      textAlign: TextAlign.left),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Text("Report Pharmacist"),
+                                              content: RichText(
+                                                text: TextSpan(
+                                                  //TODO: Insert App official Email
+                                                  text:
+                                                      "Please email __ with the pharmacist name and email as the subject and the body as the reasoning for this report. \n\nThank you, \nPharmaConnect",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 18),
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: new Text("Ok",
+                                                      textAlign:
+                                                          TextAlign.right),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            ));
+                                  },
+                                ),
                                 new TextButton(
                                   child: new Text("Ok"),
                                   onPressed: () {

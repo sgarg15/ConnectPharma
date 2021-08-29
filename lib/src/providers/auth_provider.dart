@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pharma_connect/model/user_model.dart';
@@ -438,6 +439,7 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       final UserCredential? result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
+      var errorMessage = "";
 
       if (result!.user!.emailVerified) {
         _status = Status.Authenticated;
@@ -458,22 +460,33 @@ class AuthProvider extends ChangeNotifier {
         } else if (userType.trim() == "Pharmacist") {
           print("Logged in as a Pharmacist");
           //Send to pharmacist main page
-          return [result, "Pharmacist"];
+          return [
+            result,
+            "Pharmacist",
+          ];
         }
-      } else {
+      }else {
         print("INSIDE ELSE STATEMENT");
         print("User verified: " + result.user!.emailVerified.toString());
         if (FirebaseAuth.instance.currentUser != null) {
           await FirebaseAuth.instance.currentUser?.sendEmailVerification();
         }
         signOut();
-        return null;
+              _status = Status.Unauthenticated;
+      notifyListeners();
+      return [null, null, "user-not-verified"];
       }
-    } catch (e) {
-      print("Error on the sign in = " + e.toString());
+    } on FirebaseAuthException catch (error) {
+      // if (error.code == "user-disabled") {
+      //   return [null, null, error.code];
+      // }
+      // if (error.code == "user-not-found") {
+      //   return [null, null, error.code];
+      // }
+      print("Error on the sign in = " + error.toString());
       _status = Status.Unauthenticated;
       notifyListeners();
-      return null;
+      return [null, null, error.code];
     }
   }
 

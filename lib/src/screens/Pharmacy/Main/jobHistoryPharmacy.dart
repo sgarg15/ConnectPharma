@@ -118,7 +118,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
           .changeUserDataMap(userDataMap);
       print(context.read(pharmacyMainProvider.notifier).userData);
     });
-    
+
     context.read(pharmacyMainProvider.notifier).clearDateValues();
     // getUserData();
   }
@@ -301,9 +301,11 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                     .compareTo(e2.value["startDate"])));
 
                           if (jobDataMap.isEmpty) {
-                            setState(() {
-                              jobDataMapEmpty = true;
-                            });
+                            WidgetsBinding.instance
+                                ?.addPostFrameCallback((_) => setState(() {
+                                      jobDataMapEmpty = true;
+                                    }));
+
                             return Container();
                           } else {
                             return ListView.builder(
@@ -480,9 +482,10 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                 ..sort((e1, e2) => e1.value["startDate"]
                                     .compareTo(e2.value["startDate"])));
                           if (jobDataMap.isEmpty) {
-                            setState(() {
-                              jobDataMapEmpty = true;
-                            });
+                            WidgetsBinding.instance
+                                ?.addPostFrameCallback((_) => setState(() {
+                                      jobDataMapEmpty = true;
+                                    }));
                             return Container();
                           }
 

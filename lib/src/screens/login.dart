@@ -269,12 +269,41 @@ class _LogInPageState extends State<LogInPage> {
                                           logIn.email.toString(),
                                           logIn.password.toString());
                                   if (user?[0] == null) {
+                                    var errorMessage = "";
+                                    print(user?[2]);
+                                    if (user?[2] == "user-disabled") {
+                                      setState(() {
+                                        //TODO: Add official app name
+                                        errorMessage =
+                                            "Your account has been momentarilly disabled for unsolicited behaviour towards a pharmacy or pharmacist. If you think this is a mistake, please email __, with your name and email.";
+                                      });
+                                    }
+                                    if (user?[2] == "user-not-found") {
+                                      setState(() {
+                                        //TODO: Add official app name
+                                        errorMessage =
+                                            "A user by that email address was not found, please re-check the email and assure you have created an account through the sign up pages.";
+                                      });
+                                    }
+                                    if (user?[2] == "wrong-password") {
+                                      setState(() {
+                                        //TODO: Add official app name
+                                        errorMessage =
+                                            "Please check your email and password and try logging in again after a few minutes.";
+                                      });
+                                    }
+                                    if (user?[2] == "user-not-verified") {
+                                      setState(() {
+                                        //TODO: Add official app name
+                                        errorMessage =
+                                            "Before logging in, please verify your email.";
+                                      });
+                                    }
                                     showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
                                               title: Text("Error"),
-                                              content: Text(
-                                                  "There was an error trying to log you in. Please check your email and password and try again. If you have not verified your email, please do that first."),
+                                              content: Text(errorMessage),
                                               actions: <Widget>[
                                                 new TextButton(
                                                   child: new Text("Ok"),

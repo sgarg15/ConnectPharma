@@ -593,13 +593,60 @@ class JobDetails extends StatelessWidget {
                         context: context,
                         builder: (context) => AlertDialog(
                               title: Text(jobDetails?["pharmacyName"]),
-                              content: Text(
-                                "Email: ${jobDetails?["email"]} \n \n" +
-                                    "Pharmacy Phone Number: \n${jobDetails?["phoneNumber"]}",
+                              content: RichText(
+                                text: TextSpan(
+                                    text:
+                                        "Email: ${jobDetails?["email"]} \n\n\n",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "Please do not spam the pharmacy email or phone, you can and will be reported for such actions. Resulting in withrawal from this service.",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ]),
                               ),
                               actions: <Widget>[
-                                new TextButton(
-                                  child: new Text("Ok"),
+                                TextButton(
+                                  child: new Text("Report Pharmacy",
+                                      textAlign: TextAlign.left),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Text("Report Pharmacy"),
+                                              content: RichText(
+                                                text: TextSpan(
+                                                  //TODO: Insert App official Email
+                                                  text:
+                                                      "Please email __ with the pharmacy name as the subject and the body as the reasoning for this report. \n\nThank you, \nPharmaConnect",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 18),
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: new Text("Ok",
+                                                      textAlign:
+                                                          TextAlign.right),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            ));
+                                  },
+                                ),
+                                
+                                TextButton(
+                                  child: new Text("Ok",
+                                      textAlign: TextAlign.right),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },

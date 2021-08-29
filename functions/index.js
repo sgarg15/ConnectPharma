@@ -15,7 +15,7 @@ exports.testCollection = functions.firestore.document("TestCollection/{randomStr
 exports.aggregateCreatePharmacists = functions.firestore.document("Users/{uid}/SignUp/Information").onCreate((snapshot, context) => {
     const afterData = snapshot.data();  
 
-    
+    functions.logger.log("User Type ", afterData.userType);
     if(afterData.userType == "Pharmacist"){
         //Send the following Pharmacist Information to the Aggregated Data:
             //Profile Photo
