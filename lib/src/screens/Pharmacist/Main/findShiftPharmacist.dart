@@ -9,8 +9,6 @@ import 'package:geocoding/geocoding.dart';
 
 import '../../../../all_used.dart';
 
-//TODO: Figure out what to do with Pharmacist Job History
-
 class FindShiftForPharmacist extends StatefulWidget {
   FindShiftForPharmacist({Key? key}) : super(key: key);
 
@@ -111,6 +109,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                         children: <Widget>[
                           //Start and End Fields Date
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               //Start Date
                               Column(
@@ -130,11 +129,14 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                   ),
                                   Container(
                                     height: 40,
-                                    width: 175,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.44,
                                     padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                     child: DateTimeField(
                                       format: DateFormat("yyyy-MM-dd"),
                                       decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(12),
+                                          isDense: true,
                                           border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(30)),
@@ -186,11 +188,14 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                   ),
                                   Container(
                                     height: 40,
-                                    width: 175,
-                                    padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.44,
+                                    padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                     child: DateTimeField(
                                       format: DateFormat("yyyy-MM-dd"),
                                       decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(12),
+                                          isDense: true,
                                           border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(30)),
@@ -305,7 +310,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                       (BuildContext context, int index) {
                                     String key =
                                         sortedJobsDataMap.keys.elementAt(index);
-                                    print(sortedJobsDataMap[key]);
+                                    //print(sortedJobsDataMap[key]);
                                     return FutureBuilder(
                                       future: getDistance(
                                           sortedJobsDataMap[key],
@@ -332,7 +337,8 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                                         .size
                                                         .width *
                                                     0.97,
-                                                height: 90,
+                                                constraints: BoxConstraints(
+                                                    minHeight: 90),
                                                 child: Center(
                                                   child: ListTile(
                                                     isThreeLine: true,

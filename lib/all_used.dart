@@ -244,16 +244,9 @@ final apiKey = googleMapsKey;
 
 Future<Location> getLocationFromAddress(String address) async {
   List<Location> locations = await locationFromAddress(address);
-  print(address);
-  print(locations.first);
+  //print(address);
+  //print(locations.first);
   return locations.first;
-}
-
-Future<Response> getDistanceBetweenLocation(double startLatitude,
-    double startLongitude, double endLatitude, double endLongitude) async {
-  Response response = await dio.get(
-      "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startLatitude},${startLongitude}&destinations=${endLatitude},${endLongitude}&key=${apiKey}");
-  return response.data;
 }
 
 List<String> getHourDiff(TimeOfDay tod1, TimeOfDay tod2) {
@@ -280,7 +273,7 @@ Future getDistance(Map pharmacyData, String pharmacistAddress) async {
   Location endingLocation = await getLocationFromAddress(pharmacistAddress);
   Response response = await dio.get(
       "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startingLocation.latitude},${startingLocation.longitude}&destinations=${endingLocation.latitude},${endingLocation.longitude}&key=${apiKey}");
-  print(response);
+  //print(response);
   if (response.data != null) {
     distance = double.parse(
             "${response.data["rows"][0]["elements"][0]["distance"]["value"] / 1000}")
@@ -288,7 +281,7 @@ Future getDistance(Map pharmacyData, String pharmacistAddress) async {
   } else {
     distance = "";
   }
-  print(distance);
+  //print(distance);
 
   if (distance == "0.00") {
     return "Close by in ${pharmacyData["pharmacyAddress"]["city"]}";

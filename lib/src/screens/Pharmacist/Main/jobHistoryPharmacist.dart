@@ -10,6 +10,7 @@ import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistAvailibilit
 import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistProfile.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
+import 'package:intl/intl.dart';
 
 final authProviderMain = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
@@ -32,27 +33,22 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   int segmentedControlGroupValue = 0;
   CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
   Map<String, dynamic>? userDataMap = Map();
+  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStream = null;
+  String dataID = "";
 
-  void getUserData() async {
-    await userRef
-        .doc(context.read(userProviderLogin.notifier).userUID)
-        .collection("SignUp")
-        .doc("Information")
-        .get()
-        .then((querySnapshot) => {
-              setState(() {
-                userDataMap = querySnapshot.data();
-              })
-            });
-
-    context
-        .read(pharmacistMainProvider.notifier)
-        .changeUserDataMap(userDataMap);
-  }
+  Map currentJobDataMap = Map();
+  Map appliedJobDataMap = Map();
+  Map pastJobDataMap = Map();
+  Map rejectedJobDataMap = Map();
 
   @override
   void initState() {
     super.initState();
+
+    jobsStream = userRef
+        .doc(context.read(userProviderLogin.notifier).userUID)
+        .collection("Main")
+        .snapshots();
 
     userRef
         .doc(context.read(userProviderLogin.notifier).userUID)
@@ -68,8 +64,6 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
           .changeUserDataMap(userDataMap);
       //print(context.read(pharmacistMainProvider.notifier).userDataMap);
     });
-
-    //getUserData();
   }
 
   @override
@@ -135,11 +129,11 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
           ),
         ),
         body: Container(
-          child: Stack(
+          child: Column(
             children: <Widget>[
               //Slider
               Container(
-                padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
                 width: MediaQuery.of(context).size.width,
                 height: 75,
                 alignment: Alignment.topCenter,
@@ -206,15 +200,462 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
                       });
                     }),
               ),
+              //Active
               if (segmentedControlGroupValue == 0)
-                _createActiveJobs()
+                StreamBuilder(
+                    stream: jobsStream,
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError)
+                        return Text('Error: ${snapshot.error}');
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      if (snapshot.data != null) {
+                        snapshot.data?.docs.forEach((doc) {
+                          if ((doc.data() as Map)["applicationStatus"] ==
+                              "applied") {
+                            dataID = doc.id;
+                            appliedJobDataMap[dataID] = doc.data();
+                          } else if ((doc.data() as Map)["applicationStatus"] ==
+                              "current") {
+                            dataID = doc.id;
+                            currentJobDataMap[dataID] = doc.data();
+                          }
+                        });
+
+                        return Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                //Current Jobs
+                                buildCurrentJobsList(context),
+                                //Applied Jobs
+                                buildAppliedJobsList(context),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                      return Container();
+                    })
+
+              //Past
               else if (segmentedControlGroupValue == 1)
-                _createPastJobs()
+                StreamBuilder(
+                    stream: jobsStream,
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError)
+                        return Text('Error: ${snapshot.error}');
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      if (snapshot.data != null) {
+                        snapshot.data?.docs.forEach((doc) {
+                          if ((doc.data() as Map)["applicationStatus"] ==
+                              "past") {
+                            dataID = doc.id;
+                            pastJobDataMap[dataID] = doc.data();
+                          } else if ((doc.data() as Map)["applicationStatus"] ==
+                              "rejected") {
+                            dataID = doc.id;
+                            rejectedJobDataMap[dataID] = doc.data();
+                          }
+                        });
+
+                        return Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                //Current Jobs
+                                buildPastJobsList(context),
+                                //Applied Jobs
+                                buildRejectedJobsList(context),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                      return Container();
+                    })
             ],
           ),
         ),
       ),
     );
+  }
+
+  Column buildCurrentJobsList(BuildContext context) {
+    return Column(children: <Widget>[
+      //Headline
+      Row(children: <Widget>[
+        Text(
+          "   Current (${currentJobDataMap.length})",
+        ),
+        Expanded(
+          child: new Container(
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Divider(
+                color: Colors.grey,
+                height: 36,
+                thickness: 4,
+              )),
+        ),
+      ]),
+      if (currentJobDataMap.length == 0)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+          child: Material(
+            elevation: 10,
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: 30,
+              child: Center(
+                  child: Text(
+                "No current jobs found",
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              )),
+            ),
+          ),
+        )
+      else
+        ListView.builder(
+          physics: new NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: currentJobDataMap.length,
+          itemBuilder: (BuildContext context, int index) {
+            String key = currentJobDataMap.keys.elementAt(index).toString();
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Material(
+                elevation: 10,
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  constraints: BoxConstraints(minHeight: 90),
+                  child: Center(
+                    child: ListTile(
+                      title: new Text(
+                        DateFormat("MMM d, y").format(DateTime.parse(
+                                currentJobDataMap[key]["startDate"]
+                                    .toDate()
+                                    .toString())) +
+                            " to " +
+                            DateFormat("MMM d, y").format(DateTime.parse(
+                                currentJobDataMap[key]["endDate"]
+                                    .toDate()
+                                    .toString())),
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      subtitle: Text(
+                        "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["startDate"].toDate().toString()))} - "
+                        "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                        "${currentJobDataMap[key]["hourlyRate"] + "/hr"}",
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             EditShift(
+                        //               jobDataMap:
+                        //                   sortedJobDataMap[
+                        //                       key],
+                        //               jobUID: key,
+                        //             )));
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+    ]);
+  }
+
+  Column buildAppliedJobsList(BuildContext context) {
+    return Column(children: <Widget>[
+      //Headline
+      Row(children: <Widget>[
+        Text(
+          "   Applied (${appliedJobDataMap.length})",
+        ),
+        Expanded(
+          child: new Container(
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Divider(
+                color: Colors.grey,
+                height: 36,
+                thickness: 4,
+              )),
+        ),
+      ]),
+      if (appliedJobDataMap.length == 0)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+          child: Material(
+            elevation: 10,
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: 30,
+              child: Center(
+                  child: Text(
+                "No applied jobs found",
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              )),
+            ),
+          ),
+        )
+      else
+        ListView.builder(
+          physics: new NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: appliedJobDataMap.length,
+          itemBuilder: (BuildContext context, int index) {
+            String key = appliedJobDataMap.keys.elementAt(index).toString();
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Material(
+                elevation: 10,
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  constraints: BoxConstraints(minHeight: 90),
+                  child: Center(
+                    child: ListTile(
+                      title: new Text(
+                        DateFormat("MMM d, y").format(DateTime.parse(
+                                appliedJobDataMap[key]["startDate"]
+                                    .toDate()
+                                    .toString())) +
+                            " to " +
+                            DateFormat("MMM d, y").format(DateTime.parse(
+                                appliedJobDataMap[key]["endDate"]
+                                    .toDate()
+                                    .toString())),
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      subtitle: Text(
+                        "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["startDate"].toDate().toString()))} - "
+                        "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                        "${appliedJobDataMap[key]["hourlyRate"] + "/hr"}",
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             EditShift(
+                        //               jobDataMap:
+                        //                   sortedJobDataMap[
+                        //                       key],
+                        //               jobUID: key,
+                        //             )));
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+    ]);
+  }
+
+  Column buildPastJobsList(BuildContext context) {
+    return Column(children: <Widget>[
+      //Headline
+      Row(children: <Widget>[
+        Text(
+          "   Past (${pastJobDataMap.length})",
+        ),
+        Expanded(
+          child: new Container(
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Divider(
+                color: Colors.grey,
+                height: 36,
+                thickness: 4,
+              )),
+        ),
+      ]),
+      if (pastJobDataMap.length == 0)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+          child: Material(
+            elevation: 10,
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: 30,
+              child: Center(
+                  child: Text(
+                "No past jobs found",
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              )),
+            ),
+          ),
+        )
+      else
+        ListView.builder(
+          physics: new NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: pastJobDataMap.length,
+          itemBuilder: (BuildContext context, int index) {
+            String key = pastJobDataMap.keys.elementAt(index).toString();
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Material(
+                elevation: 10,
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  constraints: BoxConstraints(minHeight: 90),
+                  child: Center(
+                    child: ListTile(
+                      title: new Text(
+                        DateFormat("MMM d, y").format(DateTime.parse(
+                                pastJobDataMap[key]["startDate"]
+                                    .toDate()
+                                    .toString())) +
+                            " to " +
+                            DateFormat("MMM d, y").format(DateTime.parse(
+                                pastJobDataMap[key]["endDate"]
+                                    .toDate()
+                                    .toString())),
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      subtitle: Text(
+                        "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["startDate"].toDate().toString()))} - "
+                        "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                        "${pastJobDataMap[key]["hourlyRate"] + "/hr"}",
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             EditShift(
+                        //               jobDataMap:
+                        //                   sortedJobDataMap[
+                        //                       key],
+                        //               jobUID: key,
+                        //             )));
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+    ]);
+  }
+
+  Column buildRejectedJobsList(BuildContext context) {
+    return Column(children: <Widget>[
+      //Headline
+      Row(children: <Widget>[
+        Text(
+          "   Rejected (${rejectedJobDataMap.length})",
+        ),
+        Expanded(
+          child: new Container(
+              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Divider(
+                color: Colors.grey,
+                height: 36,
+                thickness: 4,
+              )),
+        ),
+      ]),
+      if (rejectedJobDataMap.length == 0)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+          child: Material(
+            elevation: 10,
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: 30,
+              child: Center(
+                  child: Text(
+                "No rejected jobs found",
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              )),
+            ),
+          ),
+        )
+      else
+        ListView.builder(
+          physics: new NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: rejectedJobDataMap.length,
+          itemBuilder: (BuildContext context, int index) {
+            String key = rejectedJobDataMap.keys.elementAt(index).toString();
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Material(
+                elevation: 10,
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  constraints: BoxConstraints(minHeight: 90),
+                  child: Center(
+                    child: ListTile(
+                      title: new Text(
+                        DateFormat("MMM d, y").format(DateTime.parse(
+                                rejectedJobDataMap[key]["startDate"]
+                                    .toDate()
+                                    .toString())) +
+                            " to " +
+                            DateFormat("MMM d, y").format(DateTime.parse(
+                                rejectedJobDataMap[key]["endDate"]
+                                    .toDate()
+                                    .toString())),
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      subtitle: Text(
+                        "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["startDate"].toDate().toString()))} - "
+                        "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                        "${rejectedJobDataMap[key]["hourlyRate"] + "/hr"}",
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             EditShift(
+                        //               jobDataMap:
+                        //                   sortedJobDataMap[
+                        //                       key],
+                        //               jobUID: key,
+                        //             )));
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+    ]);
   }
 }
 
@@ -432,49 +873,6 @@ class SideMenuDrawer extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _createPastJobs extends StatelessWidget {
-  const _createPastJobs({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: SingleChildScrollView(),
-    );
-  }
-}
-
-class _createActiveJobs extends StatelessWidget {
-  const _createActiveJobs({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment(-1, -0.7),
-      child: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-        child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: FutureBuilder(
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                  case ConnectionState.active:
-                  case ConnectionState.done:
-                    return Text("Done...");
-                  case ConnectionState.waiting:
-                    return Text("Loading...");
-                }
-              },
-            )),
       ),
     );
   }

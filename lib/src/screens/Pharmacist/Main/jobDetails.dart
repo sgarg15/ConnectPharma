@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pharma_connect/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pharma_connect/src/screens/login.dart';
 
 import 'jobHistoryPharmacist.dart';
 
 // ignore: must_be_immutable
 class JobDetails extends StatelessWidget {
-  Map? jobDetails = Map();
+  Map<String, dynamic>? jobDetails = Map();
 
   JobDetails({Key? key, this.jobDetails}) : super(key: key);
 
@@ -588,6 +589,24 @@ class JobDetails extends StatelessWidget {
                         borderRadius: BorderRadius.circular(100),
                       ))),
                   onPressed: () {
+                    // 1) Click Apply
+                    //Send Applicant info (and pharmacist user uid) to pharmacy job UID and place under applicants map field within the job uid document
+
+                    // 2) Add job information to pharmacist user/main jobs field
+
+                    //In pharmacist Job History, have (Active) section and (Past) Section
+                    //Under (Active) section, have a section for Applied jobs
+                    //Under (Past) section, have a section for Rejected jobs
+
+                    //For Pharmacy:
+                      //On Job Delete have cloud function also delete job from any pharmacist with that job id in their applicants field using the where command
+                      //Send a notification either through app or showdialog that there job was deleted
+                    //For job dialog, show number of applicants for that job
+                    //By clicking on job and then on applicants button, you can view all the applied applications,
+                    //The Applicant dialogue will have pharmacist profile photo, name, years of work experience and then on the right hand side, the option to reject and accept the applicant
+                    //After clicking the reject button, send the updated applicant field to firestore with the pharmacist uid removed and also send an email to the applicant email about rejection
+                    //After clicking the accept button, show pharmacy the applicant contact information, and send an email to the applicant pharmacist about the acception
+
                     print("Pressed");
                     showDialog(
                         context: context,
@@ -596,13 +615,13 @@ class JobDetails extends StatelessWidget {
                               content: RichText(
                                 text: TextSpan(
                                     text:
-                                        "Email: ${jobDetails?["email"]} \n\n\n",
+                                        "Are you sure you want to apply for this job? \n\n\n",
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 18),
                                     children: [
                                       TextSpan(
                                         text:
-                                            "Please do not spam the pharmacy email or phone, you can and will be reported for such actions. Resulting in withrawal from this service.",
+                                            "Please only apply for jobs you are interested in and do not spam the pharmacy email or phone, you can and will be reported for such actions. Resulting in withrawal from this service.",
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 15,
@@ -612,43 +631,53 @@ class JobDetails extends StatelessWidget {
                               ),
                               actions: <Widget>[
                                 TextButton(
-                                  child: new Text("Report Pharmacy",
-                                      textAlign: TextAlign.left),
+                                  child: new Text(
+                                    "No",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Colors.red[400], fontSize: 16),
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop();
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                              title: Text("Report Pharmacy"),
-                                              content: RichText(
-                                                text: TextSpan(
-                                                  //TODO: Insert App official Email
-                                                  text:
-                                                      "Please email __ with the pharmacy name as the subject and the body as the reasoning for this report. \n\nThank you, \nPharmaConnect",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 18),
-                                                ),
-                                              ),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: new Text("Ok",
-                                                      textAlign:
-                                                          TextAlign.right),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            ));
                                   },
                                 ),
-                                
+                                SizedBox(
+                                  width: 150,
+                                ),
                                 TextButton(
-                                  child: new Text("Ok",
-                                      textAlign: TextAlign.right),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
+                                  child: new Text(
+                                    "Yes",
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                        color: Color(0xFF5DB075), fontSize: 16),
+                                  ),
+                                  onPressed: () async {
+                                    WriteBatch jobApplicationBatch =
+                                        FirebaseFirestore.instance.batch();
+
+                                    //Follow step 1)
+                                    await sendApplicantDataToPharmacy(
+                                        context, jobApplicationBatch);
+                                    //Follow step 2)
+                                    await sendJobDataToPharmacist(
+                                        context, jobApplicationBatch);
+                                    jobApplicationBatch
+                                        .commit()
+                                        .onError((error, stackTrace) {
+                                      print("ERROR APPLYING: $error");
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                                title: Text("Error"),
+                                                content: Text(
+                                                    "There was an error trying to apply for this job. Please try again after restarting the app."),
+                                              ));
+                                    });
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                JobHistoryPharmacist()));
                                   },
                                 ),
                               ],
@@ -656,7 +685,7 @@ class JobDetails extends StatelessWidget {
                   },
                   child: RichText(
                     text: TextSpan(
-                      text: "Pharmacy Information",
+                      text: "Apply",
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -674,5 +703,76 @@ class JobDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> sendJobDataToPharmacist(
+      BuildContext context, WriteBatch batchValue) async {
+    jobDetails
+        ?.addAll({"applicationStatus": "applied", "userType": "Pharmacist"});
+    DocumentReference pharmacistJobsCollection = FirebaseFirestore.instance
+        .collection("Users")
+        .doc(context.read(userProviderLogin.notifier).userUID)
+        .collection("Main")
+        .doc(jobDetails?["jobID"]);
+    batchValue.set(pharmacistJobsCollection, jobDetails);
+    // String? result = await context
+    //     .read(authProviderMain.notifier)
+    //     .sendJobInfoToPharmacistProfile(
+    //         context.read(userProviderLogin.notifier).userUID,
+    //         jobDetails?["jobID"],
+    //         jobDetails);
+  }
+
+  Future<void> sendApplicantDataToPharmacy(
+      BuildContext context, WriteBatch batchValue) async {
+    Map<String, dynamic>? applicantInformation = Map();
+    Map<String, dynamic>? userDataMap =
+        context.read(pharmacistMainProvider.notifier).userDataMap;
+    applicantInformation.addAll({
+      "jobStatus": "applied",
+      "availability": userDataMap?["availability"],
+      "email": userDataMap?["email"],
+      "knownLanguages": userDataMap?["knownLanguages"],
+      "knownSkills": userDataMap?["knownSkills"],
+      "knownSoftware": userDataMap?["knownSoftware"],
+      "name": userDataMap?["firstName"] + " " + userDataMap?["lastName"],
+      "phoneNumber": userDataMap?["phoneNumber"],
+      "profilePhoto": userDataMap?["profilePhotoDownloadURL"],
+      "resume": userDataMap?["resumeDownloadURL"],
+      "uid": context.read(userProviderLogin.notifier).userUID,
+      "yearsOfExperience": userDataMap?["workingExperience"],
+    });
+
+    batchValue.update(
+        FirebaseFirestore.instance
+            .collection("Users")
+            .doc(jobDetails?["pharmacyUID"])
+            .collection("Main")
+            .doc(jobDetails?["jobID"]),
+        {
+          "applicants.${context.read(userProviderLogin.notifier).userUID}":
+              applicantInformation
+        });
+
+    // String? result = await context
+    //     .read(authProviderMain.notifier)
+    //     .sendApplicantInfoToPharmacyJob(
+    //         jobDetails?["pharmacyUID"],
+    //         ,
+    //         context.read(userProviderLogin.notifier).userUID,
+    //         applicantInformation);
+
+    // if (result == "Applicant Upload Failed") {
+    //   showDialog(
+    //       context: context,
+    //       builder: (context) => AlertDialog(
+    //             title: Text("Error"),
+    //             content: Text(
+    //                 "There was an error trying to apply for this job. Please try again after restarting the app."),
+    //           ));
+    // } else {
+    //   // Navigator.push(context,
+    //   //     MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
+    // }
   }
 }

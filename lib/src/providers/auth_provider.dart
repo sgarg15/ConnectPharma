@@ -387,6 +387,7 @@ class AuthProvider extends ChangeNotifier {
   Future<UserCredential?>? uploadJobToPharmacy(
       String? userUID, BuildContext context) async {
     users.doc(userUID).collection("Main").add({
+      "userType":"Pharmacy",
       "startDate": context.read(pharmacyMainProvider).startDate,
       "endDate": context.read(pharmacyMainProvider).endDate,
       "pharmacyUID": userUID,
@@ -408,6 +409,39 @@ class AuthProvider extends ChangeNotifier {
       "email": context.read(pharmacyMainProvider).userData?["email"],
     });
     return null;
+  }
+
+  Future<String?>? sendApplicantInfoToPharmacyJob(String pharmacyUID,
+      String? jobUID, String applicantUID, Map applicantInformation) async {
+    try {
+      print("Pharmacy UID: $pharmacyUID");
+      print("jobUID: $jobUID");
+      print("applicantUID: $applicantUID");
+      print("ApplicantInformation: $applicantInformation");
+      // await users
+      //     .doc(pharmacyUID)
+      //     .collection("Main")
+      //     .doc(jobUID)
+      //     .update({"applicants.${applicantUID}": applicantInformation});
+    } catch (e) {
+      return "Applicant Upload Failed";
+    }
+  }
+
+  Future<String?>? sendJobInfoToPharmacistProfile(String pharmacistUID,
+      String? jobUID, Map<String, dynamic>? jobInformation) async {
+    try {
+      print("Pharmacist UID: $pharmacistUID");
+      print("jobUID: $jobUID");
+      print("JobInformation: $jobInformation");
+      // await users
+      //     .doc(pharmacistUID)
+      //     .collection("Main")
+      //     .doc(jobUID)
+      //     .set(jobInformation!);
+    } catch (e) {
+      return "Job To Pharmacist Upload Failed";
+    }
   }
 
   Future<String?>? deleteJob(String userUID, String? jobUID) async {
@@ -465,16 +499,16 @@ class AuthProvider extends ChangeNotifier {
             "Pharmacist",
           ];
         }
-      }else {
+      } else {
         print("INSIDE ELSE STATEMENT");
         print("User verified: " + result.user!.emailVerified.toString());
         if (FirebaseAuth.instance.currentUser != null) {
           await FirebaseAuth.instance.currentUser?.sendEmailVerification();
         }
         signOut();
-              _status = Status.Unauthenticated;
-      notifyListeners();
-      return [null, null, "user-not-verified"];
+        _status = Status.Unauthenticated;
+        notifyListeners();
+        return [null, null, "user-not-verified"];
       }
     } on FirebaseAuthException catch (error) {
       // if (error.code == "user-disabled") {

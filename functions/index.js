@@ -122,47 +122,50 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
 exports.aggregateCreateJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onCreate((snapshot, context) => {
     //const beforeData = change.before.data();
     const afterData = snapshot.data();
+    if(afterData.userType == "Pharmacy"){
 
-    const aggregatedDataRef = dataBase.doc("aggregation/jobs");
-    const startDate = afterData.startDate;
-    const endDate = afterData.endDate;
-    const jobStatus = afterData.jobStatus;
-    const skillsNeeded = afterData.skillsNeeded;
-    const softwareNeeded = afterData.softwareNeeded;
-    const techOnSite = afterData.techOnSite;
-    const assistantOnSite = afterData.assistantOnSite;
-    const hourlyRate = afterData.hourlyRate;
-    const limaStatus = afterData.limaStatus;
-    const comments = afterData.comments;
-    const pharmacyName = afterData.pharmacyName;
-    const pharmacyAddress = afterData.pharmacyAddress;
-    const pharmacyUID = afterData.pharmacyUID;
-    const jobID = context.params.jobID;
-    const email = afterData.email;
-    const phoneNumber = afterData.pharmacyNumber;
-
-    const next = {
-        startDate: startDate,
-        endDate: endDate,
-        jobStatus: jobStatus,
-        skillsNeeded: skillsNeeded,
-        softwareNeeded: softwareNeeded,
-        techOnSite: techOnSite,
-        assistantOnSite: assistantOnSite,
-        hourlyRate: hourlyRate,
-        limaStatus: limaStatus,
-        comments: comments,
-        pharmacyAddress: pharmacyAddress,
-        pharmacyName:pharmacyName,
-        pharmacyUID:pharmacyUID,
-        email: email,
-        jobID: jobID,
-        phoneNumber: phoneNumber,
-    }
-    // //functions.logger.log("Hello, here is the after data: ");
-
+        const aggregatedDataRef = dataBase.doc("aggregation/jobs");
+        const startDate = afterData.startDate;
+        const endDate = afterData.endDate;
+        const jobStatus = afterData.jobStatus;
+        const skillsNeeded = afterData.skillsNeeded;
+        const softwareNeeded = afterData.softwareNeeded;
+        const techOnSite = afterData.techOnSite;
+        const assistantOnSite = afterData.assistantOnSite;
+        const hourlyRate = afterData.hourlyRate;
+        const limaStatus = afterData.limaStatus;
+        const comments = afterData.comments;
+        const pharmacyName = afterData.pharmacyName;
+        const pharmacyAddress = afterData.pharmacyAddress;
+        const pharmacyUID = afterData.pharmacyUID;
+        const jobID = context.params.jobID;
+        const email = afterData.email;
+        const phoneNumber = afterData.pharmacyNumber;
     
-    return aggregatedDataRef.set({[next.jobID]: next}, {merge: true})
+        const next = {
+            startDate: startDate,
+            endDate: endDate,
+            jobStatus: jobStatus,
+            skillsNeeded: skillsNeeded,
+            softwareNeeded: softwareNeeded,
+            techOnSite: techOnSite,
+            assistantOnSite: assistantOnSite,
+            hourlyRate: hourlyRate,
+            limaStatus: limaStatus,
+            comments: comments,
+            pharmacyAddress: pharmacyAddress,
+            pharmacyName:pharmacyName,
+            pharmacyUID:pharmacyUID,
+            email: email,
+            jobID: jobID,
+            phoneNumber: phoneNumber,
+        }
+        // //functions.logger.log("Hello, here is the after data: ");
+    
+        
+        return aggregatedDataRef.set({[next.jobID]: next}, {merge: true})
+    
+    }
 
     
     // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);

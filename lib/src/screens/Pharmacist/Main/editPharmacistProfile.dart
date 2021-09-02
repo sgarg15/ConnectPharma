@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:open_file/open_file.dart';
 import 'package:pharma_connect/Custom%20Widgets/custom_multiSelect_field.dart';
 import 'package:pharma_connect/Custom%20Widgets/custom_multi_select_display.dart';
 import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
@@ -30,6 +34,10 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
   List<Skill?>? skillListToUpload = [];
   List<Software?>? softwareListToUpload = [];
   List<Language?>? languageListToUpload = [];
+
+  bool filePicked = false;
+  FilePickerResult? _result;
+  File? file;
 
   final _softwareItems = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
@@ -117,6 +125,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
 
       print(
           "Known Software: ${context.read(pharmacistMainProvider.notifier).userDataMap?["knownSoftware"]}");
+      context.read(pharmacistMainProvider.notifier).clearResumePDF();
 
       context
           .read(pharmacistSignUpProvider.notifier)
@@ -204,7 +213,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     fieldTitle: "First Name",
                                     hintText: "Enter your First Name...",
                                     keyboardStyle: TextInputType.name,
-                                    containerWidth: 345,
+                                    containerWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.85,
                                     titleFont: 22,
                                     onChanged: (String firstName) {
                                       context
@@ -235,7 +246,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     fieldTitle: "Last Name",
                                     hintText: "Enter your Last Name...",
                                     keyboardStyle: TextInputType.name,
-                                    containerWidth: 345,
+                                    containerWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.85,
                                     titleFont: 22,
                                     onChanged: (String lastName) {
                                       context
@@ -266,7 +279,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     fieldTitle: "Phone Number",
                                     hintText: "Enter your Phone Number...",
                                     keyboardStyle: TextInputType.number,
-                                    containerWidth: 345,
+                                    containerWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.85,
                                     titleFont: 22,
                                     onChanged: (String phoneNumber) {
                                       context
@@ -312,7 +327,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                       ),
                                       SizedBox(height: 10),
                                       Container(
-                                        width: 345,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.85,
                                         //height: 50,
                                         decoration: BoxDecoration(
                                           boxShadow: [
@@ -443,6 +460,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                           width: MediaQuery.of(context).size.width * 0.95,
                           constraints: BoxConstraints(minHeight: 320),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               SizedBox(
                                 height: 15,
@@ -450,11 +468,12 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
 
                               //First Year Licensed In Canada
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
                                 child: formField(
                                   fieldTitle: "First Year Licensed in Canada",
                                   hintText: "First Year Licensed in Canada...",
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   keyboardStyle: TextInputType.number,
                                   onChanged: (String licenseYear) {
@@ -481,12 +500,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
 
                               //Registration Number
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
                                 child: formField(
                                   fieldTitle: "Registration Number",
                                   hintText: "Registration Number...",
                                   keyboardStyle: TextInputType.number,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String registrationNumber) {
                                     checkIfChanged(registrationNumber,
@@ -511,12 +531,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
 
                               //Province of Registration
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
                                 child: formField(
                                   fieldTitle: "Registration Province",
                                   hintText: "Registration Province...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String registrationProvince) {
                                     checkIfChanged(registrationProvince,
@@ -541,12 +562,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
 
                               //Year of Graduation
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
                                 child: formField(
                                   fieldTitle: "Graduation Year",
                                   hintText: "Graduation Year...",
                                   keyboardStyle: TextInputType.number,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String graduationYear) {
                                     checkIfChanged(
@@ -571,12 +593,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
 
                               //Instituation Name
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
                                 child: formField(
                                   fieldTitle: "Instituation Name",
                                   hintText: "Instituation Name...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String institutionName) {
                                     checkIfChanged(
@@ -601,12 +624,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
 
                               //Years of Working experience
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
                                 child: formField(
                                   fieldTitle: "Years of Working experience",
                                   hintText: "Number of years...",
                                   keyboardStyle: TextInputType.number,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String workingExperience) {
                                     checkIfChanged(
@@ -645,339 +669,546 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.95,
                           constraints: BoxConstraints(minHeight: 320),
-                          child: Column(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 15,
-                              ),
-                              //Software
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  RichText(
-                                    textAlign: TextAlign.left,
-                                    text: TextSpan(
-                                        text: "Software",
-                                        style: GoogleFonts.questrial(
-                                          fontSize: 22,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                        )),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    width: 345,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0.3, 3),
-                                            blurRadius: 3.0,
-                                            spreadRadius: 0.5,
-                                            color: Colors.grey.shade400)
-                                      ],
-                                      color: Color(0xFFF0F0F0),
-                                      border: Border.all(
-                                        color: Color(0xFFE8E8E8),
-                                        width: 2,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                //Software
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                          text: "Software",
+                                          style: GoogleFonts.questrial(
+                                            fontSize: 22,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          )),
                                     ),
-                                    child: Column(
-                                      children: <Widget>[
-                                        CustomMultiSelectBottomSheetField<
-                                            Software?>(
-                                          selectedColor: Color(0xFF5DB075),
-                                          selectedItemsTextStyle:
-                                              TextStyle(color: Colors.white),
-                                          initialChildSize: 0.4,
-                                          decoration: BoxDecoration(),
-                                          listType: MultiSelectListType.CHIP,
-                                          initialValue: context
-                                              .read(pharmacistSignUpProvider
-                                                  .notifier)
-                                              .softwareList,
-                                          searchable: true,
-                                          items: _softwareItems,
-                                          buttonText: Text(
-                                              "Select known software...",
-                                              style: GoogleFonts.inter(
-                                                  color: Color(0xFFBDBDBD),
-                                                  fontSize: 16)),
-                                          onConfirm: (values) {
-                                            softwareListToUpload
-                                                ?.addAll(values);
-                                            context
+                                    SizedBox(height: 10),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.85,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0.3, 3),
+                                              blurRadius: 3.0,
+                                              spreadRadius: 0.5,
+                                              color: Colors.grey.shade400)
+                                        ],
+                                        color: Color(0xFFF0F0F0),
+                                        border: Border.all(
+                                          color: Color(0xFFE8E8E8),
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          CustomMultiSelectBottomSheetField<
+                                              Software?>(
+                                            selectedColor: Color(0xFF5DB075),
+                                            selectedItemsTextStyle:
+                                                TextStyle(color: Colors.white),
+                                            initialChildSize: 0.4,
+                                            decoration: BoxDecoration(),
+                                            listType: MultiSelectListType.CHIP,
+                                            initialValue: context
                                                 .read(pharmacistSignUpProvider
                                                     .notifier)
-                                                .changeSoftwareList(values);
-                                          },
-                                          chipDisplay:
-                                              CustomMultiSelectChipDisplay(
-                                            items: context
-                                                .read(pharmacistSignUpProvider
-                                                    .notifier)
-                                                .softwareList
-                                                ?.map((e) => MultiSelectItem(
-                                                    e, e.toString()))
-                                                .toList(),
-                                            chipColor: Color(0xFF5DB075),
-                                            onTap: (value) {
+                                                .softwareList,
+                                            searchable: true,
+                                            items: _softwareItems,
+                                            buttonText: Text(
+                                                "Select known software...",
+                                                style: GoogleFonts.inter(
+                                                    color: Color(0xFFBDBDBD),
+                                                    fontSize: 16)),
+                                            onConfirm: (values) {
                                               softwareListToUpload
-                                                  ?.remove(value);
-                                              softwareListToUpload?.removeWhere(
-                                                  (element) =>
-                                                      element?.name
-                                                          .toString() ==
-                                                      value.toString());
+                                                  ?.addAll(values);
                                               context
+                                                  .read(pharmacistSignUpProvider
+                                                      .notifier)
+                                                  .changeSoftwareList(values);
+                                            },
+                                            chipDisplay:
+                                                CustomMultiSelectChipDisplay(
+                                              items: context
                                                   .read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .softwareList
-                                                  ?.cast()
-                                                  .remove(value);
-                                              context
-                                                  .read(pharmacistSignUpProvider
-                                                      .notifier)
-                                                  .softwareList
-                                                  ?.removeWhere((element) =>
-                                                      element?.name
-                                                          .toString() ==
-                                                      value.toString());
+                                                  ?.map((e) => MultiSelectItem(
+                                                      e, e.toString()))
+                                                  .toList(),
+                                              chipColor: Color(0xFF5DB075),
+                                              onTap: (value) {
+                                                softwareListToUpload
+                                                    ?.remove(value);
+                                                softwareListToUpload
+                                                    ?.removeWhere((element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
+                                                context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .softwareList
+                                                    ?.cast()
+                                                    .remove(value);
+                                                context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .softwareList
+                                                    ?.removeWhere((element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
 
-                                              return context
-                                                  .read(pharmacistSignUpProvider
-                                                      .notifier)
-                                                  .softwareList;
-                                            },
-                                            textStyle:
-                                                TextStyle(color: Colors.white),
+                                                return context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .softwareList;
+                                              },
+                                              textStyle: TextStyle(
+                                                  color: Colors.white),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-
-                              //Skill
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  RichText(
-                                    textAlign: TextAlign.left,
-                                    text: TextSpan(
-                                        text: "Skill",
-                                        style: GoogleFonts.questrial(
-                                          fontSize: 22,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                        )),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    width: 345,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0.3, 3),
-                                            blurRadius: 3.0,
-                                            spreadRadius: 0.5,
-                                            color: Colors.grey.shade400)
-                                      ],
-                                      color: Color(0xFFF0F0F0),
-                                      border: Border.all(
-                                        color: Color(0xFFE8E8E8),
-                                        width: 2,
+                                        ],
                                       ),
-                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: Column(
-                                      children: <Widget>[
-                                        CustomMultiSelectBottomSheetField<
-                                            Skill?>(
-                                          selectedColor: Color(0xFF5DB075),
-                                          selectedItemsTextStyle:
-                                              TextStyle(color: Colors.white),
-                                          initialChildSize: 0.4,
-                                          decoration: BoxDecoration(),
-                                          listType: MultiSelectListType.CHIP,
-                                          initialValue: context
-                                              .read(pharmacistSignUpProvider
-                                                  .notifier)
-                                              .skillList,
-                                          searchable: true,
-                                          items: _skillItems,
-                                          buttonText: Text(
-                                              "Select your skills...",
-                                              style: GoogleFonts.inter(
-                                                  color: Color(0xFFBDBDBD),
-                                                  fontSize: 16)),
-                                          onConfirm: (values) {
-                                            skillListToUpload?.addAll(values);
-                                            context
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+
+                                //Skill
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                          text: "Skill",
+                                          style: GoogleFonts.questrial(
+                                            fontSize: 22,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          )),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.85,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0.3, 3),
+                                              blurRadius: 3.0,
+                                              spreadRadius: 0.5,
+                                              color: Colors.grey.shade400)
+                                        ],
+                                        color: Color(0xFFF0F0F0),
+                                        border: Border.all(
+                                          color: Color(0xFFE8E8E8),
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          CustomMultiSelectBottomSheetField<
+                                              Skill?>(
+                                            selectedColor: Color(0xFF5DB075),
+                                            selectedItemsTextStyle:
+                                                TextStyle(color: Colors.white),
+                                            initialChildSize: 0.4,
+                                            decoration: BoxDecoration(),
+                                            listType: MultiSelectListType.CHIP,
+                                            initialValue: context
                                                 .read(pharmacistSignUpProvider
                                                     .notifier)
-                                                .changeSkillList(values);
-                                          },
-                                          chipDisplay:
-                                              CustomMultiSelectChipDisplay(
-                                            items: context
-                                                .read(pharmacistSignUpProvider
-                                                    .notifier)
-                                                .skillList
-                                                ?.map((e) => MultiSelectItem(
-                                                    e, e.toString()))
-                                                .toList(),
-                                            chipColor: Color(0xFF5DB075),
-                                            onTap: (value) {
-                                              skillListToUpload?.remove(value);
-                                              skillListToUpload?.removeWhere(
-                                                  (element) =>
-                                                      element?.name
-                                                          .toString() ==
-                                                      value.toString());
+                                                .skillList,
+                                            searchable: true,
+                                            items: _skillItems,
+                                            buttonText: Text(
+                                                "Select your skills...",
+                                                style: GoogleFonts.inter(
+                                                    color: Color(0xFFBDBDBD),
+                                                    fontSize: 16)),
+                                            onConfirm: (values) {
+                                              skillListToUpload?.addAll(values);
                                               context
+                                                  .read(pharmacistSignUpProvider
+                                                      .notifier)
+                                                  .changeSkillList(values);
+                                            },
+                                            chipDisplay:
+                                                CustomMultiSelectChipDisplay(
+                                              items: context
                                                   .read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .skillList
-                                                  ?.cast()
-                                                  .remove(value);
-                                              context
-                                                  .read(pharmacistSignUpProvider
-                                                      .notifier)
-                                                  .skillList
-                                                  ?.removeWhere((element) =>
-                                                      element?.name
-                                                          .toString() ==
-                                                      value.toString());
-                                              return context
-                                                  .read(pharmacistSignUpProvider
-                                                      .notifier)
-                                                  .skillList;
-                                            },
-                                            textStyle:
-                                                TextStyle(color: Colors.white),
+                                                  ?.map((e) => MultiSelectItem(
+                                                      e, e.toString()))
+                                                  .toList(),
+                                              chipColor: Color(0xFF5DB075),
+                                              onTap: (value) {
+                                                skillListToUpload
+                                                    ?.remove(value);
+                                                skillListToUpload?.removeWhere(
+                                                    (element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
+                                                context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .skillList
+                                                    ?.cast()
+                                                    .remove(value);
+                                                context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .skillList
+                                                    ?.removeWhere((element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
+                                                return context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .skillList;
+                                              },
+                                              textStyle: TextStyle(
+                                                  color: Colors.white),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-
-                              //Language
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  RichText(
-                                    textAlign: TextAlign.left,
-                                    text: TextSpan(
-                                        text: "Languages",
-                                        style: GoogleFonts.questrial(
-                                          fontSize: 22,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                        )),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    width: 345,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: Offset(0.3, 3),
-                                            blurRadius: 3.0,
-                                            spreadRadius: 0.5,
-                                            color: Colors.grey.shade400)
-                                      ],
-                                      color: Color(0xFFF0F0F0),
-                                      border: Border.all(
-                                        color: Color(0xFFE8E8E8),
-                                        width: 2,
+                                        ],
                                       ),
-                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: Column(
-                                      children: <Widget>[
-                                        CustomMultiSelectBottomSheetField<
-                                            Language?>(
-                                          selectedColor: Color(0xFF5DB075),
-                                          selectedItemsTextStyle:
-                                              TextStyle(color: Colors.white),
-                                          initialChildSize: 0.4,
-                                          decoration: BoxDecoration(),
-                                          listType: MultiSelectListType.CHIP,
-                                          initialValue: context
-                                              .read(pharmacistSignUpProvider
-                                                  .notifier)
-                                              .languageList,
-                                          searchable: true,
-                                          items: _languageItems,
-                                          buttonText: Text(
-                                              "Select known languages...",
-                                              style: GoogleFonts.inter(
-                                                  color: Color(0xFFBDBDBD),
-                                                  fontSize: 16)),
-                                          onConfirm: (values) {
-                                            languageListToUpload
-                                                ?.addAll(values);
-                                            context
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+
+                                //Language
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                          text: "Languages",
+                                          style: GoogleFonts.questrial(
+                                            fontSize: 22,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          )),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.85,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: Offset(0.3, 3),
+                                              blurRadius: 3.0,
+                                              spreadRadius: 0.5,
+                                              color: Colors.grey.shade400)
+                                        ],
+                                        color: Color(0xFFF0F0F0),
+                                        border: Border.all(
+                                          color: Color(0xFFE8E8E8),
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          CustomMultiSelectBottomSheetField<
+                                              Language?>(
+                                            selectedColor: Color(0xFF5DB075),
+                                            selectedItemsTextStyle:
+                                                TextStyle(color: Colors.white),
+                                            initialChildSize: 0.4,
+                                            decoration: BoxDecoration(),
+                                            listType: MultiSelectListType.CHIP,
+                                            initialValue: context
                                                 .read(pharmacistSignUpProvider
                                                     .notifier)
-                                                .changeLanguageList(values);
-                                          },
-                                          chipDisplay:
-                                              CustomMultiSelectChipDisplay(
-                                            items: context
-                                                .read(pharmacistSignUpProvider
-                                                    .notifier)
-                                                .languageList
-                                                ?.map((e) => MultiSelectItem(
-                                                    e, e.toString()))
-                                                .toList(),
-                                            chipColor: Color(0xFF5DB075),
-                                            onTap: (value) {
+                                                .languageList,
+                                            searchable: true,
+                                            items: _languageItems,
+                                            buttonText: Text(
+                                                "Select known languages...",
+                                                style: GoogleFonts.inter(
+                                                    color: Color(0xFFBDBDBD),
+                                                    fontSize: 16)),
+                                            onConfirm: (values) {
                                               languageListToUpload
-                                                  ?.remove(value);
-                                              languageListToUpload?.removeWhere(
-                                                  (element) =>
-                                                      element?.name
-                                                          .toString() ==
-                                                      value.toString());
+                                                  ?.addAll(values);
                                               context
                                                   .read(pharmacistSignUpProvider
                                                       .notifier)
-                                                  .languageList
-                                                  ?.remove(value);
-                                              context
-                                                  .read(pharmacistSignUpProvider
-                                                      .notifier)
-                                                  .languageList
-                                                  ?.removeWhere((element) =>
-                                                      element?.name
-                                                          .toString() ==
-                                                      value.toString());
-                                              return context
-                                                  .read(pharmacistSignUpProvider
-                                                      .notifier)
-                                                  .languageList;
+                                                  .changeLanguageList(values);
                                             },
-                                            textStyle:
-                                                TextStyle(color: Colors.white),
+                                            chipDisplay:
+                                                CustomMultiSelectChipDisplay(
+                                              items: context
+                                                  .read(pharmacistSignUpProvider
+                                                      .notifier)
+                                                  .languageList
+                                                  ?.map((e) => MultiSelectItem(
+                                                      e, e.toString()))
+                                                  .toList(),
+                                              chipColor: Color(0xFF5DB075),
+                                              onTap: (value) {
+                                                languageListToUpload
+                                                    ?.remove(value);
+                                                languageListToUpload
+                                                    ?.removeWhere((element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
+                                                context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .languageList
+                                                    ?.remove(value);
+                                                context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .languageList
+                                                    ?.removeWhere((element) =>
+                                                        element?.name
+                                                            .toString() ==
+                                                        value.toString());
+                                                return context
+                                                    .read(
+                                                        pharmacistSignUpProvider
+                                                            .notifier)
+                                                    .languageList;
+                                              },
+                                              textStyle: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+
+                                //Resume
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                          text: "Resume (PDF Only)",
+                                          style: GoogleFonts.questrial(
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          )),
+                                    ),
+                                    SizedBox(height: 10),
+                                    if (context
+                                            .read(
+                                                pharmacistMainProvider.notifier)
+                                            .resumePDFData !=
+                                        null)
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          SizedBox(
+                                            width: 170,
+                                            height: 45,
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty
+                                                          .resolveWith<Color>(
+                                                              (states) {
+                                                    return Color(
+                                                        0xFF5DB075); // Regular color
+                                                  }),
+                                                  shape: MaterialStateProperty
+                                                      .all<RoundedRectangleBorder>(
+                                                          RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ))),
+                                              onPressed: () async {
+                                                file = context
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .resumePDFData;
+                                                print("FILE PATH: " +
+                                                    file!.path.toString());
+                                                OpenFile.open(file!.path);
+                                              },
+                                              child: RichText(
+                                                text: TextSpan(
+                                                  text: "View Resume",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 35),
+                                          SizedBox(
+                                            width: 100,
+                                            height: 45,
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty
+                                                          .resolveWith<Color>(
+                                                              (states) {
+                                                    return Color(
+                                                        0xFF5DB075); // Regular color
+                                                  }),
+                                                  shape: MaterialStateProperty
+                                                      .all<RoundedRectangleBorder>(
+                                                          RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ))),
+                                              onPressed: () async {
+                                                setState(() {
+                                                  _result = null;
+                                                  file = null;
+                                                });
+
+                                                context
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .clearResumePDF();
+                                              },
+                                              child: RichText(
+                                                text: TextSpan(
+                                                  text: "Clear",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    else
+                                      SizedBox(
+                                        width: 270,
+                                        height: 45,
+                                        child: ElevatedButton(
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith<Color>(
+                                                          (states) {
+                                                return Color(
+                                                    0xFF5DB075); // Regular color
+                                              }),
+                                              shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ))),
+                                          onPressed: () async {
+                                            try {
+                                              _result = await FilePicker
+                                                  .platform
+                                                  .pickFiles(
+                                                type: FileType.custom,
+                                                allowedExtensions: ['pdf'],
+                                                //withData: true,
+                                              );
+                                              if (_result?.files.first.path !=
+                                                  null) {
+                                                setState(() {
+                                                  filePicked = true;
+                                                });
+                                                file = File(_result!
+                                                    .files.first.path
+                                                    .toString());
+
+                                                context
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .changeResumePDF(file);
+                                                print(context
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .resumePDFData);
+                                              } else {
+                                                // User canceled the picker
+                                              }
+                                            } catch (error) {
+                                              print(
+                                                  "ERROR: " + error.toString());
+                                              final snackBar = SnackBar(
+                                                content: Text(
+                                                    'There was an error, please try again.'),
+                                                duration: Duration(seconds: 3),
+                                                behavior:
+                                                    SnackBarBehavior.floating,
+                                              );
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                            }
+                                          },
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: "Select Resume",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                            ],
+                                      )
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -1012,7 +1243,11 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                           onPressed: (uploadDataMap.isNotEmpty ||
                                   softwareListToUpload!.isNotEmpty ||
                                   skillListToUpload!.isNotEmpty ||
-                                  languageListToUpload!.isNotEmpty)
+                                  languageListToUpload!.isNotEmpty ||
+                                  context
+                                          .read(pharmacistMainProvider.notifier)
+                                          .resumePDFData !=
+                                      null)
                               ? () async {
                                   print(context
                                       .read(pharmacistSignUpProvider.notifier)
@@ -1046,6 +1281,29 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                         .read(pharmacistSignUpProvider.notifier)
                                         .languageList
                                         .toString();
+                                  }
+                                  if (context
+                                          .read(pharmacistMainProvider.notifier)
+                                          .resumePDFData !=
+                                      null) {
+                                    String resumePDFURL = await context
+                                        .read(authProviderMain.notifier)
+                                        .saveAsset(
+                                            context
+                                                .read(pharmacistMainProvider
+                                                    .notifier)
+                                                .resumePDFData,
+                                            context
+                                                .read(
+                                                    userProviderLogin.notifier)
+                                                .userUID,
+                                            "Resume",
+                                            context
+                                                .read(pharmacistMainProvider
+                                                    .notifier)
+                                                .userDataMap?["firstName"]);
+                                    uploadDataMap["resumeDownloadURL"] =
+                                        resumePDFURL;
                                   }
                                   print("Upload Data Map: $uploadDataMap");
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacistMainModel.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -9,6 +11,7 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
   Map<String, dynamic>? get userDataMap => state.userData;
   DateTime? get startDate => state.startDate;
   DateTime? get endDate => state.endDate;
+  File? get resumePDFData => state.resumePDF;
 
   void clearDates() {
     state.startDate = null;
@@ -29,5 +32,19 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
 
   void changeEndDate(DateTime? value) {
     state = state.copyWithPharmacistMain(endDate: value);
+  }
+
+  void changeResumePDF(File? asset) {
+    state = state.copyWithPharmacistMain(resumePDF: asset);
+  }
+
+  void clearResumePDF() {
+    state = PharmacistMainModel(
+      dateRanges: state.dateRanges,
+      userData: state.userData,
+      startDate: state.startDate,
+      resumePDF: null,
+    );
+    changeResumePDF(null);
   }
 }

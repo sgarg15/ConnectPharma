@@ -341,7 +341,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                         )),
                                       ),
                                     ),
-                                  );
+                                  );                        
                                 }
                                 if (sortedJobDataMap[key]["jobStatus"] ==
                                     "past") {
@@ -410,6 +410,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                         ),
                                       ),
                                     );
+                                  
                                   }
                                 } else
                                   return Padding(

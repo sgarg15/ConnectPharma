@@ -125,7 +125,8 @@ class _PharmacistProfileState extends State<PharmacistProfile> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width: 200,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.48,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
@@ -388,246 +389,258 @@ class _PharmacistProfileState extends State<PharmacistProfile> {
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //Type
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 12, 0, 15),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Type",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: userDataMap?["userType"] ??
-                                                  "N/A",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20.0,
-                                                  color: Colors.grey[800]),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    //Phone
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Phone",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text:
-                                                  userDataMap?["phoneNumber"] ??
-                                                      "N/A",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20.0,
-                                                  color: Colors.grey[800]),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 24,
-                                    ),
-                                    //Graduated From
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 15, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Graduated From",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                          RichText(
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.41,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      //Type
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 12, 0, 15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: userDataMap?[
-                                                        "institutionName"] ??
-                                                    "N/A",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 20.0,
-                                                    color: Colors.grey[800]),
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 22,
-                                    ),
-                                    //License Number
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 15, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "License Number",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                          RichText(
-                                              textAlign: TextAlign.start,
-                                              text: TextSpan(
-                                                text: userDataMap?[
-                                                        "registrationNumber"] ??
-                                                    "N/A",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 20.0,
-                                                    color: Colors.grey[800]),
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 2,
-                                    ),
-                                    //First Year Licensed Date
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 15, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Year Licensed",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                          RichText(
-                                              textAlign: TextAlign.start,
-                                              text: TextSpan(
-                                                text: userDataMap?[
-                                                        "firstYearLicensed"] ??
-                                                    "N/A",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 20.0,
-                                                    color: Colors.grey[800]),
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 1,
-                                    ),
-                                    //Resume
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 15, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Resume",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: userDataMap?[
-                                                        "resumeDownloadURL"] !=
-                                                    null
-                                                ? () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute<
-                                                          dynamic>(
-                                                        builder: (_) =>
-                                                            PDFViewerCachedFromUrl(
-                                                          url: userDataMap![
-                                                                  "resumeDownloadURL"]
-                                                              .toString(),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                : () {
-                                                    final snackBar = SnackBar(
-                                                      content: Text(
-                                                          "No Resume Found."),
-                                                      behavior: SnackBarBehavior
-                                                          .floating,
-                                                      duration:
-                                                          Duration(seconds: 2),
-                                                    );
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(snackBar);
-                                                  },
-                                            child: RichText(
-                                              textAlign: TextAlign.start,
-                                              text: TextSpan(
-                                                text: "View",
+                                                text: "Type",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 18.0,
-                                                    color: Color(0xFF5DB075)),
+                                                    color: Colors.grey),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text:
+                                                    userDataMap?["userType"] ??
+                                                        "N/A",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20.0,
+                                                    color: Colors.grey[800]),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      //Phone
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Phone",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: userDataMap?[
+                                                        "phoneNumber"] ??
+                                                    "N/A",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20.0,
+                                                    color: Colors.grey[800]),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 24,
+                                      ),
+                                      //Graduated From
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 15, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Graduated From",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
+                                            RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: userDataMap?[
+                                                          "institutionName"] ??
+                                                      "N/A",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 20.0,
+                                                      color: Colors.grey[800]),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 22,
+                                      ),
+                                      //License Number
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 15, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "License Number",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
+                                            RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: userDataMap?[
+                                                          "registrationNumber"] ??
+                                                      "N/A",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 20.0,
+                                                      color: Colors.grey[800]),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 2,
+                                      ),
+                                      //First Year Licensed Date
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 15, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Year Licensed",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
+                                            RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: userDataMap?[
+                                                          "firstYearLicensed"] ??
+                                                      "N/A",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 20.0,
+                                                      color: Colors.grey[800]),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 1,
+                                      ),
+                                      //Resume
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 15, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Resume",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: userDataMap?[
+                                                          "resumeDownloadURL"] !=
+                                                      null
+                                                  ? () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute<
+                                                            dynamic>(
+                                                          builder: (_) =>
+                                                              PDFViewerCachedFromUrl(
+                                                            url: userDataMap![
+                                                                    "resumeDownloadURL"]
+                                                                .toString(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                  : () {
+                                                      final snackBar = SnackBar(
+                                                        content: Text(
+                                                            "No Resume Found."),
+                                                        behavior:
+                                                            SnackBarBehavior
+                                                                .floating,
+                                                        duration: Duration(
+                                                            seconds: 2),
+                                                      );
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackBar);
+                                                    },
+                                              child: RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: "View",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 18.0,
+                                                      color: Color(0xFF5DB075)),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
