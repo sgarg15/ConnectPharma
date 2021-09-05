@@ -149,34 +149,28 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                   ),
                 )
               : Center(
-                  child: Material(
-                    elevation: 15,
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: 65,
-                      child: Center(
-                        child: RichText(
-                          text: TextSpan(
-                            text: "No pharmacists found...",
-                            style: TextStyle(
-                              fontSize: 22,
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: Material(
+                      elevation: 10,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.95,
+                        height: 50,
+                        child: Center(
+                            child: Text(
+                          "No available pharamcists found",
+                          style: TextStyle(color: Colors.grey, fontSize: 20),
+                        )),
                       ),
                     ),
                   ),
                 ),
-
           //Search Button
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 25, 0, 10),
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 10),
             child: SizedBox(
-              width: 370,
-              height: 51,
+              width: MediaQuery.of(context).size.width * 0.9,
               child: ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor:
@@ -195,34 +189,38 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => CreateShift()));
                 },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: "Post a shift",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Column(
+                    children: [
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: "Post a shift",
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 2,
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        text:
-                            "Can’t find a pharmacist? Post a shift for a future date",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                      SizedBox(
+                        height: 2,
+                      ),
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text:
+                              "Can’t find a pharmacist? Post a shift for a future date",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

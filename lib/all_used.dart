@@ -254,7 +254,7 @@ List<String> getHourDiff(TimeOfDay tod1, TimeOfDay tod2) {
       (tod1.hour * 60 + tod1.minute) - (tod2.hour * 60 + tod2.minute);
   var leftOverminutes = (totalDifferenceInMin % 60);
   var totalHours =
-      ((totalDifferenceInMin - leftOverminutes) / 60).toStringAsFixed(0);
+      ((totalDifferenceInMin - leftOverminutes) / 60).abs().toStringAsFixed(0);
   if (leftOverminutes == 0) {
     return [totalHours, ""];
   } else {

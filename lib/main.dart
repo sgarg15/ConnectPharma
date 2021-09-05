@@ -11,6 +11,7 @@ import 'package:pharma_connect/src/screens/login.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
 import 'src/providers/auth_provider.dart';
+//TODO: Add Pharmacy Assistant Option for signup but signup info for both pharmacist and pharmacy assistant is same
 
 final authProvider2 = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();

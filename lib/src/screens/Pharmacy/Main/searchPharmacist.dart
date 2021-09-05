@@ -4,11 +4,16 @@ import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pharma_connect/Custom%20Widgets/custom_multiSelect_field.dart';
 import 'package:pharma_connect/Custom%20Widgets/custom_multi_select_display.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Sign%20Up/1pharmacistSignUp.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/availablePharmacists.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import '../../../../Custom Widgets/custom_dateTimeField.dart';
 import '../../../../all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../login.dart';
+
+//TODO: Add Show All pharmacist options
 
 class SearchPharmacistPharmacy extends StatefulWidget {
   SearchPharmacistPharmacy({Key? key}) : super(key: key);
@@ -64,6 +69,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           //Start Date
                           Padding(
@@ -90,7 +97,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                     borderRadius: BorderRadius.circular(20),
                                     child: Container(
                                       height: 55,
-                                      width: 200,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.55,
                                       child: DateTimeField(
                                         format:
                                             DateFormat("MM/dd/yyyy hh:mm a"),
@@ -181,7 +189,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                     borderRadius: BorderRadius.circular(20),
                                     child: Container(
                                       height: 55,
-                                      width: 200,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.55,
                                       child: DateTimeField(
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
@@ -273,7 +282,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   height: 10,
                                 ),
                                 Container(
-                                  width: 330,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
@@ -397,7 +407,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   height: 10,
                                 ),
                                 Container(
-                                  width: 330,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.9,
                                   decoration: softwareFieldEnabled
                                       ? BoxDecoration(
                                           boxShadow: [
@@ -488,6 +499,52 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                   ),
                 ),
               ),
+              //Test Job Upload Button
+              // Padding(
+              //   padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+              //   child: SizedBox(
+              //     width: 340,
+              //     height: 51,
+              //     child: ElevatedButton(
+              //       style: ButtonStyle(
+              //           backgroundColor:
+              //               MaterialStateProperty.resolveWith<Color>((states) {
+              //             if (states.contains(MaterialState.disabled)) {
+              //               return Colors.grey; // Disabled color
+              //             }
+              //             return Color(0xFF5DB075); // Regular color
+              //           }),
+              //           shape:
+              //               MaterialStateProperty.all<RoundedRectangleBorder>(
+              //                   RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(100),
+              //           ))),
+              //       onPressed: () {
+              //         print("Pressed");
+              //         context
+              //             .read(authProvider.notifier)
+              //             .uploadTestJobToPharmacy(
+              //                 context.read(userProviderLogin.notifier).userUID,
+              //                 context);
+              //         Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => AvailablePharmacists()));
+              //       },
+              //       child: RichText(
+              //         text: TextSpan(
+              //           text: "Upload Test Job",
+              //           style: TextStyle(
+              //             fontSize: 18,
+              //             color: Colors.white,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
               //Search Button
               Consumer(
                 builder: (context, watch, child) {

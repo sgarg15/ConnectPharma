@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +14,7 @@ import 'package:pharma_connect/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.d
 import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
+//TODO: Permanent Hiring for Pharmacy, show permanent option, for pharmacist in availability show looking for permanent job
 
 final pharmacyMainProvider =
     StateNotifierProvider<PharmacyMainProvider, PharmacyMainModel>((ref) {
@@ -34,69 +37,19 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   Map sortedJobDataMap = Map();
   Map<String, dynamic>? userDataMap = Map();
   Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStream = null;
+  StreamSubscription? userDataSub;
+  StreamSubscription? jobsDataSub;
   int numActiveJobs = 0;
   int numPastJobs = 0;
   bool jobDataMapEmpty = false;
 
-  // Stream<QuerySnapshot<Map<String, dynamic>>> getJobs() {
-  //   final jobsStream = usersRef
-  //       .doc(context.read(userProviderLogin.notifier).userUID)
-  //       .collection("Main")
-  //       .snapshots();
-  //   return jobsStream;
-  //   // await usersRef
-  //   //     .doc(context.read(userProviderLogin.notifier).userUID)
-  //   //     .collection("Main")
-  //   //     .get()
-  //   //     .then((querySnapshot) => {
-  //   //           querySnapshot.docs.forEach((doc) {
-  //   //             setState(() {
-  //   //               dataID = doc.id;
-  //   //               jobDataMap[dataID] = doc.data();
-  //   //             });
-  //   //           })
-  //   //         });
-  //   // setState(() {
-  //   //   sortedJobDataMap = Map.fromEntries(jobDataMap.entries.toList()
-  //   //     ..sort((e1, e2) =>
-  //   //         e1.value["startDate"].compareTo(e2.value["startDate"])));
-  //   // });
-  //   // usersRef
-  //   //     .doc(context.read(userProviderLogin.notifier).userUID)
-  //   //     .collection("Main")
-  //   //     .snapshots()
-  //   //     .listen((event) {
-  //   //   event.docs.forEach((doc) {
-  //   //     setState(() {
-  //   //       dataID = doc.id;
-  //   //       jobDataMap[dataID] = doc.data();
-  //   //     });
-  //   //   });
-  //   // });
-  //   // setState(() {
-  //   //   sortedJobDataMap = Map.fromEntries(jobDataMap.entries.toList()
-  //   //     ..sort((e1, e2) =>
-  //   //         e1.value["startDate"].compareTo(e2.value["startDate"])));
-  //   // });
-  // }
-
-  // void getUserData() async {
-  //   await usersRef
-  //       .doc(context.read(userProviderLogin.notifier).userUID)
-  //       .collection("SignUp")
-  //       .doc("Information")
-  //       .get()
-  //       .then((querySnapshot) => {
-  //             setState(() {
-  //               userDataMap = querySnapshot.data();
-  //             })
-  //           });
-  //   context.read(pharmacyMainProvider.notifier).changeUserDataMap(userDataMap);
-  // }
-
   @override
   void initState() {
     super.initState();
+    print("User UID: ${context.read(userProviderLogin.notifier).userUID}");
+    jobsDataSub?.cancel();
+    userDataSub?.cancel();
+
     numActiveJobs = 0;
     numPastJobs = 0;
     //getJobs();
@@ -104,7 +57,14 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
         .doc(context.read(userProviderLogin.notifier).userUID)
         .collection("Main")
         .snapshots();
-    usersRef
+
+    jobsDataSub = usersRef
+        .doc(context.read(userProviderLogin.notifier).userUID)
+        .collection("Main")
+        .snapshots()
+        .listen((event) {});
+
+    userDataSub = usersRef
         .doc(context.read(userProviderLogin.notifier).userUID)
         .collection("SignUp")
         .doc("Information")
@@ -124,13 +84,23 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    jobsDataSub?.cancel();
+    userDataSub?.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: Color(0xFFE3E3E3),
         key: _scaffoldKey,
-        drawer: SideMenuDrawer(),
+        drawer: SideMenuDrawer(
+          jobsDataSub: jobsDataSub,
+          userDataSub: userDataSub,
+        ),
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
@@ -210,56 +180,61 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                     colors: [Colors.white, Color(0xFFE3E3E3)],
                   ),
                 ),
-                child: CupertinoSlidingSegmentedControl(
-                    thumbColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                    backgroundColor: Color(0xFFC4C4C4),
-                    groupValue: segmentedControlGroupValue,
-                    children: <int, Widget>{
-                      0: Container(
-                        alignment: Alignment.center,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 34),
-                        child: segmentedControlGroupValue == 0
-                            ? Text(
-                                "Active Jobs",
-                                style: TextStyle(
-                                  color: Color(0xFF5DB075),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  child: CupertinoSlidingSegmentedControl(
+                      thumbColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                      backgroundColor: Color(0xFFC4C4C4),
+                      groupValue: segmentedControlGroupValue,
+                      children: <int, Widget>{
+                        0: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 34),
+                          child: segmentedControlGroupValue == 0
+                              ? Text(
+                                  "Active Jobs",
+                                  style: TextStyle(
+                                    color: Color(0xFF5DB075),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                  ),
+                                )
+                              : Text(
+                                  "Active Jobs",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
                                 ),
-                              )
-                            : Text(
-                                "Active Jobs",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w400),
-                              ),
-                      ),
-                      1: Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 40.45),
-                        child: segmentedControlGroupValue == 1
-                            ? Text(
-                                "Past Jobs",
-                                style: TextStyle(
-                                  color: Color(0xFF5DB075),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
+                        ),
+                        1: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 40.45),
+                          child: segmentedControlGroupValue == 1
+                              ? Text(
+                                  "Past Jobs",
+                                  style: TextStyle(
+                                    color: Color(0xFF5DB075),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                  ),
+                                )
+                              : Text(
+                                  "Past Jobs",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
                                 ),
-                              )
-                            : Text(
-                                "Past Jobs",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w400),
-                              ),
-                      ),
-                    },
-                    onValueChanged: (int? i) {
-                      setState(() {
-                        segmentedControlGroupValue = i!.toInt();
-                      });
-                    }),
+                        ),
+                      },
+                      onValueChanged: (int? i) {
+                        setState(() {
+                          segmentedControlGroupValue = i!.toInt();
+                        });
+                      }),
+                ),
               ),
               if (segmentedControlGroupValue == 0) ...[
                 if (jobDataMapEmpty == true) ...[
@@ -341,7 +316,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                         )),
                                       ),
                                     ),
-                                  );                        
+                                  );
                                 }
                                 if (sortedJobDataMap[key]["jobStatus"] ==
                                     "past") {
@@ -410,7 +385,6 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                         ),
                                       ),
                                     );
-                                  
                                   }
                                 } else
                                   return Padding(
@@ -618,9 +592,15 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   }
 }
 
+// ignore: must_be_immutable
 class SideMenuDrawer extends StatelessWidget {
-  const SideMenuDrawer({
+  StreamSubscription? userDataSub;
+  StreamSubscription? jobsDataSub;
+
+  SideMenuDrawer({
     Key? key,
+    this.userDataSub,
+    this.jobsDataSub,
   }) : super(key: key);
 
   @override
@@ -819,6 +799,8 @@ class SideMenuDrawer extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                jobsDataSub?.cancel();
+                userDataSub?.cancel();
                 context.read(authProvider.notifier).signOut();
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => PharmaConnect()),

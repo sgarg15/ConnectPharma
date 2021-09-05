@@ -215,7 +215,6 @@ exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jo
         jobID: jobID,
         phoneNumber: phoneNumber,
     }
-    //functions.logger.log("Hello, here is the after data: ");
 
     
     return aggregatedDataRef.update({[next.jobID]: next})
@@ -225,14 +224,23 @@ exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jo
     // functions.logger.log("Hello, here is the uid: ", context.params.uid);
 });
 
-exports.deleteJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onDelete((snapShot, context) => {
-    const afterData = snapShot.data();  
+exports.deleteJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onDelete((snapshot, context) => {
+    const afterData = snapshot.data();  
     const FieldValue = admin.firestore.FieldValue;
 
     const aggregatedDataRef = dataBase.doc(`aggregation/jobs`);
-    //functions.logger.log("Hello, here is the after data: ", afterData);
+    const batch = dataBase.batch();
+    if(afterData.applicants != null){
+        Object.keys(afterData.applicants).forEach(function(key) {
+            const pharmacistDataRef = dataBase.doc(`Users/${key}/Main/${context.params.jobID}`);
+            batch.delete(pharmacistDataRef);
+        });
+    }
     
-    return aggregatedDataRef.update({[context.params.jobID] : FieldValue.delete()});
+    //functions.logger.log("Hello, here is the after data: ", afterData);
+    batch.update(aggregatedDataRef,{[context.params.jobID] : FieldValue.delete()});
+    
+    return batch.commit()
 
     
     // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);

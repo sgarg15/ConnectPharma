@@ -54,7 +54,7 @@ class AuthProvider extends ChangeNotifier {
     _auth = FirebaseAuth.instance;
     User _user;
     //listener for authentication changes such as user sign in and sign out
-    _auth.authStateChanges().listen(onAuthStateChanged);
+    //_auth.authStateChanges().listen(onAuthStateChanged);
   }
 
   //Create user object based on the given FirebaseUser
@@ -184,6 +184,7 @@ class AuthProvider extends ChangeNotifier {
         .collection("SignUp")
         .doc("Information")
         .set({
+      "availability": {},
       "userType": "Pharmacist",
       "email": context.read(pharmacistSignUpProvider.notifier).email,
       "firstName": context.read(pharmacistSignUpProvider.notifier).firstName,
@@ -376,6 +377,37 @@ class AuthProvider extends ChangeNotifier {
     return user;
   }
 
+  Future<UserCredential?>? uploadTestJobToPharmacy(
+      String? userUID, BuildContext context) async {
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+
+    String getRandomString(int length) =>
+        String.fromCharCodes(Iterable.generate(
+            length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+    users.doc(userUID).collection("Main").add({
+      "userType": "Pharmacy",
+      "startDate": DateTime(2019, 01, 01),
+      "endDate": DateTime(2021, 01, 01),
+      "pharmacyUID": userUID,
+      "pharmacyNumber": getRandomString(6),
+      "pharmacyName": getRandomString(6),
+      "pharmacyAddress": getRandomString(6),
+      "jobStatus": "active",
+      "skillsNeeded": getRandomString(6),
+      "softwareNeeded": getRandomString(6),
+      "techOnSite": true,
+      "assistantOnSite": false,
+      "hourlyRate": "\$45.03",
+      "limaStatus": true,
+      "comments": getRandomString(10),
+      "email": getRandomString(6),
+    });
+    return null;
+  }
+
   Future<UserCredential?>? uploadAvailalibitlityData(
       String userUID, Map dataUpload) async {
     users.doc(userUID).collection("SignUp").doc("Information").set({
@@ -387,7 +419,7 @@ class AuthProvider extends ChangeNotifier {
   Future<UserCredential?>? uploadJobToPharmacy(
       String? userUID, BuildContext context) async {
     users.doc(userUID).collection("Main").add({
-      "userType":"Pharmacy",
+      "userType": "Pharmacy",
       "startDate": context.read(pharmacyMainProvider).startDate,
       "endDate": context.read(pharmacyMainProvider).endDate,
       "pharmacyUID": userUID,
@@ -564,12 +596,11 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //Method to handle user signing out
-  Future signOut() async {
+  Future<void> signOut() async {
     await _auth.signOut().then((_) {
       _googleSignIn.signOut();
     });
-    _status = Status.Unauthenticated;
-    notifyListeners();
-    return Future.delayed(Duration.zero);
+    //_status = Status.Unauthenticated;
+    //notifyListeners();
   }
 }

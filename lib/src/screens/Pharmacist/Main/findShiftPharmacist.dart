@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,50 +26,62 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   Map jobsDataMap = Map();
   Map jobsDataMapTemp = Map();
   Map sortedJobsDataMap = Map();
+  StreamSubscription? scheduleJobsDataSub;
 
-  void getAllJobs() async {
-    DocumentReference jobsData = aggregationRef.doc("jobs");
-    jobsData.get().then((jobData) {
-      setState(() {
-        jobsDataMapTemp = jobData.data() as Map;
-      });
+  void getAllJobs(DocumentSnapshot jobsData) async {
+    setState(() {
+      jobsDataMapTemp = jobsData.data() as Map;
+    });
+  }
 
-      jobsDataMapTemp.forEach((key, value) {
+  void jobsSortedWithSchedule() {
+    jobsDataMapTemp.forEach((key, value) {
+      print(value["pharmacyUID"]);
+      print("--------------------------------------------");
+      if (((value["startDate"] as Timestamp).toDate().isAfter(context
+                  .read(pharmacistMainProvider.notifier)
+                  .startDate as DateTime) &&
+              ((value["startDate"] as Timestamp).toDate().isBefore(context
+                  .read(pharmacistMainProvider.notifier)
+                  .endDate as DateTime))) ||
+          ((value["startDate"] as Timestamp).toDate().day ==
+              (context.read(pharmacistMainProvider.notifier).startDate
+                      as DateTime)
+                  .day)) {
         print(value["pharmacyUID"]);
-        print("--------------------------------------------");
-        if (((value["startDate"] as Timestamp).toDate().isAfter(context
-                    .read(pharmacistMainProvider.notifier)
-                    .startDate as DateTime) &&
-                ((value["startDate"] as Timestamp).toDate().isBefore(context
-                    .read(pharmacistMainProvider.notifier)
-                    .endDate as DateTime))) ||
-            ((value["startDate"] as Timestamp).toDate().day ==
-                (context.read(pharmacistMainProvider.notifier).startDate
-                        as DateTime)
-                    .day)) {
-          print(value["pharmacyUID"]);
-          print("Key: $key");
-          jobsDataMap[key] = value;
-          print("YEAS");
-        } else {
-          print(value["pharmacyUID"]);
-          print("Key: $key");
-          print("NO");
-        }
-      });
-      print("Jobs Data Map: ${jobsDataMap.keys}");
-      setState(() {
-        sortedJobsDataMap = Map.fromEntries(jobsDataMap.entries.toList()
-          ..sort((e1, e2) =>
-              e1.value["startDate"].compareTo(e2.value["startDate"])));
-      });
+        print("Key: $key");
+        jobsDataMap[key] = value;
+        print("YEAS");
+      } else {
+        print(value["pharmacyUID"]);
+        print("Key: $key");
+        print("NO");
+      }
+    });
+    print("Jobs Data Map: ${jobsDataMap.keys}");
+    setState(() {
+      sortedJobsDataMap = Map.fromEntries(jobsDataMap.entries.toList()
+        ..sort((e1, e2) =>
+            e1.value["startDate"].compareTo(e2.value["startDate"])));
     });
   }
 
   @override
   void initState() {
     print(context.read(pharmacistMainProvider.notifier).startDate);
+    scheduleJobsDataSub?.cancel();
+    scheduleJobsDataSub =
+        aggregationRef.doc("jobs").snapshots().listen((allJobsData) {
+      getAllJobs(allJobsData);
+    });
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    scheduleJobsDataSub?.cancel();
+    super.dispose();
   }
 
   @override
@@ -78,6 +92,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
         return WillPopScope(
           onWillPop: () async {
             context.read(pharmacistMainProvider.notifier).clearDates();
+            scheduleJobsDataSub?.cancel();
             return true;
           },
           child: Scaffold(
@@ -205,21 +220,23 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                         final date = await showDatePicker(
                                             context: context,
                                             firstDate: context
-                                                .read(pharmacistMainProvider
-                                                    .notifier)
-                                                .startDate as DateTime,
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .startDate ??
+                                                DateTime.now(),
                                             initialDate: context
-                                                .read(pharmacistMainProvider
-                                                    .notifier)
-                                                .startDate as DateTime,
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .startDate ??
+                                                DateTime.now(),
                                             lastDate: DateTime(2100));
+
                                         if (date != null) {
                                           context
                                               .read(pharmacistMainProvider
                                                   .notifier)
                                               .changeEndDate(date);
                                           print(date);
-
                                           return date;
                                         } else {
                                           context
@@ -271,7 +288,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                         //sortedJobsDataMap = {};
                                         //jobsDataMap = {};
 
-                                        getAllJobs();
+                                        jobsSortedWithSchedule();
                                       }
                                     : null,
                                 child: RichText(

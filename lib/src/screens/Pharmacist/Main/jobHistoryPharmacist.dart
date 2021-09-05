@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +15,7 @@ import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistProfile.dar
 import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
+import '../../../../Custom Widgets/fileStorage.dart';
 
 final authProviderMain = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
@@ -34,23 +39,112 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
   Map<String, dynamic>? userDataMap = Map();
   Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStream = null;
+  StreamSubscription? _jobsStream;
+  StreamSubscription? _userDataStream;
   String dataID = "";
+  final LocalStorage localStorage = LocalStorage();
+  Directory jobsListDirectory = Directory("");
 
+  Map allJobs = Map();
+  Map removedJob = Map();
   Map currentJobDataMap = Map();
   Map appliedJobDataMap = Map();
   Map pastJobDataMap = Map();
   Map rejectedJobDataMap = Map();
 
+  void checkIfJobDeleted(Map allJobs, BuildContext context) async {
+    //print(allJobs);
+    Map storageJobsMap = Map();
+    allJobs.forEach((key, value) {
+      storageJobsMap[key] = {
+        "pharmacyName": value["pharmacyName"],
+        "startDate": value["startDate"].toDate().toIso8601String(),
+        "endDate": value["endDate"].toDate().toIso8601String()
+      };
+    });
+
+    print("Storage jobs data map: $storageJobsMap");
+    //Check if both directory and file exists
+    if (!await Directory("${await localStorage.localPath}/jobsList").exists()) {
+      jobsListDirectory =
+          await localStorage.createDirectory(directoryName: 'jobsList');
+      if (!await File("${await localStorage.localPath}/jobsList/jobsListFile")
+          .exists()) {
+        await localStorage.writeLocalFile(
+            fileName: "jobsListFile", data: jsonEncode(storageJobsMap));
+      }
+    }
+
+    File jobsListFile =
+        await localStorage.readLocalFile(fileName: "jobsListFile");
+    print("File: ${jobsListFile.readAsStringSync()}");
+
+    Map jobsMap = jsonDecode(jobsListFile.readAsStringSync());
+
+    removedJob.clear();
+
+    if (jobsMap.isEmpty) {
+      await localStorage.writeLocalFile(
+          fileName: "jobsListFile", data: jsonEncode(storageJobsMap));
+    }
+
+    print("Jobs Map: $jobsMap");
+    //print("All Jobs: $allJobs");
+    jobsMap.forEach((key, value) {
+      print("Key: ${key}");
+      if (!allJobs.containsKey(key)) {
+        print("Key: ${key}");
+        removedJob[key] = value;
+      }
+    });
+
+    print(removedJob);
+    if ((jobsMap.length > allJobs.length) && removedJob.isNotEmpty) {
+      print(removedJob);
+      removedJob.forEach((key, value) {
+        print(
+            "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} was deleted by the pharmacy.");
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Job Deleted"),
+                  content: Text(
+                      "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} was deleted by the pharmacy."),
+                ));
+      });
+    }
+
+    await localStorage.writeLocalFile(
+        fileName: "jobsListFile", data: jsonEncode(storageJobsMap));
+  }
+
   @override
   void initState() {
     super.initState();
+    print("User UID: ${context.read(userProviderLogin.notifier).userUID}");
 
     jobsStream = userRef
         .doc(context.read(userProviderLogin.notifier).userUID)
         .collection("Main")
         .snapshots();
+    //To Check if a job is deleted
+    //_jobsStream.cancel();
+    _jobsStream = jobsStream!.listen((event) {
+      print("Checking");
+      if (event.size != 0) {
+        event.docs.forEach((doc) {
+          if ((doc.data())["applicationStatus"] == "applied" ||
+              (doc.data())["applicationStatus"] == "current") {
+            dataID = doc.id;
+            allJobs[dataID] = doc.data();
+          }
+        });
+        checkIfJobDeleted(allJobs, context);
+      }
+    });
 
-    userRef
+    //_userDataStream.cancel();
+    _userDataStream = userRef
         .doc(context.read(userProviderLogin.notifier).userUID)
         .collection("SignUp")
         .doc("Information")
@@ -62,8 +156,28 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
       context
           .read(pharmacistMainProvider.notifier)
           .changeUserDataMap(userDataMap);
-      //print(context.read(pharmacistMainProvider.notifier).userDataMap);
+      print(
+          "UserData Map: ${context.read(pharmacistMainProvider.notifier).userDataMap}");
+      if (context
+          .read(pharmacistMainProvider.notifier)
+          .userDataMap?["availability"]
+          .isEmpty) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Availability Status"),
+                  content: Text(
+                      "Please fill out your availability to use this app to its full potential. And allow pharmacies to discover your profile."),
+                ));
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _jobsStream?.cancel();
+    _userDataStream?.cancel();
   }
 
   @override
@@ -118,12 +232,30 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
                   color: Color(0xFF5DB075),
                   size: 50,
                 ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => FindShiftForPharmacist()));
-                },
+                onTap: (context
+                                .read(pharmacistMainProvider.notifier)
+                                .userDataMap?["availability"] !=
+                            null &&
+                        context
+                            .read(pharmacistMainProvider.notifier)
+                            .userDataMap?["availability"]
+                            .isNotEmpty)
+                    ? () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    FindShiftForPharmacist()));
+                      }
+                    : () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text("Availability Status"),
+                                  content: Text(
+                                      "Please fill out your availability to use this app to its full potential. And allow pharmacies to discover your profile."),
+                                ));
+                      },
               ),
             ],
           ),
@@ -221,7 +353,6 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
                             currentJobDataMap[dataID] = doc.data();
                           }
                         });
-
                         return Expanded(
                           child: SingleChildScrollView(
                             child: Column(

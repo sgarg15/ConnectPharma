@@ -21,6 +21,9 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
 
   void changeAvailabilityToCalendar() {
     List<PickerDateRange> dateRangesCalendarTemp = [];
+    print(context
+        .read(pharmacistMainProvider.notifier)
+        .userDataMap?["availability"]);
     for (var i = 0;
         i <
             context
@@ -59,7 +62,6 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
   @override
   Widget build(BuildContext context) {
     void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-
       context
           .read(pharmacistMainProvider.notifier)
           .changeDateRanges(args.value);

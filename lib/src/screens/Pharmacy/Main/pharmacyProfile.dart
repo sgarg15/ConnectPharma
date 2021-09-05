@@ -121,7 +121,8 @@ class PharmacyProfile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width: 200,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.47,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
@@ -290,80 +291,88 @@ class PharmacyProfile extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //Position
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 12, 0, 15),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Position",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.42,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      //Position
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 12, 0, 15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Position",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
                                             ),
-                                          ),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: context
-                                                      .read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .userData?["position"] ??
-                                                  "N/A",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20.0,
-                                                  color: Colors.grey[800]),
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: context
+                                                        .read(
+                                                            pharmacyMainProvider
+                                                                .notifier)
+                                                        .userData?["position"] ??
+                                                    "N/A",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20.0,
+                                                    color: Colors.grey[800]),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    //Phone
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Phone",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
+                                      //Phone
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Phone",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
                                             ),
-                                          ),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: context
-                                                      .read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .userData?["phoneNumber"] ??
-                                                  "N/A",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20.0,
-                                                  color: Colors.grey[800]),
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: context
+                                                        .read(
+                                                            pharmacyMainProvider
+                                                                .notifier)
+                                                        .userData?["phoneNumber"] ??
+                                                    "N/A",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20.0,
+                                                    color: Colors.grey[800]),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -443,7 +452,8 @@ class PharmacyProfile extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width: 200,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.47,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
@@ -669,178 +679,185 @@ class PharmacyProfile extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //Store Number
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 14, 0, 15),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Store Number",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.42,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      //Store Number
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 14, 0, 15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Store Number",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
                                             ),
-                                          ),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: context
-                                                      .read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .userData?["storeNumber"] ??
-                                                  "N/A",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20.0,
-                                                  color: Colors.grey[800]),
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: context
+                                                        .read(
+                                                            pharmacyMainProvider
+                                                                .notifier)
+                                                        .userData?["storeNumber"] ??
+                                                    "N/A",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20.0,
+                                                    color: Colors.grey[800]),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    //Software
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Software",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
+                                      //Software
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Software",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
                                             ),
-                                          ),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: context
-                                                              .read(
-                                                                  pharmacyMainProvider
-                                                                      .notifier)
-                                                              .userData?[
-                                                          "softwareList"] !=
-                                                      null
-                                                  ? context
-                                                      .read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .userData!["softwareList"]
-                                                      .toString()
-                                                      .substring(
-                                                          context
-                                                                  .read(pharmacyMainProvider
-                                                                      .notifier)
-                                                                  .userData?[
-                                                                      "softwareList"]
-                                                                  .indexOf(
-                                                                      "[") +
-                                                              1,
-                                                          context
-                                                              .read(
-                                                                  pharmacyMainProvider
-                                                                      .notifier)
-                                                              .userData?[
-                                                                  "softwareList"]
-                                                              .lastIndexOf("]"))
-                                                  : "N/A",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20.0,
-                                                  color: Colors.grey[800]),
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: context
+                                                                .read(pharmacyMainProvider
+                                                                    .notifier)
+                                                                .userData?[
+                                                            "softwareList"] !=
+                                                        null
+                                                    ? context
+                                                        .read(
+                                                            pharmacyMainProvider
+                                                                .notifier)
+                                                        .userData![
+                                                            "softwareList"]
+                                                        .toString()
+                                                        .substring(
+                                                            context
+                                                                    .read(pharmacyMainProvider
+                                                                        .notifier)
+                                                                    .userData?[
+                                                                        "softwareList"]
+                                                                    .indexOf(
+                                                                        "[") +
+                                                                1,
+                                                            context
+                                                                .read(pharmacyMainProvider
+                                                                    .notifier)
+                                                                .userData?[
+                                                                    "softwareList"]
+                                                                .lastIndexOf(
+                                                                    "]"))
+                                                    : "N/A",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20.0,
+                                                    color: Colors.grey[800]),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    //Pharmacy Fax Number
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 60, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Pharmacy Fax",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
+                                      //Pharmacy Fax Number
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 60, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Pharmacy Fax",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
                                             ),
-                                          ),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: context
-                                                          .read(
-                                                              pharmacyMainProvider
-                                                                  .notifier)
-                                                          .userData?[
-                                                      "pharmacyFaxNumber"] ??
-                                                  "N/A",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20.0,
-                                                  color: Colors.grey[800]),
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: context
+                                                            .read(
+                                                                pharmacyMainProvider
+                                                                    .notifier)
+                                                            .userData?[
+                                                        "pharmacyFaxNumber"] ??
+                                                    "N/A",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20.0,
+                                                    color: Colors.grey[800]),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    //Manager Number
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 15, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: "Manager Phone",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18.0,
-                                                  color: Colors.grey),
+                                      //Manager Number
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 15, 0, 0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: "Manager Phone",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18.0,
+                                                    color: Colors.grey),
+                                              ),
                                             ),
-                                          ),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: context
-                                                          .read(
-                                                              pharmacyMainProvider
-                                                                  .notifier)
-                                                          .userData?[
-                                                      "managerPhoneNumber"] ??
-                                                  "N/A",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20.0,
-                                                  color: Colors.grey[800]),
+                                            RichText(
+                                              textAlign: TextAlign.start,
+                                              text: TextSpan(
+                                                text: context
+                                                            .read(
+                                                                pharmacyMainProvider
+                                                                    .notifier)
+                                                            .userData?[
+                                                        "managerPhoneNumber"] ??
+                                                    "N/A",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20.0,
+                                                    color: Colors.grey[800]),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

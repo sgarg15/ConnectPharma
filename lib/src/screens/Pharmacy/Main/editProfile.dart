@@ -158,7 +158,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               fieldTitle: "First Name",
                               hintText: "Enter your First Name...",
                               keyboardStyle: TextInputType.name,
-                              containerWidth: 345,
+                              containerWidth:
+                                  MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String firstName) {
                                 context
@@ -187,7 +188,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               fieldTitle: "Last Name",
                               hintText: "Enter your Last Name...",
                               keyboardStyle: TextInputType.name,
-                              containerWidth: 345,
+                              containerWidth:
+                                  MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String lastName) {
                                 context
@@ -216,7 +218,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               fieldTitle: "Phone Number",
                               hintText: "Enter your Phone Number...",
                               keyboardStyle: TextInputType.number,
-                              containerWidth: 345,
+                              containerWidth:
+                                  MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String phoneNumber) {
                                 context
@@ -257,7 +260,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                 ),
                                 SizedBox(height: 10),
                                 Container(
-                                  width: 335,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   constraints: BoxConstraints(
                                       maxHeight: 60, minHeight: 50),
                                   decoration: BoxDecoration(
@@ -367,7 +371,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   fieldTitle: "Pharmacy Name",
                                   hintText: "Enter the pharmacy name...",
                                   keyboardStyle: TextInputType.name,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String value) {
                                     context
@@ -407,7 +412,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                     ),
                                     SizedBox(height: 10),
                                     Container(
-                                      width: 345,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.85,
 
                                       //height: 50,
                                       decoration: BoxDecoration(
@@ -538,7 +544,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   fieldTitle: "Store Number",
                                   hintText: "Enter the Store Number...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String storeNumber) {
                                     context
@@ -567,7 +574,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   fieldTitle: "City",
                                   hintText: "Enter the city...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String city) {
                                     context
@@ -593,7 +601,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   fieldTitle: "Postal Code",
                                   hintText: "Enter the postal code...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String postalCode) {
                                     context
@@ -620,7 +629,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   fieldTitle: "Country",
                                   hintText: "Enter the country...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String country) {
                                     context
@@ -649,7 +659,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   hintText:
                                       "Enter the pharmacy phone Number...",
                                   keyboardStyle: TextInputType.number,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String phoneNumber) {
                                     context
@@ -682,7 +693,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   fieldTitle: "Pharmacy Fax Number",
                                   hintText: "Enter the pharmacy fax Number...",
                                   keyboardStyle: TextInputType.number,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String faxNumber) {
                                     context
@@ -717,7 +729,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   hintText:
                                       "Enter the accreditation province...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth: 345,
+                                  containerWidth:
+                                      MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String accreditationProvince) {
                                     context
@@ -760,7 +773,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                     ),
                                     SizedBox(height: 10),
                                     Container(
-                                      width: 345,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.85,
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
@@ -868,7 +882,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
               SizedBox(height: 20),
               Center(
                 child: SizedBox(
-                  width: 324,
+                  width: MediaQuery.of(context).size.width * 0.87,
                   height: 51,
                   child: ElevatedButton(
                     style: ButtonStyle(

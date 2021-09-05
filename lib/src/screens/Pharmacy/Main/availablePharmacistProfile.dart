@@ -518,10 +518,6 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () async {
                                                 print("PRESSED");
-                                                print(
-                                                    "Dates: $availabilityPharmacist");
-                                                print(
-                                                    "BlackOutDates: $_blackoutDateCollection");
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute<dynamic>(
@@ -530,6 +526,10 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                                       url: widget
                                                           .pharmacistDataMap![
                                                               "resume"]
+                                                          .toString(),
+                                                      name: widget
+                                                          .pharmacistDataMap![
+                                                              "name"]
                                                           .toString(),
                                                     ),
                                                   ),
@@ -588,7 +588,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                               content: RichText(
                                 text: TextSpan(
                                     text:
-                                        "Email: ${widget.pharmacistDataMap?["email"]}\n\n\n",
+                                        "Email: ${widget.pharmacistDataMap?["email"]}\nPhone:${widget.pharmacistDataMap?["phoneNumber"]} \n\n\n",
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 18),
                                     children: [
@@ -706,20 +706,33 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
 }
 
 class PDFViewerCachedFromUrl extends StatelessWidget {
-  const PDFViewerCachedFromUrl({Key? key, required this.url}) : super(key: key);
+  const PDFViewerCachedFromUrl(
+      {Key? key, required this.url, required this.name})
+      : super(key: key);
 
   final String url;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
-        title: const Text('Cached PDF From Url'),
+        title: Text("${name} Resume"),
       ),
-      body: const PDF().cachedFromUrl(
-        url,
-        placeholder: (double progress) => Center(child: Text('$progress %')),
-        errorWidget: (dynamic error) => Center(child: Text(error.toString())),
+      body: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: const PDF(fitEachPage: false, fitPolicy: FitPolicy.WIDTH)
+              .cachedFromUrl(
+            url,
+            placeholder: (double progress) =>
+                Center(child: Text('$progress %')),
+            errorWidget: (dynamic error) =>
+                Center(child: Text(error.toString())),
+          ),
+        ),
       ),
     );
   }

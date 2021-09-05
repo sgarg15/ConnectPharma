@@ -71,8 +71,9 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.grey[100]),
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               //Start Date
                               Padding(
@@ -99,7 +100,10 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
                                           height: 55,
-                                          width: 200,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.55,
                                           child: DateTimeField(
                                             format: DateFormat(
                                                 "MM/dd/yyyy hh:mm a"),
@@ -192,7 +196,10 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
                                           height: 55,
-                                          width: 200,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.55,
                                           child: DateTimeField(
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
@@ -286,7 +293,8 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                       height: 10,
                                     ),
                                     Container(
-                                      width: 330,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
@@ -379,7 +387,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 55,
+                                          width: 60,
                                         ),
                                         SizedBox(
                                           height: 24,
@@ -401,7 +409,8 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                       height: 10,
                                     ),
                                     Container(
-                                      width: 330,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
                                       decoration: softwareFieldEnabled
                                           ? BoxDecoration(
                                               boxShadow: [
@@ -491,12 +500,11 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                               ),
                               //Tech On Site Check Box
                               Padding(
-                                padding: softwareFieldEnabled
-                                    ? EdgeInsets.fromLTRB(0, 15, 65, 0)
-                                    : EdgeInsets.fromLTRB(0, 0, 65, 0),
+                                padding: EdgeInsets.zero,
                                 child: Container(
-                                  width: 293,
+                                  width: 268,
                                   child: CheckboxListTile(
+                                    contentPadding: EdgeInsets.zero,
                                     title: RichText(
                                       text: TextSpan(
                                         text: "Technician On-Site",
@@ -522,10 +530,11 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                               ),
                               //Assistant On Site Check Box
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 65, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                 child: Container(
-                                  width: 293,
+                                  width: 268,
                                   child: CheckboxListTile(
+                                    contentPadding: EdgeInsets.zero,
                                     title: RichText(
                                       text: TextSpan(
                                         text: "Assistant On-Site",
@@ -573,7 +582,10 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                         borderRadius: BorderRadius.circular(15),
                                         child: Container(
                                           height: 55,
-                                          width: 174,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.48,
                                           alignment: Alignment.center,
                                           child: TextField(
                                             onChanged: (value) {
@@ -616,10 +628,11 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                               ),
                               //LIMA
                               Padding(
-                                padding: EdgeInsets.fromLTRB(0, 15, 65, 0),
+                                padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
                                 child: Container(
-                                  width: 293,
+                                  width: 268,
                                   child: CheckboxListTile(
+                                    contentPadding: EdgeInsets.zero,
                                     title: RichText(
                                       text: TextSpan(
                                         text: "Can provide LIMA?",

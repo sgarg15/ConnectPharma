@@ -589,6 +589,7 @@ class JobDetails extends StatelessWidget {
                         borderRadius: BorderRadius.circular(100),
                       ))),
                   onPressed: () {
+                    //TODO: Application System
                     // 1) Click Apply
                     //Send Applicant info (and pharmacist user uid) to pharmacy job UID and place under applicants map field within the job uid document
 
