@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.
 import 'package:geocoding/geocoding.dart';
 
 import '../../../../all_used.dart';
+import '../../../../Custom Widgets/fileStorage.dart';
 
 class FindShiftForPharmacist extends StatefulWidget {
   FindShiftForPharmacist({Key? key}) : super(key: key);
@@ -27,6 +30,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   Map jobsDataMapTemp = Map();
   Map sortedJobsDataMap = Map();
   StreamSubscription? scheduleJobsDataSub;
+  final LocalStorage localStorage = LocalStorage();
 
   void getAllJobs(DocumentSnapshot jobsData) async {
     setState(() {
@@ -34,7 +38,13 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
     });
   }
 
-  void jobsSortedWithSchedule() {
+  void jobsSortedWithSchedule() async {
+    File jobsListFile =
+        await localStorage.readLocalFile(fileName: "jobsListFile");
+    print("File: ${jobsListFile.readAsStringSync()}");
+
+    Map jobsMap = jsonDecode(jobsListFile.readAsStringSync());
+
     jobsDataMapTemp.forEach((key, value) {
       print(value["pharmacyUID"]);
       print("--------------------------------------------");
@@ -50,8 +60,10 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                   .day)) {
         print(value["pharmacyUID"]);
         print("Key: $key");
-        jobsDataMap[key] = value;
-        print("YEAS");
+        if (!jobsMap.containsKey(key)) {
+          jobsDataMap[key] = value;
+          print("YEAS");
+        }
       } else {
         print(value["pharmacyUID"]);
         print("Key: $key");

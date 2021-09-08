@@ -38,38 +38,45 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   int segmentedControlGroupValue = 0;
   CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
   Map<String, dynamic>? userDataMap = Map();
-  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStream = null;
-  StreamSubscription? _jobsStream;
-  StreamSubscription? _userDataStream;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStreamPharmacist = null;
+  StreamSubscription? _jobsStreamSub;
+  StreamSubscription? _userDataStreamSub;
   String dataID = "";
   final LocalStorage localStorage = LocalStorage();
   Directory jobsListDirectory = Directory("");
 
   Map allJobs = Map();
   Map removedJob = Map();
+  Map acceptedJob = Map();
+  Map rejectedJob = Map();
   Map currentJobDataMap = Map();
   Map appliedJobDataMap = Map();
   Map pastJobDataMap = Map();
   Map rejectedJobDataMap = Map();
 
-  void checkIfJobDeleted(Map allJobs, BuildContext context) async {
+  void checkIfJobUpdated(Map allJobs, BuildContext context) async {
     //print(allJobs);
     Map storageJobsMap = Map();
+    print(allJobs);
     allJobs.forEach((key, value) {
-      storageJobsMap[key] = {
-        "pharmacyName": value["pharmacyName"],
-        "startDate": value["startDate"].toDate().toIso8601String(),
-        "endDate": value["endDate"].toDate().toIso8601String()
-      };
+      storageJobsMap.addAll({
+        key: {
+          "pharmacyName": value["pharmacyName"],
+          "startDate": value["startDate"].toDate().toIso8601String(),
+          "endDate": value["endDate"].toDate().toIso8601String(),
+          "applicationStatus": value["applicationStatus"],
+        }
+      });
     });
-
     print("Storage jobs data map: $storageJobsMap");
+
     //Check if both directory and file exists
     if (!await Directory("${await localStorage.localPath}/jobsList").exists()) {
       jobsListDirectory =
           await localStorage.createDirectory(directoryName: 'jobsList');
       if (!await File("${await localStorage.localPath}/jobsList/jobsListFile")
           .exists()) {
+        print("Writing File");
         await localStorage.writeLocalFile(
             fileName: "jobsListFile", data: jsonEncode(storageJobsMap));
       }
@@ -82,6 +89,8 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
     Map jobsMap = jsonDecode(jobsListFile.readAsStringSync());
 
     removedJob.clear();
+    acceptedJob.clear();
+    rejectedJob.clear();
 
     if (jobsMap.isEmpty) {
       await localStorage.writeLocalFile(
@@ -95,10 +104,19 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
       if (!allJobs.containsKey(key)) {
         print("Key: ${key}");
         removedJob[key] = value;
+      } else if ((jobsMap.length >= allJobs.length)) {
+        print(
+            "Stored Value: ${value["applicationStatus"]}\nAll Jobs: ${allJobs[key]["applicationStatus"]}");
+        if (value["applicationStatus"] != allJobs[key]["applicationStatus"]) {
+          if (allJobs[key]["applicationStatus"] == "current") {
+            acceptedJob.addAll({key: value});
+          } else if (allJobs[key]["applicationStatus"] == "rejected") {
+            rejectedJob.addAll({key: value});
+          }
+        }
       }
     });
 
-    print(removedJob);
     if ((jobsMap.length > allJobs.length) && removedJob.isNotEmpty) {
       print(removedJob);
       removedJob.forEach((key, value) {
@@ -114,6 +132,36 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
       });
     }
 
+    print("Accepted: $acceptedJob");
+    if ((jobsMap.length >= allJobs.length) && acceptedJob.isNotEmpty) {
+      acceptedJob.forEach((key, value) {
+        print(
+            "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has accepted you for the position. You will be contacted by the pharmacy soon.");
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Application Accepted"),
+                  content: Text(
+                      "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has accepted you for the position. You will be contacted by the pharmacy soon."),
+                ));
+      });
+      acceptedJob.clear();
+    }
+
+    print("Rejected: $rejectedJob");
+    if ((jobsMap.length >= allJobs.length) && rejectedJob.isNotEmpty) {
+      rejectedJob.forEach((key, value) {
+        print(
+            "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has rejected you for the position. To search and for more jobs please click the bottom at the bottom.");
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("Application Rejected"),
+                  content: Text(
+                      "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has rejected you for the position. To search and apply for more jobs please click the bottom at the bottom."),
+                ));
+      });
+    }
     await localStorage.writeLocalFile(
         fileName: "jobsListFile", data: jsonEncode(storageJobsMap));
   }
@@ -123,28 +171,29 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
     super.initState();
     print("User UID: ${context.read(userProviderLogin.notifier).userUID}");
 
-    jobsStream = userRef
+    jobsStreamPharmacist = userRef
         .doc(context.read(userProviderLogin.notifier).userUID)
-        .collection("Main")
+        .collection("PharmacistJobs")
         .snapshots();
     //To Check if a job is deleted
-    //_jobsStream.cancel();
-    _jobsStream = jobsStream!.listen((event) {
+    _jobsStreamSub?.cancel();
+    _jobsStreamSub = jobsStreamPharmacist!.listen((event) {
       print("Checking");
       if (event.size != 0) {
         event.docs.forEach((doc) {
           if ((doc.data())["applicationStatus"] == "applied" ||
-              (doc.data())["applicationStatus"] == "current") {
+              (doc.data())["applicationStatus"] == "current" ||
+              (doc.data())["applicationStatus"] == "rejected") {
             dataID = doc.id;
             allJobs[dataID] = doc.data();
           }
         });
-        checkIfJobDeleted(allJobs, context);
+        checkIfJobUpdated(allJobs, context);
       }
     });
 
-    //_userDataStream.cancel();
-    _userDataStream = userRef
+    _userDataStreamSub?.cancel();
+    _userDataStreamSub = userRef
         .doc(context.read(userProviderLogin.notifier).userUID)
         .collection("SignUp")
         .doc("Information")
@@ -176,8 +225,11 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   @override
   void dispose() {
     super.dispose();
-    _jobsStream?.cancel();
-    _userDataStream?.cancel();
+    print("In Pharmacist Job History dispose");
+    _jobsStreamSub?.cancel();
+    _userDataStreamSub?.cancel();
+    print("_jobsStreamSub: $_jobsStreamSub");
+    print("_userDataStreamSub: $_userDataStreamSub");
   }
 
   @override
@@ -335,20 +387,24 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
               //Active
               if (segmentedControlGroupValue == 0)
                 StreamBuilder(
-                    stream: jobsStream,
+                    stream: jobsStreamPharmacist,
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError)
                         return Text('Error: ${snapshot.error}');
                       if (!snapshot.hasData)
                         return Center(child: CircularProgressIndicator());
                       if (snapshot.data != null) {
+                        appliedJobDataMap.clear();
+                        currentJobDataMap.clear();
                         snapshot.data?.docs.forEach((doc) {
                           if ((doc.data() as Map)["applicationStatus"] ==
                               "applied") {
                             dataID = doc.id;
                             appliedJobDataMap[dataID] = doc.data();
                           } else if ((doc.data() as Map)["applicationStatus"] ==
-                              "current") {
+                                  "current" ||
+                              (doc.data() as Map)["applicationStatus"] ==
+                                  "accept") {
                             dataID = doc.id;
                             currentJobDataMap[dataID] = doc.data();
                           }
@@ -372,7 +428,7 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
               //Past
               else if (segmentedControlGroupValue == 1)
                 StreamBuilder(
-                    stream: jobsStream,
+                    stream: jobsStreamPharmacist,
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError)
                         return Text('Error: ${snapshot.error}');

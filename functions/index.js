@@ -180,6 +180,8 @@ exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jo
     const afterData = change.after.data();  
 
     const aggregatedDataRef = dataBase.doc("aggregation/jobs");
+    const batch = dataBase.batch();
+
     const startDate = afterData.startDate;
     const endDate = afterData.endDate;
     const jobStatus = afterData.jobStatus;
@@ -216,8 +218,13 @@ exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jo
         phoneNumber: phoneNumber,
     }
 
-    
-    return aggregatedDataRef.update({[next.jobID]: next})
+    Object.keys(afterData.applicants).forEach(function(key) {
+        const pharmacistDataRef = dataBase.doc(`Users/${key}/PharmacistJobs/${context.params.jobID}`);
+        batch.update(pharmacistDataRef, next);
+    });
+    batch.update(aggregatedDataRef, {[next.jobID]: next});
+
+    return batch.commit();
 
     
     // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);

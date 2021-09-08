@@ -741,6 +741,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                   ),
                                 ),
                               ),
+                              
                               //Assistant On Site Check Box
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 0, 65, 0),

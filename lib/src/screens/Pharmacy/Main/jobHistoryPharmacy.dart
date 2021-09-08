@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/all_used.dart';
 import 'package:pharma_connect/main.dart';
 import 'package:pharma_connect/model/pharmacyMainModel.dart';
 import 'package:pharma_connect/src/providers/pharmacyMainProvider.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/appliedPharmacists.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/editShift.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/pharmacyProfile.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/searchPharmacist.dart';
@@ -35,8 +37,10 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   String dataID = "";
   Map jobDataMap = Map();
   Map sortedJobDataMap = Map();
+  Map activeJobDataMap = Map();
+  Map pastJobDataMap = Map();
   Map<String, dynamic>? userDataMap = Map();
-  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStream = null;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStreamPharmacy = null;
   StreamSubscription? userDataSub;
   StreamSubscription? jobsDataSub;
   int numActiveJobs = 0;
@@ -53,7 +57,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
     numActiveJobs = 0;
     numPastJobs = 0;
     //getJobs();
-    jobsStream = usersRef
+    jobsStreamPharmacy = usersRef
         .doc(context.read(userProviderLogin.notifier).userUID)
         .collection("Main")
         .snapshots();
@@ -80,14 +84,18 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
     });
 
     context.read(pharmacyMainProvider.notifier).clearDateValues();
+    print("In Pharmacy Job History InitState");
     // getUserData();
   }
 
   @override
   void dispose() {
     super.dispose();
+    print("In Pharmacy Job History dispose");
     jobsDataSub?.cancel();
     userDataSub?.cancel();
+    print("jobsDataSub: ${jobsDataSub}");
+    print("userDataSub: $userDataSub");
   }
 
   @override
@@ -257,7 +265,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                 ] else ...[
                   Expanded(
                     child: StreamBuilder(
-                      stream: jobsStream,
+                      stream: jobsStreamPharmacy,
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError)
@@ -338,49 +346,106 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                                               0.95,
                                           constraints:
                                               BoxConstraints(minHeight: 90),
-                                          child: Center(
-                                            child: ListTile(
-                                              title: new Text(
-                                                DateFormat("MMMM d, y").format(
-                                                        DateTime.parse(
-                                                            sortedJobDataMap[
-                                                                        key][
-                                                                    "startDate"]
-                                                                .toDate()
-                                                                .toString())) +
-                                                    " to " +
-                                                    DateFormat("MMMM d, y")
-                                                        .format(DateTime.parse(
-                                                            sortedJobDataMap[
-                                                                        key]
-                                                                    ["endDate"]
-                                                                .toDate()
-                                                                .toString())),
-                                                style: TextStyle(fontSize: 18),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ListTile(
+                                                title: new Text(
+                                                  DateFormat("MMM d, y").format(
+                                                          DateTime.parse(
+                                                              sortedJobDataMap[
+                                                                          key][
+                                                                      "startDate"]
+                                                                  .toDate()
+                                                                  .toString())) +
+                                                      " to " +
+                                                      DateFormat("MMM d, y")
+                                                          .format(DateTime.parse(
+                                                              sortedJobDataMap[
+                                                                          key][
+                                                                      "endDate"]
+                                                                  .toDate()
+                                                                  .toString())),
+                                                  style:
+                                                      TextStyle(fontSize: 18),
+                                                ),
+                                                subtitle: Text(
+                                                  "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["startDate"].toDate().toString()))} - "
+                                                  "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                                                  "${sortedJobDataMap[key]["hourlyRate"] + "/hr"}",
+                                                  style: TextStyle(
+                                                      color: Colors.black54,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditShift(
+                                                                jobDataMap:
+                                                                    sortedJobDataMap[
+                                                                        key],
+                                                                jobUID: key,
+                                                              )));
+                                                },
                                               ),
-                                              subtitle: Text(
-                                                "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["startDate"].toDate().toString()))} - "
-                                                "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["endDate"].toDate().toString()))} \n"
-                                                "${sortedJobDataMap[key]["hourlyRate"] + "/hr"}",
-                                                style: TextStyle(
-                                                    color: Colors.black54,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.9,
+                                                  child: Divider(
+                                                    height: 5,
+                                                    thickness: 2,
+                                                  )),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        17, 5, 0, 10),
+                                                child: GestureDetector(
+                                                  child: Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.95,
+                                                    child: Text(
+                                                      "Number of Applicants: ${sortedJobDataMap[key]["applicants"] != null ? sortedJobDataMap[key]["applicants"].length : "0"}",
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                          color: Colors.black54,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    if (sortedJobDataMap[key]
+                                                            ["applicants"] !=
+                                                        null) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  PharmacistApplied(
+                                                                    jodID: key,
+                                                                    applicants:
+                                                                        sortedJobDataMap[key]
+                                                                            [
+                                                                            "applicants"],
+                                                                  )));
+                                                    }
+                                                  },
+                                                ),
                                               ),
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditShift(
-                                                              jobDataMap:
-                                                                  sortedJobDataMap[
-                                                                      key],
-                                                              jobUID: key,
-                                                            )));
-                                              },
-                                            ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -439,7 +504,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
                 ] else ...[
                   Expanded(
                     child: StreamBuilder(
-                      stream: jobsStream,
+                      stream: jobsStreamPharmacy,
                       builder:
                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError)
@@ -669,37 +734,6 @@ class SideMenuDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => PharmacyProfile()));
-              },
-            ),
-
-            //Availability Button
-            ListTile(
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.event_available,
-                    color: Colors.lightBlue,
-                    size: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                    child: RichText(
-                      text: TextSpan(
-                        text: "Availability",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => PharmacistAvailability()));
               },
             ),
 

@@ -590,6 +590,7 @@ class JobDetails extends StatelessWidget {
                       ))),
                   onPressed: () {
                     //TODO: Application System
+
                     // 1) Click Apply
                     //Send Applicant info (and pharmacist user uid) to pharmacy job UID and place under applicants map field within the job uid document
 
@@ -600,8 +601,8 @@ class JobDetails extends StatelessWidget {
                     //Under (Past) section, have a section for Rejected jobs
 
                     //For Pharmacy:
-                      //On Job Delete have cloud function also delete job from any pharmacist with that job id in their applicants field using the where command
-                      //Send a notification either through app or showdialog that there job was deleted
+                    //On Job Delete have cloud function also delete job from any pharmacist with that job id in their applicants field using the where command
+                    //Send a notification either through app or showdialog that there job was deleted
                     //For job dialog, show number of applicants for that job
                     //By clicking on job and then on applicants button, you can view all the applied applications,
                     //The Applicant dialogue will have pharmacist profile photo, name, years of work experience and then on the right hand side, the option to reject and accept the applicant
@@ -713,7 +714,7 @@ class JobDetails extends StatelessWidget {
     DocumentReference pharmacistJobsCollection = FirebaseFirestore.instance
         .collection("Users")
         .doc(context.read(userProviderLogin.notifier).userUID)
-        .collection("Main")
+        .collection("PharmacistJobs")
         .doc(jobDetails?["jobID"]);
     batchValue.set(pharmacistJobsCollection, jobDetails);
     // String? result = await context

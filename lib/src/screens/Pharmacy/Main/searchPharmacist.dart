@@ -31,6 +31,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
       skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
 
   bool softwareFieldEnabled = false;
+  bool skillFieldEnabled = false;
+  bool showAllPharmacists = false;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +168,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                           ),
                           //End Date
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(2, 25, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
@@ -260,23 +262,73 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                               ],
                             ),
                           ),
+                          // //Show all pharmacist options
+                          // Container(
+                          //   width: 266,
+                          //   child: CheckboxListTile(
+                          //     contentPadding: EdgeInsets.zero,
+                          //     title: RichText(
+                          //       text: TextSpan(
+                          //         text: "Show All Pharmacist",
+                          //         style: TextStyle(
+                          //             fontWeight: FontWeight.w600,
+                          //             fontSize: 20.0,
+                          //             color: Colors.black),
+                          //       ),
+                          //     ),
+                          //     activeColor: Color(0xFF5DB075),
+                          //     value: showAllPharmacists,
+                          //     onChanged: (value) {
+                          //       setState(() {
+                          //         showAllPharmacists = !showAllPharmacists;
+                          //         context
+                          //             .read(pharmacyMainProvider.notifier)
+                          //             .clearDateValues();
+                          //       });
+                          //     },
+                          //     controlAffinity: ListTileControlAffinity
+                          //         .trailing, //  <-- leading Checkbox
+                          //   ),
+                          // ),
+
                           //Skills
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                RichText(
-                                  textAlign: TextAlign.left,
-                                  text: TextSpan(
-                                    text: "Specialization Skills",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 20.0,
-                                        color: Colors.black),
-                                  ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.left,
+                                      text: TextSpan(
+                                        text: "Specialization Skills",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20.0,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 55,
+                                    ),
+                                    SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: Checkbox(
+                                          activeColor: Color(0xFF5DB075),
+                                          value: skillFieldEnabled,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              skillFieldEnabled =
+                                                  !skillFieldEnabled;
+                                              //print(softwareFieldEnabled);
+                                            });
+                                          }),
+                                    )
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -284,86 +336,87 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                 Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.9,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                          offset: Offset(0.3, 3),
-                                          blurRadius: 3.0,
-                                          spreadRadius: 0.5,
-                                          color: Colors.grey.shade400)
-                                    ],
-                                    color: Color(0xFFF0F0F0),
-                                    border: Border.all(
-                                      color: Color(0xFFE8E8E8),
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                                  decoration: skillFieldEnabled
+                                      ? BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                                offset: Offset(0.3, 3),
+                                                blurRadius: 3.0,
+                                                spreadRadius: 0.5,
+                                                color: Colors.grey.shade400)
+                                          ],
+                                          color: Color(0xFFF0F0F0),
+                                          border: Border.all(
+                                            color: Color(0xFFE8E8E8),
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        )
+                                      : null,
                                   child: Column(
                                     children: <Widget>[
-                                      CustomMultiSelectBottomSheetField<Skill?>(
-                                        selectedColor: Color(0xFF5DB075),
-                                        selectedItemsTextStyle:
-                                            TextStyle(color: Colors.white),
-                                        initialChildSize: 0.4,
-                                        decoration: BoxDecoration(),
-                                        listType: MultiSelectListType.CHIP,
-                                        initialValue: context
-                                            .read(pharmacyMainProvider.notifier)
-                                            .skillList,
-                                        searchable: true,
-                                        items: _skillItems,
-                                        buttonText: Text(
-                                            "Select known skills...",
-                                            style: GoogleFonts.inter(
-                                                color: Color(0xFFBDBDBD),
-                                                fontSize: 16)),
-                                        onConfirm: (values) {
-                                          context
-                                              .read(
-                                                  pharmacyMainProvider.notifier)
-                                              .changeSkillList(values);
-                                        },
-                                        chipDisplay:
-                                            CustomMultiSelectChipDisplay(
-                                          items: context
-                                              .read(
-                                                  pharmacyMainProvider.notifier)
-                                              .skillList
-                                              ?.map((e) => MultiSelectItem(
-                                                  e, e.toString()))
-                                              .toList(),
-                                          chipColor: Color(0xFF5DB075),
-                                          onTap: (value) {
-                                            context
-                                                .read(pharmacyMainProvider
-                                                    .notifier)
-                                                .skillList
-                                                ?.cast()
-                                                .remove(value);
-                                            context
-                                                .read(pharmacyMainProvider
-                                                    .notifier)
-                                                .skillList
-                                                ?.removeWhere((element) =>
-                                                    element?.name.toString() ==
-                                                    value.toString());
-
-                                            return context
-                                                .read(pharmacyMainProvider
-                                                    .notifier)
-                                                .skillList;
-                                          },
-                                          textStyle:
-                                              TextStyle(color: Colors.white),
-                                        ),
-                                      ),
+                                      skillFieldEnabled
+                                          ? MultiSelectBottomSheetField<Skill?>(
+                                              //enabled: softwareFieldEnabled,
+                                              selectedColor: Color(0xFF5DB075),
+                                              selectedItemsTextStyle: TextStyle(
+                                                  color: Colors.white),
+                                              initialChildSize: 0.4,
+                                              decoration: BoxDecoration(),
+                                              listType:
+                                                  MultiSelectListType.CHIP,
+                                              initialValue: context
+                                                  .read(pharmacyMainProvider
+                                                      .notifier)
+                                                  .skillList,
+                                              searchable: true,
+                                              items: _skillItems,
+                                              buttonText: Text(
+                                                  "Select known skills...",
+                                                  style: GoogleFonts.inter(
+                                                      color: Color(0xFFBDBDBD),
+                                                      fontSize: 16)),
+                                              onConfirm: (values) {
+                                                context
+                                                    .read(pharmacyMainProvider
+                                                        .notifier)
+                                                    .changeSkillList(values);
+                                              },
+                                              chipDisplay:
+                                                  MultiSelectChipDisplay(
+                                                items: context
+                                                    .read(pharmacyMainProvider
+                                                        .notifier)
+                                                    .skillList
+                                                    ?.map((e) =>
+                                                        MultiSelectItem(
+                                                            e, e.toString()))
+                                                    .toList(),
+                                                chipColor: Color(0xFF5DB075),
+                                                onTap: (value) {
+                                                  context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .skillList
+                                                      ?.remove(value);
+                                                  return context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .skillList;
+                                                },
+                                                textStyle: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            )
+                                          : Container(),
                                     ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
+
                           //Software
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
@@ -385,7 +438,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 55,
+                                      width: 60,
                                     ),
                                     SizedBox(
                                       height: 24,
@@ -490,6 +543,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                               ],
                             ),
                           ),
+
                           SizedBox(
                             height: 30,
                           )

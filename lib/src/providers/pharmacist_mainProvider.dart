@@ -12,6 +12,7 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
   DateTime? get startDate => state.startDate;
   DateTime? get endDate => state.endDate;
   File? get resumePDFData => state.resumePDF;
+  bool? get permanentJob => state.permanentJob;
 
   void clearDates() {
     state.startDate = null;
@@ -36,6 +37,10 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
 
   void changeResumePDF(File? asset) {
     state = state.copyWithPharmacistMain(resumePDF: asset);
+  }
+
+  void changePermanentJob(bool? value) {
+    state = state.copyWithPharmacistMain(permanentJob: value);
   }
 
   void clearResumePDF() {

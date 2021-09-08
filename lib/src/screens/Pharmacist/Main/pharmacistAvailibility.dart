@@ -18,6 +18,7 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
   Map dateRangesTemp = Map();
   Map dateRangesToUpload = Map();
   List<PickerDateRange> dateRangesFromFirestore = [];
+  String permanentJobBool = "";
 
   void changeAvailabilityToCalendar() {
     List<PickerDateRange> dateRangesCalendarTemp = [];
@@ -98,178 +99,229 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
         ),
         backgroundColor: Color(0xFFF6F6F6),
       ),
-      body: Column(
-        children: <Widget>[
-          //Calendar
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
-            child: Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(30),
-              child: Container(
-                padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
-                child: SfDateRangePicker(
-                  onSelectionChanged: _onSelectionChanged,
-                  initialSelectedRanges: dateRangesFromFirestore,
-                  view: DateRangePickerView.month,
-                  navigationDirection:
-                      DateRangePickerNavigationDirection.vertical,
-                  selectionShape: DateRangePickerSelectionShape.rectangle,
-                  selectionMode: DateRangePickerSelectionMode.multiRange,
-                  selectionTextStyle:
-                      TextStyle(color: Colors.white, fontSize: 20),
-                  selectionColor: Color(0xFF5DB075),
-                  startRangeSelectionColor: Color(0xFF228a4d),
-                  endRangeSelectionColor: Color(0xFF228a4d),
-                  rangeSelectionColor: Color(0xFF5DB075),
-                  rangeTextStyle: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(30)),
-              ),
-            ),
-          ),
-
-          //List view of Calendar
-          Consumer(builder: (context, watch, child) {
-            watch(pharmacistMainProvider);
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            //Calendar
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
               child: Material(
-                elevation: 20,
+                elevation: 10,
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
-                  width: 350,
-                  height: 200,
-                  child: Column(
-                    children: <Widget>[
-                      //Title of conatiner
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                        child: Container(
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              text: "List View",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18.0,
-                                  color: Colors.black),
+                  padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
+                  child: SfDateRangePicker(
+                    onSelectionChanged: _onSelectionChanged,
+                    initialSelectedRanges: dateRangesFromFirestore,
+                    view: DateRangePickerView.month,
+                    navigationDirection:
+                        DateRangePickerNavigationDirection.vertical,
+                    selectionShape: DateRangePickerSelectionShape.rectangle,
+                    selectionMode: DateRangePickerSelectionMode.multiRange,
+                    selectionTextStyle:
+                        TextStyle(color: Colors.white, fontSize: 20),
+                    selectionColor: Color(0xFF5DB075),
+                    startRangeSelectionColor: Color(0xFF228a4d),
+                    endRangeSelectionColor: Color(0xFF228a4d),
+                    rangeSelectionColor: Color(0xFF5DB075),
+                    rangeTextStyle:
+                        TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(30)),
+                ),
+              ),
+            ),
+
+            //List view of Calendar
+            Consumer(builder: (context, watch, child) {
+              watch(pharmacistMainProvider);
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  child: Material(
+                    elevation: 20,
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      width: 350,
+                      height: 200,
+                      child: Column(
+                        children: <Widget>[
+                          //Title of conatiner
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                            child: Container(
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  text: "List View",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18.0,
+                                      color: Colors.black),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      //List view of calendar
-                      Expanded(
-                        child: ListView(
-                          children: <Widget>[
-                            for (var i = 0;
-                                i <
-                                    context
-                                        .read(pharmacistMainProvider.notifier)
-                                        .dateRanges
-                                        .length;
-                                i++) ...[
-                              ListTile(
-                                visualDensity:
-                                    VisualDensity(horizontal: 0, vertical: -4),
-                                title: Text(bullet +
-                                    " " +
-                                    DateFormat.yMMMMd('en_US')
-                                        .format(context
+                          //List view of calendar
+                          Expanded(
+                            child: ListView(
+                              children: <Widget>[
+                                for (var i = 0;
+                                    i <
+                                        context
                                             .read(
                                                 pharmacistMainProvider.notifier)
-                                            .dateRanges[i]
-                                            .startDate as DateTime)
-                                        .toString() +
-                                    ' - ' +
-                                    DateFormat.yMMMMd('en_US')
-                                        .format(context
-                                                .read(pharmacistMainProvider
-                                                    .notifier)
-                                                .dateRanges[i]
-                                                .endDate ??
-                                            context
+                                            .dateRanges
+                                            .length;
+                                    i++) ...[
+                                  ListTile(
+                                    visualDensity: VisualDensity(
+                                        horizontal: 0, vertical: -4),
+                                    title: Text(bullet +
+                                        " " +
+                                        DateFormat.yMMMMd('en_US')
+                                            .format(context
                                                 .read(pharmacistMainProvider
                                                     .notifier)
                                                 .dateRanges[i]
                                                 .startDate as DateTime)
-                                        .toString()),
-                              )
-                            ],
-                            if (context
-                                .read(pharmacistMainProvider.notifier)
-                                .dateRanges
-                                .isEmpty) ...[
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 10, 5, 0),
-                                child: RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    text: "No Dates Selected",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 18.0,
-                                        color: Colors.grey),
+                                            .toString() +
+                                        ' - ' +
+                                        DateFormat.yMMMMd('en_US')
+                                            .format(context
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .dateRanges[i]
+                                                    .endDate ??
+                                                context
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .dateRanges[i]
+                                                    .startDate as DateTime)
+                                            .toString()),
+                                  )
+                                ],
+                                if (context
+                                    .read(pharmacistMainProvider.notifier)
+                                    .dateRanges
+                                    .isEmpty) ...[
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 10, 5, 0),
+                                    child: RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                        text: "No Dates Selected",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 18.0,
+                                            color: Colors.grey),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
-          //Save Button
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-            child: SizedBox(
-              width: 324,
-              height: 51,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.resolveWith<Color>((states) {
-                      if (states.contains(MaterialState.disabled)) {
-                        return Colors.grey; // Disabled color
-                      }
-                      return Color(0xFF5DB075); // Regular color
-                    }),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ))),
-                onPressed: dateRangesToUpload.isNotEmpty
-                    ? () {
-                        print("Pressed");
-                        context
-                            .read(authProvider.notifier)
-                            .uploadAvailalibitlityData(
-                                context
-                                    .read(userProviderLogin.notifier)
-                                    .userUID,
-                                dateRangesToUpload);
-                        Navigator.pop(context);
-                      }
-                    : null,
-                child: RichText(
-                  text: TextSpan(
-                    text: "Save",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+              );
+            }),
+
+            //Permanent job
+            Consumer(builder: (context, watch, child) {
+              watch(pharmacistMainProvider);
+              return Padding(
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: CheckboxListTile(
+                  contentPadding: EdgeInsets.fromLTRB(15, 0, 20, 0),
+                  title: RichText(
+                    text: TextSpan(
+                      text: "Looking for a permanent job?",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18.0,
+                          color: Colors.black),
+                    ),
+                  ),
+                  activeColor: Color(0xFF5DB075),
+                  value: context
+                      .read(pharmacistMainProvider.notifier)
+                      .permanentJob,
+                  onChanged: (value) {
+                    setState(() {
+                      permanentJobBool = "true";
+                    });
+                    context
+                        .read(pharmacistMainProvider.notifier)
+                        .changePermanentJob(value);
+                  },
+                  controlAffinity:
+                      ListTileControlAffinity.trailing, //  <-- leading Checkbox
+                ),
+              );
+            }),
+
+            //Save Button
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 30, 0, 20),
+                child: SizedBox(
+                  width: 324,
+                  height: 51,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>((states) {
+                          if (states.contains(MaterialState.disabled)) {
+                            return Colors.grey; // Disabled color
+                          }
+                          return Color(0xFF5DB075); // Regular color
+                        }),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ))),
+                    onPressed: (dateRangesToUpload.isNotEmpty ||
+                            permanentJobBool != "")
+                        ? () {
+                            print("Pressed");
+                            context
+                                .read(authProvider.notifier)
+                                .uploadAvailalibitlityData(
+                                    context
+                                        .read(userProviderLogin.notifier)
+                                        .userUID,
+                                    dateRangesToUpload,
+                                    context
+                                        .read(pharmacistMainProvider.notifier)
+                                        .permanentJob);
+                            Navigator.pop(context);
+                          }
+                        : null,
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Save",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

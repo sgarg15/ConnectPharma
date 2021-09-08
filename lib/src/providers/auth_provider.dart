@@ -6,10 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pharma_connect/model/user_model.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
@@ -58,24 +56,24 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //Create user object based on the given FirebaseUser
-  UserModel _userFromFirebase(User? user) {
-    return UserModel(
-      uid: user!.uid,
-      email: user.email,
-      displayName: user.displayName,
-    );
-  }
+  // UserModel _userFromFirebase(User? user) {
+  //   return UserModel(
+  //     uid: user!.uid,
+  //     email: user.email,
+  //     displayName: user.displayName,
+  //   );
+  // }
 
   //Method to detect live auth changes such as user sign in and sign out
-  Future<void> onAuthStateChanged(User? firebaseUser) async {
-    if (firebaseUser == null) {
-      _status = Status.Unauthenticated;
-    } else {
-      _userFromFirebase(firebaseUser);
-      _status = Status.Authenticated;
-    }
-    notifyListeners();
-  }
+  // Future<void> onAuthStateChanged(User? firebaseUser) async {
+  //   if (firebaseUser == null) {
+  //     _status = Status.Unauthenticated;
+  //   } else {
+  //     _userFromFirebase(firebaseUser);
+  //     _status = Status.Authenticated;
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<String> saveAsset(
       File? asset, String uidName, String fileName, String userName) async {
@@ -409,10 +407,18 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<UserCredential?>? uploadAvailalibitlityData(
-      String userUID, Map dataUpload) async {
-    users.doc(userUID).collection("SignUp").doc("Information").set({
-      "availability": dataUpload,
-    }, SetOptions(merge: true));
+      String userUID, Map dataUpload, bool? permanentJobBool) async {
+    if (dataUpload.isEmpty) {
+      users.doc(userUID).collection("SignUp").doc("Information").set({
+        "permanentJob": permanentJobBool,
+      }, SetOptions(merge: true));
+    } else {
+      users.doc(userUID).collection("SignUp").doc("Information").set({
+        "availability": dataUpload,
+        "permanentJob": permanentJobBool,
+      }, SetOptions(merge: true));
+    }
+
     return null;
   }
 
@@ -441,39 +447,6 @@ class AuthProvider extends ChangeNotifier {
       "email": context.read(pharmacyMainProvider).userData?["email"],
     });
     return null;
-  }
-
-  Future<String?>? sendApplicantInfoToPharmacyJob(String pharmacyUID,
-      String? jobUID, String applicantUID, Map applicantInformation) async {
-    try {
-      print("Pharmacy UID: $pharmacyUID");
-      print("jobUID: $jobUID");
-      print("applicantUID: $applicantUID");
-      print("ApplicantInformation: $applicantInformation");
-      // await users
-      //     .doc(pharmacyUID)
-      //     .collection("Main")
-      //     .doc(jobUID)
-      //     .update({"applicants.${applicantUID}": applicantInformation});
-    } catch (e) {
-      return "Applicant Upload Failed";
-    }
-  }
-
-  Future<String?>? sendJobInfoToPharmacistProfile(String pharmacistUID,
-      String? jobUID, Map<String, dynamic>? jobInformation) async {
-    try {
-      print("Pharmacist UID: $pharmacistUID");
-      print("jobUID: $jobUID");
-      print("JobInformation: $jobInformation");
-      // await users
-      //     .doc(pharmacistUID)
-      //     .collection("Main")
-      //     .doc(jobUID)
-      //     .set(jobInformation!);
-    } catch (e) {
-      return "Job To Pharmacist Upload Failed";
-    }
   }
 
   Future<String?>? deleteJob(String userUID, String? jobUID) async {
@@ -505,7 +478,6 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       final UserCredential? result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      var errorMessage = "";
 
       if (result!.user!.emailVerified) {
         _status = Status.Authenticated;
@@ -556,39 +528,34 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<UserModel?> signInWithGoogle() async {
-    try {
-      _status = Status.Authenticating;
-      notifyListeners();
-
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Once signed in, return the UserCredential
-      final UserCredential result = await FirebaseAuth.instance
-          .signInWithCredential(credential)
-          .whenComplete(() {
-        _status = Status.Authenticated;
-      });
-
-      return _userFromFirebase(result.user);
-    } catch (err) {
-      print("Error on the sign in = " + err.toString());
-      _status = Status.Unauthenticated;
-      notifyListeners();
-      return null;
-    }
-  }
+  // Future<UserModel?> signInWithGoogle() async {
+  //   try {
+  //     _status = Status.Authenticating;
+  //     notifyListeners();
+  //     // Trigger the authentication flow
+  //     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  //     // Obtain the auth details from the request
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser!.authentication;
+  //     // Create a new credential
+  //     final credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
+  //     // Once signed in, return the UserCredential
+  //     final UserCredential result = await FirebaseAuth.instance
+  //         .signInWithCredential(credential)
+  //         .whenComplete(() {
+  //       _status = Status.Authenticated;
+  //     });
+  //     return _userFromFirebase(result.user);
+  //   } catch (err) {
+  //     print("Error on the sign in = " + err.toString());
+  //     _status = Status.Unauthenticated;
+  //     notifyListeners();
+  //     return null;
+  //   }
+  // }
 
   //Method to handle password reset email
   Future<void> sendPasswordResetEmail(String email) async {

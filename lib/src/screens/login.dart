@@ -277,26 +277,29 @@ class _LogInPageState extends State<LogInPage> {
                                         errorMessage =
                                             "Your account has been momentarilly disabled for unsolicited behaviour towards a pharmacy or pharmacist. If you think this is a mistake, please email __, with your name and email.";
                                       });
-                                    }
-                                    if (user?[2] == "user-not-found") {
+                                    } else if (user?[2] == "user-not-found") {
                                       setState(() {
                                         //TODO: Add official app name
                                         errorMessage =
                                             "A user by that email address was not found, please re-check the email and assure you have created an account through the sign up pages.";
                                       });
-                                    }
-                                    if (user?[2] == "wrong-password") {
+                                    } else if (user?[2] == "wrong-password") {
                                       setState(() {
                                         //TODO: Add official app name
                                         errorMessage =
                                             "Please check your email and password and try logging in again after a few minutes.";
                                       });
-                                    }
-                                    if (user?[2] == "user-not-verified") {
+                                    } else if (user?[2] ==
+                                        "user-not-verified") {
                                       setState(() {
                                         //TODO: Add official app name
                                         errorMessage =
                                             "Before logging in, please verify your email.";
+                                      });
+                                    } else {
+                                      setState(() {
+                                        errorMessage =
+                                            "There was an unexpected error. Please try again.";
                                       });
                                     }
                                     showDialog(
