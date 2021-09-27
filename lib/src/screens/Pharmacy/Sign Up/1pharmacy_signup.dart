@@ -112,7 +112,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         //Email
-                        formField(
+                        CustomFormField(
                           hintText: "Email",
                           decoration: false,
                           keyboardStyle: TextInputType.emailAddress,
@@ -161,7 +161,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                         ),
 
                         //Password
-                        formField(
+                        CustomFormField(
                           hintText: "Password",
                           obscureText: !passwordVisibility,
                           textCapitalization: TextCapitalization.none,

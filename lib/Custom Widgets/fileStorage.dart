@@ -29,9 +29,9 @@ class LocalStorage {
     return _file.writeAsString(data);
   }
 
-  Future<String> readFile({required String filePath}) async {
+  String readFile({required String filePath}) {
     final _file = File(filePath);
-    return _file.readAsString();
+    return _file.readAsStringSync();
   }
 
   Future<void> removeFile({required String filePath}) {
@@ -39,9 +39,14 @@ class LocalStorage {
     return _file.delete();
   }
 
-  Future<Directory> createDirectory({required String directoryName}) async {
+  Future<Directory> createLocalDirectory({required String directoryName}) async {
     final _path = await localPath;
     final _directory = Directory('$_path/$directoryName');
+    return _directory.create();
+  }
+
+    Future<Directory> createDirectory({required String path}) async {
+    final _directory = Directory('$path');
     return _directory.create();
   }
 

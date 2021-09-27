@@ -228,7 +228,7 @@ class JobDetails extends StatelessWidget {
                                               size: 30,
                                             )
                                           : Icon(
-                                              Icons.check,
+                                              Icons.close,
                                               color: Colors.red,
                                               size: 30,
                                             ),
@@ -305,7 +305,7 @@ class JobDetails extends StatelessWidget {
                                         text: TextSpan(
                                           text:
                                               "${getHourDiff(TimeOfDay.fromDateTime((jobDetails?["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((jobDetails?["startDate"] as Timestamp).toDate()))[0]} hrs"
-                                              "${getHourDiff(TimeOfDay.fromDateTime((jobDetails?["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((jobDetails?["startDate"] as Timestamp).toDate()))[1]}",
+                                              "${getHourDiff(TimeOfDay.fromDateTime((jobDetails?["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((jobDetails?["startDate"] as Timestamp).toDate()))[1]}/day",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.black,
@@ -614,75 +614,88 @@ class JobDetails extends StatelessWidget {
                         context: context,
                         builder: (context) => AlertDialog(
                               title: Text(jobDetails?["pharmacyName"]),
-                              content: RichText(
-                                text: TextSpan(
-                                    text:
-                                        "Are you sure you want to apply for this job? \n\n\n",
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 18),
-                                    children: [
-                                      TextSpan(
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
                                         text:
-                                            "Please only apply for jobs you are interested in and do not spam the pharmacy email or phone, you can and will be reported for such actions. Resulting in withrawal from this service.",
+                                            "Are you sure you want to apply for this job? \n\n\n",
                                         style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500),
-                                      )
-                                    ]),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: new Text(
-                                    "No",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Colors.red[400], fontSize: 16),
+                                            color: Colors.black, fontSize: 18),
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                "Please only apply for jobs you are interested in and do not spam the pharmacy email or phone, you can and will be reported for such actions. Resulting in withrawal from this service.",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500),
+                                          )
+                                        ]),
                                   ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                SizedBox(
-                                  width: 150,
-                                ),
-                                TextButton(
-                                  child: new Text(
-                                    "Yes",
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        color: Color(0xFF5DB075), fontSize: 16),
+                                  SizedBox(
+                                    height: 20,
                                   ),
-                                  onPressed: () async {
-                                    WriteBatch jobApplicationBatch =
-                                        FirebaseFirestore.instance.batch();
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextButton(
+                                        child: new Text(
+                                          "No",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              color: Colors.red[400],
+                                              fontSize: 16),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: new Text(
+                                          "Yes",
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                              color: Color(0xFF5DB075),
+                                              fontSize: 16),
+                                        ),
+                                        onPressed: () async {
+                                          WriteBatch jobApplicationBatch =
+                                              FirebaseFirestore.instance
+                                                  .batch();
 
-                                    //Follow step 1)
-                                    await sendApplicantDataToPharmacy(
-                                        context, jobApplicationBatch);
-                                    //Follow step 2)
-                                    await sendJobDataToPharmacist(
-                                        context, jobApplicationBatch);
-                                    jobApplicationBatch
-                                        .commit()
-                                        .onError((error, stackTrace) {
-                                      print("ERROR APPLYING: $error");
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                                title: Text("Error"),
-                                                content: Text(
-                                                    "There was an error trying to apply for this job. Please try again after restarting the app."),
-                                              ));
-                                    });
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                JobHistoryPharmacist()));
-                                  },
-                                ),
-                              ],
+                                          //Follow step 1)
+                                          await sendApplicantDataToPharmacy(
+                                              context, jobApplicationBatch);
+                                          //Follow step 2)
+                                          await sendJobDataToPharmacist(
+                                              context, jobApplicationBatch);
+                                          jobApplicationBatch
+                                              .commit()
+                                              .onError((error, stackTrace) {
+                                            print("ERROR APPLYING: $error");
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                      title: Text("Error"),
+                                                      content: Text(
+                                                          "There was an error trying to apply for this job. Please try again after restarting the app."),
+                                                    ));
+                                          });
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      JobHistoryPharmacist()));
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ));
                   },
                   child: RichText(

@@ -23,24 +23,36 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
     }
   }
 
-  bool isValidSearchPharmacist() {
-    if (state.startDate == null ||
-        state.endDate == null ||
-        state.skillList == null) {
-      print("true search pharmacist");
+  bool isValidSearchPharmacist(bool showAllPharmacist) {
+    if (showAllPharmacist) {
+      return true;
+    } else if (state.startDate != null && state.endDate != null) {
       return true;
     } else {
-      print(state.startDate);
-      print(state.endDate);
-      print(state.skillList);
-      print("false search pharmacist");
       return false;
     }
+    // if (state.startDate == null ||
+    //     state.endDate == null ||
+    //     state.skillList == null) {
+    //   print(!showAllPharmacist ||
+    //       state.startDate == null ||
+    //       state.endDate == null ||
+    //       state.skillList == null);
+    //   print("true search pharmacist");
+    //   return true;
+    // } else {
+    //   print(state.startDate);
+    //   print(state.endDate);
+    //   print(state.skillList);
+    //   print("false search pharmacist");
+    //   return false;
+    // }
   }
 
   void clearDateValues() {
     state.startDate = null;
     state.endDate = null;
+    state.skillList = null;
   }
 
   void clearValues() {
@@ -48,6 +60,21 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
     state.jobComments = "";
     state.startDate = null;
     state.endDate = null;
+  }
+
+  void resetValues() {
+    state.startDate = null;
+    state.endDate = null;
+    state.hourlyRate = "";
+    state.jobComments = "";
+    state.startDate = null;
+    state.endDate = null;
+    state.softwareList = null;
+    state.skillList = null;
+    state.techOnSite = false;
+    state.assistantOnSite = false;
+    state.limaStatus = false;
+    state.userData = null;
   }
 
   DateTime? get startDate => state.startDate;

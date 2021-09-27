@@ -79,7 +79,7 @@ class _PharmacyManagerInformationState
                       SizedBox(height: 20),
 
                       //First Name
-                      formField(
+                      CustomFormField(
                         fieldTitle: "First Name",
                         hintText: "Enter manager's First Name...",
                         keyboardStyle: TextInputType.name,
@@ -103,7 +103,7 @@ class _PharmacyManagerInformationState
                       SizedBox(height: 20),
 
                       //Last Name
-                      formField(
+                      CustomFormField(
                         fieldTitle: "Last Name",
                         hintText: "Enter manager's Last Name...",
                         keyboardStyle: TextInputType.name,
@@ -127,7 +127,7 @@ class _PharmacyManagerInformationState
                       SizedBox(height: 20),
 
                       //Phone Number
-                      formField(
+                      CustomFormField(
                         fieldTitle: "Phone Number",
                         hintText: "Enter manager's Phone Number...",
                         keyboardStyle: TextInputType.number,
@@ -150,7 +150,7 @@ class _PharmacyManagerInformationState
                       SizedBox(height: 20),
 
                       //License Number
-                      formField(
+                      CustomFormField(
                         fieldTitle: "License Number",
                         hintText: "Enter license Number...",
                         keyboardStyle: TextInputType.number,
@@ -252,7 +252,7 @@ class _PharmacyManagerInformationState
                                         context
                                             .read(
                                                 pharmacySignUpProvider.notifier)
-                                            .clearAllValues();
+                                            .resetValues();
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(

@@ -13,8 +13,8 @@ class PharmacyMainModel {
   Map<String, dynamic>? userData;
 
   PharmacyMainModel({
-    this.startDate = null,
-    this.endDate = null,
+    this.startDate,
+    this.endDate,
     this.softwareList,
     this.skillList,
     this.techOnSite = false,
@@ -22,7 +22,7 @@ class PharmacyMainModel {
     this.limaStatus = false,
     this.hourlyRate = "",
     this.jobComments = "",
-    this.userData = null,
+    this.userData,
   });
 
   PharmacyMainModel copyWithPharmacyMain({

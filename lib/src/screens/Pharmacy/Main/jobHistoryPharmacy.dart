@@ -40,7 +40,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   Map activeJobDataMap = Map();
   Map pastJobDataMap = Map();
   Map<String, dynamic>? userDataMap = Map();
-  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStreamPharmacy = null;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStreamPharmacy;
   StreamSubscription? userDataSub;
   StreamSubscription? jobsDataSub;
   int numActiveJobs = 0;
@@ -51,6 +51,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   void initState() {
     super.initState();
     print("User UID: ${context.read(userProviderLogin.notifier).userUID}");
+    print(context.read(pharmacyMainProvider.notifier).userData);
     jobsDataSub?.cancel();
     userDataSub?.cancel();
 
@@ -81,6 +82,10 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
           .read(pharmacyMainProvider.notifier)
           .changeUserDataMap(userDataMap);
       print(context.read(pharmacyMainProvider.notifier).userData);
+      print(
+          "First Name: ${context.read(pharmacyMainProvider.notifier).userData?["firstName"]}");
+      print(
+          "Last Name: ${context.read(pharmacyMainProvider.notifier).userData?["lastName"]}");
     });
 
     context.read(pharmacyMainProvider.notifier).clearDateValues();
@@ -94,7 +99,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
     print("In Pharmacy Job History dispose");
     jobsDataSub?.cancel();
     userDataSub?.cancel();
-    print("jobsDataSub: ${jobsDataSub}");
+    print("jobsDataSub: $jobsDataSub");
     print("userDataSub: $userDataSub");
   }
 
@@ -676,7 +681,7 @@ class SideMenuDrawer extends StatelessWidget {
         child: Column(
           children: <Widget>[
             //Drawer Header
-            _createDrawerHeader(),
+            _CreateDrawerHeader(),
             //Home Button
             ListTile(
               title: Row(
@@ -835,7 +840,10 @@ class SideMenuDrawer extends StatelessWidget {
               onTap: () {
                 jobsDataSub?.cancel();
                 userDataSub?.cancel();
-                context.read(authProvider.notifier).signOut();
+                context.read(authProvider.notifier).signOut().then((value) {
+                  context.read(pharmacyMainProvider.notifier).resetValues();
+                  context.read(pharmacySignUpProvider.notifier).resetValues();
+                });
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => PharmaConnect()),
                     result: Navigator.pushReplacement(
@@ -851,10 +859,8 @@ class SideMenuDrawer extends StatelessWidget {
   }
 }
 
-class _createDrawerHeader extends StatelessWidget {
-  const _createDrawerHeader({
-    Key? key,
-  }) : super(key: key);
+class _CreateDrawerHeader extends StatelessWidget {
+  const _CreateDrawerHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

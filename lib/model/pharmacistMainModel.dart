@@ -12,9 +12,9 @@ class PharmacistMainModel {
 
   PharmacistMainModel({
     this.dateRanges = const [],
-    this.userData = null,
-    this.startDate = null,
-    this.endDate = null,
+    this.userData,
+    this.startDate,
+    this.endDate,
     this.resumePDF,
     this.permanentJob = false,
   });

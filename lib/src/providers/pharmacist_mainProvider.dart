@@ -19,6 +19,15 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
     state.endDate = null;
   }
 
+  void resetValues() {
+    state.dateRanges = [];
+    state.endDate = null;
+    state.startDate = null;
+    state.permanentJob = false;
+    state.resumePDF = null;
+    state.userData = null;
+  }
+
   void changeDateRanges(List<PickerDateRange> dateRanges) {
     state = state.copyWithPharmacistMain(dateRanges: dateRanges);
   }

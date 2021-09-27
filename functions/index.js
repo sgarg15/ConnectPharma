@@ -91,6 +91,7 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
         const resume = afterData.resumeDownloadURL;
         const email = afterData.email;
         const phoneNumber = afterData.phoneNumber
+        const permanentJob = afterData.permanentJob
         const uid = context.params.uid;
 
         const next = {
@@ -104,6 +105,7 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
             availability: availability,
             email:email,
             phoneNumber: phoneNumber,
+            permanentJob: permanentJob,
             uid: uid
         }
         
@@ -217,11 +219,13 @@ exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jo
         jobID: jobID,
         phoneNumber: phoneNumber,
     }
+    if(afterData.applicants != null){
+        Object.keys(afterData.applicants).forEach(function(key) {
+            const pharmacistDataRef = dataBase.doc(`Users/${key}/PharmacistJobs/${context.params.jobID}`);
+            batch.update(pharmacistDataRef, next);
+        });
+    }
 
-    Object.keys(afterData.applicants).forEach(function(key) {
-        const pharmacistDataRef = dataBase.doc(`Users/${key}/PharmacistJobs/${context.params.jobID}`);
-        batch.update(pharmacistDataRef, next);
-    });
     batch.update(aggregatedDataRef, {[next.jobID]: next});
 
     return batch.commit();

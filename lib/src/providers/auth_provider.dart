@@ -528,6 +528,25 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<String?> getCurrentUserData(String? userUID) async {
+    _status = Status.Authenticated;
+    notifyListeners();
+    DocumentSnapshot user =
+        await users.doc(userUID).collection("SignUp").doc("Information").get();
+    print("UserData: $user");
+    String userType = user.get("userType").toString();
+    print(userType);
+    if (userType.trim() == "Pharmacy") {
+      print("Logged in as a Pharmacy");
+      //Send to pharmacy main page
+      return "Pharmacy";
+    } else if (userType.trim() == "Pharmacist") {
+      print("Logged in as a Pharmacist");
+      //Send to pharmacist main page
+      return "Pharmacist";
+    }
+  }
+
   // Future<UserModel?> signInWithGoogle() async {
   //   try {
   //     _status = Status.Authenticating;

@@ -30,7 +30,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
         Colors.white, //set the color you want to see in final result
   );
   Map<String, dynamic> uploadDataMap = Map();
-  List<Software?>? softwareList = null;
+  List<Software?>? softwareList;
   List<Software?>? softwareListToUpload = [];
 
   final _items = software
@@ -154,7 +154,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                           //First Name
                           Padding(
                             padding: const EdgeInsets.fromLTRB(11, 10, 0, 0),
-                            child: formField(
+                            child: CustomFormField(
                               fieldTitle: "First Name",
                               hintText: "Enter your First Name...",
                               keyboardStyle: TextInputType.name,
@@ -184,7 +184,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                           //Last Name
                           Padding(
                             padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                            child: formField(
+                            child: CustomFormField(
                               fieldTitle: "Last Name",
                               hintText: "Enter your Last Name...",
                               keyboardStyle: TextInputType.name,
@@ -214,7 +214,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                           //Phone Number
                           Padding(
                             padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                            child: formField(
+                            child: CustomFormField(
                               fieldTitle: "Phone Number",
                               hintText: "Enter your Phone Number...",
                               keyboardStyle: TextInputType.number,
@@ -367,7 +367,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(11, 10, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Pharmacy Name",
                                   hintText: "Enter the pharmacy name...",
                                   keyboardStyle: TextInputType.name,
@@ -540,7 +540,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               //Store Number
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Store Number",
                                   hintText: "Enter the Store Number...",
                                   keyboardStyle: TextInputType.streetAddress,
@@ -570,7 +570,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               //City
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "City",
                                   hintText: "Enter the city...",
                                   keyboardStyle: TextInputType.streetAddress,
@@ -597,7 +597,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               //Postal Code
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Postal Code",
                                   hintText: "Enter the postal code...",
                                   keyboardStyle: TextInputType.streetAddress,
@@ -625,7 +625,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               //Country
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Country",
                                   hintText: "Enter the country...",
                                   keyboardStyle: TextInputType.streetAddress,
@@ -654,7 +654,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               //Phone Number
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Pharmacy Phone Number",
                                   hintText:
                                       "Enter the pharmacy phone Number...",
@@ -689,7 +689,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               //Fax Number
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Pharmacy Fax Number",
                                   hintText: "Enter the pharmacy fax Number...",
                                   keyboardStyle: TextInputType.number,
@@ -724,7 +724,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                               //Accreditation Province
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Accreditation Province",
                                   hintText:
                                       "Enter the accreditation province...",

@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
+import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
 import 'src/providers/auth_provider.dart';
+import 'src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 //TODO: Add Pharmacy Assistant Option for signup but signup info for both pharmacist and pharmacy assistant is same
 
 final authProvider2 = ChangeNotifierProvider<AuthProvider>((ref) {
@@ -57,7 +59,56 @@ Future<void> main() async {
   );
 }
 
-class PharmaConnect extends StatelessWidget {
+class PharmaConnect extends StatefulWidget {
+  @override
+  _PharmaConnectState createState() => _PharmaConnectState();
+}
+
+class _PharmaConnectState extends State<PharmaConnect> {
+  Future logInUser() async {
+    String? userType = await context
+        .read(authProvider2.notifier)
+        .getCurrentUserData(FirebaseAuth.instance.currentUser?.uid);
+
+    if (userType == "Pharmacist") {
+      print("Pharmacist");
+      context.read(logInProvider.notifier).clearAllValue();
+      context
+          .read(userProviderLogin.notifier)
+          .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
+
+      //send to pharmacist main page
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
+    } else if (userType == "Pharmacy") {
+      print("Pharmacy");
+
+      context.read(logInProvider.notifier).clearAllValue();
+      context
+          .read(userProviderLogin.notifier)
+          .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
+
+      //send to pharmacy main page
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => JobHistoryPharmacy()));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print("Inside main page");
+    print("Current User: ${FirebaseAuth.instance.currentUser?.uid}");
+    print(context.read(pharmacyMainProvider.notifier).userData);
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      if (FirebaseAuth.instance.currentUser != null) {
+        print("Current User: ${FirebaseAuth.instance.currentUser}");
+        print("Logging In");
+        logInUser();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -273,6 +324,7 @@ class PharmaConnect extends StatelessWidget {
                 ),
                 onTap: () {
                   //Push to Login Screen
+
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => LogInPage()));
                 },

@@ -118,7 +118,7 @@ class _MultiSelectBottomSheetState<V>
     if (widget.initialValue != null) {
       _selectedValues.addAll(widget.initialValue!);
     }
-    print("Selected Values: ${_selectedValues}");
+    print("Selected Values: $_selectedValues");
   }
 
   /// Returns a CheckboxListTile
@@ -156,7 +156,7 @@ class _MultiSelectBottomSheetState<V>
 
   /// Returns a ChoiceChip
   Widget _buildChipItem(MultiSelectItem<V> item) {
-    print("Selected Values: ${_selectedValues}");
+    print("Selected Values: $_selectedValues");
     print("Items: ${item.value}");
     print(
         "Containes: ${_selectedValues.any((element) => element.toString() == item.value.toString())}");

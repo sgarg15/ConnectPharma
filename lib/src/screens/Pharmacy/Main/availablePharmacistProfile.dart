@@ -76,7 +76,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
   void initState() {
     super.initState();
     changeAvailabilityToCalendar();
-    print("Dates: ${availabilityPharmacist}");
+    print("Dates: $availabilityPharmacist");
     print("BlackOutDates: $_blackoutDateCollection");
     print(widget.pharmacistDataMap);
     final pharmacistKnownSoftwareString =
@@ -448,7 +448,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                                           height: 300,
                                                           width: 500,
                                                           child:
-                                                              ShowAvailability()),
+                                                              showAvailability()),
                                                       actionsPadding:
                                                           EdgeInsets.all(0),
                                                       actions: [
@@ -671,7 +671,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
     );
   }
 
-  Container ShowAvailability() {
+  Container showAvailability() {
     return Container(
       height: 350,
       width: 350,
@@ -718,7 +718,7 @@ class PDFViewerCachedFromUrl extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
-        title: Text("${name} Resume"),
+        title: Text("$name Resume"),
       ),
       body: Center(
         child: Container(

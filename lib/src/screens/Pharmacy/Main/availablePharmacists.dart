@@ -5,8 +5,13 @@ import 'package:pharma_connect/src/screens/Pharmacy/Main/createShift.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/availablePharmacistProfile.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 
+import '../../../../all_used.dart';
+
+// ignore: must_be_immutable
 class AvailablePharmacists extends StatefulWidget {
-  AvailablePharmacists({Key? key}) : super(key: key);
+  bool showFullTimePharmacists;
+  AvailablePharmacists({Key? key, required this.showFullTimePharmacists})
+      : super(key: key);
 
   @override
   _AvailablePharmacistsState createState() => _AvailablePharmacistsState();
@@ -16,8 +21,25 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
   CollectionReference aggregationRef =
       FirebaseFirestore.instance.collection("aggregation");
 
+  List<Skill?>? skillList;
+
   Map pharmacistDataMap = Map();
   Map pharmacistDataMapTemp = Map();
+
+  void changeSkillToList(String? stringList) {
+    int indexOfOpenBracket = stringList!.indexOf("[");
+    int indexOfLastBracket = stringList.lastIndexOf("]");
+    var noBracketString =
+        stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
+    List<Skill?>? templist = [];
+    var list = noBracketString.split(", ");
+    for (var i = 0; i < list.length; i++) {
+      templist.add(Skill(id: 1, name: list[i].toString()));
+    }
+    setState(() {
+      skillList = templist;
+    });
+  }
 
   void getAggregatedPharmacists() async {
     DocumentReference pharmacistData = aggregationRef.doc("pharmacists");
@@ -29,28 +51,26 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
         print(value["uid"]);
         print("--------------------------------------------");
         for (var i = 0; i < value["availability"].length; i++) {
-          if (((value["availability"][i.toString()]["startDate"] as Timestamp)
-                      .toDate()
-                      .isAfter(context
-                          .read(pharmacyMainProvider.notifier)
-                          .startDate as DateTime) &&
-                  ((value["availability"][i.toString()]["startDate"] as Timestamp)
-                      .toDate()
-                      .isBefore(context.read(pharmacyMainProvider.notifier).endDate
-                          as DateTime))) ||
-              ((value["availability"][i.toString()]["endDate"] as Timestamp)
-                      .toDate()
-                      .isAfter(context
-                          .read(pharmacyMainProvider.notifier)
-                          .startDate as DateTime) &&
-                  ((value["availability"][i.toString()]["endDate"] as Timestamp)
-                      .toDate()
-                      .isBefore(context.read(pharmacyMainProvider.notifier).endDate as DateTime)))) {
-            print(value["uid"]);
-            pharmacistDataMap[key] = value;
-            print(pharmacistDataMap.keys);
+          if (widget.showFullTimePharmacists) {
+            if (value["permanentJob"] != null && value["permanentJob"]) {
+              print(value["uid"]);
+              pharmacistDataMap[key] = value;
+              print(pharmacistDataMap.keys);
 
-            print("YESR");
+              print("YESR");
+            }
+          } else if (checkAvailability(value, i)) {
+            if (context.read(pharmacyMainProvider.notifier).skillList != null) {
+              if (value["knownSkills"] != null)
+                changeSkillToList(value["knownSkills"]);
+              
+            } else {
+              print(value["uid"]);
+              pharmacistDataMap[key] = value;
+              print(pharmacistDataMap.keys);
+
+              print("YESR");
+            }
           } else {
             print(value["uid"]);
 
@@ -61,6 +81,25 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
       });
       print(pharmacistDataMap);
     });
+  }
+
+  bool checkAvailability(value, int i) {
+    return ((value["availability"][i.toString()]["startDate"] as Timestamp)
+                .toDate()
+                .isAfter(context.read(pharmacyMainProvider.notifier).startDate
+                    as DateTime) &&
+            ((value["availability"][i.toString()]["startDate"] as Timestamp)
+                .toDate()
+                .isBefore(context.read(pharmacyMainProvider.notifier).endDate
+                    as DateTime))) ||
+        ((value["availability"][i.toString()]["endDate"] as Timestamp)
+                .toDate()
+                .isAfter(context.read(pharmacyMainProvider.notifier).startDate
+                    as DateTime) &&
+            ((value["availability"][i.toString()]["endDate"] as Timestamp)
+                .toDate()
+                .isBefore(context.read(pharmacyMainProvider.notifier).endDate
+                    as DateTime)));
   }
 
   @override
@@ -90,6 +129,18 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
           SizedBox(
             height: 10,
           ),
+          if (widget.showFullTimePharmacists) ...[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
+                child: Text(
+                  "Showing pharmacists looking for full time job.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey, fontSize: 15),
+                ),
+              ),
+            )
+          ],
 
           pharmacistDataMap.isNotEmpty
               ? Expanded(

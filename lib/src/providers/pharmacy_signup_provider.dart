@@ -62,13 +62,14 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
     }
   }
 
-  void clearAllValues() {
+  void resetValues() {
     state.email = "";
     state.password = "";
     state.firstName = "";
     state.lastName = "";
     state.phoneNumber = "";
     state.position = null;
+    state.signatureData = null;
     state.pharmacyName = "";
     state.streetAddress = "";
     state.storeNumber = "";
@@ -77,6 +78,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
     state.country = "";
     state.phoneNumberPharmacy = "";
     state.faxNumberPharmacy = "";
+    state.accreditationProvince = "";
     state.softwareList = null;
     state.managerFirstName = "";
     state.managerLastName = "";

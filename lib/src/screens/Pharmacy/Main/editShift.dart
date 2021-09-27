@@ -36,8 +36,8 @@ class _EditShiftPharmacyState extends State<EditShift> {
   final _skillItems =
       skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
 
-  List<Skill?>? skillList = null;
-  List<Software?>? softwareList = null;
+  List<Skill?>? skillList;
+  List<Software?>? softwareList;
   bool softwareFieldEnabled = false;
   void checkIfChanged(final currentVal, String firestoreVal) {
     if (currentVal ==

@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:pharma_connect/Custom%20Widgets/custom_multiSelect_field.dart';
-import 'package:pharma_connect/Custom%20Widgets/custom_multi_select_display.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign%20Up/1pharmacistSignUp.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/availablePharmacists.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import '../../../../Custom Widgets/custom_dateTimeField.dart';
 import '../../../../all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../login.dart';
 
 //TODO: Add Show All pharmacist options
 
@@ -29,6 +25,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
       .toList();
   final _skillItems =
       skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController();
 
   bool softwareFieldEnabled = false;
   bool skillFieldEnabled = false;
@@ -102,6 +100,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                       width: MediaQuery.of(context).size.width *
                                           0.55,
                                       child: DateTimeField(
+                                        controller: startDateController,
                                         format:
                                             DateFormat("MM/dd/yyyy hh:mm a"),
                                         textAlign: TextAlign.center,
@@ -134,23 +133,12 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                                   DateTime.now(),
                                               lastDate: DateTime(2100));
                                           if (date != null) {
-                                            final time = await showTimePicker(
-                                              context: context,
-                                              initialTime:
-                                                  TimeOfDay.fromDateTime(
-                                                      currentValue ??
-                                                          DateTime.now()),
-                                            );
                                             context
                                                 .read(pharmacyMainProvider
                                                     .notifier)
-                                                .changeStartDate(
-                                                    DateTimeField.combine(
-                                                        date, time));
-                                            print(DateTimeField.combine(
-                                                date, time));
-                                            return DateTimeField.combine(
-                                                date, time);
+                                                .changeStartDate(date);
+                                            print(date);
+                                            return date;
                                           } else {
                                             context
                                                 .read(pharmacyMainProvider
@@ -194,6 +182,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                       width: MediaQuery.of(context).size.width *
                                           0.55,
                                       child: DateTimeField(
+                                        controller: endDateController,
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 17,
@@ -219,40 +208,36 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                         ),
                                         onShowPicker:
                                             (context, currentValue) async {
-                                          final date = await showDatePicker(
-                                              context: context,
-                                              firstDate: context
+                                          if (context
                                                   .read(pharmacyMainProvider
                                                       .notifier)
-                                                  .startDate as DateTime,
-                                              initialDate: context
+                                                  .startDate !=
+                                              null) {
+                                            final date = await showDatePicker(
+                                                context: context,
+                                                firstDate: context
+                                                    .read(pharmacyMainProvider
+                                                        .notifier)
+                                                    .startDate as DateTime,
+                                                initialDate: context
+                                                    .read(pharmacyMainProvider
+                                                        .notifier)
+                                                    .startDate as DateTime,
+                                                lastDate: DateTime(2100));
+                                            if (date != null) {
+                                              context
                                                   .read(pharmacyMainProvider
                                                       .notifier)
-                                                  .startDate as DateTime,
-                                              lastDate: DateTime(2100));
-                                          if (date != null) {
-                                            final time = await showTimePicker(
-                                              context: context,
-                                              initialTime:
-                                                  TimeOfDay.fromDateTime(
-                                                      currentValue ??
-                                                          DateTime.now()),
-                                            );
-                                            context
-                                                .read(pharmacyMainProvider
-                                                    .notifier)
-                                                .changeEndDate(
-                                                    DateTimeField.combine(
-                                                        date, time));
-
-                                            return DateTimeField.combine(
-                                                date, time);
-                                          } else {
-                                            context
-                                                .read(pharmacyMainProvider
-                                                    .notifier)
-                                                .changeEndDate(currentValue);
-                                            return currentValue;
+                                                  .changeEndDate(date);
+                                              print(date);
+                                              return date;
+                                            } else {
+                                              context
+                                                  .read(pharmacyMainProvider
+                                                      .notifier)
+                                                  .changeEndDate(currentValue);
+                                              return currentValue;
+                                            }
                                           }
                                         },
                                       ),
@@ -263,33 +248,35 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                             ),
                           ),
                           // //Show all pharmacist options
-                          // Container(
-                          //   width: 266,
-                          //   child: CheckboxListTile(
-                          //     contentPadding: EdgeInsets.zero,
-                          //     title: RichText(
-                          //       text: TextSpan(
-                          //         text: "Show All Pharmacist",
-                          //         style: TextStyle(
-                          //             fontWeight: FontWeight.w600,
-                          //             fontSize: 20.0,
-                          //             color: Colors.black),
-                          //       ),
-                          //     ),
-                          //     activeColor: Color(0xFF5DB075),
-                          //     value: showAllPharmacists,
-                          //     onChanged: (value) {
-                          //       setState(() {
-                          //         showAllPharmacists = !showAllPharmacists;
-                          //         context
-                          //             .read(pharmacyMainProvider.notifier)
-                          //             .clearDateValues();
-                          //       });
-                          //     },
-                          //     controlAffinity: ListTileControlAffinity
-                          //         .trailing, //  <-- leading Checkbox
-                          //   ),
-                          // ),
+                          Container(
+                            width: 266,
+                            child: CheckboxListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: RichText(
+                                text: TextSpan(
+                                  text: "Full-Time Pharmacists",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20.0,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              activeColor: Color(0xFF5DB075),
+                              value: showAllPharmacists,
+                              onChanged: (value) {
+                                setState(() {
+                                  showAllPharmacists = !showAllPharmacists;
+                                  startDateController.text = "dd/mm/yyyy hh:mm";
+                                  endDateController.text = "dd/mm/yyyy hh:mm";
+                                  context
+                                      .read(pharmacyMainProvider.notifier)
+                                      .clearDateValues();
+                                });
+                              },
+                              controlAffinity: ListTileControlAffinity
+                                  .trailing, //  <-- leading Checkbox
+                            ),
+                          ),
 
                           //Skills
                           Padding(
@@ -625,16 +612,19 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100),
                               ))),
-                          onPressed: (!context
+                          onPressed: (context
                                   .read(pharmacyMainProvider.notifier)
-                                  .isValidSearchPharmacist())
+                                  .isValidSearchPharmacist(showAllPharmacists))
                               ? () {
                                   print("Pressed");
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              AvailablePharmacists()));
+                                              AvailablePharmacists(
+                                                showFullTimePharmacists:
+                                                    showAllPharmacists,
+                                              )));
                                 }
                               : null,
                           child: RichText(

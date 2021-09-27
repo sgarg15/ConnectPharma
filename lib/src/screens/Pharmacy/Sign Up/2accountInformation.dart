@@ -117,7 +117,7 @@ class _AccountInformationPharmacyState
                       SizedBox(height: 20),
 
                       //First Name
-                      formField(
+                      CustomFormField(
                         fieldTitle: "First Name",
                         hintText: "Enter your First Name...",
                         keyboardStyle: TextInputType.name,
@@ -141,7 +141,7 @@ class _AccountInformationPharmacyState
                       SizedBox(height: 20),
 
                       //Last Name
-                      formField(
+                      CustomFormField(
                         fieldTitle: "Last Name",
                         hintText: "Enter your Last Name...",
                         keyboardStyle: TextInputType.name,
@@ -165,7 +165,7 @@ class _AccountInformationPharmacyState
                       SizedBox(height: 20),
 
                       //Phone Number
-                      formField(
+                      CustomFormField(
                         fieldTitle: "Phone Number",
                         hintText: "Enter your Phone Number...",
                         keyboardStyle: TextInputType.number,

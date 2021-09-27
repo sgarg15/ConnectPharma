@@ -10,12 +10,16 @@ import 'package:pharma_connect/model/pharmacistMainModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
 import 'package:pharma_connect/src/providers/pharmacist_mainProvider.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/findShiftPharmacist.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Main/notifications.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistAvailibility.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistProfile.dart';
+import 'package:pharma_connect/src/screens/Pharmacist/Sign%20Up/1pharmacistSignUp.dart';
 import 'package:pharma_connect/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
 import '../../../../Custom Widgets/fileStorage.dart';
+
+//TODO: Figure out the errors for notifications file and finish the notifications button/page
 
 final authProviderMain = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
@@ -38,13 +42,16 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   int segmentedControlGroupValue = 0;
   CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
   Map<String, dynamic>? userDataMap = Map();
-  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStreamPharmacist = null;
-  StreamSubscription? _jobsStreamSub;
-  StreamSubscription? _userDataStreamSub;
+  Stream<QuerySnapshot<Map<String, dynamic>>>? jobsStreamPharmacist;
+  StreamSubscription? jobsStreamSub;
+  StreamSubscription? userDataStreamSub;
   String dataID = "";
   final LocalStorage localStorage = LocalStorage();
   Directory jobsListDirectory = Directory("");
+  Directory userDirectory = Directory("");
 
+  Map<String, dynamic> alertJobs = Map();
+  Map jobsMap = Map();
   Map allJobs = Map();
   Map removedJob = Map();
   Map acceptedJob = Map();
@@ -54,8 +61,72 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   Map pastJobDataMap = Map();
   Map rejectedJobDataMap = Map();
 
-  void checkIfJobUpdated(Map allJobs, BuildContext context) async {
+  void clearFilesOrDirectory() async {
+    print(
+        "All Files: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}")}");
+
+    final directory = Directory("${await localStorage.localPath}/jobsList");
+    directory.deleteSync(recursive: true);
+
+    print(
+        "All Files: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}")}");
+  }
+
+  Future<void> updateJobAlerts() async {
+    String jobsListDirectoryPath = "${await localStorage.localPath}/jobsList";
+
+    String userDirectoryPath =
+        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}";
+
+    String userJobsFilePath =
+        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList";
+
+    String userNotificationsFilePath =
+        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/notifications";
+
+    print("Jobs List Directory: $jobsListDirectoryPath");
+
+    print(
+        "All Files: ${localStorage.allDirectoryFiles(path: "$jobsListDirectoryPath")}");
+    print(
+        "All User Files: ${localStorage.allDirectoryFiles(path: "$userDirectoryPath")}");
+
+    print(
+        "All User Jobs Storage: ${localStorage.readFile(filePath: "$userJobsFilePath")}");
+
+    print(
+        "All User Notifications: ${localStorage.readFile(filePath: "$userNotificationsFilePath")}");
+
+    if (!File(userNotificationsFilePath).existsSync()) {
+      File(userNotificationsFilePath).createSync();
+      localStorage.writeFile(filePath: userNotificationsFilePath, data: "");
+    }
+
+    print(
+        "Notifications File Path: ${localStorage.readFile(filePath: userNotificationsFilePath)}");
+
+    if (localStorage.readFile(filePath: userNotificationsFilePath).isNotEmpty) {
+      alertJobs = jsonDecode(
+          localStorage.readFile(filePath: userNotificationsFilePath));
+    }
+
+    // print("Updated Job Alerts");
+    print("Updated Job Alerts: $alertJobs");
+  }
+
+  Future<void> checkIfJobUpdated(Map allJobs, BuildContext context) async {
     //print(allJobs);
+    String jobsListDirectoryPath = "${await localStorage.localPath}/jobsList";
+
+    String userDirectoryPath =
+        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}";
+
+    String userJobsFilePath =
+        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList";
+
+    String userNotificationsFilePath =
+        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/notifications";
+
     Map storageJobsMap = Map();
     print(allJobs);
     allJobs.forEach((key, value) {
@@ -71,129 +142,184 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
     print("Storage jobs data map: $storageJobsMap");
 
     //Check if both directory and file exists
-    if (!await Directory("${await localStorage.localPath}/jobsList").exists()) {
+    if (!Directory(jobsListDirectoryPath).existsSync()) {
       jobsListDirectory =
-          await localStorage.createDirectory(directoryName: 'jobsList');
-      if (!await File("${await localStorage.localPath}/jobsList/jobsListFile")
-          .exists()) {
-        print("Writing File");
-        await localStorage.writeLocalFile(
-            fileName: "jobsListFile", data: jsonEncode(storageJobsMap));
-      }
+          await localStorage.createLocalDirectory(directoryName: 'jobsList');
+
+      userDirectory =
+          await localStorage.createDirectory(path: userDirectoryPath);
+
+      File(userJobsFilePath).createSync();
+
+      File(userNotificationsFilePath).createSync();
+
+      await localStorage.writeFile(
+          filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+    } else if (!File(userJobsFilePath).existsSync()) {
+      print("Writing File");
+      File(userJobsFilePath).createSync(recursive: true);
+
+      await localStorage.writeFile(
+          filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
     }
 
-    File jobsListFile =
-        await localStorage.readLocalFile(fileName: "jobsListFile");
-    print("File: ${jobsListFile.readAsStringSync()}");
+    String jobsListFile = localStorage.readFile(filePath: userJobsFilePath);
 
-    Map jobsMap = jsonDecode(jobsListFile.readAsStringSync());
+    print("File: $jobsListFile");
+
+    if (jobsListFile.isEmpty) {
+      await localStorage.writeFile(
+          filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+
+      jobsListFile = localStorage.readFile(filePath: userJobsFilePath);
+      print("Updated Job List File: $jobsListFile");
+    }
+
+    if (jobsListFile.isEmpty) {
+      jobsMap = Map();
+    } else {
+      jobsMap = jsonDecode(jobsListFile);
+    }
 
     removedJob.clear();
     acceptedJob.clear();
     rejectedJob.clear();
+    alertJobs.clear();
 
-    if (jobsMap.isEmpty) {
-      await localStorage.writeLocalFile(
-          fileName: "jobsListFile", data: jsonEncode(storageJobsMap));
-    }
+    // if (jobsMap.isEmpty) {
+    //   await localStorage.writeFile(
+    //       filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+
+    //   jobsListFile = await localStorage.readFile(filePath: userJobsFilePath);
+
+    //   if (jobsListFile.isEmpty) {
+    //     jobsMap = Map();
+    //   } else {
+    //     jobsMap = jsonDecode(jobsListFile);
+    //   }
+    // }
 
     print("Jobs Map: $jobsMap");
     //print("All Jobs: $allJobs");
     jobsMap.forEach((key, value) {
-      print("Key: ${key}");
+      print("Key: $key");
       if (!allJobs.containsKey(key)) {
-        print("Key: ${key}");
+        print("Key: $key");
         removedJob[key] = value;
+        alertJobs.addAll({key: value});
+        alertJobs[key]["newJobStatus"] = "removed";
       } else if ((jobsMap.length >= allJobs.length)) {
         print(
             "Stored Value: ${value["applicationStatus"]}\nAll Jobs: ${allJobs[key]["applicationStatus"]}");
+
         if (value["applicationStatus"] != allJobs[key]["applicationStatus"]) {
           if (allJobs[key]["applicationStatus"] == "current") {
             acceptedJob.addAll({key: value});
+            alertJobs.addAll({key: value});
+            alertJobs[key]["newJobStatus"] = "current";
           } else if (allJobs[key]["applicationStatus"] == "rejected") {
             rejectedJob.addAll({key: value});
+            alertJobs.addAll({key: value});
+            alertJobs[key]["newJobStatus"] = "rejected";
           }
         }
       }
     });
 
-    if ((jobsMap.length > allJobs.length) && removedJob.isNotEmpty) {
-      print(removedJob);
-      removedJob.forEach((key, value) {
-        print(
-            "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} was deleted by the pharmacy.");
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Job Deleted"),
-                  content: Text(
-                      "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} was deleted by the pharmacy."),
-                ));
-      });
-    }
-
     print("Accepted: $acceptedJob");
-    if ((jobsMap.length >= allJobs.length) && acceptedJob.isNotEmpty) {
-      acceptedJob.forEach((key, value) {
-        print(
-            "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has accepted you for the position. You will be contacted by the pharmacy soon.");
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Application Accepted"),
-                  content: Text(
-                      "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has accepted you for the position. You will be contacted by the pharmacy soon."),
-                ));
-      });
-      acceptedJob.clear();
-    }
-
     print("Rejected: $rejectedJob");
-    if ((jobsMap.length >= allJobs.length) && rejectedJob.isNotEmpty) {
-      rejectedJob.forEach((key, value) {
-        print(
-            "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has rejected you for the position. To search and for more jobs please click the bottom at the bottom.");
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Application Rejected"),
-                  content: Text(
-                      "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has rejected you for the position. To search and apply for more jobs please click the bottom at the bottom."),
-                ));
-      });
+    print("Removed: $removedJob");
+    print("Alert Jobs: $alertJobs");
+
+    // if ((jobsMap.length > allJobs.length) && removedJob.isNotEmpty) {
+    //   print(removedJob);
+    //   removedJob.forEach((key, value) {
+    //     print(
+    //         "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} was deleted by the pharmacy.");
+    //     showDialog(
+    //         context: context,
+    //         builder: (context) => AlertDialog(
+    //               title: Text("Job Deleted"),
+    //               content: Text(
+    //                   "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} was deleted by the pharmacy."),
+    //             ));
+    //   });
+    // }
+    // print("Accepted: $acceptedJob");
+    // if ((jobsMap.length >= allJobs.length) && acceptedJob.isNotEmpty) {
+    //   print("Job Length: ${acceptedJob.length}");
+    //   acceptedJob.forEach((key, value) {
+    //     print(
+    //         "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has accepted you for the position. You will be contacted by the pharmacy soon.");
+    //     showDialog(
+    //         context: context,
+    //         builder: (context) => AlertDialog(
+    //               title: Text("Application Accepted"),
+    //               content: Text(
+    //                   "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has accepted you for the position. You will be contacted by the pharmacy soon."),
+    //             ));
+    //   });
+    //   print(acceptedJob);
+    //   setState(() {
+    //     acceptedJob.clear();
+    //   });
+    //   print("Cleared");
+    //   print(acceptedJob);
+    // }
+
+    // print("Rejected: $rejectedJob");
+    // if ((jobsMap.length >= allJobs.length) && rejectedJob.isNotEmpty) {
+    //   rejectedJob.forEach((key, value) {
+    //     print(
+    //         "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has rejected you for the position. To search and for more jobs please click the bottom at the bottom.");
+    //     showDialog(
+    //         context: context,
+    //         builder: (context) => AlertDialog(
+    //               title: Text("Application Rejected"),
+    //               content: Text(
+    //                   "The job by the pharmacy ${value["pharmacyName"]} from ${DateFormat("MMM d, y").format(DateTime.parse(value["startDate"])) + " to " + DateFormat("MMM d, y").format(DateTime.parse(value["endDate"]))} has rejected you for the position. To search and apply for more jobs please click the bottom at the bottom."),
+    //             ));
+    //   });
+    // }
+
+    await localStorage.writeFile(
+        filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+
+    if (alertJobs.isNotEmpty) {
+      if (!File(userNotificationsFilePath).existsSync()) {
+        File(userNotificationsFilePath).createSync(recursive: true);
+      }
+
+      String previousNotifications =
+          File(userNotificationsFilePath).readAsStringSync();
+
+      print("Previous Notifications: $previousNotifications");
+      if (previousNotifications.isNotEmpty) {
+        print("Previous Notifications: $previousNotifications");
+        alertJobs.addAll(jsonDecode(previousNotifications));
+      }
+
+      await localStorage.writeFile(
+          filePath: userNotificationsFilePath, data: jsonEncode(alertJobs));
     }
-    await localStorage.writeLocalFile(
-        fileName: "jobsListFile", data: jsonEncode(storageJobsMap));
+    print("File: $jobsListFile");
+    print("Alert Jobs: $alertJobs");
   }
 
   @override
   void initState() {
     super.initState();
+
     print("User UID: ${context.read(userProviderLogin.notifier).userUID}");
 
-    jobsStreamPharmacist = userRef
-        .doc(context.read(userProviderLogin.notifier).userUID)
-        .collection("PharmacistJobs")
-        .snapshots();
-    //To Check if a job is deleted
-    _jobsStreamSub?.cancel();
-    _jobsStreamSub = jobsStreamPharmacist!.listen((event) {
-      print("Checking");
-      if (event.size != 0) {
-        event.docs.forEach((doc) {
-          if ((doc.data())["applicationStatus"] == "applied" ||
-              (doc.data())["applicationStatus"] == "current" ||
-              (doc.data())["applicationStatus"] == "rejected") {
-            dataID = doc.id;
-            allJobs[dataID] = doc.data();
-          }
-        });
-        checkIfJobUpdated(allJobs, context);
-      }
-    });
+    userDataFirestoreSort();
 
-    _userDataStreamSub?.cancel();
-    _userDataStreamSub = userRef
+    jobsFirestoreSort();
+  }
+
+  void userDataFirestoreSort() {
+    userDataStreamSub?.cancel();
+    userDataStreamSub = userRef
         .doc(context.read(userProviderLogin.notifier).userUID)
         .collection("SignUp")
         .doc("Information")
@@ -222,14 +348,54 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
     });
   }
 
+  void jobsFirestoreSort() async {
+    jobsStreamPharmacist = userRef
+        .doc(context.read(userProviderLogin.notifier).userUID)
+        .collection("PharmacistJobs")
+        .snapshots();
+    //To Check if a job is deleted
+    jobsStreamSub?.cancel();
+    jobsStreamSub = jobsStreamPharmacist!.distinct().listen((event) async {
+      print("Checking");
+      if (event.size != 0) {
+        event.docs.forEach((doc) {
+          if ((doc.data())["applicationStatus"] == "applied" ||
+              (doc.data())["applicationStatus"] == "current" ||
+              (doc.data())["applicationStatus"] == "rejected") {
+            dataID = doc.id;
+            allJobs[dataID] = doc.data();
+          }
+        });
+        print(context
+                .read(pharmacistMainProvider.notifier)
+                .userDataMap?["userType"] ==
+            "Pharmacist");
+        if (context
+                .read(pharmacistMainProvider.notifier)
+                .userDataMap?["userType"] ==
+            "Pharmacist") {
+          await checkIfJobUpdated(allJobs, context);
+
+          updateJobAlerts().whenComplete(() {
+            setState(() {});
+          });
+        }
+      } else {
+        localStorage.writeLocalFile(
+            fileName: "${context.read(userProviderLogin.notifier).userUID}",
+            data: "");
+      }
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
     print("In Pharmacist Job History dispose");
-    _jobsStreamSub?.cancel();
-    _userDataStreamSub?.cancel();
-    print("_jobsStreamSub: $_jobsStreamSub");
-    print("_userDataStreamSub: $_userDataStreamSub");
+    jobsStreamSub?.cancel();
+    userDataStreamSub?.cancel();
+    print("_jobsStreamSub: $jobsStreamSub");
+    print("_userDataStreamSub: $userDataStreamSub");
   }
 
   @override
@@ -239,14 +405,17 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
       child: Scaffold(
         backgroundColor: Color(0xFFE3E3E3),
         key: _scaffoldKey,
-        drawer: SideMenuDrawer(),
+        drawer: SideMenuDrawer(
+          jobsStreamSub: jobsStreamSub,
+          userDataStreamSub: userDataStreamSub,
+        ),
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
           backgroundColor: Colors.white,
           title: RichText(
             text: TextSpan(
-              text: "Job History Pharmacist",
+              text: "Job History ",
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 24.0,
@@ -260,7 +429,47 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
             ),
             onPressed: () => _scaffoldKey.currentState?.openDrawer(),
           ),
-          actions: [],
+          actions: [
+            IconButton(
+              padding: EdgeInsets.zero,
+              icon: new Stack(
+                children: <Widget>[
+                  new Icon(Icons.notifications, size: 30),
+                  new Positioned(
+                    right: 0,
+                    child: new Container(
+                      padding: EdgeInsets.all(1),
+                      decoration: new BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 12,
+                        minHeight: 12,
+                      ),
+                      child: new Text(
+                        '${alertJobs.length}',
+                        style: new TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              color: Color(0xFF5DB075),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationsPharmacist(
+                              jobAlerts: alertJobs,
+                            )));
+              },
+            ),
+          ],
         ),
         bottomNavigationBar: Container(
           height: 55,
@@ -275,8 +484,8 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
               colors: [Colors.white, Color(0xFFE3E3E3)],
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GestureDetector(
                 child: Icon(
@@ -309,6 +518,7 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
                                 ));
                       },
               ),
+              //SizedBox(width: MediaQuery.of(context).size.width * 0.3),
             ],
           ),
         ),
@@ -846,9 +1056,15 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   }
 }
 
+// ignore: must_be_immutable
 class SideMenuDrawer extends StatelessWidget {
-  const SideMenuDrawer({
+  StreamSubscription? jobsStreamSub;
+  StreamSubscription? userDataStreamSub;
+
+  SideMenuDrawer({
     Key? key,
+    this.jobsStreamSub,
+    this.userDataStreamSub,
   }) : super(key: key);
 
   @override
@@ -859,7 +1075,7 @@ class SideMenuDrawer extends StatelessWidget {
         child: Column(
           children: <Widget>[
             //Drawer Header
-            _createDrawerHeader(),
+            _CreateDrawerHeader(),
             //Home Button
             ListTile(
               title: Row(
@@ -1049,7 +1265,14 @@ class SideMenuDrawer extends StatelessWidget {
                 ],
               ),
               onTap: () {
-                context.read(authProviderMain.notifier).signOut();
+                jobsStreamSub?.cancel();
+                userDataStreamSub?.cancel();
+                context.read(authProviderMain.notifier).signOut().then((value) {
+                  context.read(pharmacistMainProvider.notifier).resetValues();
+                  context
+                      .read(pharmacistSignUpProvider.notifier)
+                      .clearAllValues();
+                });
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => PharmaConnect()),
                     result: Navigator.pushReplacement(
@@ -1065,8 +1288,8 @@ class SideMenuDrawer extends StatelessWidget {
   }
 }
 
-class _createDrawerHeader extends StatelessWidget {
-  const _createDrawerHeader({
+class _CreateDrawerHeader extends StatelessWidget {
+  const _CreateDrawerHeader({
     Key? key,
   }) : super(key: key);
 

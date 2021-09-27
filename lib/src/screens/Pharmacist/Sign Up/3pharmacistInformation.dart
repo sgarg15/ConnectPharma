@@ -72,7 +72,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                   children: <Widget>[
                     SizedBox(height: 20),
                     //First Year Licensed In Canada
-                    formField(
+                    CustomFormField(
                       fieldTitle: "First Year Licensed in Canada",
                       hintText: "First Year Licensed in Canada...",
                       keyboardStyle: TextInputType.number,
@@ -94,7 +94,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                     SizedBox(height: 20),
 
                     //Registration Number
-                    formField(
+                    CustomFormField(
                       fieldTitle: "Registration Number",
                       hintText: "Registration Number...",
                       keyboardStyle: TextInputType.number,
@@ -116,7 +116,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                     SizedBox(height: 20),
 
                     //Province of Registration
-                    formField(
+                    CustomFormField(
                       fieldTitle: "Registration Province",
                       hintText: "Registration Province...",
                       keyboardStyle: TextInputType.streetAddress,
@@ -138,7 +138,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                     SizedBox(height: 20),
 
                     //Year of Graduation
-                    formField(
+                    CustomFormField(
                       fieldTitle: "Graduation Year",
                       hintText: "Graduation Year...",
                       keyboardStyle: TextInputType.number,
@@ -160,7 +160,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                     SizedBox(height: 20),
 
                     //Instituation Name
-                    formField(
+                    CustomFormField(
                       fieldTitle: "Instituation Name",
                       hintText: "Instituation Name...",
                       keyboardStyle: TextInputType.streetAddress,
@@ -182,7 +182,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                     SizedBox(height: 20),
 
                     //Years of Working experience
-                    formField(
+                    CustomFormField(
                       fieldTitle: "Years of Working experience",
                       hintText: "Number of years...",
                       keyboardStyle: TextInputType.number,

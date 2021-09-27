@@ -27,9 +27,9 @@ class EditPharmacistProfile extends StatefulWidget {
 
 class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
   Map<String, dynamic> uploadDataMap = Map();
-  List<Skill?>? skillList = null;
-  List<Software?>? softwareList = null;
-  List<Language?>? languageList = null;
+  List<Skill?>? skillList;
+  List<Software?>? softwareList;
+  List<Language?>? languageList;
 
   List<Skill?>? skillListToUpload = [];
   List<Software?>? softwareListToUpload = [];
@@ -209,7 +209,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(11, 10, 0, 0),
-                                  child: formField(
+                                  child: CustomFormField(
                                     fieldTitle: "First Name",
                                     hintText: "Enter your First Name...",
                                     keyboardStyle: TextInputType.name,
@@ -242,7 +242,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                                  child: formField(
+                                  child: CustomFormField(
                                     fieldTitle: "Last Name",
                                     hintText: "Enter your Last Name...",
                                     keyboardStyle: TextInputType.name,
@@ -275,7 +275,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(12, 0, 0, 0),
-                                  child: formField(
+                                  child: CustomFormField(
                                     fieldTitle: "Phone Number",
                                     hintText: "Enter your Phone Number...",
                                     keyboardStyle: TextInputType.number,
@@ -469,7 +469,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                               //First Year Licensed In Canada
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "First Year Licensed in Canada",
                                   hintText: "First Year Licensed in Canada...",
                                   containerWidth:
@@ -501,7 +501,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                               //Registration Number
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Registration Number",
                                   hintText: "Registration Number...",
                                   keyboardStyle: TextInputType.number,
@@ -532,7 +532,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                               //Province of Registration
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Registration Province",
                                   hintText: "Registration Province...",
                                   keyboardStyle: TextInputType.streetAddress,
@@ -563,7 +563,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                               //Year of Graduation
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Graduation Year",
                                   hintText: "Graduation Year...",
                                   keyboardStyle: TextInputType.number,
@@ -594,7 +594,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                               //Instituation Name
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Instituation Name",
                                   hintText: "Instituation Name...",
                                   keyboardStyle: TextInputType.streetAddress,
@@ -625,7 +625,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                               //Years of Working experience
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
-                                child: formField(
+                                child: CustomFormField(
                                   fieldTitle: "Years of Working experience",
                                   hintText: "Number of years...",
                                   keyboardStyle: TextInputType.number,

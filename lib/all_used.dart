@@ -6,7 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
-class formField extends StatelessWidget {
+class CustomFormField extends StatelessWidget {
   String? fieldTitle;
   String? hintText;
   TextInputType? keyboardStyle;
@@ -22,7 +22,7 @@ class formField extends StatelessWidget {
   double containerWidth;
   double titleFont;
 
-  formField({
+  CustomFormField({
     this.fieldTitle,
     this.hintText,
     this.keyboardStyle,
@@ -272,7 +272,7 @@ Future getDistance(Map pharmacyData, String pharmacistAddress) async {
           pharmacyData["pharmacyAddress"]["country"]);
   Location endingLocation = await getLocationFromAddress(pharmacistAddress);
   Response response = await dio.get(
-      "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startingLocation.latitude},${startingLocation.longitude}&destinations=${endingLocation.latitude},${endingLocation.longitude}&key=${apiKey}");
+      "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startingLocation.latitude},${startingLocation.longitude}&destinations=${endingLocation.latitude},${endingLocation.longitude}&key=$apiKey");
   //print(response);
   if (response.data != null) {
     distance = double.parse(

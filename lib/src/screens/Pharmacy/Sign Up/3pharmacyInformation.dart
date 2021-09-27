@@ -83,7 +83,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Pharmacy Name
-            formField(
+            CustomFormField(
               fieldTitle: "Pharmacy Name",
               hintText: "Enter the Pharmacy name...",
               keyboardStyle: TextInputType.name,
@@ -213,7 +213,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Store Number
-            formField(
+            CustomFormField(
               fieldTitle: "Store Number",
               hintText: "Enter the Store Number...",
               keyboardStyle: TextInputType.streetAddress,
@@ -234,7 +234,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
             SizedBox(height: 20),
 
             //City
-            formField(
+            CustomFormField(
               fieldTitle: "City",
               hintText: "Enter the city...",
               keyboardStyle: TextInputType.streetAddress,
@@ -253,7 +253,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Postal Code
-            formField(
+            CustomFormField(
               fieldTitle: "Postal Code",
               hintText: "Enter the postal code...",
               keyboardStyle: TextInputType.streetAddress,
@@ -273,7 +273,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Country
-            formField(
+            CustomFormField(
               fieldTitle: "Country",
               hintText: "Enter the country...",
               keyboardStyle: TextInputType.streetAddress,
@@ -293,7 +293,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Phone Number
-            formField(
+            CustomFormField(
               fieldTitle: "Pharmacy Phone Number",
               hintText: "Enter the pharmacy phone Number...",
               keyboardStyle: TextInputType.number,
@@ -316,7 +316,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Fax Number
-            formField(
+            CustomFormField(
               fieldTitle: "Pharmacy Fax Number",
               hintText: "Enter the pharmacy fax Number...",
               keyboardStyle: TextInputType.number,
@@ -338,7 +338,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Accreditation Province
-            formField(
+            CustomFormField(
               fieldTitle: "Accreditation Province",
               hintText: "Enter the accreditation province...",
               keyboardStyle: TextInputType.streetAddress,

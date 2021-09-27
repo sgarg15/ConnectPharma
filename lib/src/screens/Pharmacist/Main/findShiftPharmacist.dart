@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/jobDetails.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:pharma_connect/src/screens/login.dart';
 
 import '../../../../all_used.dart';
 import '../../../../Custom Widgets/fileStorage.dart';
@@ -27,6 +27,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   Location pharmacistLocation =
       Location(latitude: 0, longitude: 0, timestamp: DateTime(0));
   Map jobsDataMap = Map();
+  Map jobsMap = Map();
   Map jobsDataMapTemp = Map();
   Map sortedJobsDataMap = Map();
   StreamSubscription? scheduleJobsDataSub;
@@ -39,11 +40,14 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   }
 
   void jobsSortedWithSchedule() async {
-    File jobsListFile =
-        await localStorage.readLocalFile(fileName: "jobsListFile");
-    print("File: ${jobsListFile.readAsStringSync()}");
+    String jobsListFile = localStorage.readFile(
+        filePath:
+            "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList");
 
-    Map jobsMap = jsonDecode(jobsListFile.readAsStringSync());
+    print("File: $jobsListFile");
+    if (jobsListFile.isNotEmpty) {
+      jobsMap = jsonDecode(jobsListFile);
+    } else {}
 
     jobsDataMapTemp.forEach((key, value) {
       print(value["pharmacyUID"]);
@@ -455,7 +459,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                   child: Center(
                                     child: RichText(
                                       text: TextSpan(
-                                        text: "No Shifts Found",
+                                        text: "No New Shifts Found",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 20.0,
