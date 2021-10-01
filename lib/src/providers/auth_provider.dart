@@ -531,6 +531,7 @@ class AuthProvider extends ChangeNotifier {
   Future<String?> getCurrentUserData(String? userUID) async {
     _status = Status.Authenticated;
     notifyListeners();
+    print("UserUID: $userUID");
     DocumentSnapshot user =
         await users.doc(userUID).collection("SignUp").doc("Information").get();
     print("UserData: $user");

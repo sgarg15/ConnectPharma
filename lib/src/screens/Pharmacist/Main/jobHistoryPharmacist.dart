@@ -415,7 +415,7 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
           backgroundColor: Colors.white,
           title: RichText(
             text: TextSpan(
-              text: "Job History ",
+              text: "Job History",
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 24.0,

@@ -13,6 +13,7 @@ import 'package:pharma_connect/src/screens/login.dart';
 
 import '../../../../all_used.dart';
 import '../../../../Custom Widgets/fileStorage.dart';
+import 'package:geolocator/geolocator.dart';
 
 class FindShiftForPharmacist extends StatefulWidget {
   FindShiftForPharmacist({Key? key}) : super(key: key);
@@ -33,6 +34,29 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   StreamSubscription? scheduleJobsDataSub;
   final LocalStorage localStorage = LocalStorage();
 
+  double distanceWillingToTravel = 0;
+
+  void _showDistanceDialog() async {
+    // <-- note the async keyword here
+
+    // this will contain the result from Navigator.pop(context, result)
+    final selectedFistance = await showDialog<double>(
+      context: context,
+      builder: (context) => DistanceTravelPickerDialog(
+          distanceWillingToTravel: distanceWillingToTravel),
+    );
+
+    // execution of this code continues when the dialog was closed (popped)
+
+    // note that the result can also be null, so check it
+    // (back button or pressed outside of the dialog)
+    if (selectedFistance != null) {
+      setState(() {
+        distanceWillingToTravel = selectedFistance;
+      });
+    }
+  }
+
   void getAllJobs(DocumentSnapshot jobsData) async {
     setState(() {
       jobsDataMapTemp = jobsData.data() as Map;
@@ -47,26 +71,23 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
     print("File: $jobsListFile");
     if (jobsListFile.isNotEmpty) {
       jobsMap = jsonDecode(jobsListFile);
-    } else {}
+    }
 
-    jobsDataMapTemp.forEach((key, value) {
+    print("Jobs DataMap: $jobsDataMapTemp");
+
+    jobsDataMapTemp.forEach((key, value) async {
       print(value["pharmacyUID"]);
       print("--------------------------------------------");
-      if (((value["startDate"] as Timestamp).toDate().isAfter(context
-                  .read(pharmacistMainProvider.notifier)
-                  .startDate as DateTime) &&
-              ((value["startDate"] as Timestamp).toDate().isBefore(context
-                  .read(pharmacistMainProvider.notifier)
-                  .endDate as DateTime))) ||
-          ((value["startDate"] as Timestamp).toDate().day ==
-              (context.read(pharmacistMainProvider.notifier).startDate
-                      as DateTime)
-                  .day)) {
+      double distanceBetweenPharmacistAndPharmacy =
+          await getDistanceBetweenPharmacyAndPharmacist(value);
+
+      if (jobsBetweenDates(value) &&
+          distanceBetweenPharmacistAndPharmacy < distanceWillingToTravel) {
         print(value["pharmacyUID"]);
         print("Key: $key");
         if (!jobsMap.containsKey(key)) {
           jobsDataMap[key] = value;
-          print("YEAS");
+          print("YEAS \n\n");
         }
       } else {
         print(value["pharmacyUID"]);
@@ -80,6 +101,43 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
         ..sort((e1, e2) =>
             e1.value["startDate"].compareTo(e2.value["startDate"])));
     });
+  }
+
+  Future<double> getDistanceBetweenPharmacyAndPharmacist(value) async {
+    var pharmacyAddress = value["pharmacyAddress"]["streetAddress"] +
+        " " +
+        value["pharmacyAddress"]["city"] +
+        " " +
+        value["pharmacyAddress"]["postalCode"] +
+        " " +
+        value["pharmacyAddress"]["country"];
+
+    List<Location> pharmacyLocation =
+        await locationFromAddress(pharmacyAddress);
+
+    List<Location> pharmacistLocation = await locationFromAddress(
+        context.read(pharmacistMainProvider.notifier).userDataMap?["address"]);
+
+    double distanceBetweenPharmacistAndPharmacy = Geolocator.distanceBetween(
+            pharmacistLocation.first.latitude,
+            pharmacistLocation.first.longitude,
+            pharmacyLocation.first.latitude,
+            pharmacyLocation.first.longitude) /
+        1000;
+    return distanceBetweenPharmacistAndPharmacy;
+  }
+
+  bool jobsBetweenDates(value) {
+    return ((value["startDate"] as Timestamp).toDate().isAfter(context
+                .read(pharmacistMainProvider.notifier)
+                .startDate as DateTime) &&
+            ((value["startDate"] as Timestamp).toDate().isBefore(context
+                .read(pharmacistMainProvider.notifier)
+                .endDate as DateTime))) ||
+        ((value["startDate"] as Timestamp).toDate().day ==
+            (context.read(pharmacistMainProvider.notifier).startDate
+                    as DateTime)
+                .day);
   }
 
   @override
@@ -268,58 +326,77 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                               ),
                             ],
                           ),
-                          //Search Button
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                            child: SizedBox(
-                              width: 324,
-                              height: 51,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty
-                                        .resolveWith<Color>((states) {
-                                      if (states
-                                          .contains(MaterialState.disabled)) {
-                                        return Colors.grey; // Disabled color
-                                      }
-                                      return Color(0xFF5DB075); // Regular color
-                                    }),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(100),
-                                    ))),
-                                onPressed: (context
-                                                .read(pharmacistMainProvider
-                                                    .notifier)
-                                                .startDate !=
-                                            null &&
-                                        context
-                                                .read(pharmacistMainProvider
-                                                    .notifier)
-                                                .endDate !=
-                                            null)
-                                    ? () {
-                                        print("Pressed");
-                                        //sortedJobsDataMap = {};
-                                        //jobsDataMap = {};
 
-                                        jobsSortedWithSchedule();
-                                      }
-                                    : null,
-                                child: RichText(
-                                  text: TextSpan(
-                                    text: "Search",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.6,
+                                  height: 51,
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty
+                                            .resolveWith<Color>((states) {
+                                          if (states.contains(
+                                              MaterialState.disabled)) {
+                                            return Colors
+                                                .grey; // Disabled color
+                                          }
+                                          return Color(
+                                              0xFF5DB075); // Regular color
+                                        }),
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ))),
+                                    onPressed: (context
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .startDate !=
+                                                null &&
+                                            context
+                                                    .read(pharmacistMainProvider
+                                                        .notifier)
+                                                    .endDate !=
+                                                null)
+                                        ? () {
+                                            print("Pressed");
+                                            //sortedJobsDataMap = {};
+                                            //jobsDataMap = {};
+
+                                            jobsSortedWithSchedule();
+                                          }
+                                        : null,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        text: "Search",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )
+                              
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                                child: IconButton(
+                                    onPressed: () {
+                                      _showDistanceDialog();
+                                    },
+                                    icon: Icon(Icons.filter_list_rounded)),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                       decoration: BoxDecoration(
@@ -401,7 +478,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                                         TextSpan(
                                                             text:
                                                                 "(${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[0]} hrs"
-                                                                "${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[1]})\n",
+                                                                "${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[1]}/day)\n",
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .black,
@@ -478,6 +555,82 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
           ),
         );
       },
+    );
+  }
+}
+
+class DistanceTravelPickerDialog extends StatefulWidget {
+  /// initial selection for the slider
+  final double distanceWillingToTravel;
+
+  const DistanceTravelPickerDialog(
+      {Key? key, required this.distanceWillingToTravel})
+      : super(key: key);
+
+  @override
+  _DistanceTravelPickerDialogState createState() =>
+      _DistanceTravelPickerDialogState();
+}
+
+class _DistanceTravelPickerDialogState
+    extends State<DistanceTravelPickerDialog> {
+  /// current selection of the slider
+  double _distanceWillingToTravel = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _distanceWillingToTravel = widget.distanceWillingToTravel;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      child: AlertDialog(
+        title: Text('Distance Willing to Travel'),
+        contentPadding: EdgeInsets.zero,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 10),
+            Container(
+              child: Slider(
+                value: _distanceWillingToTravel,
+                min: 0,
+                max: 100,
+                divisions: 20,
+                onChanged: (value) {
+                  setState(() {
+                    _distanceWillingToTravel =
+                        num.parse(value.toStringAsFixed(0)).toDouble();
+                  });
+                },
+                label: "$_distanceWillingToTravel km",
+              ),
+            ),
+            Text("Distance: $_distanceWillingToTravel km"),
+            TextButton(
+              onPressed: () {
+                // Use the second argument of Navigator.pop(...) to pass
+                // back a result to the page that opened the dialog
+                Navigator.pop(context, _distanceWillingToTravel);
+              },
+              child: Text('DONE'),
+            )
+          ],
+        ),
+        // actions: <Widget>[
+        //   TextButton(
+        //     onPressed: () {
+        //       // Use the second argument of Navigator.pop(...) to pass
+        //       // back a result to the page that opened the dialog
+        //       Navigator.pop(context, _test);
+        //     },
+        //     child: Text('DONE'),
+        //   )
+        // ],
+      ),
     );
   }
 }

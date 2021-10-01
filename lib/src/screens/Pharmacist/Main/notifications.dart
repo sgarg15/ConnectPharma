@@ -21,7 +21,7 @@ class _NotificationsPharmacistState extends State<NotificationsPharmacist> {
   @override
   void initState() {
     super.initState();
-    print(widget.jobAlerts);
+    print("Job Alerts: ${widget.jobAlerts}");
   }
 
   @override

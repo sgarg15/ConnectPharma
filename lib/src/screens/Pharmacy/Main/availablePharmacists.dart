@@ -63,7 +63,11 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
             if (context.read(pharmacyMainProvider.notifier).skillList != null) {
               if (value["knownSkills"] != null)
                 changeSkillToList(value["knownSkills"]);
-              
+              print(value["uid"]);
+              pharmacistDataMap[key] = value;
+              print(pharmacistDataMap.keys);
+
+              print("YESR");
             } else {
               print(value["uid"]);
               pharmacistDataMap[key] = value;

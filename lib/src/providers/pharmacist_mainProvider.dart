@@ -9,6 +9,7 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
 
   List<PickerDateRange> get dateRanges => state.dateRanges;
   Map<String, dynamic>? get userDataMap => state.userData;
+  
   DateTime? get startDate => state.startDate;
   DateTime? get endDate => state.endDate;
   File? get resumePDFData => state.resumePDF;
