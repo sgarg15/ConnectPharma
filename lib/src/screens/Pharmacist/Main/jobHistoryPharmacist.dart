@@ -66,10 +66,10 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
         "All Files: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}")}");
 
     final directory = Directory("${await localStorage.localPath}/jobsList");
-    directory.deleteSync(recursive: true);
+    //directory.deleteSync(recursive: true);
 
     print(
-        "All Files: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}")}");
+        "All Files: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}/jobsList")}");
   }
 
   Future<void> updateJobAlerts() async {
@@ -143,6 +143,7 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
 
     //Check if both directory and file exists
     if (!Directory(jobsListDirectoryPath).existsSync()) {
+      print("Creating all directories");
       jobsListDirectory =
           await localStorage.createLocalDirectory(directoryName: 'jobsList');
 
@@ -311,7 +312,7 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
     super.initState();
 
     print("User UID: ${context.read(userProviderLogin.notifier).userUID}");
-
+    clearFilesOrDirectory();
     userDataFirestoreSort();
 
     jobsFirestoreSort();
@@ -371,9 +372,13 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
                 .userDataMap?["userType"] ==
             "Pharmacist");
         if (context
-                .read(pharmacistMainProvider.notifier)
-                .userDataMap?["userType"] ==
-            "Pharmacist") {
+                    .read(pharmacistMainProvider.notifier)
+                    .userDataMap?["userType"] ==
+                "Pharmacist" ||
+            context
+                    .read(pharmacistMainProvider.notifier)
+                    .userDataMap?["userType"] ==
+                "Pharmacy Assistant") {
           await checkIfJobUpdated(allJobs, context);
 
           updateJobAlerts().whenComplete(() {
@@ -381,8 +386,20 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
           });
         }
       } else {
-        localStorage.writeLocalFile(
-            fileName: "${context.read(userProviderLogin.notifier).userUID}",
+        print("Writing Empty File");
+        userDirectory = await localStorage.createDirectory(
+            path:
+                "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}");
+
+        File("${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList")
+            .createSync();
+
+        File("${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/notifications")
+            .createSync();
+
+        localStorage.writeFile(
+            filePath:
+                "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList",
             data: "");
       }
     });

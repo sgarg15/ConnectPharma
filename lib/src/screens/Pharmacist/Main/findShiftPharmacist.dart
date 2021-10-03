@@ -34,7 +34,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   StreamSubscription? scheduleJobsDataSub;
   final LocalStorage localStorage = LocalStorage();
 
-  double distanceWillingToTravel = 0;
+  double distanceWillingToTravel = 50;
 
   void _showDistanceDialog() async {
     // <-- note the async keyword here
@@ -80,6 +80,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
       print("--------------------------------------------");
       double distanceBetweenPharmacistAndPharmacy =
           await getDistanceBetweenPharmacyAndPharmacist(value);
+      print("Distance: $distanceBetweenPharmacistAndPharmacy");
 
       if (jobsBetweenDates(value) &&
           distanceBetweenPharmacistAndPharmacy < distanceWillingToTravel) {
@@ -87,7 +88,10 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
         print("Key: $key");
         if (!jobsMap.containsKey(key)) {
           jobsDataMap[key] = value;
-          print("YEAS \n\n");
+          print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n");
+          print("YESS \n");
+          print("Distance: $distanceBetweenPharmacistAndPharmacy");
+          print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv \n");
         }
       } else {
         print(value["pharmacyUID"]);
@@ -386,7 +390,6 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                   ),
                                 ),
                               ),
-                              
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                                 child: IconButton(

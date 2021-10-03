@@ -23,8 +23,9 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
+        centerTitle: true,
         title: new Text(
-          "Pharmacist Information",
+          "Education Information",
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,

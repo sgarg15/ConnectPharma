@@ -49,10 +49,19 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
       });
       pharmacistDataMapTemp.forEach((key, value) {
         print(value["uid"]);
+        print("UserType: ${value["userType"]}");
+        print(
+            "Position: ${context.read(pharmacyMainProvider.notifier).position}");
+        print(
+            "Permanent Job: ${context.read(pharmacyMainProvider.notifier).position}");
+
         print("--------------------------------------------");
         for (var i = 0; i < value["availability"].length; i++) {
           if (widget.showFullTimePharmacists) {
-            if (value["permanentJob"] != null && value["permanentJob"]) {
+            if (value["permanentJob"] != null &&
+                value["permanentJob"] &&
+                value["userType"] ==
+                    context.read(pharmacyMainProvider.notifier).position) {
               print(value["uid"]);
               pharmacistDataMap[key] = value;
               print(pharmacistDataMap.keys);
@@ -212,11 +221,33 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.95,
                         height: 50,
-                        child: Center(
-                            child: Text(
-                          "No available pharamcists found",
-                          style: TextStyle(color: Colors.grey, fontSize: 20),
-                        )),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,  
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (context
+                                    .read(pharmacyMainProvider.notifier)
+                                    .position ==
+                                "Pharmacist") ...[
+                              Center(
+                                  child: Text(
+                                "No available pharamcists found",
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 20),
+                              )),
+                            ] else if (context
+                                    .read(pharmacyMainProvider.notifier)
+                                    .position ==
+                                "Pharmacy Assistant") ...[
+                              Center(
+                                  child: Text(
+                                "No available pharmacy assistant found",
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 18),
+                              )),
+                            ]
+                          ],
+                        ),
                       ),
                     ),
                   ),

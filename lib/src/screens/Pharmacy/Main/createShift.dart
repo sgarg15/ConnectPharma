@@ -25,7 +25,11 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
   final _skillItems =
       skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
 
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController();
+
   bool softwareFieldEnabled = false;
+  bool showAllPharmacists = false;
 
   @override
   void initState() {
@@ -105,6 +109,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                   .width *
                                               0.55,
                                           child: DateTimeField(
+                                            controller: startDateController,
                                             format: DateFormat(
                                                 "MM/dd/yyyy hh:mm a"),
                                             textAlign: TextAlign.center,
@@ -130,38 +135,44 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                             ),
                                             onShowPicker:
                                                 (context, currentValue) async {
-                                              final date = await showDatePicker(
-                                                  context: context,
-                                                  firstDate: DateTime.now(),
-                                                  initialDate: currentValue ??
-                                                      DateTime.now(),
-                                                  lastDate: DateTime(2100));
-                                              if (date != null) {
-                                                final time =
-                                                    await showTimePicker(
-                                                  context: context,
-                                                  initialTime:
-                                                      TimeOfDay.fromDateTime(
-                                                          currentValue ??
-                                                              DateTime.now()),
-                                                );
-                                                context
-                                                    .read(pharmacyMainProvider
-                                                        .notifier)
-                                                    .changeStartDate(
-                                                        DateTimeField.combine(
-                                                            date, time));
-                                                print(DateTimeField.combine(
-                                                    date, time));
-                                                return DateTimeField.combine(
-                                                    date, time);
-                                              } else {
-                                                context
-                                                    .read(pharmacyMainProvider
-                                                        .notifier)
-                                                    .changeStartDate(
-                                                        currentValue);
-                                                return currentValue;
+                                              if (!showAllPharmacists) {
+                                                final date =
+                                                    await showDatePicker(
+                                                        context: context,
+                                                        firstDate:
+                                                            DateTime.now(),
+                                                        initialDate:
+                                                            currentValue ??
+                                                                DateTime.now(),
+                                                        lastDate:
+                                                            DateTime(2100));
+                                                if (date != null) {
+                                                  final time =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                        TimeOfDay.fromDateTime(
+                                                            currentValue ??
+                                                                DateTime.now()),
+                                                  );
+                                                  context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .changeStartDate(
+                                                          DateTimeField.combine(
+                                                              date, time));
+                                                  print(DateTimeField.combine(
+                                                      date, time));
+                                                  return DateTimeField.combine(
+                                                      date, time);
+                                                } else {
+                                                  context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .changeStartDate(
+                                                          currentValue);
+                                                  return currentValue;
+                                                }
                                               }
                                             },
                                           ),
@@ -205,6 +216,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                               fontWeight: FontWeight.w600,
                                               fontSize: 17,
                                             ),
+                                            controller: endDateController,
                                             format: DateFormat(
                                                 "MM/dd/yyyy hh:mm a"),
                                             textAlign: TextAlign.center,
@@ -226,42 +238,46 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                             ),
                                             onShowPicker:
                                                 (context, currentValue) async {
-                                              final date = await showDatePicker(
-                                                  context: context,
-                                                  firstDate: context
+                                              if (!showAllPharmacists) {
+                                                final date = await showDatePicker(
+                                                    context: context,
+                                                    firstDate: context
+                                                        .read(
+                                                            pharmacyMainProvider
+                                                                .notifier)
+                                                        .startDate as DateTime,
+                                                    initialDate: context
+                                                        .read(
+                                                            pharmacyMainProvider
+                                                                .notifier)
+                                                        .startDate as DateTime,
+                                                    lastDate: DateTime(2100));
+                                                if (date != null) {
+                                                  final time =
+                                                      await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                        TimeOfDay.fromDateTime(
+                                                            currentValue ??
+                                                                DateTime.now()),
+                                                  );
+                                                  context
                                                       .read(pharmacyMainProvider
                                                           .notifier)
-                                                      .startDate as DateTime,
-                                                  initialDate: context
-                                                      .read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .startDate as DateTime,
-                                                  lastDate: DateTime(2100));
-                                              if (date != null) {
-                                                final time =
-                                                    await showTimePicker(
-                                                  context: context,
-                                                  initialTime:
-                                                      TimeOfDay.fromDateTime(
-                                                          currentValue ??
-                                                              DateTime.now()),
-                                                );
-                                                context
-                                                    .read(pharmacyMainProvider
-                                                        .notifier)
-                                                    .changeEndDate(
-                                                        DateTimeField.combine(
-                                                            date, time));
+                                                      .changeEndDate(
+                                                          DateTimeField.combine(
+                                                              date, time));
 
-                                                return DateTimeField.combine(
-                                                    date, time);
-                                              } else {
-                                                context
-                                                    .read(pharmacyMainProvider
-                                                        .notifier)
-                                                    .changeEndDate(
-                                                        currentValue);
-                                                return currentValue;
+                                                  return DateTimeField.combine(
+                                                      date, time);
+                                                } else {
+                                                  context
+                                                      .read(pharmacyMainProvider
+                                                          .notifier)
+                                                      .changeEndDate(
+                                                          currentValue);
+                                                  return currentValue;
+                                                }
                                               }
                                             },
                                           ),
@@ -271,6 +287,122 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                   ],
                                 ),
                               ),
+                              // //Show all pharmacist options
+                              Container(
+                                width: 266,
+                                child: CheckboxListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: RichText(
+                                    text: TextSpan(
+                                      text: "Full-Time Pharmacists",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20.0,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  activeColor: Color(0xFF5DB075),
+                                  value: context
+                                      .read(pharmacyMainProvider.notifier)
+                                      .fullTime,
+                                  onChanged: (value) {
+                                    context
+                                        .read(pharmacyMainProvider.notifier)
+                                        .changeFullTimeStatus(value);
+                                    setState(() {
+                                      startDateController.text =
+                                          "dd/mm/yyyy hh:mm";
+                                      endDateController.text =
+                                          "dd/mm/yyyy hh:mm";
+
+                                      context
+                                          .read(pharmacyMainProvider.notifier)
+                                          .clearDateValues();
+                                    });
+                                  },
+                                  controlAffinity: ListTileControlAffinity
+                                      .trailing, //  <-- leading Checkbox
+                                ),
+                              ),
+
+                              //Add User Type Option
+                              //Position Drop Box
+                              SizedBox(height: 10),
+                              RichText(
+                                textAlign: TextAlign.left,
+                                text: TextSpan(
+                                  text: "Position",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20.0,
+                                      color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              Container(
+                                height: 45,
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  constraints: BoxConstraints(
+                                      maxHeight: 60, minHeight: 10),
+                                  padding: EdgeInsets.zero,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0.3, 5),
+                                          blurRadius: 3.0,
+                                          spreadRadius: 0.5,
+                                          color: Colors.grey.shade400)
+                                    ],
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.grey.shade200,
+                                  ),
+                                  child: DropdownButtonFormField<String>(
+                                      itemHeight: 80,
+                                      icon: Icon(Icons.arrow_downward,
+                                          color: Colors.black),
+                                      hint: Text(
+                                        "Select your Position...",
+                                        style: GoogleFonts.inter(
+                                            color: Color(0xFFBDBDBD),
+                                            fontSize: 16),
+                                      ),
+                                      value: context
+                                          .read(pharmacyMainProvider.notifier)
+                                          .position,
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Color(0xFFF0F0F0),
+                                        contentPadding:
+                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Color(0xFFE8E8E8))),
+                                      ),
+                                      items: <String>[
+                                        'Pharmacist',
+                                        'Pharmacy Assistant',
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                            child: Text(value), value: value);
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        context
+                                            .read(pharmacyMainProvider.notifier)
+                                            .changePosition(value);
+                                      },
+                                      style: GoogleFonts.questrial(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                      )),
+                                ),
+                              ),
+
                               //Skills
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),

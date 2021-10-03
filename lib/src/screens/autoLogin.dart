@@ -94,6 +94,7 @@ class _AutoLoginState extends State<AutoLogin> {
                         borderRadius: BorderRadius.circular(100),
                       ))),
                   onPressed: () {
+                    context.read(authProviderLogin.notifier).signOut();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LogInPage()));
                   },

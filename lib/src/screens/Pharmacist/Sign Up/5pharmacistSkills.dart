@@ -46,8 +46,9 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
+        centerTitle: true,
         title: new Text(
-          "Pharmacist Skills",
+          "Skills",
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,

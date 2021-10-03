@@ -280,9 +280,10 @@ class _LogInPageState extends State<LogInPage> {
                                         .signInWithEmailAndPassword(
                                             logIn.email.toString(),
                                             logIn.password.toString());
+                                    print("User[0]: ${user?[0]}");
                                     if (user?[0] == null) {
                                       var errorMessage = "";
-                                      print(user?[2]);
+                                      print("Error MEssage: ${user?[2]}");
                                       if (user?[2] == "user-disabled") {
                                         setState(() {
                                           errorMessage =

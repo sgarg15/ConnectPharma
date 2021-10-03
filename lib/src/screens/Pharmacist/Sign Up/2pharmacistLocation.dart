@@ -65,8 +65,9 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
+          centerTitle: true,
           title: new Text(
-            "Pharmacist Location",
+            "Location",
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,

@@ -1,5 +1,7 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
 import 'package:pharma_connect/src/providers/auth_provider.dart';
@@ -20,7 +22,8 @@ final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
 });
 
 class PharmacistSignUpPage extends StatefulWidget {
-  const PharmacistSignUpPage({Key? key}) : super(key: key);
+  String userType = "";
+  PharmacistSignUpPage({Key? key, required this.userType}) : super(key: key);
 
   @override
   _PharmacistSignUpPageState createState() => _PharmacistSignUpPageState();
@@ -35,6 +38,19 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
 
   @override
   void initState() {
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      if (widget.userType == "Pharmacist") {
+        context
+            .read(pharmacistSignUpProvider.notifier)
+            .changeUserType("Pharmacist");
+      } else if (widget.userType == "Pharmacy Assistant") {
+        context
+            .read(pharmacistSignUpProvider.notifier)
+            .changeUserType("Pharmacy Assistant");
+      }
+      print(
+          "User Type: ${context.read(pharmacistSignUpProvider.notifier).userType}");
+    });
     super.initState();
   }
 
@@ -43,7 +59,6 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
     return Consumer(
       builder: (context, watch, child) {
         watch(pharmacistSignUpProvider);
-
         return Scaffold(
           resizeToAvoidBottomInset: false,
           body: Container(
@@ -287,20 +302,61 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                                   .isValidPharmacistSignUp())
                               ? null
                               : () async {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PharmacistLocation()));
+                                  List<String> signInMethod = await FirebaseAuth
+                                      .instance
+                                      .fetchSignInMethodsForEmail(context
+                                          .read(
+                                              pharmacistSignUpProvider.notifier)
+                                          .email);
+                                  if (signInMethod.isNotEmpty) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Text("Error"),
+                                              content: Text(
+                                                  "Sorry this email address already exists. Please use another address. \n\nThank you!"),
+                                              actions: <Widget>[
+                                                new TextButton(
+                                                  child: new Text("Ok"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            ));
+                                  }
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             PharmacistLocation()));
                                 },
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Sign Up as a pharmacist",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (widget.userType == "Pharmacist") ...[
+                                RichText(
+                                  text: TextSpan(
+                                    text: "Sign Up as a pharmacist",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ] else if (widget.userType ==
+                                  "Pharmacy Assistant") ...[
+                                RichText(
+                                  text: TextSpan(
+                                    text: "Sign Up as a pharmacy assistant",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ]
+                            ],
                           ),
                         ),
                       ),

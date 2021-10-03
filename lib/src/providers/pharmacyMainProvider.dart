@@ -24,7 +24,7 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   }
 
   bool isValidSearchPharmacist(bool showAllPharmacist) {
-    if (showAllPharmacist) {
+    if (showAllPharmacist && state.position != null) {
       return true;
     } else if (state.startDate != null && state.endDate != null) {
       return true;
@@ -53,6 +53,7 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
     state.startDate = null;
     state.endDate = null;
     state.skillList = null;
+    state.position = null;
   }
 
   void clearValues() {
@@ -87,6 +88,8 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   String? get hourlyRate => state.hourlyRate;
   String? get jobComments => state.jobComments;
   Map<String, dynamic>? get userData => state.userData;
+  bool? get fullTime => state.fullTime;
+  String? get position => state.position;
 
   void changeStartDate(DateTime? value) {
     state = state.copyWithPharmacyMain(startDate: value);
@@ -126,5 +129,13 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
 
   void changeUserDataMap(Map<String, dynamic>? data) {
     state = state.copyWithPharmacyMain(userData: data);
+  }
+
+  void changePosition(String? position) {
+    state = state.copyWithPharmacyMain(position: position);
+  }
+
+  void changeFullTimeStatus(bool? fullTimeStatus) {
+    state = state.copyWithPharmacyMain(fullTime: fullTimeStatus);
   }
 }

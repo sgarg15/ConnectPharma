@@ -73,7 +73,8 @@ class _PharmaConnectState extends State<PharmaConnect> {
     print("Current User: ${FirebaseAuth.instance.currentUser?.uid}");
     print(context.read(pharmacyMainProvider.notifier).userData);
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      if (FirebaseAuth.instance.currentUser != null) {
+      if (FirebaseAuth.instance.currentUser != null &&
+          FirebaseAuth.instance.currentUser!.emailVerified) {
         print("Current User: ${FirebaseAuth.instance.currentUser}");
         print("Logging In");
         //logInUser();
@@ -121,7 +122,7 @@ class _PharmaConnectState extends State<PharmaConnect> {
             //Register Text
             Container(
               //top: 360,
-              alignment: Alignment(0, 0.2),
+              alignment: Alignment(0, 0.1),
               child: RichText(
                 text: TextSpan(
                   text: "Register",
@@ -134,7 +135,7 @@ class _PharmaConnectState extends State<PharmaConnect> {
             ),
             //Button For Pharmacist Registration
             Container(
-              alignment: Alignment(0, 0.4),
+              alignment: Alignment(0, 0.3),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -144,7 +145,9 @@ class _PharmaConnectState extends State<PharmaConnect> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PharmacistSignUpPage()));
+                            builder: (context) => PharmacistSignUpPage(
+                                  userType: "Pharmacist",
+                                )));
                   },
                   child: RichText(
                     text: TextSpan(
@@ -157,9 +160,38 @@ class _PharmaConnectState extends State<PharmaConnect> {
                 ),
               ),
             ),
+
+            //Pharmacy Assistant
+            Container(
+              alignment: Alignment(0, 0.5),
+              child: SizedBox(
+                width: 300,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    //Send to Pharmacy Assistant Sign Up Page
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PharmacistSignUpPage(
+                                  userType: "Pharmacy Assistant",
+                                )));
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Pharmacy Assistant",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
             //Button For Pharmacy Registration
             Container(
-              alignment: Alignment(0, 0.6),
+              alignment: Alignment(0, 0.7),
               child: SizedBox(
                 width: 300,
                 height: 50,

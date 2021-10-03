@@ -86,6 +86,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
     state.registrationCertificate = null;
     state.profilePhoto = null;
     state.signatureData = null;
+    state.userType = "";
   }
 
   //Getters
@@ -121,6 +122,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   File? get registrationCertificateData => state.registrationCertificate;
   File? get profilePhotoData => state.profilePhoto;
   Uint8List? get signatureData => state.signatureData;
+  String? get userType => state.userType;
 
   //Setters Sign Up
   void changeEmail(String value) {
@@ -222,6 +224,10 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
 
   void changeSignature(Uint8List? asset) {
     state = state.copyWithPharmacistSignUp(signatureData: asset);
+  }
+
+  void changeUserType(String? userType) {
+    state = state.copyWithPharmacistSignUp(userType: userType);
   }
 
   //Setters PDF and Imgages Files

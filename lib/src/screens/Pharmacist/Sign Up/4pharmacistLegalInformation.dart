@@ -23,8 +23,9 @@ class _PharmacistLegalInformationState
           iconTheme: IconThemeData(
             color: Colors.black, //change your color here
           ),
+          centerTitle: true,
           title: new Text(
-            "Pharmacist Legal Information",
+            "Legal Information",
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,

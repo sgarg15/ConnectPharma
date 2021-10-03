@@ -8,7 +8,6 @@ import '../../../../Custom Widgets/custom_dateTimeField.dart';
 import '../../../../all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 //TODO: Add Show All pharmacist options
 
 class SearchPharmacistPharmacy extends StatefulWidget {
@@ -275,6 +274,81 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                               },
                               controlAffinity: ListTileControlAffinity
                                   .trailing, //  <-- leading Checkbox
+                            ),
+                          ),
+
+                          //Add User Type Option
+                          //Position Drop Box
+                          SizedBox(height: 10),
+                          RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              text: "Position",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20.0,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          Container(
+                            height: 45,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              constraints:
+                                  BoxConstraints(maxHeight: 60, minHeight: 10),
+                              padding: EdgeInsets.zero,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0.3, 5),
+                                      blurRadius: 3.0,
+                                      spreadRadius: 0.5,
+                                      color: Colors.grey.shade400)
+                                ],
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.grey.shade200,
+                              ),
+                              child: DropdownButtonFormField<String>(
+                                  itemHeight: 80,
+                                  icon: Icon(Icons.arrow_downward,
+                                      color: Colors.black),
+                                  hint: Text(
+                                    "Select your Position...",
+                                    style: GoogleFonts.inter(
+                                        color: Color(0xFFBDBDBD), fontSize: 16),
+                                  ),
+                                  value: context
+                                      .read(pharmacyMainProvider.notifier)
+                                      .position,
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(0xFFF0F0F0),
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(
+                                            color: Color(0xFFE8E8E8))),
+                                  ),
+                                  items: <String>[
+                                    'Pharmacist',
+                                    'Pharmacy Assistant',
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                        child: Text(value), value: value);
+                                  }).toList(),
+                                  onChanged: (String? value) {
+                                    context
+                                        .read(pharmacyMainProvider.notifier)
+                                        .changePosition(value);
+                                  },
+                                  style: GoogleFonts.questrial(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  )),
                             ),
                           ),
 
@@ -617,6 +691,9 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   .isValidSearchPharmacist(showAllPharmacists))
                               ? () {
                                   print("Pressed");
+                                  print(context
+                                      .read(pharmacyMainProvider)
+                                      .position);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

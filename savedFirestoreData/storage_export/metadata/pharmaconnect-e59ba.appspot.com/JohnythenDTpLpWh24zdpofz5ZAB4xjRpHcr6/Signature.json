@@ -1,0 +1,19 @@
+{
+  "name": "JohnythenDTpLpWh24zdpofz5ZAB4xjRpHcr6/Signature",
+  "bucket": "pharmaconnect-e59ba.appspot.com",
+  "contentType": "",
+  "metageneration": 1,
+  "generation": 1633213212242,
+  "storageClass": "STANDARD",
+  "etag": "someETag",
+  "contentDisposition": "inline",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "8fb90573-f609-4887-9abe-64aef47be606"
+  ],
+  "timeCreated": "2021-10-02T22:20:12.241Z",
+  "updated": "2021-10-02T22:20:12.241Z",
+  "size": 10462,
+  "md5Hash": "gNMfJlG22axMsJGYztffNw==",
+  "crc32c": "1285987931"
+}

@@ -5,13 +5,6 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 const dataBase = admin.firestore();
 
-exports.testCollection = functions.firestore.document("TestCollection/{randomString}/Testv2/WhatUp").onWrite((change, context)=>{
-    const afterData = change.after.data(); 
-    functions.logger.log("Hello, here is the after data ", afterData);
-    console.log("Hello, this is the company name" + afterData.company);
-    console.log(context.params.randomString);
-});
-
 exports.aggregateCreatePharmacists = functions.firestore.document("Users/{uid}/SignUp/Information").onCreate((snapshot, context) => {
     const afterData = snapshot.data();  
 
@@ -36,7 +29,8 @@ exports.aggregateCreatePharmacists = functions.firestore.document("Users/{uid}/S
         const availability = afterData.availability ?? "";
         const resume = afterData.resumeDownloadURL;
         const email = afterData.email;
-        const phoneNumber = afterData.phoneNumber
+        const phoneNumber = afterData.phoneNumber;
+        const userType = afterData.userType;
         const uid = context.params.uid;
 
         const next = {
@@ -50,11 +44,52 @@ exports.aggregateCreatePharmacists = functions.firestore.document("Users/{uid}/S
             availability: availability,
             email:email,
             phoneNumber: phoneNumber,
+            userType: userType,
             uid: uid
         }
         
         return aggregatedDataRef.set({[next.uid]: next}, {merge: true})
 
+    } else if(afterData.userType == "Pharmacy Assistant") {
+         //Send the following Pharmacist Information to the Aggregated Data:
+            //Profile Photo
+            //Name
+            //Years of Experience
+            //Known Software
+            //Known Skills
+            //known Languages
+            //List of Availability
+            //Resume link
+            const aggregatedDataRef = dataBase.doc("aggregation/pharmacyAssistant");
+            const profilePhoto = afterData.profilePhotoDownloadURL;
+            const name = afterData.firstName + " " +  afterData.lastName;
+            const yearsOfExperience = afterData.workingExperience;
+            const knownSoftware = afterData.knownSoftware;
+            const knownSkills = afterData.knownSkills;
+            const knownLanguages = afterData.knownLanguages;
+            const availability = afterData.availability ?? "";
+            const resume = afterData.resumeDownloadURL;
+            const email = afterData.email;
+            const phoneNumber = afterData.phoneNumber;
+            const userType = afterData.userType;
+            const uid = context.params.uid;
+    
+            const next = {
+                name: name,
+                yearsOfExperience: yearsOfExperience,
+                knownSoftware: knownSoftware,
+                knownSkills: knownSkills,
+                knownLanguages: knownLanguages,
+                resume: resume,
+                profilePhoto: profilePhoto,
+                availability: availability,
+                email:email,
+                phoneNumber: phoneNumber,
+                userType: userType,
+                uid: uid
+            }
+            
+            return aggregatedDataRef.set({[next.uid]: next}, {merge: true})
     }
     
     // functions.logger.log("Hello, here is the after data ON WRITE: ", afterData);
@@ -69,7 +104,7 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
     const beforeData = change.before.data();
     const afterData = change.after.data();  
 
-    
+    functions.logger.log("User Type ", afterData.userType);
     if(afterData.userType == "Pharmacist"){
         //Send the following Pharmacist Information to the Aggregated Data:
             //Profile Photo
@@ -90,8 +125,9 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
         const availability = afterData.availability ?? "";
         const resume = afterData.resumeDownloadURL;
         const email = afterData.email;
-        const phoneNumber = afterData.phoneNumber
-        const permanentJob = afterData.permanentJob
+        const phoneNumber = afterData.phoneNumber;
+        const permanentJob = afterData.permanentJob;
+        const userType = afterData.userType;
         const uid = context.params.uid;
 
         const next = {
@@ -106,11 +142,52 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
             email:email,
             phoneNumber: phoneNumber,
             permanentJob: permanentJob,
+            userType: userType,
             uid: uid
         }
         
         return aggregatedDataRef.update({[next.uid]: next})
 
+    } else if(afterData.userType == "Pharmacy Assistant") {
+        //Send the following Pharmacist Information to the Aggregated Data:
+           //Profile Photo
+           //Name
+           //Years of Experience
+           //Known Software
+           //Known Skills
+           //known Languages
+           //List of Availability
+           //Resume link
+           const aggregatedDataRef = dataBase.doc("aggregation/pharmacyAssistant");
+           const profilePhoto = afterData.profilePhotoDownloadURL;
+           const name = afterData.firstName + " " +  afterData.lastName;
+           const yearsOfExperience = afterData.workingExperience;
+           const knownSoftware = afterData.knownSoftware;
+           const knownSkills = afterData.knownSkills;
+           const knownLanguages = afterData.knownLanguages;
+           const availability = afterData.availability ?? "";
+           const resume = afterData.resumeDownloadURL;
+           const email = afterData.email;
+           const phoneNumber = afterData.phoneNumber;
+           const userType = afterData.userType;
+           const uid = context.params.uid;
+   
+           const next = {
+               name: name,
+               yearsOfExperience: yearsOfExperience,
+               knownSoftware: knownSoftware,
+               knownSkills: knownSkills,
+               knownLanguages: knownLanguages,
+               resume: resume,
+               profilePhoto: profilePhoto,
+               availability: availability,
+               email:email,
+               phoneNumber: phoneNumber,
+               userType: userType,
+               uid: uid
+           }
+           
+           return aggregatedDataRef.update({[next.uid]: next})
     }
     
     // functions.logger.log("Hello, here is the after data ON WRITE: ", afterData);
@@ -124,57 +201,56 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
 exports.aggregateCreateJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onCreate((snapshot, context) => {
     //const beforeData = change.before.data();
     const afterData = snapshot.data();
-    if(afterData.userType == "Pharmacy"){
 
-        const aggregatedDataRef = dataBase.doc("aggregation/jobs");
-        const startDate = afterData.startDate;
-        const endDate = afterData.endDate;
-        const jobStatus = afterData.jobStatus;
-        const skillsNeeded = afterData.skillsNeeded;
-        const softwareNeeded = afterData.softwareNeeded;
-        const techOnSite = afterData.techOnSite;
-        const assistantOnSite = afterData.assistantOnSite;
-        const hourlyRate = afterData.hourlyRate;
-        const limaStatus = afterData.limaStatus;
-        const comments = afterData.comments;
-        const pharmacyName = afterData.pharmacyName;
-        const pharmacyAddress = afterData.pharmacyAddress;
-        const pharmacyUID = afterData.pharmacyUID;
-        const jobID = context.params.jobID;
-        const email = afterData.email;
-        const phoneNumber = afterData.pharmacyNumber;
-    
-        const next = {
-            startDate: startDate,
-            endDate: endDate,
-            jobStatus: jobStatus,
-            skillsNeeded: skillsNeeded,
-            softwareNeeded: softwareNeeded,
-            techOnSite: techOnSite,
-            assistantOnSite: assistantOnSite,
-            hourlyRate: hourlyRate,
-            limaStatus: limaStatus,
-            comments: comments,
-            pharmacyAddress: pharmacyAddress,
-            pharmacyName:pharmacyName,
-            pharmacyUID:pharmacyUID,
-            email: email,
-            jobID: jobID,
-            phoneNumber: phoneNumber,
-        }
-        // //functions.logger.log("Hello, here is the after data: ");
-    
-        
-        return aggregatedDataRef.set({[next.jobID]: next}, {merge: true})
-    
+    const aggregatedDataRef = dataBase.doc("aggregation/jobs");
+    const startDate = afterData.startDate;
+    const endDate = afterData.endDate;
+    const jobStatus = afterData.jobStatus;
+    const skillsNeeded = afterData.skillsNeeded;
+    const softwareNeeded = afterData.softwareNeeded;
+    const techOnSite = afterData.techOnSite;
+    const assistantOnSite = afterData.assistantOnSite;
+    const hourlyRate = afterData.hourlyRate;
+    const limaStatus = afterData.limaStatus;
+    const comments = afterData.comments;
+    const pharmacyName = afterData.pharmacyName;
+    const pharmacyAddress = afterData.pharmacyAddress;
+    const pharmacyUID = afterData.pharmacyUID;
+    const jobID = context.params.jobID;
+    const position = afterData.position;
+    const email = afterData.email;
+    const phoneNumber = afterData.pharmacyNumber;
+
+    const next = {
+        startDate: startDate,
+        endDate: endDate,
+        jobStatus: jobStatus,
+        skillsNeeded: skillsNeeded,
+        softwareNeeded: softwareNeeded,
+        techOnSite: techOnSite,
+        assistantOnSite: assistantOnSite,
+        hourlyRate: hourlyRate,
+        limaStatus: limaStatus,
+        comments: comments,
+        pharmacyAddress: pharmacyAddress,
+        pharmacyName:pharmacyName,
+        pharmacyUID:pharmacyUID,
+        email: email,
+        jobID: jobID,
+        position: position,
+        phoneNumber: phoneNumber,
     }
+    // //functions.logger.log("Hello, here is the after data: ");
+
+
+    return aggregatedDataRef.set({[next.jobID]: next}, {merge: true})
+
+
 
     
     // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);
     // functions.logger.log("Hello, here is the uid: ", context.params.uid);
-    
-    
-    return null;
+
 });
 
 exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").onUpdate((change, context) => {
@@ -199,6 +275,7 @@ exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jo
     const pharmacyUID = afterData.pharmacyUID;
     const jobID = context.params.jobID;
     const email = afterData.email;
+    const position = afterData.position;
     const phoneNumber = afterData.pharmacyNumber;
 
     const next = {
@@ -217,6 +294,7 @@ exports.aggregateUpdateJobs = functions.firestore.document("Users/{uid}/Main/{jo
         pharmacyUID:pharmacyUID,
         email: email,
         jobID: jobID,
+        position: position,
         phoneNumber: phoneNumber,
     }
     if(afterData.applicants != null){
@@ -243,7 +321,7 @@ exports.deleteJobs = functions.firestore.document("Users/{uid}/Main/{jobID}").on
     const batch = dataBase.batch();
     if(afterData.applicants != null){
         Object.keys(afterData.applicants).forEach(function(key) {
-            const pharmacistDataRef = dataBase.doc(`Users/${key}/Main/${context.params.jobID}`);
+            const pharmacistDataRef = dataBase.doc(`Users/${key}/PharmacistJobs/${context.params.jobID}`);
             batch.delete(pharmacistDataRef);
         });
     }
@@ -285,7 +363,7 @@ exports.updateJobStatus = functions.runWith({memory: '2GB'}).pubsub.schedule(`0 
 
 
 //TEST
-exports.updateJobStatus = functions.firestore.document("aggregation2/jobs").onUpdate((change, context) => {
+exports.testUpdateJobStatus = functions.firestore.document("aggregation2/jobs").onUpdate((change, context) => {
     const beforeData = change.before.data();
     const afterData = change.after.data();
     dataBase.doc(`aggregation/jobs`).get().then(snapshot => {
@@ -310,4 +388,11 @@ exports.updateJobStatus = functions.firestore.document("aggregation2/jobs").onUp
        }
     });
     return null;
+});
+
+exports.testCollection = functions.firestore.document("TestCollection/{randomString}/Testv2/WhatUp").onWrite((change, context)=>{
+    const afterData = change.after.data(); 
+    functions.logger.log("Hello, here is the after data ", afterData);
+    console.log("Hello, this is the company name" + afterData.company);
+    console.log(context.params.randomString);
 });

@@ -37,6 +37,8 @@ class PharmacistSignUpModel {
   File? registrationCertificate;
   File? profilePhoto;
 
+  String userType;
+
   PharmacistSignUpModel({
     this.email = "",
     this.password = "",
@@ -66,6 +68,7 @@ class PharmacistSignUpModel {
     this.backID,
     this.registrationCertificate,
     this.profilePhoto,
+    this.userType = "",
   });
 
   PharmacistSignUpModel copyWithPharmacistSignUp({
@@ -97,6 +100,7 @@ class PharmacistSignUpModel {
     File? backID,
     File? registrationCertificate,
     File? profilePhoto,
+    String? userType,
   }) {
     return PharmacistSignUpModel(
       email: email ?? this.email,
@@ -128,6 +132,7 @@ class PharmacistSignUpModel {
       registrationCertificate:
           registrationCertificate ?? this.registrationCertificate,
       profilePhoto: profilePhoto ?? this.profilePhoto,
+      userType: userType ?? this.userType,
     );
   }
 }

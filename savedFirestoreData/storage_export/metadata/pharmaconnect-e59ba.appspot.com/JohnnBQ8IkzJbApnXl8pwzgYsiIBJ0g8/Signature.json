@@ -1,0 +1,19 @@
+{
+  "name": "JohnnBQ8IkzJbApnXl8pwzgYsiIBJ0g8/Signature",
+  "bucket": "pharmaconnect-e59ba.appspot.com",
+  "contentType": "",
+  "metageneration": 1,
+  "generation": 1633212928161,
+  "storageClass": "STANDARD",
+  "etag": "someETag",
+  "contentDisposition": "inline",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "cbe9cf9d-a9a0-4adc-a100-a5a984b7610c"
+  ],
+  "timeCreated": "2021-10-02T22:15:28.160Z",
+  "updated": "2021-10-02T22:15:28.160Z",
+  "size": 8697,
+  "md5Hash": "gUnThukwnX2goe+NgvrGMg==",
+  "crc32c": "305087717"
+}
