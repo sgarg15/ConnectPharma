@@ -23,8 +23,12 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
 
   List<Skill?>? skillList;
 
-  Map pharmacistDataMap = Map();
+  Map allUserDataMapTemp = Map();
+  Map allUserDataMap = Map();
   Map pharmacistDataMapTemp = Map();
+  Map pharmacyAssistantDataMapTemp = Map();
+  Map pharmacyTechnicianDataMapTemp = Map();
+
 
   void changeSkillToList(String? stringList) {
     int indexOfOpenBracket = stringList!.indexOf("[");
@@ -43,57 +47,89 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
 
   void getAggregatedPharmacists() async {
     DocumentReference pharmacistData = aggregationRef.doc("pharmacists");
-    pharmacistData.get().then((pharmacistData) {
+    DocumentReference pharmacyAssistantData =
+        aggregationRef.doc("pharmacyAssistant");
+    DocumentReference pharmacyTechnicianData =
+        aggregationRef.doc("pharmacyTechnician");
+
+    await pharmacyAssistantData.get().then((pharmacyAssistantData) {
+      setState(() {
+        pharmacyAssistantDataMapTemp = pharmacyAssistantData.data() as Map;
+      });
+      print("Pharmacy Assistant Data: $pharmacyAssistantDataMapTemp");
+    });
+    await pharmacistData.get().then((pharmacistData) {
       setState(() {
         pharmacistDataMapTemp = pharmacistData.data() as Map;
       });
-      pharmacistDataMapTemp.forEach((key, value) {
-        print(value["uid"]);
-        print("UserType: ${value["userType"]}");
-        print(
-            "Position: ${context.read(pharmacyMainProvider.notifier).position}");
-        print(
-            "Permanent Job: ${context.read(pharmacyMainProvider.notifier).position}");
+      print("Pharmacist Data: $pharmacistDataMapTemp");
+    });
+    await pharmacyTechnicianData.get().then((pharmacyTechnicianData) {
+      setState(() {
+        pharmacyTechnicianDataMapTemp = pharmacyTechnicianData.data() as Map;
+      });
+      print("Pharmacist Data: $pharmacyTechnicianDataMapTemp");
+    });
 
-        print("--------------------------------------------");
-        for (var i = 0; i < value["availability"].length; i++) {
-          if (widget.showFullTimePharmacists) {
-            if (value["permanentJob"] != null &&
-                value["permanentJob"] &&
-                value["userType"] ==
-                    context.read(pharmacyMainProvider.notifier).position) {
-              print(value["uid"]);
-              pharmacistDataMap[key] = value;
-              print(pharmacistDataMap.keys);
+    setState(() {
+      allUserDataMapTemp = {
+        ...pharmacistDataMapTemp,
+        ...pharmacyAssistantDataMapTemp,
+        ...pharmacyTechnicianDataMapTemp
+      };
+    });
 
-              print("YESR");
-            }
-          } else if (checkAvailability(value, i)) {
-            if (context.read(pharmacyMainProvider.notifier).skillList != null) {
-              if (value["knownSkills"] != null)
-                changeSkillToList(value["knownSkills"]);
-              print(value["uid"]);
-              pharmacistDataMap[key] = value;
-              print(pharmacistDataMap.keys);
+    print("All Users Data: $allUserDataMap");
 
-              print("YESR");
-            } else {
-              print(value["uid"]);
-              pharmacistDataMap[key] = value;
-              print(pharmacistDataMap.keys);
+    allUserDataMapTemp.forEach((key, value) {
+      print("--------------------------------------------");
+      print(value["uid"]);
+      print("UserType: ${value["userType"]}");
+      print(
+          "Position: ${context.read(pharmacyMainProvider.notifier).position}");
+      print(
+          "Permanent Job: ${context.read(pharmacyMainProvider.notifier).fullTime}");
 
-              print("YESR");
-            }
+      print("--------------------------------------------");
+      for (var i = 0; i < value["availability"].length; i++) {
+        if (widget.showFullTimePharmacists) {
+          if (value["permanentJob"] != null &&
+              value["permanentJob"] &&
+              value["userType"] ==
+                  context.read(pharmacyMainProvider.notifier).position) {
+            print(value["uid"]);
+            allUserDataMap[key] = value;
+            print(allUserDataMap.keys);
+
+            print("YESR");
+          }
+        } else if (checkAvailability(value, i) &&
+            value["userType"] ==
+                context.read(pharmacyMainProvider.notifier).position) {
+          if (context.read(pharmacyMainProvider.notifier).skillList != null) {
+            if (value["knownSkills"] != null)
+              changeSkillToList(value["knownSkills"]);
+            print(value["uid"]);
+            allUserDataMap[key] = value;
+            print(allUserDataMap.keys);
+
+            print("YESR");
           } else {
             print(value["uid"]);
+            allUserDataMap[key] = value;
+            print(allUserDataMap.keys);
 
-            print("NO");
+            print("YESR");
           }
-          //print(value["availability"][i.toString()]["endDate"]);
+        } else {
+          print(value["uid"]);
+
+          print("NO");
         }
-      });
-      print(pharmacistDataMap);
+        //print(value["availability"][i.toString()]["endDate"]);
+      }
     });
+    print(allUserDataMap);
   }
 
   bool checkAvailability(value, int i) {
@@ -143,24 +179,38 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
             height: 10,
           ),
           if (widget.showFullTimePharmacists) ...[
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
-                child: Text(
-                  "Showing pharmacists looking for full time job.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey, fontSize: 15),
+            if (context.read(pharmacyMainProvider.notifier).position ==
+                "Pharmacist")
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                  child: Text(
+                    "Showing pharmacists looking for full time job.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
                 ),
-              ),
-            )
+              )
+            else if (context.read(pharmacyMainProvider.notifier).position ==
+                "Pharmacy Assistant")
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                  child: Text(
+                    "Showing pharmacy assistants looking for full time job.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
+                ),
+              )
           ],
 
-          pharmacistDataMap.isNotEmpty
+          allUserDataMap.isNotEmpty
               ? Expanded(
                   child: ListView.builder(
-                    itemCount: pharmacistDataMap.length,
+                    itemCount: allUserDataMap.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String key = pharmacistDataMap.keys.elementAt(index);
+                      String key = allUserDataMap.keys.elementAt(index);
 
                       return new Column(
                         children: <Widget>[
@@ -173,17 +223,17 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                               child: Center(
                                 child: ListTile(
                                   title: new Text(
-                                    "${pharmacistDataMap[key]["name"]}",
+                                    "${allUserDataMap[key]["name"]}",
                                     style: TextStyle(fontSize: 18),
                                   ),
                                   subtitle: new Text(
                                     "Years of working experience: " +
-                                        "${pharmacistDataMap[key]["yearsOfExperience"]}",
+                                        "${allUserDataMap[key]["yearsOfExperience"]}",
                                     style: TextStyle(fontSize: 15),
                                   ),
                                   leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
-                                      pharmacistDataMap[key]["profilePhoto"],
+                                      allUserDataMap[key]["profilePhoto"],
                                     ),
                                     radius: 30,
                                   ),
@@ -194,7 +244,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                                             builder: (context) =>
                                                 ChosenPharmacistProfile(
                                                   pharmacistDataMap:
-                                                      pharmacistDataMap[key],
+                                                      allUserDataMap[key],
                                                 )));
                                   },
                                 ),
@@ -222,7 +272,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                         width: MediaQuery.of(context).size.width * 0.95,
                         height: 50,
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,  
+                          mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             if (context

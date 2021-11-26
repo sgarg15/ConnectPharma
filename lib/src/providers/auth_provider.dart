@@ -333,6 +333,104 @@ class AuthProvider extends ChangeNotifier {
     return user;
   }
 
+  Future<UserCredential?> uploadPharmacyTechnicianUserInformation(
+      UserCredential? user, BuildContext context) async {
+    if (user == null) {
+      return null;
+    }
+    print("Uploading Pharmacy Assistant User Info");
+    String resumePDFURL = await saveAsset(
+        context.read(pharmacistSignUpProvider.notifier).resumePDFData,
+        user.user!.uid,
+        "Resume",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+    String frontIDURL = await saveAsset(
+        context.read(pharmacistSignUpProvider.notifier).frontIDData,
+        user.user!.uid,
+        "Front ID",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+    String backIDURL = await saveAsset(
+        context.read(pharmacistSignUpProvider.notifier).backIDData,
+        user.user!.uid,
+        "Back ID",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+    String registrationCertificateURL = await saveAsset(
+        context
+            .read(pharmacistSignUpProvider.notifier)
+            .registrationCertificateData,
+        user.user!.uid,
+        "Registration Certificate",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+    String profilePhotoURL = await saveAsset(
+        context.read(pharmacistSignUpProvider.notifier).profilePhotoData,
+        user.user!.uid,
+        "Profile Photo",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+
+    String signaureImageURL = await saveImageAsset(
+        context.read(pharmacistSignUpProvider.notifier).signatureData,
+        user.user!.uid,
+        "Signature",
+        context.read(pharmacistSignUpProvider.notifier).firstName);
+
+    users
+        .doc(user.user?.uid.toString())
+        .collection("SignUp")
+        .doc("Information")
+        .set({
+      "availability": {},
+      "userType": "Pharmacy Technician",
+      "email": context.read(pharmacistSignUpProvider.notifier).email,
+      "firstName": context.read(pharmacistSignUpProvider.notifier).firstName,
+      "lastName": context.read(pharmacistSignUpProvider.notifier).lastName,
+      "address": context.read(pharmacistSignUpProvider.notifier).address,
+      "phoneNumber":
+          context.read(pharmacistSignUpProvider.notifier).phoneNumber,
+      "firstYearLicensed":
+          context.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
+      "registrationNumber":
+          context.read(pharmacistSignUpProvider.notifier).registrationNumber,
+      "registrationProvince":
+          context.read(pharmacistSignUpProvider.notifier).registrationProvince,
+      "gradutationYear":
+          context.read(pharmacistSignUpProvider.notifier).graduationYear,
+      "institutionName":
+          context.read(pharmacistSignUpProvider.notifier).institutionName,
+      "workingExperience":
+          context.read(pharmacistSignUpProvider.notifier).workingExperience,
+      "willingToMove":
+          context.read(pharmacistSignUpProvider.notifier).willingToMove,
+      "entitledToWork":
+          context.read(pharmacistSignUpProvider.notifier).entitledToWork,
+      "activeMember":
+          context.read(pharmacistSignUpProvider.notifier).activeMember,
+      "liabilityInsurance":
+          context.read(pharmacistSignUpProvider.notifier).liabilityInsurance,
+      "licenseRestricted":
+          context.read(pharmacistSignUpProvider.notifier).licenseRestricted,
+      "malPractice":
+          context.read(pharmacistSignUpProvider.notifier).malpractice,
+      "felon": context.read(pharmacistSignUpProvider.notifier).felon,
+      "knownSoftware": context
+          .read(pharmacistSignUpProvider.notifier)
+          .softwareList
+          .toString(),
+      "knownSkills":
+          context.read(pharmacistSignUpProvider.notifier).skillList.toString(),
+      "knownLanguages": context
+          .read(pharmacistSignUpProvider.notifier)
+          .languageList
+          .toString(),
+      "resumeDownloadURL": resumePDFURL,
+      "frontIDDownloadURL": frontIDURL,
+      "backIDDownloadURL": backIDURL,
+      "registrationCertificateDownloadURL": registrationCertificateURL,
+      "profilePhotoDownloadURL": profilePhotoURL,
+      "signatureDownloadURL": signaureImageURL,
+    });
+    return user;
+  }
+
   Future<UserCredential?> uploadPharmacyUserInformation(
       UserCredential? user, BuildContext context) async {
     if (user == null) {
@@ -596,8 +694,9 @@ class AuthProvider extends ChangeNotifier {
           //Send to pharmacy main page
           return [result, "Pharmacy"];
         } else if (userType.trim() == "Pharmacist" ||
-            userType.trim() == "Pharmacy Assistant") {
-          print("Logged in as a Pharmacist");
+            userType.trim() == "Pharmacy Assistant" ||
+            userType.trim() == "Pharmacy Technician") {
+          print("Logged in as a $userType");
           //Send to pharmacist main page
           return [
             result,
@@ -646,6 +745,14 @@ class AuthProvider extends ChangeNotifier {
       print("Logged in as a Pharmacist");
       //Send to pharmacist main page
       return "Pharmacist";
+    } else if (userType.trim() == "Pharmacy Assistant") {
+      print("Logged in as a Pharmacy Assistant");
+      //Send to pharmacy main page
+      return "Pharmacy Assistant";
+    } else if (userType.trim() == "Pharmacy Technician") {
+      print("Logged in as a Pharmacy Technician");
+      //Send to pharmacy main page
+      return "Pharmacy Technician";
     }
   }
 

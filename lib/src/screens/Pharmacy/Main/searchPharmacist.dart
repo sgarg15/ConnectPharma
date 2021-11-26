@@ -253,7 +253,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                               contentPadding: EdgeInsets.zero,
                               title: RichText(
                                 text: TextSpan(
-                                  text: "Full-Time Pharmacists",
+                                  text: "Full-Time Position",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 20.0,
@@ -334,6 +334,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   items: <String>[
                                     'Pharmacist',
                                     'Pharmacy Assistant',
+                                    'Pharmacy Technician'
                                   ].map<DropdownMenuItem<String>>(
                                       (String value) {
                                     return DropdownMenuItem<String>(

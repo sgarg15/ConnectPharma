@@ -956,6 +956,55 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                   ));
                                         });
                                       });
+                                    } else if (context
+                                            .read(pharmacistSignUpProvider
+                                                .notifier)
+                                            .userType ==
+                                        "Pharmacy Technician") {
+                                      print("Registering Pharmacy Technician");
+                                      context
+                                          .read(authProvider.notifier)
+                                          .uploadPharmacyTechnicianUserInformation(
+                                              value, context)
+                                          .then((value) async {
+                                        final snackBar = SnackBar(
+                                          content: Text(
+                                              "Pharmacy Technician Registered"),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                        print("DATA UPLOADED");
+                                        await value?.user
+                                            ?.sendEmailVerification()
+                                            .then((_) {
+                                          context
+                                              .read(pharmacistSignUpProvider
+                                                  .notifier)
+                                              .clearAllValues();
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PharmaConnect()));
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                    title: Text(
+                                                        "Verification Email"),
+                                                    content: Text(
+                                                        "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
+                                                    actions: <Widget>[
+                                                      new TextButton(
+                                                        child: new Text("Ok"),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ));
+                                        });
+                                      });
                                     }
                                   }
                                 });

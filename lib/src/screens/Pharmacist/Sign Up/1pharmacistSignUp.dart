@@ -47,6 +47,10 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
         context
             .read(pharmacistSignUpProvider.notifier)
             .changeUserType("Pharmacy Assistant");
+      } else if (widget.userType == "Pharmacy Technician") {
+        context
+            .read(pharmacistSignUpProvider.notifier)
+            .changeUserType("Pharmacy Technician");
       }
       print(
           "User Type: ${context.read(pharmacistSignUpProvider.notifier).userType}");
@@ -325,11 +329,11 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                                               ],
                                             ));
                                   }
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //             PharmacistLocation()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PharmacistLocation()));
                                 },
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -349,6 +353,17 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                                 RichText(
                                   text: TextSpan(
                                     text: "Sign Up as a pharmacy assistant",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ] else if (widget.userType ==
+                                  "Pharmacy Technician") ...[
+                                RichText(
+                                  text: TextSpan(
+                                    text: "Sign Up as a pharmacy technician",
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,

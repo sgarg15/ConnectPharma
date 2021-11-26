@@ -26,7 +26,9 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   bool isValidSearchPharmacist(bool showAllPharmacist) {
     if (showAllPharmacist && state.position != null) {
       return true;
-    } else if (state.startDate != null && state.endDate != null) {
+    } else if (state.startDate != null &&
+        state.endDate != null &&
+        state.position != null) {
       return true;
     } else {
       return false;

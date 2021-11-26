@@ -378,7 +378,11 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
             context
                     .read(pharmacistMainProvider.notifier)
                     .userDataMap?["userType"] ==
-                "Pharmacy Assistant") {
+                "Pharmacy Assistant" ||
+            context
+                    .read(pharmacistMainProvider.notifier)
+                    .userDataMap?["userType"] ==
+                "Pharmacy Technician") {
           await checkIfJobUpdated(allJobs, context);
 
           updateJobAlerts().whenComplete(() {
@@ -1312,6 +1316,7 @@ class _CreateDrawerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Creating Header");
     return Container(
       height: 140,
       child: DrawerHeader(

@@ -122,7 +122,7 @@ class _PharmaConnectState extends State<PharmaConnect> {
             //Register Text
             Container(
               //top: 360,
-              alignment: Alignment(0, 0.1),
+              alignment: Alignment(0, -0.1),
               child: RichText(
                 text: TextSpan(
                   text: "Register",
@@ -135,7 +135,7 @@ class _PharmaConnectState extends State<PharmaConnect> {
             ),
             //Button For Pharmacist Registration
             Container(
-              alignment: Alignment(0, 0.3),
+              alignment: Alignment(0, 0.1),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -163,7 +163,7 @@ class _PharmaConnectState extends State<PharmaConnect> {
 
             //Pharmacy Assistant
             Container(
-              alignment: Alignment(0, 0.5),
+              alignment: Alignment(0, 0.3),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -180,6 +180,34 @@ class _PharmaConnectState extends State<PharmaConnect> {
                   child: RichText(
                     text: TextSpan(
                       text: "Pharmacy Assistant",
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            //Pharmacy Technician
+            Container(
+              alignment: Alignment(0, 0.5),
+              child: SizedBox(
+                width: 300,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    //Send to Pharmacy Assistant Sign Up Page
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PharmacistSignUpPage(
+                                  userType: "Pharmacy Technician",
+                                )));
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Pharmacy Technician",
                       style: TextStyle(
                         fontSize: 20,
                       ),

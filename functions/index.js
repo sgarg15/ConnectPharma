@@ -90,7 +90,47 @@ exports.aggregateCreatePharmacists = functions.firestore.document("Users/{uid}/S
             }
             
             return aggregatedDataRef.set({[next.uid]: next}, {merge: true})
-    }
+    }else if(afterData.userType == "Pharmacy Technician") {
+        //Send the following Pharmacist Information to the Aggregated Data:
+           //Profile Photo
+           //Name
+           //Years of Experience
+           //Known Software
+           //Known Skills
+           //known Languages
+           //List of Availability
+           //Resume link
+           const aggregatedDataRef = dataBase.doc("aggregation/pharmacyTechnician");
+           const profilePhoto = afterData.profilePhotoDownloadURL;
+           const name = afterData.firstName + " " +  afterData.lastName;
+           const yearsOfExperience = afterData.workingExperience;
+           const knownSoftware = afterData.knownSoftware;
+           const knownSkills = afterData.knownSkills;
+           const knownLanguages = afterData.knownLanguages;
+           const availability = afterData.availability ?? "";
+           const resume = afterData.resumeDownloadURL;
+           const email = afterData.email;
+           const phoneNumber = afterData.phoneNumber;
+           const userType = afterData.userType;
+           const uid = context.params.uid;
+   
+           const next = {
+               name: name,
+               yearsOfExperience: yearsOfExperience,
+               knownSoftware: knownSoftware,
+               knownSkills: knownSkills,
+               knownLanguages: knownLanguages,
+               resume: resume,
+               profilePhoto: profilePhoto,
+               availability: availability,
+               email:email,
+               phoneNumber: phoneNumber,
+               userType: userType,
+               uid: uid
+           }
+           
+           return aggregatedDataRef.set({[next.uid]: next}, {merge: true})
+   }
     
     // functions.logger.log("Hello, here is the after data ON WRITE: ", afterData);
     // functions.logger.log("Hello, here is the after data address: ", afterData.firstName);
@@ -170,6 +210,7 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
            const email = afterData.email;
            const phoneNumber = afterData.phoneNumber;
            const userType = afterData.userType;
+           const permanentJob = afterData.permanentJob;
            const uid = context.params.uid;
    
            const next = {
@@ -184,6 +225,49 @@ exports.aggregateUpdatePharmacists = functions.firestore.document("Users/{uid}/S
                email:email,
                phoneNumber: phoneNumber,
                userType: userType,
+               permanentJob: permanentJob,
+               uid: uid
+           }
+           
+           return aggregatedDataRef.update({[next.uid]: next})
+    }else if(afterData.userType == "Pharmacy Technician") {
+        //Send the following Pharmacist Information to the Aggregated Data:
+           //Profile Photo
+           //Name
+           //Years of Experience
+           //Known Software
+           //Known Skills
+           //known Languages
+           //List of Availability
+           //Resume link
+           const aggregatedDataRef = dataBase.doc("aggregation/pharmacyTechnician");
+           const profilePhoto = afterData.profilePhotoDownloadURL;
+           const name = afterData.firstName + " " +  afterData.lastName;
+           const yearsOfExperience = afterData.workingExperience;
+           const knownSoftware = afterData.knownSoftware;
+           const knownSkills = afterData.knownSkills;
+           const knownLanguages = afterData.knownLanguages;
+           const availability = afterData.availability ?? "";
+           const resume = afterData.resumeDownloadURL;
+           const email = afterData.email;
+           const phoneNumber = afterData.phoneNumber;
+           const userType = afterData.userType;
+           const permanentJob = afterData.permanentJob;
+           const uid = context.params.uid;
+   
+           const next = {
+               name: name,
+               yearsOfExperience: yearsOfExperience,
+               knownSoftware: knownSoftware,
+               knownSkills: knownSkills,
+               knownLanguages: knownLanguages,
+               resume: resume,
+               profilePhoto: profilePhoto,
+               availability: availability,
+               email:email,
+               phoneNumber: phoneNumber,
+               userType: userType,
+               permanentJob: permanentJob,
                uid: uid
            }
            

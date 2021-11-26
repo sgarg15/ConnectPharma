@@ -18,6 +18,7 @@ class _AutoLoginState extends State<AutoLogin> {
     String? userType = await context
         .read(authProviderLogin.notifier)
         .getCurrentUserData(FirebaseAuth.instance.currentUser?.uid);
+    print("User Type in Log In User: $userType");
 
     if (userType == "Pharmacist") {
       print("Pharmacist");
@@ -40,6 +41,22 @@ class _AutoLoginState extends State<AutoLogin> {
       //send to pharmacy main page
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => JobHistoryPharmacy()));
+    } else if (userType == "Pharmacy Assistant") {
+      print("Pharmacy Assistant");
+
+      print("Sending to Pharmacist SignUp page1");
+      context.read(logInProvider.notifier).clearAllValue();
+
+      print("Sending to Pharmacist SignUp page2");
+      context
+          .read(userProviderLogin.notifier)
+          .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
+
+      print("Sending to Pharmacist SignUp page3");
+
+      //send to pharmacy main page
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
     }
   }
 
