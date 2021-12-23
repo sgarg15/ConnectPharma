@@ -163,7 +163,7 @@ class _AccountInformationPharmacyState
                       //Phone Number
                       CustomFormField(
                         fieldTitle: "Phone Number",
-                        hintText: "Enter your Phone Number...",
+                        hintText: "+1 234 567 8910",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String phoneNumber) {
                           ref.read(pharmacySignUpProvider.notifier)
@@ -177,71 +177,12 @@ class _AccountInformationPharmacyState
                         },
                         initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .phoneNumber,
-                        formatter: [MaskedInputFormatter('(###) ###-####')],
+                        formatter: [PhoneInputFormatter()],
                       ),
                       SizedBox(height: 20),
 
                       //Position Drop Box
-                      RichText(
-                        textAlign: TextAlign.left,
-                        text: TextSpan(
-                            text: "Position",
-                            style: GoogleFonts.questrial(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            )),
-                      ),
-                      SizedBox(height: 10),
-                      Container(
-                        width: 335,
-                        constraints:
-                            BoxConstraints(maxHeight: 60, minHeight: 50),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                offset: Offset(0.3, 5),
-                                blurRadius: 3.0,
-                                spreadRadius: 0.5,
-                                color: Colors.grey.shade400)
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey.shade200,
-                        ),
-                        child: DropdownButtonFormField<String>(
-                            hint: Text(
-                              "Select your Position...",
-                              style: GoogleFonts.inter(
-                                  color: Color(0xFFBDBDBD), fontSize: 16),
-                            ),
-                            value: ref.read(pharmacySignUpProvider.notifier)
-                                .position,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(0xFFF0F0F0),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
-                            ),
-                            items: <String>[
-                              'Pharmacy',
-                              'Pharmacist',
-                              'Technician',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                  child: Text(value), value: value);
-                            }).toList(),
-                            onChanged: (String? value) {
-                              ref.read(pharmacySignUpProvider.notifier)
-                                  .changePosition(value);
-                            },
-                            style: GoogleFonts.questrial(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            )),
-                      ),
+                      positionSelectDropDown(),
 
                       SizedBox(height: 20),
 
@@ -265,57 +206,117 @@ class _AccountInformationPharmacyState
               ),
 
               //Next Button
-              Center(
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    ref.watch(pharmacySignUpProvider);
-                    return SizedBox(
-                      width: 324,
-                      height: 51,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                                    (states) {
-                              if (states.contains(MaterialState.disabled)) {
-                                return Colors.grey; // Disabled color
-                              }
-                              return Color(0xFF5DB075); // Regular color
-                            }),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100),
-                            ))),
-                        onPressed: (ref.read(pharmacySignUpProvider.notifier)
-                                .isValidAccountInfo())
-                            ? null
-                            : () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PharmacyInformation()));
-                              },
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Next",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              nextButton(),
               SizedBox(height: 15),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Center nextButton() {
+    return Center(
+      child: Consumer(
+        builder: (context, ref, child) {
+          ref.watch(pharmacySignUpProvider);
+          return SizedBox(
+            width: 324,
+            height: 51,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.grey; // Disabled color
+                    }
+                    return Color(0xFF5DB075); // Regular color
+                  }),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ))),
+              onPressed: (ref.read(pharmacySignUpProvider.notifier).isValidAccountInfo())
+                  ? null
+                  : () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => PharmacyInformation()));
+                    },
+              child: RichText(
+                text: TextSpan(
+                  text: "Next",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+            );
+  }
+
+  Column positionSelectDropDown() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          textAlign: TextAlign.left,
+          text: TextSpan(
+              text: "Position",
+              style: GoogleFonts.questrial(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              )),
+        ),
+        SizedBox(height: 10),
+        Container(
+          width: 335,
+          constraints: BoxConstraints(maxHeight: 60, minHeight: 50),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0.3, 5),
+                  blurRadius: 3.0,
+                  spreadRadius: 0.5,
+                  color: Colors.grey.shade400)
+            ],
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.grey.shade200,
+          ),
+          child: DropdownButtonFormField<String>(
+              hint: Text(
+                "Select your Position...",
+                style: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16),
+              ),
+              value: ref.read(pharmacySignUpProvider.notifier).position,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFFF0F0F0),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+              ),
+              items: <String>[
+                'Pharmacy',
+                'Pharmacist',
+                'Technician',
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(child: Text(value), value: value);
+              }).toList(),
+              onChanged: (String? value) {
+                ref.read(pharmacySignUpProvider.notifier).changePosition(value);
+              },
+              style: GoogleFonts.questrial(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              )),
+        ),
+      ],
     );
   }
 }

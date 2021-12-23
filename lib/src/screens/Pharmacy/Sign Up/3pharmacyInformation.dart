@@ -103,107 +103,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Street Address
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                      text: "Street Address",
-                      style: GoogleFonts.questrial(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      )),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  width: 335,
-                  //height: 50,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          offset: Offset(0.3, 5),
-                          blurRadius: 3.0,
-                          spreadRadius: 0.5,
-                          color: Colors.grey.shade400)
-                    ],
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey.shade200,
-                  ),
-                  child: TextFormField(
-                    readOnly: true,
-                    controller: streetAddress,
-                    onTap: () async {
-                      final sessionToken = Uuid().v4();
-                      final Suggestion? result = await showSearch<Suggestion?>(
-                        context: context,
-                        delegate: AddressSearch(sessionToken),
-                      );
-
-                      if (result != null) {
-                        final placeDetails =
-                            await PlaceApiProvider(sessionToken)
-                                .getPlaceDetailFromId(result.placeId);
-                        print(
-                            "${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
-                        if (placeDetails.streetNumber != null) {
-                          print(
-                              "${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
-                          print("Not null");
-                          ref.read(pharmacySignUpProvider.notifier)
-                              .changeStreetAddress(
-                                  "${placeDetails.streetNumber} ${placeDetails.street.toString()}");
-                        } else {
-                          print(
-                              "${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
-                          print("null");
-                          ref.read(pharmacySignUpProvider.notifier)
-                              .changeStreetAddress(
-                                  "${placeDetails.street.toString()}");
-                        }
-
-                        ref.read(pharmacySignUpProvider.notifier)
-                            .changeCity(placeDetails.city);
-                        ref.read(pharmacySignUpProvider.notifier)
-                            .changePostalCode(placeDetails.zipCode);
-                        ref.read(pharmacySignUpProvider.notifier)
-                            .changeCountry(placeDetails.country);
-                        streetAddress.text =
-                            "${placeDetails.streetNumber.toString()} ${placeDetails.street.toString()}";
-                        postalCode.text = placeDetails.zipCode.toString();
-                        country.text = placeDetails.country.toString();
-                        city.text = placeDetails.city.toString();
-                      }
-                    },
-                    decoration: InputDecoration(
-                      errorStyle: TextStyle(fontWeight: FontWeight.w500),
-                      contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 30),
-                      filled: true,
-                      fillColor: Color(0xFFF0F0F0),
-                      // focusedErrorBorder: OutlineInputBorder(
-                      //     borderRadius: BorderRadius.circular(8),
-                      //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                      // errorBorder: OutlineInputBorder(
-                      //     borderRadius: BorderRadius.circular(8),
-                      //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFFE8E8E8)),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      hintText: "Enter the street address...",
-                      hintStyle: GoogleFonts.inter(
-                          color: Color(0xFFBDBDBD), fontSize: 16),
-                    ),
-                    style: GoogleFonts.inter(color: Colors.black, fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
+            getPharmacyAddress(streetAddress, context, postalCode, country, city),
             SizedBox(height: 20),
 
             //Store Number
@@ -286,7 +186,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
             //Phone Number
             CustomFormField(
               fieldTitle: "Pharmacy Phone Number",
-              hintText: "Enter the pharmacy phone Number...",
+              hintText: "+1 234 567 8910",
               keyboardStyle: TextInputType.number,
               onChanged: (String phoneNumber) {
                 ref.read(pharmacySignUpProvider.notifier)
@@ -300,14 +200,14 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               },
               initialValue: ref.read(pharmacySignUpProvider.notifier)
                   .phoneNumberPharmacy,
-              formatter: [MaskedInputFormatter('(###) ###-####')],
+              formatter: [PhoneInputFormatter()],
             ),
             SizedBox(height: 20),
 
             //Fax Number
             CustomFormField(
               fieldTitle: "Pharmacy Fax Number",
-              hintText: "Enter the pharmacy fax Number...",
+              hintText: "+1 234 567 8910",
               keyboardStyle: TextInputType.number,
               onChanged: (String faxNumber) {
                 ref.read(pharmacySignUpProvider.notifier)
@@ -321,7 +221,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               },
               initialValue:
                   ref.read(pharmacySignUpProvider.notifier).faxNumber,
-              formatter: [MaskedInputFormatter('(###) ###-####')],
+              formatter: [PhoneInputFormatter()],
             ),
             SizedBox(height: 20),
 
@@ -348,129 +248,221 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
             SizedBox(height: 20),
 
             //Pharmacy Software
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                      text: "Pharmacy Software",
-                      style: GoogleFonts.questrial(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      )),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  width: 335,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          offset: Offset(0.3, 3),
-                          blurRadius: 3.0,
-                          spreadRadius: 0.5,
-                          color: Colors.grey.shade400)
-                    ],
-                    color: Color(0xFFF0F0F0),
-                    border: Border.all(
-                      color: Color(0xFFE8E8E8),
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      MultiSelectBottomSheetField<Software?>(
-                        selectedColor: Color(0xFF5DB075),
-                        selectedItemsTextStyle: TextStyle(color: Colors.white),
-                        initialChildSize: 0.4,
-                        decoration: BoxDecoration(),
-                        listType: MultiSelectListType.CHIP,
-                        initialValue: ref.read(pharmacySignUpProvider.notifier)
-                            .softwareList,
-                        searchable: true,
-                        items: _items,
-                        buttonText: Text("Select Pharmacy Software...",
-                            style: GoogleFonts.inter(
-                                color: Color(0xFFBDBDBD), fontSize: 16)),
-                        onConfirm: (values) {
-                          ref.read(pharmacySignUpProvider.notifier)
-                              .changeSoftwareList(values);
-                        },
-                        chipDisplay: MultiSelectChipDisplay(
-                          items: ref.read(pharmacySignUpProvider.notifier)
-                              .softwareList
-                              ?.map((e) => MultiSelectItem(e, e.toString()))
-                              .toList(),
-                          chipColor: Color(0xFF5DB075),
-                          onTap: (value) {
-                            ref.read(pharmacySignUpProvider.notifier)
-                                .softwareList
-                                ?.remove(value);
-                            return ref.read(pharmacySignUpProvider.notifier)
-                                .softwareList;
-                          },
-                          textStyle: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            selectPharmacySoftware(),
 
             SizedBox(height: 20),
             //Next Button
-            Consumer(builder: (context, ref, child) {
-              ref.watch(pharmacySignUpProvider);
-              return SizedBox(
-                width: 324,
-                height: 51,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Color(0xFF5DB075);
-                          else if (states.contains(MaterialState.disabled))
-                            return Colors.grey;
-                          return Color(
-                              0xFF5DB075); // Use the component's default.
-                        },
-                      ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ))),
-                  onPressed: (ref.read(pharmacySignUpProvider.notifier)
-                          .isValidPharmacyInformation())
-                      ? null
-                      : () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      PharmacyManagerInformation()));
-                        },
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Next",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }),
+            nextButton(),
             SizedBox(height: 15),
           ],
         ),
       ),
+    );
+  }
+
+  Consumer nextButton() {
+    return Consumer(builder: (context, ref, child) {
+      ref.watch(pharmacySignUpProvider);
+      return SizedBox(
+        width: 324,
+        height: 51,
+        child: ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed))
+                    return Color(0xFF5DB075);
+                  else if (states.contains(MaterialState.disabled)) return Colors.grey;
+                  return Color(0xFF5DB075); // Use the component's default.
+                },
+              ),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ))),
+          onPressed: (ref.read(pharmacySignUpProvider.notifier).isValidPharmacyInformation())
+              ? null
+              : () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PharmacyManagerInformation()));
+                },
+          child: RichText(
+            text: TextSpan(
+              text: "Next",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Column selectPharmacySoftware() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        RichText(
+          textAlign: TextAlign.left,
+          text: TextSpan(
+              text: "Pharmacy Software",
+              style: GoogleFonts.questrial(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              )),
+        ),
+        SizedBox(height: 10),
+        Container(
+          width: 335,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0.3, 3),
+                  blurRadius: 3.0,
+                  spreadRadius: 0.5,
+                  color: Colors.grey.shade400)
+            ],
+            color: Color(0xFFF0F0F0),
+            border: Border.all(
+              color: Color(0xFFE8E8E8),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: <Widget>[
+              MultiSelectBottomSheetField<Software?>(
+                selectedColor: Color(0xFF5DB075),
+                selectedItemsTextStyle: TextStyle(color: Colors.white),
+                initialChildSize: 0.4,
+                decoration: BoxDecoration(),
+                listType: MultiSelectListType.CHIP,
+                initialValue: ref.read(pharmacySignUpProvider.notifier).softwareList,
+                searchable: true,
+                items: _items,
+                buttonText: Text("Select Pharmacy Software...",
+                    style: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16)),
+                onConfirm: (values) {
+                  ref.read(pharmacySignUpProvider.notifier).changeSoftwareList(values);
+                },
+                chipDisplay: MultiSelectChipDisplay(
+                  items: ref
+                      .read(pharmacySignUpProvider.notifier)
+                      .softwareList
+                      ?.map((e) => MultiSelectItem(e, e.toString()))
+                      .toList(),
+                  chipColor: Color(0xFF5DB075),
+                  onTap: (value) {
+                    ref.read(pharmacySignUpProvider.notifier).softwareList?.remove(value);
+                    return ref.read(pharmacySignUpProvider.notifier).softwareList;
+                  },
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+          );
+  }
+
+  Column getPharmacyAddress(TextEditingController streetAddress, BuildContext context,
+      TextEditingController postalCode, TextEditingController country, TextEditingController city) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        RichText(
+          textAlign: TextAlign.left,
+          text: TextSpan(
+              text: "Street Address",
+              style: GoogleFonts.questrial(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              )),
+        ),
+        SizedBox(height: 10),
+        Container(
+          width: 335,
+          //height: 50,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0.3, 5),
+                  blurRadius: 3.0,
+                  spreadRadius: 0.5,
+                  color: Colors.grey.shade400)
+            ],
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.grey.shade200,
+          ),
+          child: TextFormField(
+            readOnly: true,
+            controller: streetAddress,
+            onTap: () async {
+              final sessionToken = Uuid().v4();
+              final Suggestion? result = await showSearch<Suggestion?>(
+                context: context,
+                delegate: AddressSearch(sessionToken),
+              );
+
+              if (result != null) {
+                final placeDetails =
+                    await PlaceApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
+                print("${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
+                if (placeDetails.streetNumber != null) {
+                  print("${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
+                  print("Not null");
+                  ref.read(pharmacySignUpProvider.notifier).changeStreetAddress(
+                      "${placeDetails.streetNumber} ${placeDetails.street.toString()}");
+                } else {
+                  print("${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
+                  print("null");
+                  ref
+                      .read(pharmacySignUpProvider.notifier)
+                      .changeStreetAddress("${placeDetails.street.toString()}");
+                }
+
+                ref.read(pharmacySignUpProvider.notifier).changeCity(placeDetails.city);
+                ref.read(pharmacySignUpProvider.notifier).changePostalCode(placeDetails.zipCode);
+                ref.read(pharmacySignUpProvider.notifier).changeCountry(placeDetails.country);
+                streetAddress.text =
+                    "${placeDetails.streetNumber.toString()} ${placeDetails.street.toString()}";
+                postalCode.text = placeDetails.zipCode.toString();
+                country.text = placeDetails.country.toString();
+                city.text = placeDetails.city.toString();
+              }
+            },
+            decoration: InputDecoration(
+              errorStyle: TextStyle(fontWeight: FontWeight.w500),
+              contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 30),
+              filled: true,
+              fillColor: Color(0xFFF0F0F0),
+              // focusedErrorBorder: OutlineInputBorder(
+              //     borderRadius: BorderRadius.circular(8),
+              //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+              // errorBorder: OutlineInputBorder(
+              //     borderRadius: BorderRadius.circular(8),
+              //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              hintText: "Enter the street address...",
+              hintStyle: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16),
+            ),
+            style: GoogleFonts.inter(color: Colors.black, fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }

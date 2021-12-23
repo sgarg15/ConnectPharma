@@ -125,7 +125,7 @@ class _PharmacyManagerInformationState
                       //Phone Number
                       CustomFormField(
                         fieldTitle: "Phone Number",
-                        hintText: "Enter manager's Phone Number...",
+                        hintText: "+1 234 567 8910",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String managerPhoneNumber) {
                           ref.read(pharmacySignUpProvider.notifier)
@@ -139,7 +139,7 @@ class _PharmacyManagerInformationState
                         },
                         initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .managerPhoneNumber,
-                        formatter: [MaskedInputFormatter('(###) ###-####')],
+                        formatter: [PhoneInputFormatter()],
                       ),
                       SizedBox(height: 20),
 
@@ -168,125 +168,112 @@ class _PharmacyManagerInformationState
               ),
 
               //Submit
-              Center(
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    ref.watch(pharmacySignUpProvider);
-                    return SizedBox(
-                      width: 324,
-                      height: 51,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                                    (states) {
-                              if (states.contains(MaterialState.disabled)) {
-                                return Colors.grey; // Disabled color
-                              }
-                              return Color(0xFF5DB075); // Regular color
-                            }),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100),
-                            ))),
-                        onPressed: (!ref.read(pharmacySignUpProvider.notifier)
-                                    .isValidManagerInformation() &&
-                                !disableButton)
-                            ? () {
-                                print("Pressed");
-                                setState(() {
-                                  disableButton = true;
-                                });
-                                ref.read(authProvider.notifier)
-                                    .registerWithEmailAndPassword(
-                                        ref.read(
-                                                pharmacySignUpProvider.notifier)
-                                            .email
-                                            .toString(),
-                                        ref.read(
-                                                pharmacySignUpProvider.notifier)
-                                            .password
-                                            .toString())
-                                    .then((value) async {
-                                  print("UPLOADING DATA");
-                                  if (value == null) {
-                                    print("ERROR");
-                                    final snackBar = SnackBar(
-                                      content: Text(
-                                          "There was an error trying to register you. Please check your email and password and try again."),
-                                      behavior: SnackBarBehavior.floating,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                    setState(() {
-                                      disableButton = false;
-                                    });
-                                    return null;
-                                  } else {
-                                    ref.read(authProvider.notifier)
-                                        .uploadPharmacyUserInformation(
-                                            ref, value, context)
-                                        .then((value) async {
-                                      final snackBar = SnackBar(
-                                        content: Text("User Registered"),
-                                      );
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snackBar);
-                                      print("DATA UPLOADED");
-                                      await value?.user
-                                          ?.sendEmailVerification()
-                                          .then((_) {
-                                        ref.read(
-                                                pharmacySignUpProvider.notifier)
-                                            .resetValues();
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PharmaConnect()));
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                                  title: Text(
-                                                      "Verification Email"),
-                                                  content: Text(
-                                                      "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
-                                                  actions: <Widget>[
-                                                    new TextButton(
-                                                      child: new Text("Ok"),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                  ],
-                                                ));
-                                      });
-                                    });
-                                  }
-                                });
-                              }
-                            : null,
-                        child: RichText(
-                          text: TextSpan(
-                            text: disableButton ? "Loading..." : "Submit",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              submitButton(),
               SizedBox(height: 15),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Center submitButton() {
+    return Center(
+      child: Consumer(
+        builder: (context, ref, child) {
+          ref.watch(pharmacySignUpProvider);
+          return SizedBox(
+            width: 324,
+            height: 51,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.grey; // Disabled color
+                    }
+                    return Color(0xFF5DB075); // Regular color
+                  }),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ))),
+              onPressed: (!ref.read(pharmacySignUpProvider.notifier).isValidManagerInformation() &&
+                      !disableButton)
+                  ? () {
+                      print("Pressed");
+                      setState(() {
+                        disableButton = true;
+                      });
+                      
+                      ref
+                          .read(authProvider.notifier)
+                          .registerWithEmailAndPassword(
+                              ref.read(pharmacySignUpProvider.notifier).email.toString(),
+                              ref.read(pharmacySignUpProvider.notifier).password.toString())
+                          .then((value) async {
+                      
+                        print("UPLOADING DATA");
+                        
+                        if (value == null) {
+                          print("ERROR");
+                          final snackBar = SnackBar(
+                            content: Text(
+                                "There was an error trying to register you. Please check your email and password and try again."),
+                            behavior: SnackBarBehavior.floating,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          setState(() {
+                            disableButton = false;
+                          });
+                          return null;
+                        } else {
+                          ref
+                              .read(authProvider.notifier)
+                              .uploadPharmacyUserInformation(ref, value, context)
+                              .then((value) async {
+                            final snackBar = SnackBar(
+                              content: Text("User Registered"),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            print("DATA UPLOADED");
+                            await value?.user?.sendEmailVerification().then((_) {
+                              ref.read(pharmacySignUpProvider.notifier).resetValues();
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => PharmaConnect()));
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                        title: Text("Verification Email"),
+                                        content: Text(
+                                            "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
+                                        actions: <Widget>[
+                                          new TextButton(
+                                            child: new Text("Ok"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ));
+                            });
+                          });
+                        }
+                      });
+                    }
+                  : null,
+              child: RichText(
+                text: TextSpan(
+                  text: disableButton ? "Loading..." : "Submit",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+            );
   }
 }
