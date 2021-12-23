@@ -63,13 +63,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
   void clearFilesOrDirectory() async {
     print(
-        "All Files: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}")}");
+        "All Files Local: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}")}");
 
     final directory = Directory("${await localStorage.localPath}/jobsList");
     //directory.deleteSync(recursive: true);
 
     print(
-        "All Files: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}/jobsList")}");
+        "All Files Jobs List: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}/jobsList")}");
   }
 
   Future<void> updateJobAlerts(WidgetRef ref) async {
@@ -86,13 +86,10 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
     print("Jobs List Directory: $jobsListDirectoryPath");
 
-    print(
-        "All Files: ${localStorage.allDirectoryFiles(path: "$jobsListDirectoryPath")}");
-    print(
-        "All User Files: ${localStorage.allDirectoryFiles(path: "$userDirectoryPath")}");
+    print("All Files: ${localStorage.allDirectoryFiles(path: "$jobsListDirectoryPath")}");
+    print("All User Files: ${localStorage.allDirectoryFiles(path: "$userDirectoryPath")}");
 
-    print(
-        "All User Jobs Storage: ${localStorage.readFile(filePath: "$userJobsFilePath")}");
+    print("All User Jobs Storage: ${localStorage.readFile(filePath: "$userJobsFilePath")}");
 
     print(
         "All User Notifications: ${localStorage.readFile(filePath: "$userNotificationsFilePath")}");
@@ -102,19 +99,17 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
       localStorage.writeFile(filePath: userNotificationsFilePath, data: "");
     }
 
-    print(
-        "Notifications File Path: ${localStorage.readFile(filePath: userNotificationsFilePath)}");
+    print("Notifications File Path: ${localStorage.readFile(filePath: userNotificationsFilePath)}");
 
     if (localStorage.readFile(filePath: userNotificationsFilePath).isNotEmpty) {
-      alertJobs = jsonDecode(
-          localStorage.readFile(filePath: userNotificationsFilePath));
+      alertJobs = jsonDecode(localStorage.readFile(filePath: userNotificationsFilePath));
     }
 
     // print("Updated Job Alerts");
     print("Updated Job Alerts: $alertJobs");
   }
 
-  Future<void> checkIfJobUpdated(WidgetRef ref, Map allJobs, BuildContext context) async {
+  Future<void> checkIfJobUpdated(WidgetRef ref, Map allJobs) async {
     //print(allJobs);
     String jobsListDirectoryPath = "${await localStorage.localPath}/jobsList";
 
@@ -143,25 +138,21 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
     //Check if both directory and file exists
     if (!Directory(jobsListDirectoryPath).existsSync()) {
-      print("Creating all directories");
-      jobsListDirectory =
-          await localStorage.createLocalDirectory(directoryName: 'jobsList');
+      print("\n---------Creating all directories---------\n");
+      jobsListDirectory = await localStorage.createLocalDirectory(directoryName: 'jobsList');
 
-      userDirectory =
-          await localStorage.createDirectory(path: userDirectoryPath);
+      userDirectory = await localStorage.createDirectory(path: userDirectoryPath);
 
       File(userJobsFilePath).createSync();
 
       File(userNotificationsFilePath).createSync();
 
-      await localStorage.writeFile(
-          filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+      await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
     } else if (!File(userJobsFilePath).existsSync()) {
       print("Writing File");
       File(userJobsFilePath).createSync(recursive: true);
 
-      await localStorage.writeFile(
-          filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+      await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
     }
 
     String jobsListFile = localStorage.readFile(filePath: userJobsFilePath);
@@ -169,8 +160,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
     print("File: $jobsListFile");
 
     if (jobsListFile.isEmpty) {
-      await localStorage.writeFile(
-          filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+      await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
 
       jobsListFile = localStorage.readFile(filePath: userJobsFilePath);
       print("Updated Job List File: $jobsListFile");
@@ -283,16 +273,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
     //   });
     // }
 
-    await localStorage.writeFile(
-        filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+    await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
 
     if (alertJobs.isNotEmpty) {
       if (!File(userNotificationsFilePath).existsSync()) {
         File(userNotificationsFilePath).createSync(recursive: true);
       }
 
-      String previousNotifications =
-          File(userNotificationsFilePath).readAsStringSync();
+      String previousNotifications = File(userNotificationsFilePath).readAsStringSync();
 
       print("Previous Notifications: $previousNotifications");
       if (previousNotifications.isNotEmpty) {
@@ -314,7 +302,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
     print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
     clearFilesOrDirectory();
     userDataFirestoreSort(ref);
-
+    checkIfJobUpdated(ref, allJobs);
     jobsFirestoreSort(ref);
   }
 
@@ -329,13 +317,9 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
       setState(() {
         userDataMap = docData.data();
       });
-      ref.read(pharmacistMainProvider.notifier)
-          .changeUserDataMap(userDataMap);
-      print(
-          "UserData Map: ${ref.read(pharmacistMainProvider.notifier).userDataMap}");
-      if (ref.read(pharmacistMainProvider.notifier)
-          .userDataMap?["availability"]
-          .isEmpty) {
+      ref.read(pharmacistMainProvider.notifier).changeUserDataMap(userDataMap);
+      print("UserData Map: ${ref.read(pharmacistMainProvider.notifier).userDataMap}");
+      if (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"].isEmpty) {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -365,19 +349,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             allJobs[dataID] = doc.data();
           }
         });
-        print(ref.read(pharmacistMainProvider.notifier)
-                .userDataMap?["userType"] ==
-            "Pharmacist");
-        if (ref.read(pharmacistMainProvider.notifier)
-                    .userDataMap?["userType"] ==
-                "Pharmacist" ||
-            ref.read(pharmacistMainProvider.notifier)
-                    .userDataMap?["userType"] ==
+        print(ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] == "Pharmacist");
+        if (ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] == "Pharmacist" ||
+            ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] ==
                 "Pharmacy Assistant" ||
-            ref.read(pharmacistMainProvider.notifier)
-                    .userDataMap?["userType"] ==
+            ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] ==
                 "Pharmacy Technician") {
-          await checkIfJobUpdated(ref, allJobs, context);
+          await checkIfJobUpdated(ref, allJobs);
 
           updateJobAlerts(ref).whenComplete(() {
             setState(() {});
@@ -385,6 +363,9 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         }
       } else {
         print("Writing Empty File");
+        clearFilesOrDirectory();
+        print(
+            "All Files USER: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}")}");
         userDirectory = await localStorage.createDirectory(
             path:
                 "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}");
@@ -394,7 +375,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
         File("${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/notifications")
             .createSync();
-
+print(
+            "All Files USER: ${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList");
         localStorage.writeFile(
             filePath:
                 "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList",
@@ -431,10 +413,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
           title: RichText(
             text: TextSpan(
               text: "Job History",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24.0,
-                  color: Colors.black),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24.0, color: Colors.black),
             ),
           ),
           leading: IconButton(
@@ -508,18 +487,15 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                   color: Color(0xFF5DB075),
                   size: 50,
                 ),
-                onTap: (ref.read(pharmacistMainProvider.notifier)
-                                .userDataMap?["availability"] !=
+                onTap: (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"] !=
                             null &&
-                        ref.read(pharmacistMainProvider.notifier)
+                        ref
+                            .read(pharmacistMainProvider.notifier)
                             .userDataMap?["availability"]
                             .isNotEmpty)
                     ? () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    FindShiftForPharmacist()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => FindShiftForPharmacist()));
                       }
                     : () {
                         showDialog(
@@ -564,8 +540,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     children: <int, Widget>{
                       0: Container(
                         alignment: Alignment.center,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 12, horizontal: 34),
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 34),
                         child: segmentedControlGroupValue == 0
                             ? Text(
                                 "Active Jobs",
@@ -577,14 +552,12 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                               )
                             : Text(
                                 "Active Jobs",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w400),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                               ),
                       ),
                       1: Container(
                         alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 40.45),
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40.45),
                         child: segmentedControlGroupValue == 1
                             ? Text(
                                 "Past Jobs",
@@ -596,8 +569,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                               )
                             : Text(
                                 "Past Jobs",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w400),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                               ),
                       ),
                     },
@@ -612,22 +584,17 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 StreamBuilder(
                     stream: jobsStreamPharmacist,
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError)
-                        return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData)
-                        return Center(child: CircularProgressIndicator());
+                      if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                      if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
                       if (snapshot.data != null) {
                         appliedJobDataMap.clear();
                         currentJobDataMap.clear();
                         snapshot.data?.docs.forEach((doc) {
-                          if ((doc.data() as Map)["applicationStatus"] ==
-                              "applied") {
+                          if ((doc.data() as Map)["applicationStatus"] == "applied") {
                             dataID = doc.id;
                             appliedJobDataMap[dataID] = doc.data();
-                          } else if ((doc.data() as Map)["applicationStatus"] ==
-                                  "current" ||
-                              (doc.data() as Map)["applicationStatus"] ==
-                                  "accept") {
+                          } else if ((doc.data() as Map)["applicationStatus"] == "current" ||
+                              (doc.data() as Map)["applicationStatus"] == "accept") {
                             dataID = doc.id;
                             currentJobDataMap[dataID] = doc.data();
                           }
@@ -653,18 +620,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 StreamBuilder(
                     stream: jobsStreamPharmacist,
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError)
-                        return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData)
-                        return Center(child: CircularProgressIndicator());
+                      if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                      if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
                       if (snapshot.data != null) {
                         snapshot.data?.docs.forEach((doc) {
-                          if ((doc.data() as Map)["applicationStatus"] ==
-                              "past") {
+                          if ((doc.data() as Map)["applicationStatus"] == "past") {
                             dataID = doc.id;
                             pastJobDataMap[dataID] = doc.data();
-                          } else if ((doc.data() as Map)["applicationStatus"] ==
-                              "rejected") {
+                          } else if ((doc.data() as Map)["applicationStatus"] == "rejected") {
                             dataID = doc.id;
                             rejectedJobDataMap[dataID] = doc.data();
                           }
@@ -745,14 +708,10 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     child: ListTile(
                       title: new Text(
                         DateFormat("MMM d, y").format(DateTime.parse(
-                                currentJobDataMap[key]["startDate"]
-                                    .toDate()
-                                    .toString())) +
+                                currentJobDataMap[key]["startDate"].toDate().toString())) +
                             " to " +
                             DateFormat("MMM d, y").format(DateTime.parse(
-                                currentJobDataMap[key]["endDate"]
-                                    .toDate()
-                                    .toString())),
+                                currentJobDataMap[key]["endDate"].toDate().toString())),
                         style: TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(
@@ -760,9 +719,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["endDate"].toDate().toString()))} \n"
                         "${currentJobDataMap[key]["hourlyRate"] + "/hr"}",
                         style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
                         // Navigator.push(
@@ -839,14 +796,10 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     child: ListTile(
                       title: new Text(
                         DateFormat("MMM d, y").format(DateTime.parse(
-                                appliedJobDataMap[key]["startDate"]
-                                    .toDate()
-                                    .toString())) +
+                                appliedJobDataMap[key]["startDate"].toDate().toString())) +
                             " to " +
                             DateFormat("MMM d, y").format(DateTime.parse(
-                                appliedJobDataMap[key]["endDate"]
-                                    .toDate()
-                                    .toString())),
+                                appliedJobDataMap[key]["endDate"].toDate().toString())),
                         style: TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(
@@ -854,9 +807,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["endDate"].toDate().toString()))} \n"
                         "${appliedJobDataMap[key]["hourlyRate"] + "/hr"}",
                         style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
                         // Navigator.push(
@@ -933,14 +884,10 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     child: ListTile(
                       title: new Text(
                         DateFormat("MMM d, y").format(DateTime.parse(
-                                pastJobDataMap[key]["startDate"]
-                                    .toDate()
-                                    .toString())) +
+                                pastJobDataMap[key]["startDate"].toDate().toString())) +
                             " to " +
-                            DateFormat("MMM d, y").format(DateTime.parse(
-                                pastJobDataMap[key]["endDate"]
-                                    .toDate()
-                                    .toString())),
+                            DateFormat("MMM d, y").format(
+                                DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString())),
                         style: TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(
@@ -948,9 +895,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString()))} \n"
                         "${pastJobDataMap[key]["hourlyRate"] + "/hr"}",
                         style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
                         // Navigator.push(
@@ -1027,14 +972,10 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     child: ListTile(
                       title: new Text(
                         DateFormat("MMM d, y").format(DateTime.parse(
-                                rejectedJobDataMap[key]["startDate"]
-                                    .toDate()
-                                    .toString())) +
+                                rejectedJobDataMap[key]["startDate"].toDate().toString())) +
                             " to " +
                             DateFormat("MMM d, y").format(DateTime.parse(
-                                rejectedJobDataMap[key]["endDate"]
-                                    .toDate()
-                                    .toString())),
+                                rejectedJobDataMap[key]["endDate"].toDate().toString())),
                         style: TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(
@@ -1042,9 +983,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["endDate"].toDate().toString()))} \n"
                         "${rejectedJobDataMap[key]["hourlyRate"] + "/hr"}",
                         style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
                         // Navigator.push(
@@ -1104,9 +1043,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Home",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -1114,9 +1051,7 @@ class SideMenuDrawer extends ConsumerWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => JobHistoryPharmacist()));
+                    context, MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
               },
             ),
 
@@ -1135,9 +1070,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Profile",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -1145,9 +1078,7 @@ class SideMenuDrawer extends ConsumerWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PharmacistProfile()));
+                    context, MaterialPageRoute(builder: (context) => PharmacistProfile()));
               },
             ),
 
@@ -1166,9 +1097,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Availability",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -1176,9 +1105,7 @@ class SideMenuDrawer extends ConsumerWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PharmacistAvailability()));
+                    context, MaterialPageRoute(builder: (context) => PharmacistAvailability()));
               },
             ),
 
@@ -1197,9 +1124,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Terms of Service",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -1229,9 +1154,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Privacy Policy",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -1269,9 +1192,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Sign Out",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -1282,15 +1203,12 @@ class SideMenuDrawer extends ConsumerWidget {
                 userDataStreamSub?.cancel();
                 ref.read(authProviderMain.notifier).signOut().then((value) {
                   ref.read(pharmacistMainProvider.notifier).resetValues();
-                  ref.read(pharmacistSignUpProvider.notifier)
-                      .clearAllValues();
+                  ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
                 });
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => PharmaConnect()),
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => PharmaConnect()),
                     result: Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PharmaConnect())));
+                        context, MaterialPageRoute(builder: (context) => PharmaConnect())));
               },
             ),
           ],
@@ -1322,7 +1240,8 @@ class _CreateDrawerHeader extends ConsumerWidget {
                 radius: 30.0,
                 backgroundColor: const Color(0xFF778899),
                 //Change to retrieve photo from firestore
-                backgroundImage: NetworkImage(ref.read(pharmacistMainProvider.notifier)
+                backgroundImage: NetworkImage(ref
+                    .read(pharmacistMainProvider.notifier)
                     .userDataMap?["profilePhotoDownloadURL"])),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1333,15 +1252,11 @@ class _CreateDrawerHeader extends ConsumerWidget {
                   child: RichText(
                     text: TextSpan(
                       //change to retrieve name from Firestore
-                      text: ref.read(pharmacistMainProvider.notifier)
-                              .userDataMap?["firstName"] +
+                      text: ref.read(pharmacistMainProvider.notifier).userDataMap?["firstName"] +
                           " " +
-                          ref.read(pharmacistMainProvider.notifier)
-                              .userDataMap?["lastName"],
+                          ref.read(pharmacistMainProvider.notifier).userDataMap?["lastName"],
                       style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.0,
-                          color: Colors.black),
+                          fontWeight: FontWeight.w700, fontSize: 18.0, color: Colors.black),
                     ),
                   ),
                 ),
@@ -1350,12 +1265,9 @@ class _CreateDrawerHeader extends ConsumerWidget {
                   child: RichText(
                     text: TextSpan(
                       //change to retrieve email from firestore
-                      text: ref.read(pharmacistMainProvider.notifier)
-                          .userDataMap?["email"],
+                      text: ref.read(pharmacistMainProvider.notifier).userDataMap?["email"],
                       style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13.0,
-                          color: Colors.black),
+                          fontWeight: FontWeight.w400, fontSize: 13.0, color: Colors.black),
                     ),
                   ),
                 ),

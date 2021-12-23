@@ -230,58 +230,56 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
             ),
 
             //Next Button
-            Center(
-              child: Consumer(
-                builder: (context, ref, child) {
-                  ref.watch(pharmacistSignUpProvider);
-                  return SizedBox(
-                    width: 324,
-                    height: 51,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                                  (states) {
-                            if (states.contains(MaterialState.disabled)) {
-                              return Colors.grey; // Disabled color
-                            }
-                            return Color(0xFF5DB075); // Regular color
-                          }),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100),
-                          ))),
-                      onPressed: (ref.read(pharmacistSignUpProvider.notifier)
-                              .isValidPharmacistInformation())
-                          ? null
-                          : () {
-                              print("Pressed");
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PharmacistLegalInformation()));
-                            },
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Next",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+            nextButton(),
             SizedBox(height: 15),
           ],
         ),
       ),
     );
+  }
+
+  Center nextButton() {
+    return Center(
+      child: Consumer(
+        builder: (context, ref, child) {
+          ref.watch(pharmacistSignUpProvider);
+          return SizedBox(
+            width: 324,
+            height: 51,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.grey; // Disabled color
+                    }
+                    return Color(0xFF5DB075); // Regular color
+                  }),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ))),
+              onPressed: (ref
+                      .read(pharmacistSignUpProvider.notifier)
+                      .isValidPharmacistInformation())
+                  ? null
+                  : () {
+                      print("Pressed");
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => PharmacistLegalInformation()));
+                    },
+              child: RichText(
+                text: TextSpan(
+                  text: "Next",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+          );
   }
 }

@@ -13,13 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
-enum Status {
-  Uninitialized,
-  Authenticated,
-  Authenticating,
-  Unauthenticated,
-  Registering
-}
+enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated, Registering }
 
 /*
 The UI will depends on the Status to decide which screen/action to be done.
@@ -37,8 +31,7 @@ class AuthProvider extends ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
   CollectionReference users = FirebaseFirestore.instance.collection("Users");
-  CollectionReference testCollection =
-      FirebaseFirestore.instance.collection('TestCollection');
+  CollectionReference testCollection = FirebaseFirestore.instance.collection('TestCollection');
 
   //Default status
   Status _status = Status.Uninitialized;
@@ -75,14 +68,11 @@ class AuthProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<String> saveAsset(
-      File? asset, String uidName, String fileName, String userName) async {
+  Future<String> saveAsset(File? asset, String uidName, String fileName, String userName) async {
     try {
       if (asset != null) {
-        Reference reference = FirebaseStorage.instance
-            .ref()
-            .child(userName + uidName)
-            .child(fileName);
+        Reference reference =
+            FirebaseStorage.instance.ref().child(userName + uidName).child(fileName);
         UploadTask uploadTask = reference.putFile(asset);
 
         String url = await (await uploadTask).ref.getDownloadURL();
@@ -96,14 +86,12 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<String> saveImageAsset(Uint8List? asset, String uidName,
-      String fileName, String userName) async {
+  Future<String> saveImageAsset(
+      Uint8List? asset, String uidName, String fileName, String userName) async {
     try {
       if (asset != null) {
-        Reference reference = FirebaseStorage.instance
-            .ref()
-            .child(userName + uidName)
-            .child(fileName);
+        Reference reference =
+            FirebaseStorage.instance.ref().child(userName + uidName).child(fileName);
         UploadTask uploadTask = reference.putData(asset);
 
         String url = await (await uploadTask).ref.getDownloadURL();
@@ -118,8 +106,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   //Method for new user registration using email and password
-  Future<UserCredential?> registerWithEmailAndPassword(
-      String email, String password) async {
+  Future<UserCredential?> registerWithEmailAndPassword(String email, String password) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
@@ -143,25 +130,14 @@ class AuthProvider extends ChangeNotifier {
     if (user == null) {
       return null;
     }
-    String resumePDFURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).resumePDFData,
-        user.user!.uid,
-        "Resume",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
-    String frontIDURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).frontIDData,
-        user.user!.uid,
-        "Front ID",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
-    String backIDURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).backIDData,
-        user.user!.uid,
-        "Back ID",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String resumePDFURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).resumePDFData,
+        user.user!.uid, "Resume", ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String frontIDURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).frontIDData,
+        user.user!.uid, "Front ID", ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String backIDURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).backIDData,
+        user.user!.uid, "Back ID", ref.read(pharmacistSignUpProvider.notifier).firstName);
     String registrationCertificateURL = await saveAsset(
-        ref
-            .read(pharmacistSignUpProvider.notifier)
-            .registrationCertificateData,
+        ref.read(pharmacistSignUpProvider.notifier).registrationCertificateData,
         user.user!.uid,
         "Registration Certificate",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
@@ -177,55 +153,30 @@ class AuthProvider extends ChangeNotifier {
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
 
-    users
-        .doc(user.user?.uid.toString())
-        .collection("SignUp")
-        .doc("Information")
-        .set({
+    users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
       "userType": "Pharmacist",
       "email": ref.read(pharmacistSignUpProvider.notifier).email,
       "firstName": ref.read(pharmacistSignUpProvider.notifier).firstName,
       "lastName": ref.read(pharmacistSignUpProvider.notifier).lastName,
       "address": ref.read(pharmacistSignUpProvider.notifier).address,
-      "phoneNumber":
-          ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
-      "firstYearLicensed":
-          ref.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
-      "registrationNumber":
-          ref.read(pharmacistSignUpProvider.notifier).registrationNumber,
-      "registrationProvince":
-          ref.read(pharmacistSignUpProvider.notifier).registrationProvince,
-      "gradutationYear":
-          ref.read(pharmacistSignUpProvider.notifier).graduationYear,
-      "institutionName":
-          ref.read(pharmacistSignUpProvider.notifier).institutionName,
-      "workingExperience":
-          ref.read(pharmacistSignUpProvider.notifier).workingExperience,
-      "willingToMove":
-          ref.read(pharmacistSignUpProvider.notifier).willingToMove,
-      "entitledToWork":
-          ref.read(pharmacistSignUpProvider.notifier).entitledToWork,
-      "activeMember":
-          ref.read(pharmacistSignUpProvider.notifier).activeMember,
-      "liabilityInsurance":
-          ref.read(pharmacistSignUpProvider.notifier).liabilityInsurance,
-      "licenseRestricted":
-          ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
-      "malPractice":
-          ref.read(pharmacistSignUpProvider.notifier).malpractice,
+      "phoneNumber": ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
+      "firstYearLicensed": ref.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
+      "registrationNumber": ref.read(pharmacistSignUpProvider.notifier).registrationNumber,
+      "registrationProvince": ref.read(pharmacistSignUpProvider.notifier).registrationProvince,
+      "gradutationYear": ref.read(pharmacistSignUpProvider.notifier).graduationYear,
+      "institutionName": ref.read(pharmacistSignUpProvider.notifier).institutionName,
+      "workingExperience": ref.read(pharmacistSignUpProvider.notifier).workingExperience,
+      "willingToMove": ref.read(pharmacistSignUpProvider.notifier).willingToMove,
+      "entitledToWork": ref.read(pharmacistSignUpProvider.notifier).entitledToWork,
+      "activeMember": ref.read(pharmacistSignUpProvider.notifier).activeMember,
+      "liabilityInsurance": ref.read(pharmacistSignUpProvider.notifier).liabilityInsurance,
+      "licenseRestricted": ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
+      "malPractice": ref.read(pharmacistSignUpProvider.notifier).malpractice,
       "felon": ref.read(pharmacistSignUpProvider.notifier).felon,
-      "knownSoftware":
-          ref.read(pharmacistSignUpProvider.notifier)
-          .softwareList
-          .toString(),
-      "knownSkills":
-          ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
-      "knownLanguages":
-          ref
-          .read(pharmacistSignUpProvider.notifier)
-          .languageList
-          .toString(),
+      "knownSoftware": ref.read(pharmacistSignUpProvider.notifier).softwareList.toString(),
+      "knownSkills": ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
+      "knownLanguages": ref.read(pharmacistSignUpProvider.notifier).languageList.toString(),
       "resumeDownloadURL": resumePDFURL,
       "frontIDDownloadURL": frontIDURL,
       "backIDDownloadURL": backIDURL,
@@ -242,25 +193,14 @@ class AuthProvider extends ChangeNotifier {
       return null;
     }
     print("Uploading Pharmacy Assistant User Info");
-    String resumePDFURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).resumePDFData,
-        user.user!.uid,
-        "Resume",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
-    String frontIDURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).frontIDData,
-        user.user!.uid,
-        "Front ID",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
-    String backIDURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).backIDData,
-        user.user!.uid,
-        "Back ID",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String resumePDFURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).resumePDFData,
+        user.user!.uid, "Resume", ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String frontIDURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).frontIDData,
+        user.user!.uid, "Front ID", ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String backIDURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).backIDData,
+        user.user!.uid, "Back ID", ref.read(pharmacistSignUpProvider.notifier).firstName);
     String registrationCertificateURL = await saveAsset(
-        ref
-            .read(pharmacistSignUpProvider.notifier)
-            .registrationCertificateData,
+        ref.read(pharmacistSignUpProvider.notifier).registrationCertificateData,
         user.user!.uid,
         "Registration Certificate",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
@@ -276,56 +216,30 @@ class AuthProvider extends ChangeNotifier {
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
 
-    users
-        .doc(user.user?.uid.toString())
-        .collection("SignUp")
-        .doc("Information")
-        .set({
+    users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
       "userType": "Pharmacy Assistant",
       "email": ref.read(pharmacistSignUpProvider.notifier).email,
       "firstName": ref.read(pharmacistSignUpProvider.notifier).firstName,
       "lastName": ref.read(pharmacistSignUpProvider.notifier).lastName,
       "address": ref.read(pharmacistSignUpProvider.notifier).address,
-      "phoneNumber":
-          ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
-      "firstYearLicensed":
-          ref.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
-      "registrationNumber":
-          ref.read(pharmacistSignUpProvider.notifier).registrationNumber,
-      "registrationProvince":
-          ref.read(pharmacistSignUpProvider.notifier).registrationProvince,
-      "gradutationYear":
-          ref.read(pharmacistSignUpProvider.notifier).graduationYear,
-      "institutionName":
-          ref.read(pharmacistSignUpProvider.notifier).institutionName,
-      "workingExperience":
-          ref.read(pharmacistSignUpProvider.notifier).workingExperience,
-      "willingToMove":
-          ref.read(pharmacistSignUpProvider.notifier).willingToMove,
-      "entitledToWork":
-          ref.read(pharmacistSignUpProvider.notifier).entitledToWork,
-      "activeMember":
-          ref.read(pharmacistSignUpProvider.notifier).activeMember,
-      "liabilityInsurance":
-          ref.read(pharmacistSignUpProvider.notifier).liabilityInsurance,
-      "licenseRestricted":
-          ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
-      "malPractice":
-          ref.read(pharmacistSignUpProvider.notifier).malpractice,
+      "phoneNumber": ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
+      "firstYearLicensed": ref.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
+      "registrationNumber": ref.read(pharmacistSignUpProvider.notifier).registrationNumber,
+      "registrationProvince": ref.read(pharmacistSignUpProvider.notifier).registrationProvince,
+      "gradutationYear": ref.read(pharmacistSignUpProvider.notifier).graduationYear,
+      "institutionName": ref.read(pharmacistSignUpProvider.notifier).institutionName,
+      "workingExperience": ref.read(pharmacistSignUpProvider.notifier).workingExperience,
+      "willingToMove": ref.read(pharmacistSignUpProvider.notifier).willingToMove,
+      "entitledToWork": ref.read(pharmacistSignUpProvider.notifier).entitledToWork,
+      "activeMember": ref.read(pharmacistSignUpProvider.notifier).activeMember,
+      "liabilityInsurance": ref.read(pharmacistSignUpProvider.notifier).liabilityInsurance,
+      "licenseRestricted": ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
+      "malPractice": ref.read(pharmacistSignUpProvider.notifier).malpractice,
       "felon": ref.read(pharmacistSignUpProvider.notifier).felon,
-      "knownSoftware":
-          ref
-          .read(pharmacistSignUpProvider.notifier)
-          .softwareList
-          .toString(),
-      "knownSkills":
-          ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
-      "knownLanguages":
-          ref
-          .read(pharmacistSignUpProvider.notifier)
-          .languageList
-          .toString(),
+      "knownSoftware": ref.read(pharmacistSignUpProvider.notifier).softwareList.toString(),
+      "knownSkills": ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
+      "knownLanguages": ref.read(pharmacistSignUpProvider.notifier).languageList.toString(),
       "resumeDownloadURL": resumePDFURL,
       "frontIDDownloadURL": frontIDURL,
       "backIDDownloadURL": backIDURL,
@@ -342,25 +256,14 @@ class AuthProvider extends ChangeNotifier {
       return null;
     }
     print("Uploading Pharmacy Assistant User Info");
-    String resumePDFURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).resumePDFData,
-        user.user!.uid,
-        "Resume",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
-    String frontIDURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).frontIDData,
-        user.user!.uid,
-        "Front ID",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
-    String backIDURL = await saveAsset(
-        ref.read(pharmacistSignUpProvider.notifier).backIDData,
-        user.user!.uid,
-        "Back ID",
-        ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String resumePDFURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).resumePDFData,
+        user.user!.uid, "Resume", ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String frontIDURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).frontIDData,
+        user.user!.uid, "Front ID", ref.read(pharmacistSignUpProvider.notifier).firstName);
+    String backIDURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).backIDData,
+        user.user!.uid, "Back ID", ref.read(pharmacistSignUpProvider.notifier).firstName);
     String registrationCertificateURL = await saveAsset(
-        ref
-            .read(pharmacistSignUpProvider.notifier)
-            .registrationCertificateData,
+        ref.read(pharmacistSignUpProvider.notifier).registrationCertificateData,
         user.user!.uid,
         "Registration Certificate",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
@@ -376,56 +279,30 @@ class AuthProvider extends ChangeNotifier {
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
 
-    users
-        .doc(user.user?.uid.toString())
-        .collection("SignUp")
-        .doc("Information")
-        .set({
+    users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
       "userType": "Pharmacy Technician",
       "email": ref.read(pharmacistSignUpProvider.notifier).email,
       "firstName": ref.read(pharmacistSignUpProvider.notifier).firstName,
       "lastName": ref.read(pharmacistSignUpProvider.notifier).lastName,
       "address": ref.read(pharmacistSignUpProvider.notifier).address,
-      "phoneNumber":
-          ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
-      "firstYearLicensed":
-          ref.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
-      "registrationNumber":
-          ref.read(pharmacistSignUpProvider.notifier).registrationNumber,
-      "registrationProvince":
-          ref.read(pharmacistSignUpProvider.notifier).registrationProvince,
-      "gradutationYear":
-          ref.read(pharmacistSignUpProvider.notifier).graduationYear,
-      "institutionName":
-          ref.read(pharmacistSignUpProvider.notifier).institutionName,
-      "workingExperience":
-          ref.read(pharmacistSignUpProvider.notifier).workingExperience,
-      "willingToMove":
-          ref.read(pharmacistSignUpProvider.notifier).willingToMove,
-      "entitledToWork":
-          ref.read(pharmacistSignUpProvider.notifier).entitledToWork,
-      "activeMember":
-          ref.read(pharmacistSignUpProvider.notifier).activeMember,
-      "liabilityInsurance":
-          ref.read(pharmacistSignUpProvider.notifier).liabilityInsurance,
-      "licenseRestricted":
-          ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
-      "malPractice":
-          ref.read(pharmacistSignUpProvider.notifier).malpractice,
+      "phoneNumber": ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
+      "firstYearLicensed": ref.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
+      "registrationNumber": ref.read(pharmacistSignUpProvider.notifier).registrationNumber,
+      "registrationProvince": ref.read(pharmacistSignUpProvider.notifier).registrationProvince,
+      "gradutationYear": ref.read(pharmacistSignUpProvider.notifier).graduationYear,
+      "institutionName": ref.read(pharmacistSignUpProvider.notifier).institutionName,
+      "workingExperience": ref.read(pharmacistSignUpProvider.notifier).workingExperience,
+      "willingToMove": ref.read(pharmacistSignUpProvider.notifier).willingToMove,
+      "entitledToWork": ref.read(pharmacistSignUpProvider.notifier).entitledToWork,
+      "activeMember": ref.read(pharmacistSignUpProvider.notifier).activeMember,
+      "liabilityInsurance": ref.read(pharmacistSignUpProvider.notifier).liabilityInsurance,
+      "licenseRestricted": ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
+      "malPractice": ref.read(pharmacistSignUpProvider.notifier).malpractice,
       "felon": ref.read(pharmacistSignUpProvider.notifier).felon,
-      "knownSoftware":
-          ref
-          .read(pharmacistSignUpProvider.notifier)
-          .softwareList
-          .toString(),
-      "knownSkills":
-          ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
-      "knownLanguages":
-          ref
-          .read(pharmacistSignUpProvider.notifier)
-          .languageList
-          .toString(),
+      "knownSoftware": ref.read(pharmacistSignUpProvider.notifier).softwareList.toString(),
+      "knownSkills": ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
+      "knownLanguages": ref.read(pharmacistSignUpProvider.notifier).languageList.toString(),
       "resumeDownloadURL": resumePDFURL,
       "frontIDDownloadURL": frontIDURL,
       "backIDDownloadURL": backIDURL,
@@ -447,45 +324,30 @@ class AuthProvider extends ChangeNotifier {
         "Signature",
         ref.read(pharmacySignUpProvider.notifier).firstName);
 
-    users
-        .doc(user.user?.uid.toString())
-        .collection("SignUp")
-        .doc("Information")
-        .set({
+    users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "userType": "Pharmacy",
       "email": ref.read(pharmacySignUpProvider.notifier).email,
       "firstName": ref.read(pharmacySignUpProvider.notifier).firstName,
       "lastName": ref.read(pharmacySignUpProvider.notifier).lastName,
       "phoneNumber": ref.read(pharmacySignUpProvider.notifier).phoneNumber,
       "position": ref.read(pharmacySignUpProvider.notifier).position,
-      "pharmacyName":
-          ref.read(pharmacySignUpProvider.notifier).pharmacyName,
+      "pharmacyName": ref.read(pharmacySignUpProvider.notifier).pharmacyName,
       "address": {
-        "streetAddress":
-            ref.read(pharmacySignUpProvider.notifier).streetAddress,
-        "storeNumber":
-            ref.read(pharmacySignUpProvider.notifier).storeNumber,
+        "streetAddress": ref.read(pharmacySignUpProvider.notifier).streetAddress,
+        "storeNumber": ref.read(pharmacySignUpProvider.notifier).storeNumber,
         "city": ref.read(pharmacySignUpProvider.notifier).city,
         "postalCode": ref.read(pharmacySignUpProvider.notifier).postalCode,
         "country": ref.read(pharmacySignUpProvider.notifier).country,
       },
-      "pharmacyPhoneNumber":
-          ref.read(pharmacySignUpProvider.notifier).phoneNumberPharmacy,
-      "pharmacyFaxNumber":
-          ref.read(pharmacySignUpProvider.notifier).faxNumber,
-      "accreditationProvice":
-          ref.read(pharmacySignUpProvider.notifier).accreditationProvince,
-      "managerFirstName":
-          ref.read(pharmacySignUpProvider.notifier).managerFirstName,
-      "managerLastName":
-          ref.read(pharmacySignUpProvider.notifier).managerLastName,
-      "managerPhoneNumber":
-          ref.read(pharmacySignUpProvider.notifier).managerPhoneNumber,
-      "managerLicenseNumber":
-          ref.read(pharmacySignUpProvider.notifier).licenseNumber,
+      "pharmacyPhoneNumber": ref.read(pharmacySignUpProvider.notifier).phoneNumberPharmacy,
+      "pharmacyFaxNumber": ref.read(pharmacySignUpProvider.notifier).faxNumber,
+      "accreditationProvice": ref.read(pharmacySignUpProvider.notifier).accreditationProvince,
+      "managerFirstName": ref.read(pharmacySignUpProvider.notifier).managerFirstName,
+      "managerLastName": ref.read(pharmacySignUpProvider.notifier).managerLastName,
+      "managerPhoneNumber": ref.read(pharmacySignUpProvider.notifier).managerPhoneNumber,
+      "managerLicenseNumber": ref.read(pharmacySignUpProvider.notifier).licenseNumber,
       "signatureDownloadURL": signaureImageURL,
-      "softwareList":
-          ref.read(pharmacySignUpProvider.notifier).softwareList.toString(),
+      "softwareList": ref.read(pharmacySignUpProvider.notifier).softwareList.toString(),
     });
     return user;
   }
@@ -493,11 +355,7 @@ class AuthProvider extends ChangeNotifier {
   Future<String?>? updatePharmacyUserInformation(
       String userUID, Map<String, dynamic> uploadData) async {
     try {
-      users
-          .doc(userUID)
-          .collection("SignUp")
-          .doc("Information")
-          .update(uploadData);
+      users.doc(userUID).collection("SignUp").doc("Information").update(uploadData);
     } catch (error) {
       return "Profile Upload Failed";
     }
@@ -506,44 +364,31 @@ class AuthProvider extends ChangeNotifier {
   Future<String?>? updatePharmacistUserInformation(
       String userUID, Map<String, dynamic> uploadData) async {
     try {
-      users
-          .doc(userUID)
-          .collection("SignUp")
-          .doc("Information")
-          .update(uploadData);
+      users.doc(userUID).collection("SignUp").doc("Information").update(uploadData);
     } catch (error) {
       return "Profile Upload Failed";
     }
   }
 
-  Future<UserCredential?> uploadTestInformaiton(
-      UserCredential? user, BuildContext context) async {
+  Future<UserCredential?> uploadTestInformaiton(UserCredential? user, BuildContext context) async {
     if (user == null) {
       return null;
     }
-    const _chars =
-        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
     Random _rnd = Random();
 
-    String getRandomString(int length) =>
-        String.fromCharCodes(Iterable.generate(
-            length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+    String getRandomString(int length) => String.fromCharCodes(
+        Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
     String resumePDFURL = "http://www.africau.edu/images/default/sample.pdf";
     String frontIDURL = "http://www.africau.edu/images/default/sample.pdf";
     String backIDURL = "http://www.africau.edu/images/default/sample.pdf";
-    String registrationCertificateURL =
-        "http://www.africau.edu/images/default/sample.pdf";
+    String registrationCertificateURL = "http://www.africau.edu/images/default/sample.pdf";
     String profilePhotoURL = "http://www.africau.edu/images/default/sample.pdf";
 
-    String signaureImageURL =
-        "http://www.africau.edu/images/default/sample.pdf";
+    String signaureImageURL = "http://www.africau.edu/images/default/sample.pdf";
 
-    users
-        .doc(user.user?.uid.toString())
-        .collection("SignUp")
-        .doc("Information")
-        .set({
+    users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "userType": "Pharmacist",
       "email": getRandomString(5),
       "firstName": getRandomString(4),
@@ -576,15 +421,12 @@ class AuthProvider extends ChangeNotifier {
     return user;
   }
 
-  Future<UserCredential?>? uploadTestJobToPharmacy(
-      String? userUID, BuildContext context) async {
-    const _chars =
-        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Future<UserCredential?>? uploadTestJobToPharmacy(String? userUID, BuildContext context) async {
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
     Random _rnd = Random();
 
-    String getRandomString(int length) =>
-        String.fromCharCodes(Iterable.generate(
-            length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+    String getRandomString(int length) => String.fromCharCodes(
+        Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
     users.doc(userUID).collection("Main").add({
       "userType": "Pharmacy",
@@ -632,16 +474,12 @@ class AuthProvider extends ChangeNotifier {
       "endDate": ref.read(pharmacyMainProvider).endDate,
       "fullTime": ref.read(pharmacyMainProvider).fullTime,
       "pharmacyUID": userUID,
-      "pharmacyNumber":
-          ref.read(pharmacyMainProvider).userData?["pharmacyPhoneNumber"],
-      "pharmacyName":
-          ref.read(pharmacyMainProvider).userData?["pharmacyName"],
-      "pharmacyAddress":
-          ref.read(pharmacyMainProvider).userData?["address"],
+      "pharmacyNumber": ref.read(pharmacyMainProvider).userData?["pharmacyPhoneNumber"],
+      "pharmacyName": ref.read(pharmacyMainProvider).userData?["pharmacyName"],
+      "pharmacyAddress": ref.read(pharmacyMainProvider).userData?["address"],
       "jobStatus": "active",
       "skillsNeeded": ref.read(pharmacyMainProvider).skillList.toString(),
-      "softwareNeeded":
-          ref.read(pharmacyMainProvider).softwareList.toString(),
+      "softwareNeeded": ref.read(pharmacyMainProvider).softwareList.toString(),
       "techOnSite": ref.read(pharmacyMainProvider).techOnSite,
       "assistantOnSite": ref.read(pharmacyMainProvider).assistantOnSite,
       "hourlyRate": ref.read(pharmacyMainProvider).hourlyRate,
@@ -663,28 +501,25 @@ class AuthProvider extends ChangeNotifier {
   Future<String?>? updateJobInformation(
       String userUID, Map<String, dynamic> uploadData, String? jobUID) async {
     try {
-      await users
-          .doc(userUID)
-          .collection("Main")
-          .doc(jobUID)
-          .update(uploadData);
+      await users.doc(userUID).collection("Main").doc(jobUID).update(uploadData);
     } catch (error) {
       return "Profile Upload Failed";
     }
   }
 
   //Method to handle user sign in using email and password
-  Future<List?> signInWithEmailAndPassword(
-      String email, String password) async {
+  Future<List?> signInWithEmailAndPassword(String email, String password) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      final UserCredential? result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      final UserCredential? result =
+          await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       if (result!.user!.emailVerified) {
         _status = Status.Authenticated;
         notifyListeners();
+        print(
+            "--------------------------------------HELOOOOO------------------------------------------");
         print("User verified: " + result.user!.emailVerified.toString());
         DocumentSnapshot user = await users
             .doc(result.user?.uid.toString())
@@ -693,6 +528,7 @@ class AuthProvider extends ChangeNotifier {
             .get();
 
         String userType = user.get("userType").toString();
+        print("INSIDE SIGN IN WITH PASSWORD");
         print(userType);
         if (userType.trim() == "Pharmacy") {
           print("Logged in as a Pharmacy");
@@ -737,8 +573,7 @@ class AuthProvider extends ChangeNotifier {
     _status = Status.Authenticated;
     notifyListeners();
     print("UserUID: $userUID");
-    DocumentSnapshot user =
-        await users.doc(userUID).collection("SignUp").doc("Information").get();
+    DocumentSnapshot user = await users.doc(userUID).collection("SignUp").doc("Information").get();
     print("UserData: $user");
     String userType = user.get("userType").toString();
     print(userType);

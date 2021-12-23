@@ -1,0 +1,19 @@
+{
+  "name": "SatvikFqeJPj7kMfZGd79uTx50N4QfC8NE/Signature",
+  "bucket": "pharmaconnect-e59ba.appspot.com",
+  "contentType": "",
+  "metageneration": 1,
+  "generation": 1640241032827,
+  "storageClass": "STANDARD",
+  "etag": "someETag",
+  "contentDisposition": "inline",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "2683fafe-ddad-465d-9c4b-71ea7142d331"
+  ],
+  "timeCreated": "2021-12-23T06:30:32.826Z",
+  "updated": "2021-12-23T06:30:32.826Z",
+  "size": 7414,
+  "md5Hash": "PIWRlGn9Ypq6zAwwaKMY/g==",
+  "crc32c": "57521407"
+}

@@ -7,7 +7,9 @@ import 'package:path_provider/path_provider.dart';
 
 class LocalStorage {
   Future<String> get localPath async {
-    final directory = await getApplicationDocumentsDirectory();
+    //print("INSIDE LOCAL PATH");
+    Directory directory = await getApplicationDocumentsDirectory();
+    //print("directory $directory");
     return directory.path;
   }
 
@@ -16,15 +18,13 @@ class LocalStorage {
     return File('$path/$fileName');
   }
 
-  Future<File> writeLocalFile(
-      {required String fileName, required String data}) async {
+  Future<File> writeLocalFile({required String fileName, required String data}) async {
     final path = await localPath;
     final _file = File('$path/$fileName');
     return _file.writeAsString(data);
   }
 
-  Future<File> writeFile(
-      {required String filePath, required String data}) async {
+  Future<File> writeFile({required String filePath, required String data}) async {
     final _file = File(filePath);
     return _file.writeAsString(data);
   }
@@ -45,7 +45,7 @@ class LocalStorage {
     return _directory.create();
   }
 
-    Future<Directory> createDirectory({required String path}) async {
+  Future<Directory> createDirectory({required String path}) async {
     final _directory = Directory('$path');
     return _directory.create();
   }

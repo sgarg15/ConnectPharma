@@ -83,6 +83,7 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                 ),
               ),
             ),
+            //Information Text
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
@@ -113,400 +114,19 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     //Software
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        RichText(
-                          textAlign: TextAlign.left,
-                          text: TextSpan(
-                              text: "Software",
-                              style: GoogleFonts.questrial(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          width: 335,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  offset: Offset(0.3, 3),
-                                  blurRadius: 3.0,
-                                  spreadRadius: 0.5,
-                                  color: Colors.grey.shade400)
-                            ],
-                            color: Color(0xFFF0F0F0),
-                            border: Border.all(
-                              color: Color(0xFFE8E8E8),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              MultiSelectBottomSheetField<Software?>(
-                                selectedColor: Color(0xFF5DB075),
-                                selectedItemsTextStyle:
-                                    TextStyle(color: Colors.white),
-                                initialChildSize: 0.4,
-                                decoration: BoxDecoration(),
-                                listType: MultiSelectListType.CHIP,
-                                initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                                    .softwareList,
-                                searchable: true,
-                                items: _softwareItems,
-                                buttonText: Text("Select known software...",
-                                    style: GoogleFonts.inter(
-                                        color: Color(0xFFBDBDBD),
-                                        fontSize: 16)),
-                                onConfirm: (values) {
-                                  ref.read(pharmacistSignUpProvider.notifier)
-                                      .changeSoftwareList(values);
-                                },
-                                chipDisplay: MultiSelectChipDisplay(
-                                  items: ref.read(pharmacistSignUpProvider.notifier)
-                                      .softwareList
-                                      ?.map((e) =>
-                                          MultiSelectItem(e, e.toString()))
-                                      .toList(),
-                                  chipColor: Color(0xFF5DB075),
-                                  onTap: (value) {
-                                    ref.read(pharmacistSignUpProvider.notifier)
-                                        .softwareList
-                                        ?.remove(value);
-                                    return ref.read(pharmacistSignUpProvider.notifier)
-                                        .softwareList;
-                                  },
-                                  textStyle: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    selectSoftware(),
                     SizedBox(height: 20),
 
                     //Skill
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        RichText(
-                          textAlign: TextAlign.left,
-                          text: TextSpan(
-                              text: "Skill",
-                              style: GoogleFonts.questrial(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          width: 335,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  offset: Offset(0.3, 3),
-                                  blurRadius: 3.0,
-                                  spreadRadius: 0.5,
-                                  color: Colors.grey.shade400)
-                            ],
-                            color: Color(0xFFF0F0F0),
-                            border: Border.all(
-                              color: Color(0xFFE8E8E8),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              MultiSelectBottomSheetField<Skill?>(
-                                selectedColor: Color(0xFF5DB075),
-                                selectedItemsTextStyle:
-                                    TextStyle(color: Colors.white),
-                                initialChildSize: 0.4,
-                                decoration: BoxDecoration(),
-                                listType: MultiSelectListType.CHIP,
-                                initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                                    .skillList,
-                                searchable: true,
-                                items: _skillItems,
-                                buttonText: Text("Select your skills...",
-                                    style: GoogleFonts.inter(
-                                        color: Color(0xFFBDBDBD),
-                                        fontSize: 16)),
-                                onConfirm: (values) {
-                                  ref.read(pharmacistSignUpProvider.notifier)
-                                      .changeSkillList(values);
-                                },
-                                chipDisplay: MultiSelectChipDisplay(
-                                  items: ref.read(pharmacistSignUpProvider.notifier)
-                                      .skillList
-                                      ?.map((e) =>
-                                          MultiSelectItem(e, e.toString()))
-                                      .toList(),
-                                  chipColor: Color(0xFF5DB075),
-                                  onTap: (value) {
-                                    ref.read(pharmacistSignUpProvider.notifier)
-                                        .skillList
-                                        ?.remove(value);
-                                    return ref.read(pharmacistSignUpProvider.notifier)
-                                        .skillList;
-                                  },
-                                  textStyle: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    selectSkills(),
                     SizedBox(height: 20),
 
                     //Language
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        RichText(
-                          textAlign: TextAlign.left,
-                          text: TextSpan(
-                              text: "Languages",
-                              style: GoogleFonts.questrial(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          width: 335,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  offset: Offset(0.3, 3),
-                                  blurRadius: 3.0,
-                                  spreadRadius: 0.5,
-                                  color: Colors.grey.shade400)
-                            ],
-                            color: Color(0xFFF0F0F0),
-                            border: Border.all(
-                              color: Color(0xFFE8E8E8),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              MultiSelectBottomSheetField<Language?>(
-                                selectedColor: Color(0xFF5DB075),
-                                selectedItemsTextStyle:
-                                    TextStyle(color: Colors.white),
-                                initialChildSize: 0.4,
-                                decoration: BoxDecoration(),
-                                listType: MultiSelectListType.CHIP,
-                                initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                                    .languageList,
-                                searchable: true,
-                                items: _languageItems,
-                                buttonText: Text("Select known languages...",
-                                    style: GoogleFonts.inter(
-                                        color: Color(0xFFBDBDBD),
-                                        fontSize: 16)),
-                                onConfirm: (values) {
-                                  ref.read(pharmacistSignUpProvider.notifier)
-                                      .changeLanguageList(values);
-                                },
-                                chipDisplay: MultiSelectChipDisplay(
-                                  items: ref.read(pharmacistSignUpProvider.notifier)
-                                      .languageList
-                                      ?.map((e) =>
-                                          MultiSelectItem(e, e.toString()))
-                                      .toList(),
-                                  chipColor: Color(0xFF5DB075),
-                                  onTap: (value) {
-                                    ref.read(pharmacistSignUpProvider.notifier)
-                                        .languageList
-                                        ?.remove(value);
-                                    return ref.read(pharmacistSignUpProvider.notifier)
-                                        .languageList;
-                                  },
-                                  textStyle: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    selectLanguages(),
                     SizedBox(height: 50),
 
                     //Resume
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        RichText(
-                          textAlign: TextAlign.left,
-                          text: TextSpan(
-                              text: "Resume (PDF Only)",
-                              style: GoogleFonts.questrial(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        SizedBox(height: 10),
-                        if (ref.read(pharmacistSignUpProvider.notifier)
-                                .resumePDFData !=
-                            null)
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 170,
-                                height: 45,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty
-                                          .resolveWith<Color>((states) {
-                                        return Color(
-                                            0xFF5DB075); // Regular color
-                                      }),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ))),
-                                  onPressed: () async {
-                                    file = ref.read(pharmacistSignUpProvider.notifier)
-                                        .resumePDFData;
-                                    print(
-                                        "FILE PATH: " + file!.path.toString());
-                                    OpenFile.open(file!.path);
-                                  },
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: "View Resume",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 35),
-                              SizedBox(
-                                width: 100,
-                                height: 45,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty
-                                          .resolveWith<Color>((states) {
-                                        return Color(
-                                            0xFF5DB075); // Regular color
-                                      }),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ))),
-                                  onPressed: () async {
-                                    setState(() {
-                                      _result = null;
-                                      file = null;
-                                    });
-                                    print(ref.read(pharmacistSignUpProvider.notifier)
-                                        .firstName);
-                                    ref.read(pharmacistSignUpProvider.notifier)
-                                        .clearResumePDF();
-                                    print(ref.read(pharmacistSignUpProvider.notifier)
-                                        .firstName);
-                                  },
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: "Clear",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        else
-                          SizedBox(
-                            width: 270,
-                            height: 45,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith<Color>(
-                                          (states) {
-                                    return Color(0xFF5DB075); // Regular color
-                                  }),
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ))),
-                              onPressed: () async {
-                                try {
-                                  _result = await FilePicker.platform.pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: ['pdf'],
-                                    //withData: true,
-                                  );
-                                  if (_result!.files.first.path != null) {
-                                    setState(() {
-                                      filePicked = true;
-                                    });
-                                    file = File(
-                                        _result!.files.first.path.toString());
-
-                                    ref.read(pharmacistSignUpProvider.notifier)
-                                        .changeResumePDF(file);
-                                    print(ref.read(pharmacistSignUpProvider.notifier)
-                                        .resumePDFData);
-                                  } else {
-                                    // User canceled the picker
-                                  }
-                                } catch (error) {
-                                  print("ERROR: " + error.toString());
-                                  final snackBar = SnackBar(
-                                    content: Text(
-                                        'There was an error, please try again.'),
-                                    duration: Duration(seconds: 3),
-                                    behavior: SnackBarBehavior.floating,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                }
-                              },
-                              child: RichText(
-                                text: TextSpan(
-                                  text: "Select Resume",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                      ],
-                    ),
+                    selectResume(context),
                     SizedBox(height: 30),
 
                     //Signature Overlay
@@ -529,59 +149,406 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
             ),
 
             //Next
-            Center(
-              child: Consumer(
-                builder: (context, ref, child) {
-                  ref.watch(pharmacistSignUpProvider);
-                  return SizedBox(
-                    width: 324,
-                    height: 51,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                                  (states) {
-                            if (states.contains(MaterialState.disabled)) {
-                              return Colors.grey; // Disabled color
-                            }
-                            return Color(0xFF5DB075); // Regular color
-                          }),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100),
-                          ))),
-                      onPressed: (ref.read(pharmacistSignUpProvider.notifier)
-                              .isValidPharmacistSkills())
-                          ? null
-                          : () {
-                              print("Pressed");
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PhotoInformation()));
-                            },
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Next",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+            nextButton(),
             SizedBox(height: 15),
           ],
         ),
       ),
     );
+  }
+
+  Center nextButton() {
+    return Center(
+      child: Consumer(
+        builder: (context, ref, child) {
+          ref.watch(pharmacistSignUpProvider);
+          return SizedBox(
+            width: 324,
+            height: 51,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.grey; // Disabled color
+                    }
+                    return Color(0xFF5DB075); // Regular color
+                  }),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ))),
+              onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistSkills())
+                  ? null
+                  : () {
+                      print("Pressed");
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => PhotoInformation()));
+                    },
+              child: RichText(
+                text: TextSpan(
+                        text: "Next",
+                  style: TextStyle(
+                    fontSize: 16,
+                          color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+          );
+        },
+            ),
+          );
+  }
+
+  Column selectResume(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        RichText(
+          textAlign: TextAlign.left,
+          text: TextSpan(
+              text: "Resume (PDF Only)",
+              style: GoogleFonts.questrial(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              )),
+        ),
+        SizedBox(height: 10),
+        if (ref.read(pharmacistSignUpProvider.notifier).resumePDFData != null)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SizedBox(
+                width: 170,
+                height: 45,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                        return Color(0xFF5DB075); // Regular color
+                      }),
+                      shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ))),
+                  onPressed: () async {
+                    file = ref.read(pharmacistSignUpProvider.notifier).resumePDFData;
+                    print("FILE PATH: " + file!.path.toString());
+                    OpenFile.open(file!.path);
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      text: "View Resume",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 35),
+              SizedBox(
+                width: 100,
+                height: 45,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                        return Color(0xFF5DB075); // Regular color
+                      }),
+                      shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ))),
+                  onPressed: () async {
+                    setState(() {
+                      _result = null;
+                      file = null;
+                    });
+                    print(ref.read(pharmacistSignUpProvider.notifier).firstName);
+                    ref.read(pharmacistSignUpProvider.notifier).clearResumePDF();
+                    print(ref.read(pharmacistSignUpProvider.notifier).firstName);
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Clear",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        else
+          SizedBox(
+            width: 270,
+            height: 45,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                    return Color(0xFF5DB075); // Regular color
+                  }),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ))),
+              onPressed: () async {
+                try {
+                  _result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ['pdf'],
+                    //withData: true,
+                  );
+                  if (_result!.files.first.path != null) {
+                    setState(() {
+                      filePicked = true;
+                    });
+                    file = File(_result!.files.first.path.toString());
+
+                                  ref.read(pharmacistSignUpProvider.notifier).changeResumePDF(file);
+                    print(ref.read(pharmacistSignUpProvider.notifier).resumePDFData);
+                  } else {
+                    // User canceled the picker
+                  }
+                } catch (error) {
+                  print("ERROR: " + error.toString());
+                  final snackBar = SnackBar(
+                    content: Text('There was an error, please try again.'),
+                    duration: Duration(seconds: 3),
+                    behavior: SnackBarBehavior.floating,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
+              },
+              child: RichText(
+                text: TextSpan(
+                  text: "Select Resume",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          )
+      ],
+                  );
+  }
+
+  Column selectLanguages() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        RichText(
+          textAlign: TextAlign.left,
+          text: TextSpan(
+                            text: "Languages",
+              style: GoogleFonts.questrial(
+                              fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              )),
+        ),
+                      SizedBox(height: 10),
+        Container(
+          width: 335,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0.3, 3),
+                  blurRadius: 3.0,
+                  spreadRadius: 0.5,
+                  color: Colors.grey.shade400)
+            ],
+                          color: Color(0xFFF0F0F0),
+            border: Border.all(
+              color: Color(0xFFE8E8E8),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: <Widget>[
+              MultiSelectBottomSheetField<Language?>(
+                selectedColor: Color(0xFF5DB075),
+                selectedItemsTextStyle: TextStyle(color: Colors.white),
+                initialChildSize: 0.4,
+                decoration: BoxDecoration(),
+                listType: MultiSelectListType.CHIP,
+                initialValue: ref.read(pharmacistSignUpProvider.notifier).languageList,
+                searchable: true,
+                items: _languageItems,
+                buttonText: Text("Select known languages...",
+                    style: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16)),
+                onConfirm: (values) {
+                  ref.read(pharmacistSignUpProvider.notifier).changeLanguageList(values);
+                },
+                chipDisplay: MultiSelectChipDisplay(
+                  items: ref
+                      .read(pharmacistSignUpProvider.notifier)
+                      .languageList
+                      ?.map((e) => MultiSelectItem(e, e.toString()))
+                      .toList(),
+                  chipColor: Color(0xFF5DB075),
+                  onTap: (value) {
+                    ref.read(pharmacistSignUpProvider.notifier).languageList?.remove(value);
+                    return ref.read(pharmacistSignUpProvider.notifier).languageList;
+                  },
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+                            ),
+                          ],
+                        ),
+        ),
+                    ],
+    );
+  }
+
+  Column selectSkills() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        RichText(
+          textAlign: TextAlign.left,
+                        text: TextSpan(
+                            text: "Skill",
+              style: GoogleFonts.questrial(
+                fontSize: 16,
+                              color: Colors.black,
+                fontWeight: FontWeight.w500,
+              )),
+        ),
+        SizedBox(height: 10),
+        Container(
+          width: 335,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0.3, 3),
+                  blurRadius: 3.0,
+                  spreadRadius: 0.5,
+                  color: Colors.grey.shade400)
+            ],
+            color: Color(0xFFF0F0F0),
+            border: Border.all(
+              color: Color(0xFFE8E8E8),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: <Widget>[
+              MultiSelectBottomSheetField<Skill?>(
+                selectedColor: Color(0xFF5DB075),
+                selectedItemsTextStyle: TextStyle(color: Colors.white),
+                initialChildSize: 0.4,
+                decoration: BoxDecoration(),
+                listType: MultiSelectListType.CHIP,
+                initialValue: ref.read(pharmacistSignUpProvider.notifier).skillList,
+                searchable: true,
+                items: _skillItems,
+                buttonText: Text("Select your skills...",
+                    style: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16)),
+                onConfirm: (values) {
+                  ref.read(pharmacistSignUpProvider.notifier).changeSkillList(values);
+                },
+                chipDisplay: MultiSelectChipDisplay(
+                  items: ref
+                      .read(pharmacistSignUpProvider.notifier)
+                      .skillList
+                      ?.map((e) => MultiSelectItem(e, e.toString()))
+                      .toList(),
+                  chipColor: Color(0xFF5DB075),
+                  onTap: (value) {
+                    ref.read(pharmacistSignUpProvider.notifier).skillList?.remove(value);
+                    return ref.read(pharmacistSignUpProvider.notifier).skillList;
+                  },
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+              ),
+                          ],
+                        ),
+        ),
+                    ],
+                  );
+  }
+
+  Column selectSoftware() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        RichText(
+          textAlign: TextAlign.left,
+          text: TextSpan(
+              text: "Software",
+              style: GoogleFonts.questrial(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              )),
+        ),
+        SizedBox(height: 10),
+        Container(
+          width: 335,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0.3, 3),
+                  blurRadius: 3.0,
+                  spreadRadius: 0.5,
+                  color: Colors.grey.shade400)
+            ],
+            color: Color(0xFFF0F0F0),
+            border: Border.all(
+              color: Color(0xFFE8E8E8),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: <Widget>[
+              MultiSelectBottomSheetField<Software?>(
+                selectedColor: Color(0xFF5DB075),
+                selectedItemsTextStyle: TextStyle(color: Colors.white),
+                initialChildSize: 0.4,
+                decoration: BoxDecoration(),
+                listType: MultiSelectListType.CHIP,
+                initialValue: ref.read(pharmacistSignUpProvider.notifier).softwareList,
+                searchable: true,
+                items: _softwareItems,
+                buttonText: Text("Select known software...",
+                    style: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16)),
+                onConfirm: (values) {
+                  ref.read(pharmacistSignUpProvider.notifier).changeSoftwareList(values);
+                },
+                chipDisplay: MultiSelectChipDisplay(
+                  items: ref
+                      .read(pharmacistSignUpProvider.notifier)
+                      .softwareList
+                      ?.map((e) => MultiSelectItem(e, e.toString()))
+                      .toList(),
+                  chipColor: Color(0xFF5DB075),
+                  onTap: (value) {
+                    ref.read(pharmacistSignUpProvider.notifier).softwareList?.remove(value);
+                    return ref.read(pharmacistSignUpProvider.notifier).softwareList;
+                                },
+                                textStyle: TextStyle(color: Colors.white),
+                              ),
+              ),
+                          ],
+          ),
+        ),
+                    ],
+                  );
   }
 }
 
@@ -715,123 +682,3 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
     );
   }
 }
-
-
-// class SignatureBox extends StatelessWidget {
-//   const SignatureBox({
-//     Key? key,
-//     required SignatureController sigController,
-//   })  : _sigController = sigController,
-//         super(key: key);
-
-//   final SignatureController _sigController;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 100,
-//       height: 40,
-//       child: ElevatedButton(
-//         style: ButtonStyle(
-//             backgroundColor:
-//                 MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
-//             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                 RoundedRectangleBorder(
-//               borderRadius: BorderRadius.circular(8),
-//             ))),
-//         onPressed: () {
-//           showDialog(
-//             context: context,
-//             builder: (_) => Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: <Widget>[
-//                 //Signature Pad
-//                 Align(
-//                   alignment: Alignment.center,
-//                   child: Container(
-//                     height: 140,
-//                     width: MediaQuery.of(context).size.width - 20,
-//                     decoration: BoxDecoration(
-//                       border: Border.all(
-//                         width: 3,
-//                         color: Color(0xFF5DB075),
-//                       ),
-//                     ),
-//                     child: Signature(
-//                       controller: _sigController,
-//                       height: 140,
-//                       width: MediaQuery.of(context).size.width - 20,
-//                       backgroundColor: Colors.white,
-//                     ),
-//                   ),
-//                 ),
-//                 //Buttons
-//                 Material(
-//                   child: Container(
-//                     color: Colors.grey.shade200,
-//                     height: 40,
-//                     width: MediaQuery.of(context).size.width - 20,
-//                     child: Row(
-//                       //mainAxisSize: MainAxisSize.min,
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: <Widget>[
-//                         Container(
-//                           width: 100,
-//                           height: 31,
-//                           alignment: Alignment.centerLeft,
-//                           padding: EdgeInsets.only(left: 5),
-//                           child: TextButton.icon(
-//                             clipBehavior: Clip.none,
-//                             style: ButtonStyle(
-//                               backgroundColor: MaterialStateProperty.all<Color>(
-//                                   Color(0xFF5DB075)),
-//                             ),
-//                             onPressed: () async {
-//                               context
-//                                   .read(pharmacistSignUpProvider.notifier)
-//                                   .changeSignature((_sigController.isNotEmpty)
-//                                       ? await _sigController.toPngBytes()
-//                                       : null);
-
-//                               Navigator.pop(context);
-//                             },
-//                             icon: Icon(
-//                               Icons.check,
-//                               color: Colors.white,
-//                               size: 13,
-//                             ),
-//                             label: Text(
-//                               "Apply",
-//                               style:
-//                                   TextStyle(color: Colors.white, fontSize: 13),
-//                             ),
-//                           ),
-//                         ),
-//                         Container(
-//                           alignment: Alignment.centerRight,
-//                           width: 100,
-//                           height: 35,
-//                           child: TextButton(
-//                             onPressed: () {
-//                               _sigController.clear();
-//                             },
-//                             child: Text(
-//                               "Reset",
-//                               style: TextStyle(color: Colors.grey),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           );
-//         },
-//         child: _sigController.isEmpty ? Text("Add") : Text("Change"),
-//       ),
-//     );
- 
-//   }
-// }

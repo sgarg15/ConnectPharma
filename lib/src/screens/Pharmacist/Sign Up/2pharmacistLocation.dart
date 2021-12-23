@@ -43,8 +43,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                       style: TextStyle(color: Color(0xFF5DB075)),
                     ),
                     onPressed: () {
-                      ref.read(pharmacistSignUpProvider.notifier)
-                          .clearAllValues();
+                      ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
                       // Direct to whichever they are in Information Form pages
                       Navigator.pushReplacement(
                         context,
@@ -175,84 +174,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                                 )),
                           ),
                           SizedBox(height: 10),
-                          Container(
-                            width: 335,
-                            //height: 50,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    offset: Offset(0.3, 3),
-                                    blurRadius: 3.0,
-                                    spreadRadius: 0.5,
-                                    color: Colors.grey.shade400)
-                              ],
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.grey.shade200,
-                            ),
-                            child: TextFormField(
-                              readOnly: true,
-                              controller: streetAddress,
-                              onTap: () async {
-                                final sessionToken = Uuid().v4();
-                                final Suggestion? result =
-                                    await showSearch<Suggestion?>(
-                                  context: context,
-                                  delegate: AddressSearch(sessionToken),
-                                );
-
-                                if (result != null) {
-                                  final placeDetails =
-                                      await PlaceApiProvider(sessionToken)
-                                          .getPlaceDetailFromId(result.placeId);
-                                  ref.read(pharmacistSignUpProvider.notifier)
-                                      .changePharmacistAddress(
-                                          placeDetails.streetNumber! +
-                                              " " +
-                                              placeDetails.street.toString() +
-                                              ", " +
-                                              placeDetails.city.toString() +
-                                              ", " +
-                                              placeDetails.country.toString());
-                                  streetAddress.text =
-                                      placeDetails.streetNumber! +
-                                          " " +
-                                          placeDetails.street.toString() +
-                                          ", " +
-                                          placeDetails.city.toString() +
-                                          ", " +
-                                          placeDetails.country.toString();
-                                }
-                              },
-                              decoration: InputDecoration(
-                                errorStyle:
-                                    TextStyle(fontWeight: FontWeight.w500),
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(10, 0, 0, 30),
-                                filled: true,
-                                fillColor: Color(0xFFF0F0F0),
-                                // focusedErrorBorder: OutlineInputBorder(
-                                //     borderRadius: BorderRadius.circular(8),
-                                //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                                // errorBorder: OutlineInputBorder(
-                                //     borderRadius: BorderRadius.circular(8),
-                                //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide:
-                                        BorderSide(color: Color(0xFFE8E8E8))),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8)),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                hintText: "Enter the address...",
-                                hintStyle: GoogleFonts.inter(
-                                    color: Color(0xFFBDBDBD), fontSize: 16),
-                              ),
-                              style: GoogleFonts.inter(
-                                  color: Colors.black, fontSize: 16),
-                            ),
-                          ),
+                          streetAddressField(streetAddress, context),
                         ],
                       ),
                       SizedBox(height: 20),
@@ -260,7 +182,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                       //Phone Number
                       CustomFormField(
                         fieldTitle: "Phone Number",
-                        hintText: "Enter your Phone Number...",
+                        hintText: "+1 234 567 8910",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String phoneNumber) {
                           ref.read(pharmacistSignUpProvider.notifier)
@@ -274,7 +196,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                         },
                         initialValue: ref.read(pharmacistSignUpProvider.notifier)
                             .phoneNumber,
-                        formatter: [MaskedInputFormatter('(###) ###-####')],
+                        formatter: [PhoneInputFormatter()]
                       ),
 
                       SizedBox(height: 20),
@@ -284,57 +206,125 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
               ),
 
               //Next Button
-              Center(
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    ref.watch(pharmacistSignUpProvider);
-                    return SizedBox(
-                      width: 324,
-                      height: 51,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                                    (states) {
-                              if (states.contains(MaterialState.disabled)) {
-                                return Colors.grey; // Disabled color
-                              }
-                              return Color(0xFF5DB075); // Regular color
-                            }),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100),
-                            ))),
-                        onPressed: (ref.read(pharmacistSignUpProvider.notifier)
-                                .isValidPharmacistLocation())
-                            ? null
-                            : () {
-                                print("Pressed");
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PharmacistInformation()));
-                              },
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Next",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              nextButton(),
               SizedBox(height: 15),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Center nextButton() {
+    return Center(
+      child: Consumer(
+        builder: (context, ref, child) {
+          ref.watch(pharmacistSignUpProvider);
+          return SizedBox(
+            width: 324,
+            height: 51,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.grey; // Disabled color
+                    }
+                    return Color(0xFF5DB075); // Regular color
+                  }),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100),
+                  ))),
+              onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistLocation())
+                  ? null
+                  : () {
+                      print("Pressed");
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => PharmacistInformation()));
+                    },
+              child: RichText(
+                text: TextSpan(
+                  text: "Next",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+            );
+  }
+
+  Container streetAddressField(TextEditingController streetAddress, BuildContext context) {
+    return Container(
+      width: 335,
+      //height: 50,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              offset: Offset(0.3, 3),
+              blurRadius: 3.0,
+              spreadRadius: 0.5,
+              color: Colors.grey.shade400)
+        ],
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.grey.shade200,
+      ),
+      child: TextFormField(
+        readOnly: true,
+        controller: streetAddress,
+        onTap: () async {
+          final sessionToken = Uuid().v4();
+          final Suggestion? result = await showSearch<Suggestion?>(
+            context: context,
+            delegate: AddressSearch(sessionToken),
+          );
+
+          if (result != null) {
+            final placeDetails =
+                await PlaceApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
+            ref.read(pharmacistSignUpProvider.notifier).changePharmacistAddress(
+                placeDetails.streetNumber! +
+                    " " +
+                    placeDetails.street.toString() +
+                    ", " +
+                    placeDetails.city.toString() +
+                    ", " +
+                    placeDetails.country.toString());
+            streetAddress.text = placeDetails.streetNumber! +
+                " " +
+                placeDetails.street.toString() +
+                ", " +
+                placeDetails.city.toString() +
+                ", " +
+                placeDetails.country.toString();
+          }
+        },
+        decoration: InputDecoration(
+          errorStyle: TextStyle(fontWeight: FontWeight.w500),
+          contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 30),
+          filled: true,
+          fillColor: Color(0xFFF0F0F0),
+          // focusedErrorBorder: OutlineInputBorder(
+          //     borderRadius: BorderRadius.circular(8),
+          //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+          // errorBorder: OutlineInputBorder(
+          //     borderRadius: BorderRadius.circular(8),
+          //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          hintText: "Enter the address...",
+          hintStyle: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16),
+        ),
+        style: GoogleFonts.inter(color: Colors.black, fontSize: 16),
       ),
     );
   }

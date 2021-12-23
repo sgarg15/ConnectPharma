@@ -51,6 +51,20 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
       print("Sending to Pharmacist SignUp page3");
 
       //send to pharmacy main page
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
+    } else if (userType == "Pharmacy Technician") {
+      print("Pharmacy Technician");
+
+      print("Sending to Pharmacist SignUp page1");
+      ref.read(logInProvider.notifier).clearAllValue();
+
+      print("Sending to Pharmacist SignUp page2");
+      ref.read(userProviderLogin.notifier).changeUserUID(FirebaseAuth.instance.currentUser?.uid);
+
+      print("Sending to Pharmacist SignUp page3");
+
+      //send to pharmacy main page
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
     }

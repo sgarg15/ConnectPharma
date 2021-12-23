@@ -277,7 +277,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                                         .signInWithEmailAndPassword(
                                             logIn.email.toString(),
                                             logIn.password.toString());
-                                    print("User[0]: ${user?[0]}");
+                                    print("----------User[0]----: ${user?[0]}");
                                     if (user?[0] == null) {
                                       var errorMessage = "";
                                       print("Error MEssage: ${user?[2]}");
