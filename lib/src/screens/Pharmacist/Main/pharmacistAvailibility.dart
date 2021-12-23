@@ -6,38 +6,39 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'jobHistoryPharmacist.dart';
 
-class PharmacistAvailability extends StatefulWidget {
+class PharmacistAvailability extends ConsumerStatefulWidget {
   PharmacistAvailability({Key? key}) : super(key: key);
 
   @override
   _PharmacistAvailabilityState createState() => _PharmacistAvailabilityState();
 }
 
-class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
+class _PharmacistAvailabilityState
+    extends ConsumerState<PharmacistAvailability> {
   String bullet = "\u2022";
   Map dateRangesTemp = Map();
   Map dateRangesToUpload = Map();
   List<PickerDateRange> dateRangesFromFirestore = [];
   String permanentJobBool = "";
 
-  void changeAvailabilityToCalendar() {
+  void changeAvailabilityToCalendar(WidgetRef ref) {
     List<PickerDateRange> dateRangesCalendarTemp = [];
-    print(context
-        .read(pharmacistMainProvider.notifier)
+    print(
+        ref.read(pharmacistMainProvider.notifier)
         .userDataMap?["availability"]);
     for (var i = 0;
         i <
-            context
+            ref
                 .read(pharmacistMainProvider.notifier)
                 .userDataMap?["availability"]
                 .length;
         i++) {
       dateRangesCalendarTemp.add(PickerDateRange(
-          context
+          ref
               .read(pharmacistMainProvider.notifier)
               .userDataMap?["availability"][i.toString()]["startDate"]
               .toDate(),
-          context
+          ref
               .read(pharmacistMainProvider.notifier)
               .userDataMap?["availability"][i.toString()]["endDate"]
               .toDate()));
@@ -52,9 +53,9 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
   @override
   void initState() {
     super.initState();
-    changeAvailabilityToCalendar();
+    changeAvailabilityToCalendar(ref);
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      context
+      ref
           .read(pharmacistMainProvider.notifier)
           .changeDateRanges(dateRangesFromFirestore);
     });
@@ -63,17 +64,16 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
   @override
   Widget build(BuildContext context) {
     void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-      context
-          .read(pharmacistMainProvider.notifier)
+      ref.read(pharmacistMainProvider.notifier)
           .changeDateRanges(args.value);
 
-      context
+      ref
           .read(pharmacistMainProvider.notifier)
           .dateRanges
           .sort((a, b) => a.startDate!.compareTo(b.startDate as DateTime));
       dateRangesTemp.clear();
       for (var i = 0;
-          i < context.read(pharmacistMainProvider.notifier).dateRanges.length;
+          i < ref.read(pharmacistMainProvider.notifier).dateRanges.length;
           i++) {
         dateRangesTemp[i.toString()] = {
           "startDate": args.value[i].startDate,
@@ -84,7 +84,7 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
         dateRangesToUpload = dateRangesTemp;
       });
       print(dateRangesToUpload);
-      //print(context.read(pharmacistMainProvider.notifier).dateRanges);
+      //print(ref.read(pharmacistMainProvider.notifier).dateRanges);
     }
 
     return Scaffold(
@@ -136,8 +136,8 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
             ),
 
             //List view of Calendar
-            Consumer(builder: (context, watch, child) {
-              watch(pharmacistMainProvider);
+            Consumer(builder: (context, ref, child) {
+              ref.watch(pharmacistMainProvider);
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
@@ -171,7 +171,7 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                               children: <Widget>[
                                 for (var i = 0;
                                     i <
-                                        context
+                                        ref
                                             .read(
                                                 pharmacistMainProvider.notifier)
                                             .dateRanges
@@ -183,7 +183,7 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                                     title: Text(bullet +
                                         " " +
                                         DateFormat.yMMMMd('en_US')
-                                            .format(context
+                                            .format(ref
                                                 .read(pharmacistMainProvider
                                                     .notifier)
                                                 .dateRanges[i]
@@ -191,12 +191,12 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                                             .toString() +
                                         ' - ' +
                                         DateFormat.yMMMMd('en_US')
-                                            .format(context
+                                            .format(ref
                                                     .read(pharmacistMainProvider
                                                         .notifier)
                                                     .dateRanges[i]
                                                     .endDate ??
-                                                context
+                                                ref
                                                     .read(pharmacistMainProvider
                                                         .notifier)
                                                     .dateRanges[i]
@@ -204,7 +204,7 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                                             .toString()),
                                   )
                                 ],
-                                if (context
+                                if (ref
                                     .read(pharmacistMainProvider.notifier)
                                     .dateRanges
                                     .isEmpty) ...[
@@ -235,8 +235,8 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
             }),
 
             //Permanent job
-            Consumer(builder: (context, watch, child) {
-              watch(pharmacistMainProvider);
+            Consumer(builder: (context, ref, child) {
+              ref.watch(pharmacistMainProvider);
               return Padding(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: CheckboxListTile(
@@ -251,14 +251,13 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                     ),
                   ),
                   activeColor: Color(0xFF5DB075),
-                  value: context
-                      .read(pharmacistMainProvider.notifier)
+                  value: ref.read(pharmacistMainProvider.notifier)
                       .permanentJob,
                   onChanged: (value) {
                     setState(() {
                       permanentJobBool = "true";
                     });
-                    context
+                    ref
                         .read(pharmacistMainProvider.notifier)
                         .changePermanentJob(value);
                   },
@@ -293,14 +292,14 @@ class _PharmacistAvailabilityState extends State<PharmacistAvailability> {
                             permanentJobBool != "")
                         ? () {
                             print("Pressed");
-                            context
+                            ref
                                 .read(authProvider.notifier)
                                 .uploadAvailalibitlityData(
-                                    context
+                                    ref
                                         .read(userProviderLogin.notifier)
                                         .userUID,
                                     dateRangesToUpload,
-                                    context
+                                    ref
                                         .read(pharmacistMainProvider.notifier)
                                         .permanentJob);
                             Navigator.pop(context);

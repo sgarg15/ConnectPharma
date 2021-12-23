@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //TODO: Add Show All pharmacist options
 
-class SearchPharmacistPharmacy extends StatefulWidget {
+class SearchPharmacistPharmacy extends ConsumerStatefulWidget {
   SearchPharmacistPharmacy({Key? key}) : super(key: key);
 
   @override
@@ -18,7 +18,8 @@ class SearchPharmacistPharmacy extends StatefulWidget {
       _SearchPharmacistPharmacyState();
 }
 
-class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
+class _SearchPharmacistPharmacyState
+    extends ConsumerState<SearchPharmacistPharmacy> {
   final _softwareItems = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
@@ -35,7 +36,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        context.read(pharmacyMainProvider.notifier).clearDateValues();
+        ref.read(pharmacyMainProvider.notifier).clearDateValues();
         return true;
       },
       child: Scaffold(
@@ -132,14 +133,14 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                                   DateTime.now(),
                                               lastDate: DateTime(2100));
                                           if (date != null) {
-                                            context
+                                            ref
                                                 .read(pharmacyMainProvider
                                                     .notifier)
                                                 .changeStartDate(date);
                                             print(date);
                                             return date;
                                           } else {
-                                            context
+                                            ref
                                                 .read(pharmacyMainProvider
                                                     .notifier)
                                                 .changeStartDate(currentValue);
@@ -207,31 +208,31 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                         ),
                                         onShowPicker:
                                             (context, currentValue) async {
-                                          if (context
+                                          if (ref
                                                   .read(pharmacyMainProvider
                                                       .notifier)
                                                   .startDate !=
                                               null) {
                                             final date = await showDatePicker(
                                                 context: context,
-                                                firstDate: context
+                                                firstDate: ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .startDate as DateTime,
-                                                initialDate: context
+                                                initialDate: ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .startDate as DateTime,
                                                 lastDate: DateTime(2100));
                                             if (date != null) {
-                                              context
+                                              ref
                                                   .read(pharmacyMainProvider
                                                       .notifier)
                                                   .changeEndDate(date);
                                               print(date);
                                               return date;
                                             } else {
-                                              context
+                                              ref
                                                   .read(pharmacyMainProvider
                                                       .notifier)
                                                   .changeEndDate(currentValue);
@@ -267,7 +268,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   showAllPharmacists = !showAllPharmacists;
                                   startDateController.text = "dd/mm/yyyy hh:mm";
                                   endDateController.text = "dd/mm/yyyy hh:mm";
-                                  context
+                                  ref
                                       .read(pharmacyMainProvider.notifier)
                                       .clearDateValues();
                                 });
@@ -318,7 +319,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                     style: GoogleFonts.inter(
                                         color: Color(0xFFBDBDBD), fontSize: 16),
                                   ),
-                                  value: context
+                                  value: ref
                                       .read(pharmacyMainProvider.notifier)
                                       .position,
                                   decoration: InputDecoration(
@@ -341,7 +342,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                         child: Text(value), value: value);
                                   }).toList(),
                                   onChanged: (String? value) {
-                                    context
+                                    ref
                                         .read(pharmacyMainProvider.notifier)
                                         .changePosition(value);
                                   },
@@ -428,7 +429,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                               decoration: BoxDecoration(),
                                               listType:
                                                   MultiSelectListType.CHIP,
-                                              initialValue: context
+                                              initialValue: ref
                                                   .read(pharmacyMainProvider
                                                       .notifier)
                                                   .skillList,
@@ -440,14 +441,14 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                                       color: Color(0xFFBDBDBD),
                                                       fontSize: 16)),
                                               onConfirm: (values) {
-                                                context
+                                                ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .changeSkillList(values);
                                               },
                                               chipDisplay:
                                                   MultiSelectChipDisplay(
-                                                items: context
+                                                items: ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .skillList
@@ -457,12 +458,12 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                                     .toList(),
                                                 chipColor: Color(0xFF5DB075),
                                                 onTap: (value) {
-                                                  context
+                                                  ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .skillList
                                                       ?.remove(value);
-                                                  return context
+                                                  return ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .skillList;
@@ -555,7 +556,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                               decoration: BoxDecoration(),
                                               listType:
                                                   MultiSelectListType.CHIP,
-                                              initialValue: context
+                                              initialValue: ref
                                                   .read(pharmacyMainProvider
                                                       .notifier)
                                                   .softwareList,
@@ -567,14 +568,14 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                                       color: Color(0xFFBDBDBD),
                                                       fontSize: 16)),
                                               onConfirm: (values) {
-                                                context
+                                                ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .changeSoftwareList(values);
                                               },
                                               chipDisplay:
                                                   MultiSelectChipDisplay(
-                                                items: context
+                                                items: ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .softwareList
@@ -584,12 +585,12 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                                     .toList(),
                                                 chipColor: Color(0xFF5DB075),
                                                 onTap: (value) {
-                                                  context
+                                                  ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .softwareList
                                                       ?.remove(value);
-                                                  return context
+                                                  return ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .softwareList;
@@ -640,7 +641,7 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
               //         context
               //             .read(authProvider.notifier)
               //             .uploadTestJobToPharmacy(
-              //                 context.read(userProviderLogin.notifier).userUID,
+              //                 ref.read(userProviderLogin.notifier).userUID,
               //                 context);
               //         Navigator.push(
               //             context,
@@ -663,8 +664,8 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
 
               //Search Button
               Consumer(
-                builder: (context, watch, child) {
-                  watch(pharmacyMainProvider);
+                builder: (context, ref, child) {
+                  ref.watch(pharmacyMainProvider);
                   return Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -687,13 +688,13 @@ class _SearchPharmacistPharmacyState extends State<SearchPharmacistPharmacy> {
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100),
                               ))),
-                          onPressed: (context
+                          onPressed: (ref
                                   .read(pharmacyMainProvider.notifier)
                                   .isValidSearchPharmacist(showAllPharmacists))
                               ? () {
                                   print("Pressed");
-                                  print(context
-                                      .read(pharmacyMainProvider)
+                                  print(
+                                      ref.read(pharmacyMainProvider)
                                       .position);
                                   Navigator.push(
                                       context,

@@ -15,20 +15,20 @@ final logInProvider = StateNotifierProvider<LogInProvider, LogInModel>((ref) {
   return LogInProvider();
 });
 
-final userProviderLogin = StateNotifierProvider((ref) => UserProvider());
+final userProviderLogin = StateNotifierProvider<UserProvider, dynamic>((ref) => UserProvider());
 
 final authProviderLogin = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
-class LogInPage extends StatefulWidget {
+class LogInPage extends ConsumerStatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
 
   @override
   _LogInPageState createState() => _LogInPageState();
 }
 
-class _LogInPageState extends State<LogInPage> {
+class _LogInPageState extends ConsumerState<LogInPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool passwordVisibility = false;
@@ -42,10 +42,10 @@ class _LogInPageState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, watch, child) {
-        final logIn = watch(logInProvider);
-        final authModel = watch(authProviderLogin);
-        watch(userProviderLogin);
+      builder: (context, ref, child) {
+        final logIn = ref.watch(logInProvider);
+        final authModel = ref.watch(authProviderLogin);
+        ref.watch(userProviderLogin);
 
         return WillPopScope(
           onWillPop: () async {
@@ -132,8 +132,7 @@ class _LogInPageState extends State<LogInPage> {
                             keyboardStyle: TextInputType.emailAddress,
                             textCapitalization: TextCapitalization.none,
                             onChanged: (String emailAddress) {
-                              context
-                                  .read(logInProvider.notifier)
+                              ref.read(logInProvider.notifier)
                                   .changeEmail(emailAddress);
                             },
                             validation: (value) {
@@ -143,7 +142,7 @@ class _LogInPageState extends State<LogInPage> {
                               return null;
                             },
                             initialValue:
-                                context.read(logInProvider.notifier).email,
+                                ref.read(logInProvider.notifier).email,
                             inputDecoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
@@ -182,8 +181,7 @@ class _LogInPageState extends State<LogInPage> {
                             decoration: false,
                             keyboardStyle: TextInputType.text,
                             onChanged: (String password) {
-                              context
-                                  .read(logInProvider.notifier)
+                              ref.read(logInProvider.notifier)
                                   .changePassword(password);
                             },
                             validation: (value) {
@@ -193,7 +191,7 @@ class _LogInPageState extends State<LogInPage> {
                               return null;
                             },
                             initialValue:
-                                context.read(logInProvider.notifier).password,
+                                ref.read(logInProvider.notifier).password,
                             inputDecoration: InputDecoration(
                               filled: true,
                               fillColor: Color(0xFFF6F6F6),
@@ -268,8 +266,7 @@ class _LogInPageState extends State<LogInPage> {
                                     RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(100),
                                 ))),
-                            onPressed: (!context
-                                        .read(logInProvider.notifier)
+                            onPressed: (!ref.read(logInProvider.notifier)
                                         .isValid() &&
                                     !logginIn)
                                 ? () async {
@@ -332,11 +329,9 @@ class _LogInPageState extends State<LogInPage> {
                                       });
                                     } else if (user?[1] == "Pharmacist") {
                                       print("Pharmacist");
-                                      context
-                                          .read(logInProvider.notifier)
+                                      ref.read(logInProvider.notifier)
                                           .clearAllValue();
-                                      context
-                                          .read(userProviderLogin.notifier)
+                                      ref.read(userProviderLogin.notifier)
                                           .changeUserUID(
                                               user?[0].user.uid.toString());
 
@@ -349,11 +344,9 @@ class _LogInPageState extends State<LogInPage> {
                                     } else if (user?[1] == "Pharmacy") {
                                       print("Pharmacy");
 
-                                      context
-                                          .read(logInProvider.notifier)
+                                      ref.read(logInProvider.notifier)
                                           .clearAllValue();
-                                      context
-                                          .read(userProviderLogin.notifier)
+                                      ref.read(userProviderLogin.notifier)
                                           .changeUserUID(
                                               user?[0].user.uid.toString());
 

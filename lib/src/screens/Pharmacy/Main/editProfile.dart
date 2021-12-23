@@ -15,14 +15,14 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../all_used.dart';
 
-class EditPharmacyProfile extends StatefulWidget {
+class EditPharmacyProfile extends ConsumerStatefulWidget {
   EditPharmacyProfile({Key? key}) : super(key: key);
 
   @override
   _EditPharmacyProfileState createState() => _EditPharmacyProfileState();
 }
 
-class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
+class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
   final SignatureController _sigController = SignatureController(
     penStrokeWidth: 3, //you can set pen stroke with by changing this value
     penColor: Colors.black, // change your pen color
@@ -37,9 +37,9 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
 
-  void checkIfChanged(String? currentVal, String firestoreVal) {
+  void checkIfChanged(WidgetRef ref, String? currentVal, String firestoreVal) {
     if (currentVal ==
-        context.read(pharmacyMainProvider.notifier).userData?[firestoreVal]) {
+        ref.read(pharmacyMainProvider.notifier).userData?[firestoreVal]) {
       uploadDataMap.remove(firestoreVal);
     } else {
       uploadDataMap[firestoreVal] = currentVal;
@@ -64,24 +64,25 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      changeSoftwareToList(context
-          .read(pharmacyMainProvider.notifier)
+      changeSoftwareToList(
+          ref.read(pharmacyMainProvider.notifier)
           .userData?["softwareList"]);
-      context
+      ref
           .read(pharmacySignUpProvider.notifier)
           .changeSoftwareList(softwareList as List<Software?>);
 
       setState(() {
-        context.read(pharmacySignUpProvider.notifier).changeStreetAddress(
-            context.read(pharmacyMainProvider.notifier).userData?["address"]
+        ref.read(pharmacySignUpProvider.notifier).changeStreetAddress(ref
+            .read(pharmacyMainProvider.notifier)
+            .userData?["address"]
                 ["streetAddress"]);
-        context.read(pharmacySignUpProvider.notifier).changeCity(context
+        ref.read(pharmacySignUpProvider.notifier).changeCity(ref
             .read(pharmacyMainProvider.notifier)
             .userData?["address"]["city"]);
-        context.read(pharmacySignUpProvider.notifier).changePostalCode(context
+        ref.read(pharmacySignUpProvider.notifier).changePostalCode(ref
             .read(pharmacyMainProvider.notifier)
             .userData?["address"]["postalCode"]);
-        context.read(pharmacySignUpProvider.notifier).changeCountry(context
+        ref.read(pharmacySignUpProvider.notifier).changeCountry(ref
             .read(pharmacyMainProvider.notifier)
             .userData?["address"]["country"]);
       });
@@ -92,13 +93,13 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
   @override
   Widget build(BuildContext context) {
     TextEditingController city = TextEditingController(
-        text: context.read(pharmacySignUpProvider.notifier).city);
+        text: ref.read(pharmacySignUpProvider.notifier).city);
     TextEditingController streetAddress = TextEditingController(
-        text: context.read(pharmacySignUpProvider.notifier).streetAddress);
+        text: ref.read(pharmacySignUpProvider.notifier).streetAddress);
     TextEditingController postalCode = TextEditingController(
-        text: context.read(pharmacySignUpProvider.notifier).postalCode);
+        text: ref.read(pharmacySignUpProvider.notifier).postalCode);
     TextEditingController country = TextEditingController(
-        text: context.read(pharmacySignUpProvider.notifier).country);
+        text: ref.read(pharmacySignUpProvider.notifier).country);
 
     return Scaffold(
       appBar: AppBar(
@@ -112,8 +113,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
         ),
         backgroundColor: Color(0xFFF6F6F6),
       ),
-      body: Consumer(builder: (context, watch, child) {
-        watch(pharmacySignUpProvider);
+      body: Consumer(builder: (context, ref, child) {
+        ref.watch(pharmacySignUpProvider);
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,10 +163,10 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String firstName) {
-                                context
+                                ref
                                     .read(pharmacySignUpProvider.notifier)
                                     .changeFirstName(firstName);
-                                checkIfChanged(firstName, "firstName");
+                                checkIfChanged(ref, firstName, "firstName");
                               },
                               validation: (value) {
                                 if (!RegExp(
@@ -175,7 +176,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                 }
                                 return null;
                               },
-                              initialValue: context
+                              initialValue: ref
                                   .read(pharmacyMainProvider.notifier)
                                   .userData?["firstName"],
                             ),
@@ -192,10 +193,10 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String lastName) {
-                                context
+                                ref
                                     .read(pharmacySignUpProvider.notifier)
                                     .changeLastName(lastName);
-                                checkIfChanged(lastName, "lastName");
+                                checkIfChanged(ref, lastName, "lastName");
                               },
                               validation: (value) {
                                 if (!RegExp(
@@ -205,7 +206,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                 }
                                 return null;
                               },
-                              initialValue: context
+                              initialValue: ref
                                   .read(pharmacyMainProvider.notifier)
                                   .userData?["lastName"],
                             ),
@@ -222,10 +223,10 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                   MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String phoneNumber) {
-                                context
+                                ref
                                     .read(pharmacySignUpProvider.notifier)
                                     .changePhoneNumber(phoneNumber);
-                                checkIfChanged(phoneNumber, "phoneNumber");
+                                checkIfChanged(ref, phoneNumber, "phoneNumber");
                               },
                               validation: (value) {
                                 if (value.length < 4) {
@@ -233,7 +234,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                 }
                                 return null;
                               },
-                              initialValue: context
+                              initialValue: ref
                                   .read(pharmacyMainProvider.notifier)
                                   .userData?["phoneNumber"],
                               formatter: [
@@ -282,7 +283,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                             color: Color(0xFFBDBDBD),
                                             fontSize: 16),
                                       ),
-                                      value: context
+                                      value: ref
                                           .read(pharmacyMainProvider.notifier)
                                           .userData?["position"],
                                       decoration: InputDecoration(
@@ -304,11 +305,11 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                             child: Text(value), value: value);
                                       }).toList(),
                                       onChanged: (String? value) {
-                                        context
+                                        ref
                                             .read(
                                                 pharmacySignUpProvider.notifier)
                                             .changePosition(value);
-                                        checkIfChanged(value, "position");
+                                        checkIfChanged(ref, value, "position");
                                       },
                                       style: GoogleFonts.questrial(
                                         color: Colors.black,
@@ -338,8 +339,8 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                       width: MediaQuery.of(context).size.width * 0.95,
                       constraints: BoxConstraints(minHeight: 320),
                       child: Consumer(
-                        builder: (context, watch, child) {
-                          watch(pharmacySignUpProvider);
+                        builder: (context, ref, child) {
+                          ref.watch(pharmacySignUpProvider);
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -375,10 +376,10 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String value) {
-                                    context
+                                    ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changePharmacyName(value);
-                                    checkIfChanged(value, "pharmacyName");
+                                    checkIfChanged(ref, value, "pharmacyName");
                                   },
                                   validation: (value) {
                                     if (value == null || value.isEmpty) {
@@ -386,7 +387,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
+                                  initialValue: ref
                                       .read(pharmacyMainProvider.notifier)
                                       .userData?["pharmacyName"],
                                 ),
@@ -445,7 +446,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                                         sessionToken)
                                                     .getPlaceDetailFromId(
                                                         result.placeId);
-                                            context
+                                            ref
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
                                                 .changeStreetAddress(
@@ -453,16 +454,16 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                                         " " +
                                                         placeDetails.street
                                                             .toString());
-                                            context
+                                            ref
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
                                                 .changeCity(placeDetails.city);
-                                            context
+                                            ref
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
                                                 .changePostalCode(
                                                     placeDetails.zipCode);
-                                            context
+                                            ref
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
                                                 .changeCountry(
@@ -548,7 +549,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String storeNumber) {
-                                    context
+                                    ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changeStoreNumber(storeNumber);
                                     uploadDataMap["address"]["storeNumber"] =
@@ -560,7 +561,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
+                                  initialValue: ref
                                       .read(pharmacyMainProvider.notifier)
                                       .userData?["address"]["storeNumber"],
                                 ),
@@ -578,7 +579,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String city) {
-                                    context
+                                    ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changeCity(city);
                                     uploadDataMap["address"]["city"] = city;
@@ -605,7 +606,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String postalCode) {
-                                    context
+                                    ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changePostalCode(postalCode);
                                     uploadDataMap["address"]["postalCode"] =
@@ -633,7 +634,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String country) {
-                                    context
+                                    ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changeCountry(country);
 
@@ -663,12 +664,13 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String phoneNumber) {
-                                    context
+                                    ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changePhoneNumberPharmacy(phoneNumber);
 
                                     checkIfChanged(
-                                        phoneNumber, "pharmacyPhoneNumber");
+                                        ref, phoneNumber,
+                                        "pharmacyPhoneNumber");
                                   },
                                   validation: (value) {
                                     if (value.length < 4) {
@@ -676,7 +678,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
+                                  initialValue: ref
                                       .read(pharmacyMainProvider.notifier)
                                       .userData?["pharmacyPhoneNumber"],
                                   formatter: [
@@ -697,13 +699,13 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String faxNumber) {
-                                    context
+                                    ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changeFaxNumber(faxNumber);
                                     uploadDataMap["pharmacyFaxNumber"] =
                                         faxNumber;
                                     checkIfChanged(
-                                        faxNumber, "pharmacyFaxNumber");
+                                        ref, faxNumber, "pharmacyFaxNumber");
                                   },
                                   validation: (value) {
                                     if (value.length < 4) {
@@ -711,7 +713,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
+                                  initialValue: ref
                                       .read(pharmacyMainProvider.notifier)
                                       .userData?["pharmacyFaxNumber"],
                                   formatter: [
@@ -733,12 +735,12 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String accreditationProvince) {
-                                    context
+                                    ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changeAccreditationProvince(
                                             accreditationProvince);
 
-                                    checkIfChanged(accreditationProvince,
+                                    checkIfChanged(ref, accreditationProvince,
                                         "accreditationProvice");
                                   },
                                   validation: (value) {
@@ -747,7 +749,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
+                                  initialValue: ref
                                       .read(pharmacyMainProvider.notifier)
                                       .userData?["accreditationProvice"],
                                 ),
@@ -800,7 +802,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
                                             listType: MultiSelectListType.CHIP,
-                                            initialValue: context
+                                            initialValue: ref
                                                 .read(pharmacySignUpProvider
                                                     .notifier)
                                                 .softwareList,
@@ -814,14 +816,14 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                             onConfirm: (values) {
                                               softwareListToUpload
                                                   ?.addAll(values);
-                                              context
+                                              ref
                                                   .read(pharmacySignUpProvider
                                                       .notifier)
                                                   .changeSoftwareList(values);
                                             },
                                             chipDisplay:
                                                 CustomMultiSelectChipDisplay(
-                                              items: context
+                                              items: ref
                                                   .read(pharmacySignUpProvider
                                                       .notifier)
                                                   .softwareList
@@ -837,13 +839,13 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                                         element?.name
                                                             .toString() ==
                                                         value.toString());
-                                                context
+                                                ref
                                                     .read(pharmacySignUpProvider
                                                         .notifier)
                                                     .softwareList
                                                     ?.cast()
                                                     .remove(value);
-                                                context
+                                                ref
                                                     .read(pharmacySignUpProvider
                                                         .notifier)
                                                     .softwareList
@@ -852,7 +854,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                                                             .toString() ==
                                                         value.toString());
 
-                                                return context
+                                                return ref
                                                     .read(pharmacySignUpProvider
                                                         .notifier)
                                                     .softwareList;
@@ -906,20 +908,20 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
                             softwareListToUpload!.isNotEmpty)
                         ? () async {
                             print(uploadDataMap);
-                            if (context
+                            if (ref
                                     .read(pharmacySignUpProvider.notifier)
                                     .softwareList !=
                                 null) {
-                              uploadDataMap["softwareList"] = context
+                              uploadDataMap["softwareList"] = ref
                                   .read(pharmacySignUpProvider.notifier)
                                   .softwareList
                                   .toString();
                             }
                             print("Upload Data Map: $uploadDataMap");
-                            String? result = await context
+                            String? result = await ref
                                 .read(authProvider.notifier)
                                 .updatePharmacyUserInformation(
-                                    context
+                                    ref
                                         .read(userProviderLogin.notifier)
                                         .userUID,
                                     uploadDataMap);
@@ -978,7 +980,7 @@ class _EditPharmacyProfileState extends State<EditPharmacyProfile> {
   }
 }
 
-class SignatureBox extends StatefulWidget {
+class SignatureBox extends ConsumerStatefulWidget {
   const SignatureBox({
     Key? key,
     required SignatureController sigController,
@@ -991,7 +993,7 @@ class SignatureBox extends StatefulWidget {
   _SignatureBoxState createState() => _SignatureBoxState();
 }
 
-class _SignatureBoxState extends State<SignatureBox> {
+class _SignatureBoxState extends ConsumerState<SignatureBox> {
   bool signatureSaved = false;
 
   @override
@@ -1056,7 +1058,7 @@ class _SignatureBoxState extends State<SignatureBox> {
                             ),
                             onPressed: () async {
                               if (widget._sigController.isNotEmpty) {
-                                context
+                                ref
                                     .read(pharmacySignUpProvider.notifier)
                                     .changeSignature(await widget._sigController
                                         .toPngBytes());

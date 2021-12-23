@@ -4,11 +4,11 @@ import 'package:pharma_connect/all_used.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/editProfile.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 
-class PharmacyProfile extends StatelessWidget {
+class PharmacyProfile extends ConsumerWidget {
   const PharmacyProfile({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -98,12 +98,10 @@ class PharmacyProfile extends StatelessWidget {
                                       backgroundColor: Colors.grey,
                                       child: Text(
                                           getInitials(
-                                              context
-                                                  .read(pharmacyMainProvider
+                                              ref.read(pharmacyMainProvider
                                                       .notifier)
                                                   .userData?["firstName"],
-                                              context
-                                                  .read(pharmacyMainProvider
+                                              ref.read(pharmacyMainProvider
                                                       .notifier)
                                                   .userData?["lastName"]),
                                           style: TextStyle(
@@ -147,22 +145,19 @@ class PharmacyProfile extends StatelessWidget {
                                               ),
                                             ),
                                             RichText(
-                                              text: context
-                                                              .read(
+                                              text: ref.read(
                                                                   pharmacyMainProvider
                                                                       .notifier)
                                                               .userData?[
                                                           "firstName"] !=
                                                       null
                                                   ? TextSpan(
-                                                      text: context
-                                                                  .read(pharmacyMainProvider
+                                                      text: ref.read(pharmacyMainProvider
                                                                       .notifier)
                                                                   .userData?[
                                                               "firstName"] +
                                                           " " +
-                                                          context
-                                                              .read(
+                                                          ref.read(
                                                                   pharmacyMainProvider
                                                                       .notifier)
                                                               .userData?["lastName"],
@@ -206,8 +201,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: context
-                                                          .read(
+                                                  text: ref.read(
                                                               pharmacyMainProvider
                                                                   .notifier)
                                                           .userData?["email"] ??
@@ -240,8 +234,7 @@ class PharmacyProfile extends StatelessWidget {
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: context
-                                                              .read(
+                                              onTap: ref.read(
                                                                   pharmacyMainProvider
                                                                       .notifier)
                                                               .userData?[
@@ -264,8 +257,7 @@ class PharmacyProfile extends StatelessWidget {
                                                                         0xFF5DB075),
                                                                   ),
                                                                 ),
-                                                                child: Image.network(context
-                                                                    .read(pharmacyMainProvider
+                                                                child: Image.network(ref.read(pharmacyMainProvider
                                                                         .notifier)
                                                                     .userData?["signatureDownloadURL"]),
                                                               ),
@@ -320,8 +312,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                        .read(
+                                                text: ref.read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .userData?["position"] ??
@@ -356,8 +347,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                        .read(
+                                                text: ref.read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .userData?["phoneNumber"] ??
@@ -480,8 +470,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                            .read(
+                                                text: ref.read(
                                                                 pharmacyMainProvider
                                                                     .notifier)
                                                             .userData?[
@@ -519,8 +508,7 @@ class PharmacyProfile extends StatelessWidget {
                                               text: TextSpan(
                                                 children: [
                                                   TextSpan(
-                                                      text: context
-                                                                  .read(pharmacyMainProvider
+                                                      text: ref.read(pharmacyMainProvider
                                                                       .notifier)
                                                                   .userData?["address"]
                                                               [
@@ -528,24 +516,21 @@ class PharmacyProfile extends StatelessWidget {
                                                           "N/A"),
                                                   TextSpan(text: "\n"),
                                                   TextSpan(
-                                                      text: context
-                                                              .read(
+                                                      text: ref.read(
                                                                   pharmacyMainProvider
                                                                       .notifier)
                                                               .userData?[
                                                           "address"]["city"]),
                                                   TextSpan(text: " "),
                                                   TextSpan(
-                                                      text: context
-                                                              .read(
+                                                      text: ref.read(
                                                                   pharmacyMainProvider
                                                                       .notifier)
                                                               .userData?[
                                                           "address"]["country"]),
                                                   TextSpan(text: "\n"),
                                                   TextSpan(
-                                                      text: context
-                                                                  .read(pharmacyMainProvider
+                                                      text: ref.read(pharmacyMainProvider
                                                                       .notifier)
                                                                   .userData?["address"]
                                                               ["postalCode"] ??
@@ -581,8 +566,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                            .read(
+                                                text: ref.read(
                                                                 pharmacyMainProvider
                                                                     .notifier)
                                                             .userData?[
@@ -618,14 +602,12 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                                .read(pharmacyMainProvider
+                                                text: ref.read(pharmacyMainProvider
                                                                     .notifier)
                                                                 .userData?[
                                                             "managerFirstName"] +
                                                         " " +
-                                                        context
-                                                                .read(pharmacyMainProvider
+                                                        ref.read(pharmacyMainProvider
                                                                     .notifier)
                                                                 .userData?[
                                                             "managerLastName"] ??
@@ -660,8 +642,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                            .read(
+                                                text: ref.read(
                                                                 pharmacyMainProvider
                                                                     .notifier)
                                                             .userData?[
@@ -707,8 +688,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                        .read(
+                                                text: ref.read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .userData?["storeNumber"] ??
@@ -743,30 +723,26 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                                .read(pharmacyMainProvider
+                                                text: ref.read(pharmacyMainProvider
                                                                     .notifier)
                                                                 .userData?[
                                                             "softwareList"] !=
                                                         null
-                                                    ? context
-                                                        .read(
+                                                    ? ref.read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .userData![
                                                             "softwareList"]
                                                         .toString()
                                                         .substring(
-                                                            context
-                                                                    .read(pharmacyMainProvider
+                                                            ref.read(pharmacyMainProvider
                                                                         .notifier)
                                                                     .userData?[
                                                                         "softwareList"]
                                                                     .indexOf(
                                                                         "[") +
                                                                 1,
-                                                            context
-                                                                .read(pharmacyMainProvider
+                                                            ref.read(pharmacyMainProvider
                                                                     .notifier)
                                                                 .userData?[
                                                                     "softwareList"]
@@ -803,8 +779,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                            .read(
+                                                text: ref.read(
                                                                 pharmacyMainProvider
                                                                     .notifier)
                                                             .userData?[
@@ -840,8 +815,7 @@ class PharmacyProfile extends StatelessWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: context
-                                                            .read(
+                                                text: ref.read(
                                                                 pharmacyMainProvider
                                                                     .notifier)
                                                             .userData?[

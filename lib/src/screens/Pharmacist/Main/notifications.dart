@@ -5,7 +5,7 @@ import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.
 import 'package:pharma_connect/src/screens/login.dart';
 
 // ignore: must_be_immutable
-class NotificationsPharmacist extends StatefulWidget {
+class NotificationsPharmacist extends ConsumerStatefulWidget {
   Map jobAlerts;
   NotificationsPharmacist({Key? key, required this.jobAlerts})
       : super(key: key);
@@ -15,7 +15,7 @@ class NotificationsPharmacist extends StatefulWidget {
       _NotificationsPharmacistState();
 }
 
-class _NotificationsPharmacistState extends State<NotificationsPharmacist> {
+class _NotificationsPharmacistState extends ConsumerState<NotificationsPharmacist> {
   final LocalStorage localStorage = LocalStorage();
 
   @override
@@ -279,7 +279,7 @@ class _NotificationsPharmacistState extends State<NotificationsPharmacist> {
                   onPressed: () async {
                     await localStorage.writeFile(
                         filePath:
-                            "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/notifications",
+                            "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/notifications",
                         data: "");
                     print("Storage Cleared");
                     Navigator.push(

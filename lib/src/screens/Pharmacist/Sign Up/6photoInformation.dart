@@ -8,14 +8,14 @@ import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
 import '../../../../main.dart';
 
-class PhotoInformation extends StatefulWidget {
+class PhotoInformation extends ConsumerStatefulWidget {
   PhotoInformation({Key? key}) : super(key: key);
 
   @override
   _PhotoInformationState createState() => _PhotoInformationState();
 }
 
-class _PhotoInformationState extends State<PhotoInformation> {
+class _PhotoInformationState extends ConsumerState<PhotoInformation> {
   bool frontOfIDPicked = false;
   bool backOfIDPicked = false;
   bool registrationCertificatePicked = false;
@@ -94,8 +94,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             SizedBox(height: 10),
-                            if (context
-                                    .read(pharmacistSignUpProvider.notifier)
+                            if (ref.read(pharmacistSignUpProvider.notifier)
                                     .frontIDData !=
                                 null)
                               Row(
@@ -118,8 +117,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                 BorderRadius.circular(10),
                                           ))),
                                       onPressed: () async {
-                                        frontFile = context
-                                            .read(pharmacistSignUpProvider
+                                        frontFile = ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .frontIDData;
                                         print("FILE PATH: " +
@@ -161,8 +159,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                           frontFile = null;
                                         });
 
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .clearFrontIDImage();
                                       },
@@ -211,8 +208,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                             .files.first.path
                                             .toString());
 
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .changeFrontIDImage(frontFile);
                                       } else {
@@ -251,8 +247,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             SizedBox(height: 10),
-                            if (context
-                                    .read(pharmacistSignUpProvider.notifier)
+                            if (ref.read(pharmacistSignUpProvider.notifier)
                                     .backIDData !=
                                 null)
                               Row(
@@ -275,8 +270,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                 BorderRadius.circular(10),
                                           ))),
                                       onPressed: () async {
-                                        backFile = context
-                                            .read(pharmacistSignUpProvider
+                                        backFile = ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .backIDData;
                                         print("FILE PATH: " +
@@ -318,8 +312,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                           backFile = null;
                                         });
 
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .clearBackIDImage();
                                       },
@@ -369,8 +362,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                             .files.first.path
                                             .toString());
 
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .changeBackIDImage(backFile);
                                       } else {
@@ -432,8 +424,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             SizedBox(height: 10),
-                            if (context
-                                    .read(pharmacistSignUpProvider.notifier)
+                            if (ref.read(pharmacistSignUpProvider.notifier)
                                     .registrationCertificateData !=
                                 null)
                               Row(
@@ -456,8 +447,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                 BorderRadius.circular(10),
                                           ))),
                                       onPressed: () async {
-                                        registrationFile = context
-                                            .read(pharmacistSignUpProvider
+                                        registrationFile = ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .registrationCertificateData;
                                         print("FILE PATH: " +
@@ -499,8 +489,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                           registrationFile = null;
                                         });
 
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .clearRegistrationCertificatePDF();
                                       },
@@ -553,8 +542,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                 .files.first.path
                                                 .toString());
 
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .changeRegistrationCertificate(
                                                 registrationFile);
@@ -616,8 +604,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             SizedBox(height: 10),
-                            if (context
-                                    .read(pharmacistSignUpProvider.notifier)
+                            if (ref.read(pharmacistSignUpProvider.notifier)
                                     .profilePhotoData !=
                                 null)
                               Row(
@@ -640,8 +627,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                 BorderRadius.circular(10),
                                           ))),
                                       onPressed: () async {
-                                        profilePhotoFile = context
-                                            .read(pharmacistSignUpProvider
+                                        profilePhotoFile = ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .profilePhotoData;
                                         print("FILE PATH: " +
@@ -683,8 +669,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                           profilePhotoFile = null;
                                         });
 
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .clearProfilePhotoImage();
                                       },
@@ -736,8 +721,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                 .files.first.path
                                                 .toString());
 
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .changeProfilePhotoImage(
                                                 profilePhotoFile);
@@ -805,8 +789,8 @@ class _PhotoInformationState extends State<PhotoInformation> {
               //Submit
               Center(
                 child: Consumer(
-                  builder: (context, watch, child) {
-                    watch(pharmacistSignUpProvider);
+                  builder: (context, ref, child) {
+                    ref.watch(pharmacistSignUpProvider);
                     return SizedBox(
                       width: 324,
                       height: 51,
@@ -830,16 +814,13 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                 setState(() {
                                   disableButton = true;
                                 });
-                                context
-                                    .read(authProvider.notifier)
+                                ref.read(authProvider.notifier)
                                     .registerWithEmailAndPassword(
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .email
                                             .toString(),
-                                        context
-                                            .read(pharmacistSignUpProvider
+                                        ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .password
                                             .toString())
@@ -859,15 +840,13 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                     //value!.user!.delete();
                                     return null;
                                   } else {
-                                    if (context
-                                            .read(pharmacistSignUpProvider
+                                    if (ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .userType ==
                                         "Pharmacist") {
-                                      context
-                                          .read(authProvider.notifier)
+                                      ref.read(authProvider.notifier)
                                           .uploadPharmacistUserInformation(
-                                              value, context)
+                                              ref, value, context)
                                           .then((value) async {
                                         final snackBar = SnackBar(
                                           content:
@@ -879,8 +858,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                         await value?.user
                                             ?.sendEmailVerification()
                                             .then((_) {
-                                          context
-                                              .read(pharmacistSignUpProvider
+                                          ref.read(pharmacistSignUpProvider
                                                   .notifier)
                                               .clearAllValues();
                                           Navigator.push(
@@ -907,16 +885,14 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                   ));
                                         });
                                       });
-                                    } else if (context
-                                            .read(pharmacistSignUpProvider
+                                    } else if (ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .userType ==
                                         "Pharmacy Assistant") {
                                       print("Registering Pharmacy Assistant");
-                                      context
-                                          .read(authProvider.notifier)
+                                      ref.read(authProvider.notifier)
                                           .uploadPharmacyAssistantUserInformation(
-                                              value, context)
+                                              ref, value, context)
                                           .then((value) async {
                                         final snackBar = SnackBar(
                                           content: Text(
@@ -928,8 +904,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                         await value?.user
                                             ?.sendEmailVerification()
                                             .then((_) {
-                                          context
-                                              .read(pharmacistSignUpProvider
+                                          ref.read(pharmacistSignUpProvider
                                                   .notifier)
                                               .clearAllValues();
                                           Navigator.push(
@@ -956,16 +931,14 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                                   ));
                                         });
                                       });
-                                    } else if (context
-                                            .read(pharmacistSignUpProvider
+                                    } else if (ref.read(pharmacistSignUpProvider
                                                 .notifier)
                                             .userType ==
                                         "Pharmacy Technician") {
                                       print("Registering Pharmacy Technician");
-                                      context
-                                          .read(authProvider.notifier)
+                                      ref.read(authProvider.notifier)
                                           .uploadPharmacyTechnicianUserInformation(
-                                              value, context)
+                                              ref, value, context)
                                           .then((value) async {
                                         final snackBar = SnackBar(
                                           content: Text(
@@ -977,8 +950,7 @@ class _PhotoInformationState extends State<PhotoInformation> {
                                         await value?.user
                                             ?.sendEmailVerification()
                                             .then((_) {
-                                          context
-                                              .read(pharmacistSignUpProvider
+                                          ref.read(pharmacistSignUpProvider
                                                   .notifier)
                                               .clearAllValues();
                                           Navigator.push(

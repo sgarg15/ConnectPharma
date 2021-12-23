@@ -23,14 +23,14 @@ final pharmacyMainProvider =
   return PharmacyMainProvider();
 });
 
-class JobHistoryPharmacy extends StatefulWidget {
+class JobHistoryPharmacy extends ConsumerStatefulWidget {
   JobHistoryPharmacy({Key? key}) : super(key: key);
 
   @override
   _JobHistoryState createState() => _JobHistoryState();
 }
 
-class _JobHistoryState extends State<JobHistoryPharmacy> {
+class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int segmentedControlGroupValue = 0;
   CollectionReference usersRef = FirebaseFirestore.instance.collection("Users");
@@ -50,8 +50,8 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
   @override
   void initState() {
     super.initState();
-    print("User UID: ${context.read(userProviderLogin.notifier).userUID}");
-    print(context.read(pharmacyMainProvider.notifier).userData);
+    print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
+    print(ref.read(pharmacyMainProvider.notifier).userData);
     jobsDataSub?.cancel();
     userDataSub?.cancel();
 
@@ -59,18 +59,18 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
     numPastJobs = 0;
     //getJobs();
     jobsStreamPharmacy = usersRef
-        .doc(context.read(userProviderLogin.notifier).userUID)
+        .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("Main")
         .snapshots();
 
     jobsDataSub = usersRef
-        .doc(context.read(userProviderLogin.notifier).userUID)
+        .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("Main")
         .snapshots()
         .listen((event) {});
 
     userDataSub = usersRef
-        .doc(context.read(userProviderLogin.notifier).userUID)
+        .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("SignUp")
         .doc("Information")
         .snapshots()
@@ -78,17 +78,16 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
       setState(() {
         userDataMap = docData.data();
       });
-      context
-          .read(pharmacyMainProvider.notifier)
+      ref.read(pharmacyMainProvider.notifier)
           .changeUserDataMap(userDataMap);
-      print(context.read(pharmacyMainProvider.notifier).userData);
+      print(ref.read(pharmacyMainProvider.notifier).userData);
       print(
-          "First Name: ${context.read(pharmacyMainProvider.notifier).userData?["firstName"]}");
+          "First Name: ${ref.read(pharmacyMainProvider.notifier).userData?["firstName"]}");
       print(
-          "Last Name: ${context.read(pharmacyMainProvider.notifier).userData?["lastName"]}");
+          "Last Name: ${ref.read(pharmacyMainProvider.notifier).userData?["lastName"]}");
     });
 
-    context.read(pharmacyMainProvider.notifier).clearDateValues();
+    ref.read(pharmacyMainProvider.notifier).clearDateValues();
     print("In Pharmacy Job History InitState");
     // getUserData();
   }
@@ -663,7 +662,7 @@ class _JobHistoryState extends State<JobHistoryPharmacy> {
 }
 
 // ignore: must_be_immutable
-class SideMenuDrawer extends StatelessWidget {
+class SideMenuDrawer extends ConsumerWidget {
   StreamSubscription? userDataSub;
   StreamSubscription? jobsDataSub;
 
@@ -674,7 +673,7 @@ class SideMenuDrawer extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       constraints: BoxConstraints(minWidth: 250),
       child: Drawer(
@@ -840,9 +839,9 @@ class SideMenuDrawer extends StatelessWidget {
               onTap: () {
                 jobsDataSub?.cancel();
                 userDataSub?.cancel();
-                context.read(authProvider.notifier).signOut().then((value) {
-                  context.read(pharmacyMainProvider.notifier).resetValues();
-                  context.read(pharmacySignUpProvider.notifier).resetValues();
+                ref.read(authProvider.notifier).signOut().then((value) {
+                  ref.read(pharmacyMainProvider.notifier).resetValues();
+                  ref.read(pharmacySignUpProvider.notifier).resetValues();
                 });
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => PharmaConnect()),
@@ -859,11 +858,11 @@ class SideMenuDrawer extends StatelessWidget {
   }
 }
 
-class _CreateDrawerHeader extends StatelessWidget {
+class _CreateDrawerHeader extends ConsumerWidget {
   const _CreateDrawerHeader({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 140,
       child: DrawerHeader(
@@ -882,10 +881,10 @@ class _CreateDrawerHeader extends StatelessWidget {
                 backgroundColor: Colors.grey,
                 child: Text(
                     getInitials(
-                        context
+                        ref
                             .read(pharmacyMainProvider.notifier)
                             .userData?["firstName"],
-                        context
+                        ref
                             .read(pharmacyMainProvider.notifier)
                             .userData?["lastName"]),
                     style: TextStyle(
@@ -902,11 +901,11 @@ class _CreateDrawerHeader extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(15, 8, 0, 5),
                   child: RichText(
                     text: TextSpan(
-                      text: context
+                      text: ref
                               .read(pharmacyMainProvider.notifier)
                               .userData?["firstName"] +
                           " " +
-                          context
+                          ref
                               .read(pharmacyMainProvider.notifier)
                               .userData?["lastName"],
                       style: TextStyle(
@@ -920,7 +919,7 @@ class _CreateDrawerHeader extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: RichText(
                     text: TextSpan(
-                      text: context
+                      text: ref
                           .read(pharmacyMainProvider.notifier)
                           .userData?["email"],
                       style: TextStyle(

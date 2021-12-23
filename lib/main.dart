@@ -60,18 +60,18 @@ Future<void> main() async {
   );
 }
 
-class PharmaConnect extends StatefulWidget {
+class PharmaConnect extends ConsumerStatefulWidget {
   @override
   _PharmaConnectState createState() => _PharmaConnectState();
 }
 
-class _PharmaConnectState extends State<PharmaConnect> {
+class _PharmaConnectState extends ConsumerState<PharmaConnect> {
   @override
   void initState() {
     super.initState();
     print("Inside main page");
     print("Current User: ${FirebaseAuth.instance.currentUser?.uid}");
-    print(context.read(pharmacyMainProvider.notifier).userData);
+    print(ref.read(pharmacyMainProvider.notifier).userData);
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if (FirebaseAuth.instance.currentUser != null &&
           FirebaseAuth.instance.currentUser!.emailVerified) {

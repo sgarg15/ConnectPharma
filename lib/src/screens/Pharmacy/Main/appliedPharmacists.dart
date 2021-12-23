@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../login.dart';
 
 // ignore: must_be_immutable
-class PharmacistApplied extends StatefulWidget {
+class PharmacistApplied extends ConsumerStatefulWidget {
   Map? applicants;
   String? jodID;
   PharmacistApplied({Key? key, this.applicants, this.jodID}) : super(key: key);
@@ -16,7 +16,7 @@ class PharmacistApplied extends StatefulWidget {
   _PharmacistAppliedState createState() => _PharmacistAppliedState();
 }
 
-class _PharmacistAppliedState extends State<PharmacistApplied> {
+class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
   @override
   void initState() {
     print(widget.applicants);
@@ -308,7 +308,7 @@ class _PharmacistAppliedState extends State<PharmacistApplied> {
                                             ))),
                                         child: Text("Reject"),
                                         onPressed: () {
-                                          _rejectPharmacist(context, key);
+                                          _rejectPharmacist(ref, context, key);
                                         },
                                       ),
                                     ),
@@ -351,7 +351,7 @@ class _PharmacistAppliedState extends State<PharmacistApplied> {
                                                   BorderRadius.circular(100),
                                             ))),
                                         onPressed: () {
-                                          _acceptPharmacist(context, key);
+                                          _acceptPharmacist(ref, context, key);
                                         },
                                       ),
                                     ),
@@ -380,7 +380,7 @@ class _PharmacistAppliedState extends State<PharmacistApplied> {
   }
 
   Future<dynamic> _acceptPharmacist(
-      BuildContext context, String pharmacistUID) {
+      WidgetRef ref, BuildContext context, String pharmacistUID) {
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -450,7 +450,7 @@ class _PharmacistAppliedState extends State<PharmacistApplied> {
                               FirebaseFirestore.instance.batch();
 
                           sendPharmacyAcceptionData(
-                              context, acceptPharmacistBatch, pharmacistUID);
+                              ref, context, acceptPharmacistBatch, pharmacistUID);
 
                           sendPharmacistAcceptionData(
                               pharmacistUID, acceptPharmacistBatch);
@@ -498,11 +498,11 @@ class _PharmacistAppliedState extends State<PharmacistApplied> {
             ));
   }
 
-  void sendPharmacyAcceptionData(BuildContext context,
+  void sendPharmacyAcceptionData(WidgetRef ref, BuildContext context,
       WriteBatch acceptPharmacistBatch, String pharmacistUID) {
     DocumentReference jobDocument = FirebaseFirestore.instance
         .collection("Users")
-        .doc(context.read(userProviderLogin.notifier).userUID)
+        .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("Main")
         .doc(widget.jodID);
     acceptPharmacistBatch.update(
@@ -521,7 +521,7 @@ class _PharmacistAppliedState extends State<PharmacistApplied> {
   }
 
   Future<dynamic> _rejectPharmacist(
-      BuildContext context, String pharmacistUID) {
+      WidgetRef ref, BuildContext context, String pharmacistUID) {
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -591,7 +591,7 @@ class _PharmacistAppliedState extends State<PharmacistApplied> {
                               FirebaseFirestore.instance.batch();
 
                           sendPharmacyRejectionData(
-                              context, rejectPharmacistBatch, pharmacistUID);
+                              ref, context, rejectPharmacistBatch, pharmacistUID);
 
                           sendPharmacistRejectionData(
                               pharmacistUID, rejectPharmacistBatch);
@@ -639,11 +639,11 @@ class _PharmacistAppliedState extends State<PharmacistApplied> {
             ));
   }
 
-  void sendPharmacyRejectionData(BuildContext context,
+  void sendPharmacyRejectionData(WidgetRef ref, BuildContext context,
       WriteBatch rejectPharmacistBatch, String pharmacistUID) {
     DocumentReference jobDocument = FirebaseFirestore.instance
         .collection("Users")
-        .doc(context.read(userProviderLogin.notifier).userUID)
+        .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("Main")
         .doc(widget.jodID);
     rejectPharmacistBatch.update(

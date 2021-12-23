@@ -7,7 +7,7 @@ import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dar
 
 import '../../../../main.dart';
 
-class PharmacyManagerInformation extends StatefulWidget {
+class PharmacyManagerInformation extends ConsumerStatefulWidget {
   PharmacyManagerInformation({Key? key}) : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class PharmacyManagerInformation extends StatefulWidget {
 }
 
 class _PharmacyManagerInformationState
-    extends State<PharmacyManagerInformation> {
+    extends ConsumerState<PharmacyManagerInformation> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool disableButton = false;
 
@@ -84,8 +84,7 @@ class _PharmacyManagerInformationState
                         hintText: "Enter manager's First Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String managerFirstName) {
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeManagerFirstName(managerFirstName);
                         },
                         validation: (value) {
@@ -96,8 +95,7 @@ class _PharmacyManagerInformationState
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacySignUpProvider.notifier)
+                        initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .managerFirstName,
                       ),
                       SizedBox(height: 20),
@@ -108,8 +106,7 @@ class _PharmacyManagerInformationState
                         hintText: "Enter manager's Last Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String managerLastName) {
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeMangagerLastName(managerLastName);
                         },
                         validation: (value) {
@@ -120,8 +117,7 @@ class _PharmacyManagerInformationState
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacySignUpProvider.notifier)
+                        initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .managerLastName,
                       ),
                       SizedBox(height: 20),
@@ -132,8 +128,7 @@ class _PharmacyManagerInformationState
                         hintText: "Enter manager's Phone Number...",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String managerPhoneNumber) {
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeManagerPhoneNumber(managerPhoneNumber);
                         },
                         validation: (value) {
@@ -142,8 +137,7 @@ class _PharmacyManagerInformationState
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacySignUpProvider.notifier)
+                        initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .managerPhoneNumber,
                         formatter: [MaskedInputFormatter('(###) ###-####')],
                       ),
@@ -155,8 +149,7 @@ class _PharmacyManagerInformationState
                         hintText: "Enter license Number...",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String licenseNumber) {
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeLicenseNumber(licenseNumber);
                         },
                         validation: (value) {
@@ -165,8 +158,7 @@ class _PharmacyManagerInformationState
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacySignUpProvider.notifier)
+                        initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .licenseNumber,
                       ),
                       SizedBox(height: 20),
@@ -178,8 +170,8 @@ class _PharmacyManagerInformationState
               //Submit
               Center(
                 child: Consumer(
-                  builder: (context, watch, child) {
-                    watch(pharmacySignUpProvider);
+                  builder: (context, ref, child) {
+                    ref.watch(pharmacySignUpProvider);
                     return SizedBox(
                       width: 324,
                       height: 51,
@@ -197,8 +189,7 @@ class _PharmacyManagerInformationState
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
                             ))),
-                        onPressed: (!context
-                                    .read(pharmacySignUpProvider.notifier)
+                        onPressed: (!ref.read(pharmacySignUpProvider.notifier)
                                     .isValidManagerInformation() &&
                                 !disableButton)
                             ? () {
@@ -206,16 +197,13 @@ class _PharmacyManagerInformationState
                                 setState(() {
                                   disableButton = true;
                                 });
-                                context
-                                    .read(authProvider.notifier)
+                                ref.read(authProvider.notifier)
                                     .registerWithEmailAndPassword(
-                                        context
-                                            .read(
+                                        ref.read(
                                                 pharmacySignUpProvider.notifier)
                                             .email
                                             .toString(),
-                                        context
-                                            .read(
+                                        ref.read(
                                                 pharmacySignUpProvider.notifier)
                                             .password
                                             .toString())
@@ -235,10 +223,9 @@ class _PharmacyManagerInformationState
                                     });
                                     return null;
                                   } else {
-                                    context
-                                        .read(authProvider.notifier)
+                                    ref.read(authProvider.notifier)
                                         .uploadPharmacyUserInformation(
-                                            value, context)
+                                            ref, value, context)
                                         .then((value) async {
                                       final snackBar = SnackBar(
                                         content: Text("User Registered"),
@@ -249,8 +236,7 @@ class _PharmacyManagerInformationState
                                       await value?.user
                                           ?.sendEmailVerification()
                                           .then((_) {
-                                        context
-                                            .read(
+                                        ref.read(
                                                 pharmacySignUpProvider.notifier)
                                             .resetValues();
                                         Navigator.push(

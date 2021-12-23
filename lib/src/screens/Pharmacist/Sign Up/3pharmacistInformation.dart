@@ -6,14 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../all_used.dart';
 
-class PharmacistInformation extends StatefulWidget {
+class PharmacistInformation extends ConsumerStatefulWidget {
   PharmacistInformation({Key? key}) : super(key: key);
 
   @override
   _PharmacistInformationState createState() => _PharmacistInformationState();
 }
 
-class _PharmacistInformationState extends State<PharmacistInformation> {
+class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -78,8 +78,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                       hintText: "First Year Licensed in Canada...",
                       keyboardStyle: TextInputType.number,
                       onChanged: (String licenseYear) {
-                        context
-                            .read(pharmacistSignUpProvider.notifier)
+                        ref.read(pharmacistSignUpProvider.notifier)
                             .changeFirstYearLicensed(licenseYear);
                       },
                       validation: (value) {
@@ -88,8 +87,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: context
-                          .read(pharmacistSignUpProvider.notifier)
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
                           .firstYearLicensed,
                     ),
                     SizedBox(height: 20),
@@ -100,8 +98,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                       hintText: "Registration Number...",
                       keyboardStyle: TextInputType.number,
                       onChanged: (String registrationNumber) {
-                        context
-                            .read(pharmacistSignUpProvider.notifier)
+                        ref.read(pharmacistSignUpProvider.notifier)
                             .changeRegistrationNumber(registrationNumber);
                       },
                       validation: (value) {
@@ -110,8 +107,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: context
-                          .read(pharmacistSignUpProvider.notifier)
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
                           .registrationNumber,
                     ),
                     SizedBox(height: 20),
@@ -122,8 +118,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                       hintText: "Registration Province...",
                       keyboardStyle: TextInputType.streetAddress,
                       onChanged: (String registrationProvince) {
-                        context
-                            .read(pharmacistSignUpProvider.notifier)
+                        ref.read(pharmacistSignUpProvider.notifier)
                             .changeRegistrationProvince(registrationProvince);
                       },
                       validation: (value) {
@@ -132,8 +127,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: context
-                          .read(pharmacistSignUpProvider.notifier)
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
                           .registrationProvince,
                     ),
                     SizedBox(height: 20),
@@ -144,8 +138,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                       hintText: "Graduation Year...",
                       keyboardStyle: TextInputType.number,
                       onChanged: (String graduationYear) {
-                        context
-                            .read(pharmacistSignUpProvider.notifier)
+                        ref.read(pharmacistSignUpProvider.notifier)
                             .changeGraduationYear(graduationYear);
                       },
                       validation: (value) {
@@ -154,8 +147,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: context
-                          .read(pharmacistSignUpProvider.notifier)
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
                           .graduationYear,
                     ),
                     SizedBox(height: 20),
@@ -166,8 +158,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                       hintText: "Instituation Name...",
                       keyboardStyle: TextInputType.streetAddress,
                       onChanged: (String institutionName) {
-                        context
-                            .read(pharmacistSignUpProvider.notifier)
+                        ref.read(pharmacistSignUpProvider.notifier)
                             .changeInstitutionName(institutionName);
                       },
                       validation: (value) {
@@ -176,8 +167,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: context
-                          .read(pharmacistSignUpProvider.notifier)
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
                           .institutionName,
                     ),
                     SizedBox(height: 20),
@@ -188,8 +178,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                       hintText: "Number of years...",
                       keyboardStyle: TextInputType.number,
                       onChanged: (String workingExperience) {
-                        context
-                            .read(pharmacistSignUpProvider.notifier)
+                        ref.read(pharmacistSignUpProvider.notifier)
                             .changeWorkingExperience(workingExperience);
                       },
                       validation: (value) {
@@ -198,8 +187,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: context
-                          .read(pharmacistSignUpProvider.notifier)
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
                           .workingExperience,
                     ),
                     SizedBox(height: 20),
@@ -217,18 +205,16 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                     ),
                     SizedBox(height: 0),
                     Consumer(
-                      builder: (context, watch, child) {
-                        watch(pharmacistSignUpProvider);
+                      builder: (context, ref, child) {
+                        ref.watch(pharmacistSignUpProvider);
                         return Transform.scale(
                           scale: 1.5,
                           child: Switch(
-                            value: context
-                                .read(pharmacistSignUpProvider.notifier)
+                            value: ref.read(pharmacistSignUpProvider.notifier)
                                 .willingToMove,
                             onChanged: (value) {
                               print(value);
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
+                              ref.read(pharmacistSignUpProvider.notifier)
                                   .changeWillingToMove(value);
                             },
                             activeTrackColor: Color(0xFF5DB075),
@@ -246,8 +232,8 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
             //Next Button
             Center(
               child: Consumer(
-                builder: (context, watch, child) {
-                  watch(pharmacistSignUpProvider);
+                builder: (context, ref, child) {
+                  ref.watch(pharmacistSignUpProvider);
                   return SizedBox(
                     width: 324,
                     height: 51,
@@ -266,8 +252,7 @@ class _PharmacistInformationState extends State<PharmacistInformation> {
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ))),
-                      onPressed: (context
-                              .read(pharmacistSignUpProvider.notifier)
+                      onPressed: (ref.read(pharmacistSignUpProvider.notifier)
                               .isValidPharmacistInformation())
                           ? null
                           : () {

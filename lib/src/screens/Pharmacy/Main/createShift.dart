@@ -11,14 +11,14 @@ import '../../../../Custom Widgets/custom_dateTimeField.dart';
 import '../../../../all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateShift extends StatefulWidget {
+class CreateShift extends ConsumerStatefulWidget {
   CreateShift({Key? key}) : super(key: key);
 
   @override
   _CreateShiftPharmacyState createState() => _CreateShiftPharmacyState();
 }
 
-class _CreateShiftPharmacyState extends State<CreateShift> {
+class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
   final _softwareItems = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
@@ -34,14 +34,14 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
   @override
   void initState() {
     super.initState();
-    context.read(pharmacyMainProvider.notifier).clearValues();
+    ref.read(pharmacyMainProvider.notifier).clearValues();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        context.read(pharmacyMainProvider.notifier).clearValues();
+        ref.read(pharmacyMainProvider.notifier).clearValues();
         return true;
       },
       child: Scaffold(
@@ -57,8 +57,8 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
           backgroundColor: Color(0xFFF6F6F6),
         ),
         body: Consumer(
-          builder: (context, watch, child) {
-            watch(pharmacyMainProvider);
+          builder: (context, ref, child) {
+            ref.watch(pharmacyMainProvider);
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,8 +155,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                             currentValue ??
                                                                 DateTime.now()),
                                                   );
-                                                  context
-                                                      .read(pharmacyMainProvider
+                                                  ref.read(pharmacyMainProvider
                                                           .notifier)
                                                       .changeStartDate(
                                                           DateTimeField.combine(
@@ -166,8 +165,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                   return DateTimeField.combine(
                                                       date, time);
                                                 } else {
-                                                  context
-                                                      .read(pharmacyMainProvider
+                                                  ref.read(pharmacyMainProvider
                                                           .notifier)
                                                       .changeStartDate(
                                                           currentValue);
@@ -241,13 +239,11 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                               if (!showAllPharmacists) {
                                                 final date = await showDatePicker(
                                                     context: context,
-                                                    firstDate: context
-                                                        .read(
+                                                    firstDate: ref.read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .startDate as DateTime,
-                                                    initialDate: context
-                                                        .read(
+                                                    initialDate: ref.read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .startDate as DateTime,
@@ -261,8 +257,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                             currentValue ??
                                                                 DateTime.now()),
                                                   );
-                                                  context
-                                                      .read(pharmacyMainProvider
+                                                  ref.read(pharmacyMainProvider
                                                           .notifier)
                                                       .changeEndDate(
                                                           DateTimeField.combine(
@@ -271,8 +266,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                   return DateTimeField.combine(
                                                       date, time);
                                                 } else {
-                                                  context
-                                                      .read(pharmacyMainProvider
+                                                  ref.read(pharmacyMainProvider
                                                           .notifier)
                                                       .changeEndDate(
                                                           currentValue);
@@ -302,12 +296,10 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                     ),
                                   ),
                                   activeColor: Color(0xFF5DB075),
-                                  value: context
-                                      .read(pharmacyMainProvider.notifier)
+                                  value: ref.read(pharmacyMainProvider.notifier)
                                       .fullTime,
                                   onChanged: (value) {
-                                    context
-                                        .read(pharmacyMainProvider.notifier)
+                                    ref.read(pharmacyMainProvider.notifier)
                                         .changeFullTimeStatus(value);
                                     setState(() {
                                       startDateController.text =
@@ -315,8 +307,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                       endDateController.text =
                                           "dd/mm/yyyy hh:mm";
 
-                                      context
-                                          .read(pharmacyMainProvider.notifier)
+                                      ref.read(pharmacyMainProvider.notifier)
                                           .clearDateValues();
                                     });
                                   },
@@ -368,8 +359,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                             color: Color(0xFFBDBDBD),
                                             fontSize: 16),
                                       ),
-                                      value: context
-                                          .read(pharmacyMainProvider.notifier)
+                                      value: ref.read(pharmacyMainProvider.notifier)
                                           .position,
                                       decoration: InputDecoration(
                                         filled: true,
@@ -391,8 +381,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                             child: Text(value), value: value);
                                       }).toList(),
                                       onChanged: (String? value) {
-                                        context
-                                            .read(pharmacyMainProvider.notifier)
+                                        ref.read(pharmacyMainProvider.notifier)
                                             .changePosition(value);
                                       },
                                       style: GoogleFonts.questrial(
@@ -451,8 +440,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
                                             listType: MultiSelectListType.CHIP,
-                                            initialValue: context
-                                                .read(pharmacyMainProvider
+                                            initialValue: ref.read(pharmacyMainProvider
                                                     .notifier)
                                                 .skillList,
                                             searchable: true,
@@ -463,14 +451,12 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                     color: Color(0xFFBDBDBD),
                                                     fontSize: 16)),
                                             onConfirm: (values) {
-                                              context
-                                                  .read(pharmacyMainProvider
+                                              ref.read(pharmacyMainProvider
                                                       .notifier)
                                                   .changeSkillList(values);
                                             },
                                             chipDisplay: MultiSelectChipDisplay(
-                                              items: context
-                                                  .read(pharmacyMainProvider
+                                              items: ref.read(pharmacyMainProvider
                                                       .notifier)
                                                   .skillList
                                                   ?.map((e) => MultiSelectItem(
@@ -478,13 +464,11 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                   .toList(),
                                               chipColor: Color(0xFF5DB075),
                                               onTap: (value) {
-                                                context
-                                                    .read(pharmacyMainProvider
+                                                ref.read(pharmacyMainProvider
                                                         .notifier)
                                                     .skillList
                                                     ?.remove(value);
-                                                return context
-                                                    .read(pharmacyMainProvider
+                                                return ref.read(pharmacyMainProvider
                                                         .notifier)
                                                     .skillList;
                                               },
@@ -586,8 +570,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                               Color(0xFFBDBDBD),
                                                           fontSize: 16)),
                                                   onConfirm: (values) {
-                                                    context
-                                                        .read(
+                                                    ref.read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .changeSoftwareList(
@@ -595,8 +578,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                   },
                                                   chipDisplay:
                                                       MultiSelectChipDisplay(
-                                                    items: context
-                                                        .read(
+                                                    items: ref.read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .softwareList
@@ -607,14 +589,12 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                                     chipColor:
                                                         Color(0xFF5DB075),
                                                     onTap: (value) {
-                                                      context
-                                                          .read(
+                                                      ref.read(
                                                               pharmacyMainProvider
                                                                   .notifier)
                                                           .softwareList
                                                           ?.remove(value);
-                                                      return context
-                                                          .read(
+                                                      return ref.read(
                                                               pharmacyMainProvider
                                                                   .notifier)
                                                           .softwareList;
@@ -647,12 +627,10 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: context
-                                        .read(pharmacyMainProvider.notifier)
+                                    value: ref.read(pharmacyMainProvider.notifier)
                                         .techOnSite,
                                     onChanged: (value) {
-                                      context
-                                          .read(pharmacyMainProvider.notifier)
+                                      ref.read(pharmacyMainProvider.notifier)
                                           .changeTechOnSite(value);
                                     },
                                     controlAffinity: ListTileControlAffinity
@@ -677,12 +655,10 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: context
-                                        .read(pharmacyMainProvider.notifier)
+                                    value: ref.read(pharmacyMainProvider.notifier)
                                         .assistantOnSite,
                                     onChanged: (value) {
-                                      context
-                                          .read(pharmacyMainProvider.notifier)
+                                      ref.read(pharmacyMainProvider.notifier)
                                           .changeAssistantOnSite(value);
                                     },
                                     controlAffinity: ListTileControlAffinity
@@ -721,8 +697,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                           alignment: Alignment.center,
                                           child: TextField(
                                             onChanged: (value) {
-                                              context
-                                                  .read(pharmacyMainProvider
+                                              ref.read(pharmacyMainProvider
                                                       .notifier)
                                                   .changeHourlyRate(value);
                                             },
@@ -775,12 +750,10 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: context
-                                        .read(pharmacyMainProvider.notifier)
+                                    value: ref.read(pharmacyMainProvider.notifier)
                                         .limaStatus,
                                     onChanged: (value) {
-                                      context
-                                          .read(pharmacyMainProvider.notifier)
+                                      ref.read(pharmacyMainProvider.notifier)
                                           .changeLIMAStatus(value);
                                     },
                                     controlAffinity: ListTileControlAffinity
@@ -817,8 +790,7 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.start,
                                           onChanged: (value) {
-                                            context
-                                                .read(pharmacyMainProvider
+                                            ref.read(pharmacyMainProvider
                                                     .notifier)
                                                 .changeComments(value);
                                           },
@@ -881,17 +853,14 @@ class _CreateShiftPharmacyState extends State<CreateShift> {
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100),
                               ))),
-                          onPressed: (!context
-                                  .read(pharmacyMainProvider.notifier)
+                          onPressed: (!ref.read(pharmacyMainProvider.notifier)
                                   .isValidCreateShift())
                               ? () {
                                   print("Pressed");
 
-                                  context
-                                      .read(authProvider.notifier)
+                                  ref.read(authProvider.notifier)
                                       .uploadJobToPharmacy(
-                                          context
-                                              .read(userProviderLogin.notifier)
+                                          ref, ref.read(userProviderLogin.notifier)
                                               .userUID,
                                           context);
 

@@ -15,14 +15,14 @@ import '../../../../all_used.dart';
 import '../../../../Custom Widgets/fileStorage.dart';
 import 'package:geolocator/geolocator.dart';
 
-class FindShiftForPharmacist extends StatefulWidget {
+class FindShiftForPharmacist extends ConsumerStatefulWidget {
   FindShiftForPharmacist({Key? key}) : super(key: key);
 
   @override
   _FindShiftForPharmacistState createState() => _FindShiftForPharmacistState();
 }
 
-class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
+class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist> {
   CollectionReference aggregationRef =
       FirebaseFirestore.instance.collection("aggregation");
   Location pharmacistLocation =
@@ -63,10 +63,10 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
     });
   }
 
-  void jobsSortedWithSchedule() async {
+  void jobsSortedWithSchedule(WidgetRef ref) async {
     String jobsListFile = localStorage.readFile(
         filePath:
-            "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList");
+            "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList");
 
     print("File: $jobsListFile");
     if (jobsListFile.isNotEmpty) {
@@ -79,10 +79,10 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
       print(value["pharmacyUID"]);
       print("--------------------------------------------");
       double distanceBetweenPharmacistAndPharmacy =
-          await getDistanceBetweenPharmacyAndPharmacist(value);
+          await getDistanceBetweenPharmacyAndPharmacist(ref, value);
       print("Distance: $distanceBetweenPharmacistAndPharmacy");
 
-      if (jobsBetweenDates(value) &&
+      if (jobsBetweenDates(ref, value) &&
           distanceBetweenPharmacistAndPharmacy < distanceWillingToTravel) {
         print(value["pharmacyUID"]);
         print("Key: $key");
@@ -107,7 +107,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
     });
   }
 
-  Future<double> getDistanceBetweenPharmacyAndPharmacist(value) async {
+  Future<double> getDistanceBetweenPharmacyAndPharmacist(WidgetRef ref, value) async {
     var pharmacyAddress = value["pharmacyAddress"]["streetAddress"] +
         " " +
         value["pharmacyAddress"]["city"] +
@@ -120,7 +120,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
         await locationFromAddress(pharmacyAddress);
 
     List<Location> pharmacistLocation = await locationFromAddress(
-        context.read(pharmacistMainProvider.notifier).userDataMap?["address"]);
+        ref.read(pharmacistMainProvider.notifier).userDataMap?["address"]);
 
     double distanceBetweenPharmacistAndPharmacy = Geolocator.distanceBetween(
             pharmacistLocation.first.latitude,
@@ -131,22 +131,20 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
     return distanceBetweenPharmacistAndPharmacy;
   }
 
-  bool jobsBetweenDates(value) {
-    return ((value["startDate"] as Timestamp).toDate().isAfter(context
-                .read(pharmacistMainProvider.notifier)
+  bool jobsBetweenDates(WidgetRef ref, value) {
+    return ((value["startDate"] as Timestamp).toDate().isAfter(ref.read(pharmacistMainProvider.notifier)
                 .startDate as DateTime) &&
-            ((value["startDate"] as Timestamp).toDate().isBefore(context
-                .read(pharmacistMainProvider.notifier)
+            ((value["startDate"] as Timestamp).toDate().isBefore(ref.read(pharmacistMainProvider.notifier)
                 .endDate as DateTime))) ||
         ((value["startDate"] as Timestamp).toDate().day ==
-            (context.read(pharmacistMainProvider.notifier).startDate
+            (ref.read(pharmacistMainProvider.notifier).startDate
                     as DateTime)
                 .day);
   }
 
   @override
   void initState() {
-    print(context.read(pharmacistMainProvider.notifier).startDate);
+    print(ref.read(pharmacistMainProvider.notifier).startDate);
     scheduleJobsDataSub?.cancel();
     scheduleJobsDataSub =
         aggregationRef.doc("jobs").snapshots().listen((allJobsData) {
@@ -165,11 +163,11 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, watch, child) {
-        watch(pharmacistMainProvider);
+      builder: (context, ref, child) {
+        ref.watch(pharmacistMainProvider);
         return WillPopScope(
           onWillPop: () async {
-            context.read(pharmacistMainProvider.notifier).clearDates();
+            ref.read(pharmacistMainProvider.notifier).clearDates();
             scheduleJobsDataSub?.cancel();
             return true;
           },
@@ -244,15 +242,13 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                             lastDate: DateTime(2100));
 
                                         if (date != null) {
-                                          context
-                                              .read(pharmacistMainProvider
+                                          ref.read(pharmacistMainProvider
                                                   .notifier)
                                               .changeStartDate(date);
                                           print(date);
                                           return date;
                                         } else {
-                                          context
-                                              .read(pharmacistMainProvider
+                                          ref.read(pharmacistMainProvider
                                                   .notifier)
                                               .changeStartDate(currentValue);
                                           return currentValue;
@@ -297,28 +293,24 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                           (context, currentValue) async {
                                         final date = await showDatePicker(
                                             context: context,
-                                            firstDate: context
-                                                    .read(pharmacistMainProvider
+                                            firstDate: ref.read(pharmacistMainProvider
                                                         .notifier)
                                                     .startDate ??
                                                 DateTime.now(),
-                                            initialDate: context
-                                                    .read(pharmacistMainProvider
+                                            initialDate: ref.read(pharmacistMainProvider
                                                         .notifier)
                                                     .startDate ??
                                                 DateTime.now(),
                                             lastDate: DateTime(2100));
 
                                         if (date != null) {
-                                          context
-                                              .read(pharmacistMainProvider
+                                          ref.read(pharmacistMainProvider
                                                   .notifier)
                                               .changeEndDate(date);
                                           print(date);
                                           return date;
                                         } else {
-                                          context
-                                              .read(pharmacistMainProvider
+                                          ref.read(pharmacistMainProvider
                                                   .notifier)
                                               .changeEndDate(currentValue);
                                           return currentValue;
@@ -359,13 +351,11 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                           borderRadius:
                                               BorderRadius.circular(100),
                                         ))),
-                                    onPressed: (context
-                                                    .read(pharmacistMainProvider
+                                    onPressed: (ref.read(pharmacistMainProvider
                                                         .notifier)
                                                     .startDate !=
                                                 null &&
-                                            context
-                                                    .read(pharmacistMainProvider
+                                            ref.read(pharmacistMainProvider
                                                         .notifier)
                                                     .endDate !=
                                                 null)
@@ -374,7 +364,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                             //sortedJobsDataMap = {};
                                             //jobsDataMap = {};
 
-                                            jobsSortedWithSchedule();
+                                            jobsSortedWithSchedule(ref);
                                           }
                                         : null,
                                     child: RichText(
@@ -427,8 +417,7 @@ class _FindShiftForPharmacistState extends State<FindShiftForPharmacist> {
                                     return FutureBuilder(
                                       future: getDistance(
                                           sortedJobsDataMap[key],
-                                          context
-                                              .read(pharmacistMainProvider
+                                          ref.read(pharmacistMainProvider
                                                   .notifier)
                                               .userDataMap?["address"]),
                                       builder: (BuildContext context,

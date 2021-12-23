@@ -15,7 +15,7 @@ import '../../../../all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
-class EditShift extends StatefulWidget {
+class EditShift extends ConsumerStatefulWidget {
   Map? jobDataMap = Map();
   String? jobUID = "";
 
@@ -25,7 +25,7 @@ class EditShift extends StatefulWidget {
   _EditShiftPharmacyState createState() => _EditShiftPharmacyState();
 }
 
-class _EditShiftPharmacyState extends State<EditShift> {
+class _EditShiftPharmacyState extends ConsumerState<EditShift> {
   Map<String, dynamic> uploadDataMap = Map();
   List<Software?>? softwareListToUpload = [];
   List<Skill?>? skillListToUpload = [];
@@ -39,9 +39,9 @@ class _EditShiftPharmacyState extends State<EditShift> {
   List<Skill?>? skillList;
   List<Software?>? softwareList;
   bool softwareFieldEnabled = false;
-  void checkIfChanged(final currentVal, String firestoreVal) {
+  void checkIfChanged(WidgetRef ref, final currentVal, String firestoreVal) {
     if (currentVal ==
-        context.read(pharmacyMainProvider.notifier).userData?[firestoreVal]) {
+        ref.read(pharmacyMainProvider.notifier).userData?[firestoreVal]) {
       uploadDataMap.remove(firestoreVal);
     } else {
       uploadDataMap[firestoreVal] = currentVal;
@@ -101,32 +101,32 @@ class _EditShiftPharmacyState extends State<EditShift> {
         });
       }
       if (skillList != null) {
-        context
+        ref
             .read(pharmacyMainProvider.notifier)
             .changeSkillList(skillList as List<Skill?>);
       }
       if (softwareList != null) {
-        context
+        ref
             .read(pharmacyMainProvider.notifier)
             .changeSoftwareList(softwareList as List<Software?>);
       }
 
-      context
+      ref
           .read(pharmacyMainProvider.notifier)
           .changeTechOnSite(widget.jobDataMap?["techOnSite"]);
       print(widget.jobDataMap?["assistantOnSite"]);
-      context
+      ref
           .read(pharmacyMainProvider.notifier)
           .changeAssistantOnSite(widget.jobDataMap?["assistantOnSite"]);
-      context
+      ref
           .read(pharmacyMainProvider.notifier)
           .changeHourlyRate(widget.jobDataMap?["hourlyRate"]);
       print(
-          "Hourly Rate: ${context.read(pharmacyMainProvider.notifier).hourlyRate}");
-      context
+          "Hourly Rate: ${ref.read(pharmacyMainProvider.notifier).hourlyRate}");
+      ref
           .read(pharmacyMainProvider.notifier)
           .changeLIMAStatus(widget.jobDataMap?["limaStatus"]);
-      context
+      ref
           .read(pharmacyMainProvider.notifier)
           .changeComments(widget.jobDataMap?["comments"]);
     });
@@ -136,11 +136,11 @@ class _EditShiftPharmacyState extends State<EditShift> {
   @override
   Widget build(BuildContext context) {
     TextEditingController commentsController = TextEditingController(
-        text: context.read(pharmacyMainProvider.notifier).jobComments);
+        text: ref.read(pharmacyMainProvider.notifier).jobComments);
 
     return WillPopScope(
       onWillPop: () async {
-        //context.read(pharmacyMainProvider.notifier).clearValues();
+        //ref.read(pharmacyMainProvider.notifier).clearValues();
         return true;
       },
       child: Scaffold(
@@ -156,8 +156,8 @@ class _EditShiftPharmacyState extends State<EditShift> {
           backgroundColor: Color(0xFFF6F6F6),
         ),
         body: Consumer(
-          builder: (context, watch, child) {
-            watch(pharmacyMainProvider);
+          builder: (context, ref, child) {
+            ref.watch(pharmacyMainProvider);
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,10 +279,11 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                                 DateTime.now()),
                                                   );
                                                   checkIfChanged(
+                                                      ref,
                                                       DateTimeField.combine(
                                                           date, time),
                                                       "startDate");
-                                                  context
+                                                  ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .changeStartDate(
@@ -293,7 +294,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                   return DateTimeField.combine(
                                                       date, time);
                                                 } else {
-                                                  context
+                                                  ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .changeStartDate(
@@ -393,12 +394,12 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                               } else {
                                                 final date = await showDatePicker(
                                                     context: context,
-                                                    firstDate: context
+                                                    firstDate: ref
                                                         .read(
                                                             pharmacyMainProvider
                                                                 .notifier)
                                                         .startDate as DateTime,
-                                                    initialDate: context
+                                                    initialDate: ref
                                                         .read(
                                                             pharmacyMainProvider
                                                                 .notifier)
@@ -414,10 +415,11 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                                 DateTime.now()),
                                                   );
                                                   checkIfChanged(
+                                                      ref,
                                                       DateTimeField.combine(
                                                           date, time),
                                                       "endDate");
-                                                  context
+                                                  ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .changeEndDate(
@@ -427,7 +429,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                   return DateTimeField.combine(
                                                       date, time);
                                                 } else {
-                                                  context
+                                                  ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .changeEndDate(
@@ -491,7 +493,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
                                             listType: MultiSelectListType.CHIP,
-                                            initialValue: context
+                                            initialValue: ref
                                                 .read(pharmacyMainProvider
                                                     .notifier)
                                                 .skillList,
@@ -504,14 +506,14 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                     fontSize: 16)),
                                             onConfirm: (values) {
                                               skillListToUpload?.addAll(values);
-                                              context
+                                              ref
                                                   .read(pharmacyMainProvider
                                                       .notifier)
                                                   .changeSkillList(values);
                                             },
                                             chipDisplay:
                                                 CustomMultiSelectChipDisplay(
-                                              items: context
+                                              items: ref
                                                   .read(pharmacyMainProvider
                                                       .notifier)
                                                   .skillList
@@ -527,13 +529,13 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                         element?.name
                                                             .toString() ==
                                                         value.toString());
-                                                context
+                                                ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .skillList
                                                     ?.cast()
                                                     .remove(value);
-                                                context
+                                                ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .skillList
@@ -541,7 +543,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                         element?.name
                                                             .toString() ==
                                                         value.toString());
-                                                return context
+                                                return ref
                                                     .read(pharmacyMainProvider
                                                         .notifier)
                                                     .skillList;
@@ -632,7 +634,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                   decoration: BoxDecoration(),
                                                   listType:
                                                       MultiSelectListType.CHIP,
-                                                  initialValue: context
+                                                  initialValue: ref
                                                       .read(pharmacyMainProvider
                                                           .notifier)
                                                       .softwareList,
@@ -647,7 +649,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                   onConfirm: (values) {
                                                     softwareListToUpload
                                                         ?.addAll(values);
-                                                    context
+                                                    ref
                                                         .read(
                                                             pharmacyMainProvider
                                                                 .notifier)
@@ -656,7 +658,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                   },
                                                   chipDisplay:
                                                       CustomMultiSelectChipDisplay(
-                                                    items: context
+                                                    items: ref
                                                         .read(
                                                             pharmacyMainProvider
                                                                 .notifier)
@@ -675,14 +677,14 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                               element?.name
                                                                   .toString() ==
                                                               value.toString());
-                                                      context
+                                                      ref
                                                           .read(
                                                               pharmacyMainProvider
                                                                   .notifier)
                                                           .softwareList
                                                           ?.cast()
                                                           .remove(value);
-                                                      context
+                                                      ref
                                                           .read(
                                                               pharmacyMainProvider
                                                                   .notifier)
@@ -692,7 +694,7 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                                                   .toString() ==
                                                               value.toString());
 
-                                                      return context
+                                                      return ref
                                                           .read(
                                                               pharmacyMainProvider
                                                                   .notifier)
@@ -727,12 +729,12 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: context
+                                    value: ref
                                         .read(pharmacyMainProvider.notifier)
                                         .techOnSite,
                                     onChanged: (value) {
-                                      checkIfChanged(value, "techOnSite");
-                                      context
+                                      checkIfChanged(ref, value, "techOnSite");
+                                      ref
                                           .read(pharmacyMainProvider.notifier)
                                           .changeTechOnSite(value);
                                     },
@@ -758,12 +760,13 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: context
+                                    value: ref
                                         .read(pharmacyMainProvider.notifier)
                                         .assistantOnSite,
                                     onChanged: (value) {
-                                      checkIfChanged(value, "assistantOnSite");
-                                      context
+                                      checkIfChanged(
+                                          ref, value, "assistantOnSite");
+                                      ref
                                           .read(pharmacyMainProvider.notifier)
                                           .changeAssistantOnSite(value);
                                     },
@@ -799,14 +802,14 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                           width: 174,
                                           alignment: Alignment.center,
                                           child: TextFormField(
-                                            initialValue: context
+                                            initialValue: ref
                                                 .read(pharmacyMainProvider
                                                     .notifier)
                                                 .hourlyRate,
                                             onChanged: (value) {
                                               checkIfChanged(
-                                                  value, "hourlyRate");
-                                              context
+                                                  ref, value, "hourlyRate");
+                                              ref
                                                   .read(pharmacyMainProvider
                                                       .notifier)
                                                   .changeHourlyRate(value);
@@ -859,12 +862,12 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: context
+                                    value: ref
                                         .read(pharmacyMainProvider.notifier)
                                         .limaStatus,
                                     onChanged: (value) {
-                                      checkIfChanged(value, "limaStatus");
-                                      context
+                                      checkIfChanged(ref, value, "limaStatus");
+                                      ref
                                           .read(pharmacyMainProvider.notifier)
                                           .changeLIMAStatus(value);
                                     },
@@ -903,11 +906,12 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.start,
                                           onChanged: (value) {
-                                            context
+                                            ref
                                                 .read(pharmacyMainProvider
                                                     .notifier)
                                                 .changeComments(value);
-                                            checkIfChanged(value, "comments");
+                                            checkIfChanged(
+                                                ref, value, "comments");
                                           },
                                           style: TextStyle(
                                             fontWeight: FontWeight.w400,
@@ -973,30 +977,30 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                   skillListToUpload!.isNotEmpty)
                               ? () async {
                                   print("Pressed");
-                                  if (context
+                                  if (ref
                                           .read(pharmacyMainProvider.notifier)
                                           .softwareList !=
                                       null) {
-                                    uploadDataMap["softwareList"] = context
+                                    uploadDataMap["softwareList"] = ref
                                         .read(pharmacyMainProvider.notifier)
                                         .softwareList
                                         .toString();
                                   }
-                                  if (context
+                                  if (ref
                                           .read(pharmacyMainProvider.notifier)
                                           .skillList !=
                                       null) {
-                                    uploadDataMap["skillList"] = context
+                                    uploadDataMap["skillList"] = ref
                                         .read(pharmacyMainProvider.notifier)
                                         .skillList
                                         .toString();
                                   }
                                   print(uploadDataMap);
 
-                                  String? result = await context
+                                  String? result = await ref
                                       .read(authProvider.notifier)
                                       .updateJobInformation(
-                                          context
+                                          ref
                                               .read(userProviderLogin.notifier)
                                               .userUID,
                                           uploadDataMap,
@@ -1086,10 +1090,10 @@ class _EditShiftPharmacyState extends State<EditShift> {
                                               color: Color(0xFF5DB075)),
                                         ),
                                         onPressed: () async {
-                                          String? result = await context
+                                          String? result = await ref
                                               .read(authProvider.notifier)
                                               .deleteJob(
-                                                  context
+                                                  ref
                                                       .read(userProviderLogin
                                                           .notifier)
                                                       .userUID,

@@ -6,25 +6,23 @@ import 'package:pharma_connect/src/screens/login.dart';
 import 'Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'Pharmacy/Main/jobHistoryPharmacy.dart';
 
-class AutoLogin extends StatefulWidget {
+class AutoLogin extends ConsumerStatefulWidget {
   AutoLogin({Key? key}) : super(key: key);
 
   @override
   _AutoLoginState createState() => _AutoLoginState();
 }
 
-class _AutoLoginState extends State<AutoLogin> {
-  Future logInUser() async {
-    String? userType = await context
-        .read(authProviderLogin.notifier)
+class _AutoLoginState extends ConsumerState<AutoLogin> {
+  Future logInUser(WidgetRef ref) async {
+    String? userType = await ref.read(authProviderLogin.notifier)
         .getCurrentUserData(FirebaseAuth.instance.currentUser?.uid);
     print("User Type in Log In User: $userType");
 
     if (userType == "Pharmacist") {
       print("Pharmacist");
-      context.read(logInProvider.notifier).clearAllValue();
-      context
-          .read(userProviderLogin.notifier)
+      ref.read(logInProvider.notifier).clearAllValue();
+      ref.read(userProviderLogin.notifier)
           .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
 
       //send to pharmacist main page
@@ -33,9 +31,8 @@ class _AutoLoginState extends State<AutoLogin> {
     } else if (userType == "Pharmacy") {
       print("Pharmacy");
 
-      context.read(logInProvider.notifier).clearAllValue();
-      context
-          .read(userProviderLogin.notifier)
+      ref.read(logInProvider.notifier).clearAllValue();
+      ref.read(userProviderLogin.notifier)
           .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
 
       //send to pharmacy main page
@@ -45,11 +42,10 @@ class _AutoLoginState extends State<AutoLogin> {
       print("Pharmacy Assistant");
 
       print("Sending to Pharmacist SignUp page1");
-      context.read(logInProvider.notifier).clearAllValue();
+      ref.read(logInProvider.notifier).clearAllValue();
 
       print("Sending to Pharmacist SignUp page2");
-      context
-          .read(userProviderLogin.notifier)
+      ref.read(userProviderLogin.notifier)
           .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
 
       print("Sending to Pharmacist SignUp page3");
@@ -63,7 +59,7 @@ class _AutoLoginState extends State<AutoLogin> {
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      logInUser();
+      logInUser(ref);
     });
     super.initState();
   }
@@ -111,7 +107,7 @@ class _AutoLoginState extends State<AutoLogin> {
                         borderRadius: BorderRadius.circular(100),
                       ))),
                   onPressed: () {
-                    context.read(authProviderLogin.notifier).signOut();
+                    ref.read(authProviderLogin.notifier).signOut();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LogInPage()));
                   },

@@ -4,20 +4,20 @@ import 'package:pharma_connect/src/screens/Pharmacist/Main/editPharmacistProfile
 import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 
-class PharmacistProfile extends StatefulWidget {
+class PharmacistProfile extends ConsumerStatefulWidget {
   PharmacistProfile({Key? key}) : super(key: key);
 
   @override
   _PharmacistProfileState createState() => _PharmacistProfileState();
 }
 
-class _PharmacistProfileState extends State<PharmacistProfile> {
+class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
   Map<String, dynamic>? userDataMap;
 
   @override
   void initState() {
     setState(() {
-      userDataMap = context.read(pharmacistMainProvider.notifier).userDataMap;
+      userDataMap = ref.read(pharmacistMainProvider.notifier).userDataMap;
     });
     super.initState();
   }

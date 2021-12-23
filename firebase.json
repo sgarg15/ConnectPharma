@@ -21,10 +21,6 @@
     },
     "ui": {
       "enabled": true
-    },
-    "pubsub": {
-      "host": "192.168.1.93",
-      "port": 8085
     }
   },
   "storage": {

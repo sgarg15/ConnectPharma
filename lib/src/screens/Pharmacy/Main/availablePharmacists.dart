@@ -8,7 +8,7 @@ import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart
 import '../../../../all_used.dart';
 
 // ignore: must_be_immutable
-class AvailablePharmacists extends StatefulWidget {
+class AvailablePharmacists extends ConsumerStatefulWidget {
   bool showFullTimePharmacists;
   AvailablePharmacists({Key? key, required this.showFullTimePharmacists})
       : super(key: key);
@@ -17,7 +17,7 @@ class AvailablePharmacists extends StatefulWidget {
   _AvailablePharmacistsState createState() => _AvailablePharmacistsState();
 }
 
-class _AvailablePharmacistsState extends State<AvailablePharmacists> {
+class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
   CollectionReference aggregationRef =
       FirebaseFirestore.instance.collection("aggregation");
 
@@ -45,7 +45,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
     });
   }
 
-  void getAggregatedPharmacists() async {
+  void getAggregatedPharmacists(WidgetRef ref) async {
     DocumentReference pharmacistData = aggregationRef.doc("pharmacists");
     DocumentReference pharmacyAssistantData =
         aggregationRef.doc("pharmacyAssistant");
@@ -86,9 +86,9 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
       print(value["uid"]);
       print("UserType: ${value["userType"]}");
       print(
-          "Position: ${context.read(pharmacyMainProvider.notifier).position}");
+          "Position: ${ref.read(pharmacyMainProvider.notifier).position}");
       print(
-          "Permanent Job: ${context.read(pharmacyMainProvider.notifier).fullTime}");
+          "Permanent Job: ${ref.read(pharmacyMainProvider.notifier).fullTime}");
 
       print("--------------------------------------------");
       for (var i = 0; i < value["availability"].length; i++) {
@@ -96,17 +96,17 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
           if (value["permanentJob"] != null &&
               value["permanentJob"] &&
               value["userType"] ==
-                  context.read(pharmacyMainProvider.notifier).position) {
+                  ref.read(pharmacyMainProvider.notifier).position) {
             print(value["uid"]);
             allUserDataMap[key] = value;
             print(allUserDataMap.keys);
 
             print("YESR");
           }
-        } else if (checkAvailability(value, i) &&
+        } else if (checkAvailability(ref, value, i) &&
             value["userType"] ==
-                context.read(pharmacyMainProvider.notifier).position) {
-          if (context.read(pharmacyMainProvider.notifier).skillList != null) {
+                ref.read(pharmacyMainProvider.notifier).position) {
+          if (ref.read(pharmacyMainProvider.notifier).skillList != null) {
             if (value["knownSkills"] != null)
               changeSkillToList(value["knownSkills"]);
             print(value["uid"]);
@@ -132,29 +132,29 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
     print(allUserDataMap);
   }
 
-  bool checkAvailability(value, int i) {
+  bool checkAvailability(WidgetRef ref, value, int i) {
     return ((value["availability"][i.toString()]["startDate"] as Timestamp)
                 .toDate()
-                .isAfter(context.read(pharmacyMainProvider.notifier).startDate
+                .isAfter(ref.read(pharmacyMainProvider.notifier).startDate
                     as DateTime) &&
             ((value["availability"][i.toString()]["startDate"] as Timestamp)
                 .toDate()
-                .isBefore(context.read(pharmacyMainProvider.notifier).endDate
+                .isBefore(ref.read(pharmacyMainProvider.notifier).endDate
                     as DateTime))) ||
         ((value["availability"][i.toString()]["endDate"] as Timestamp)
                 .toDate()
-                .isAfter(context.read(pharmacyMainProvider.notifier).startDate
+                .isAfter(ref.read(pharmacyMainProvider.notifier).startDate
                     as DateTime) &&
             ((value["availability"][i.toString()]["endDate"] as Timestamp)
                 .toDate()
-                .isBefore(context.read(pharmacyMainProvider.notifier).endDate
+                .isBefore(ref.read(pharmacyMainProvider.notifier).endDate
                     as DateTime)));
   }
 
   @override
   void initState() {
     super.initState();
-    getAggregatedPharmacists();
+    getAggregatedPharmacists(ref);
   }
 
   @override
@@ -179,7 +179,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
             height: 10,
           ),
           if (widget.showFullTimePharmacists) ...[
-            if (context.read(pharmacyMainProvider.notifier).position ==
+            if (ref.read(pharmacyMainProvider.notifier).position ==
                 "Pharmacist")
               Center(
                 child: Padding(
@@ -191,7 +191,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                   ),
                 ),
               )
-            else if (context.read(pharmacyMainProvider.notifier).position ==
+            else if (ref.read(pharmacyMainProvider.notifier).position ==
                 "Pharmacy Assistant")
               Center(
                 child: Padding(
@@ -275,8 +275,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (context
-                                    .read(pharmacyMainProvider.notifier)
+                            if (ref.read(pharmacyMainProvider.notifier)
                                     .position ==
                                 "Pharmacist") ...[
                               Center(
@@ -285,8 +284,7 @@ class _AvailablePharmacistsState extends State<AvailablePharmacists> {
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 20),
                               )),
-                            ] else if (context
-                                    .read(pharmacyMainProvider.notifier)
+                            ] else if (ref.read(pharmacyMainProvider.notifier)
                                     .position ==
                                 "Pharmacy Assistant") ...[
                               Center(

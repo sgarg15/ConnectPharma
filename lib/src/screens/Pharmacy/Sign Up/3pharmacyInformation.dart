@@ -10,14 +10,14 @@ import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/4pharmacyManagerInfo
 import 'package:uuid/uuid.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
-class PharmacyInformation extends StatefulWidget {
+class PharmacyInformation extends ConsumerStatefulWidget {
   PharmacyInformation({Key? key}) : super(key: key);
 
   @override
   _PharmacyInformationState createState() => _PharmacyInformationState();
 }
 
-class _PharmacyInformationState extends State<PharmacyInformation> {
+class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
   final _items = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
@@ -30,13 +30,13 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
   @override
   Widget build(BuildContext context) {
     TextEditingController city = TextEditingController(
-        text: context.read(pharmacySignUpProvider.notifier).city);
+        text: ref.read(pharmacySignUpProvider.notifier).city);
     TextEditingController streetAddress = TextEditingController(
-        text: context.read(pharmacySignUpProvider.notifier).streetAddress);
+        text: ref.read(pharmacySignUpProvider.notifier).streetAddress);
     TextEditingController postalCode = TextEditingController(
-        text: context.read(pharmacySignUpProvider.notifier).postalCode);
+        text: ref.read(pharmacySignUpProvider.notifier).postalCode);
     TextEditingController country = TextEditingController(
-        text: context.read(pharmacySignUpProvider.notifier).country);
+        text: ref.read(pharmacySignUpProvider.notifier).country);
 
     return Scaffold(
       appBar: AppBar(
@@ -88,8 +88,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               hintText: "Enter the Pharmacy name...",
               keyboardStyle: TextInputType.name,
               onChanged: (String pharmacyName) {
-                context
-                    .read(pharmacySignUpProvider.notifier)
+                ref.read(pharmacySignUpProvider.notifier)
                     .changePharmacyName(pharmacyName);
               },
               validation: (value) {
@@ -99,7 +98,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                 return null;
               },
               initialValue:
-                  context.read(pharmacySignUpProvider.notifier).pharmacyName,
+                  ref.read(pharmacySignUpProvider.notifier).pharmacyName,
             ),
             SizedBox(height: 20),
 
@@ -153,28 +152,23 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                           print(
                               "${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
                           print("Not null");
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeStreetAddress(
                                   "${placeDetails.streetNumber} ${placeDetails.street.toString()}");
                         } else {
                           print(
                               "${placeDetails.streetNumber ?? ""} ${placeDetails.street.toString()}");
                           print("null");
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeStreetAddress(
                                   "${placeDetails.street.toString()}");
                         }
 
-                        context
-                            .read(pharmacySignUpProvider.notifier)
+                        ref.read(pharmacySignUpProvider.notifier)
                             .changeCity(placeDetails.city);
-                        context
-                            .read(pharmacySignUpProvider.notifier)
+                        ref.read(pharmacySignUpProvider.notifier)
                             .changePostalCode(placeDetails.zipCode);
-                        context
-                            .read(pharmacySignUpProvider.notifier)
+                        ref.read(pharmacySignUpProvider.notifier)
                             .changeCountry(placeDetails.country);
                         streetAddress.text =
                             "${placeDetails.streetNumber.toString()} ${placeDetails.street.toString()}";
@@ -218,8 +212,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               hintText: "Enter the Store Number...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String storeNumber) {
-                context
-                    .read(pharmacySignUpProvider.notifier)
+                ref.read(pharmacySignUpProvider.notifier)
                     .changeStoreNumber(storeNumber);
               },
               validation: (value) {
@@ -229,7 +222,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                 return null;
               },
               initialValue:
-                  context.read(pharmacySignUpProvider.notifier).storeNumber,
+                  ref.read(pharmacySignUpProvider.notifier).storeNumber,
             ),
             SizedBox(height: 20),
 
@@ -239,7 +232,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               hintText: "Enter the city...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String city) {
-                context.read(pharmacySignUpProvider.notifier).changeCity(city);
+                ref.read(pharmacySignUpProvider.notifier).changeCity(city);
               },
               validation: (value) {
                 if (value == null || value.isEmpty) {
@@ -258,8 +251,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               hintText: "Enter the postal code...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String postalCode) {
-                context
-                    .read(pharmacySignUpProvider.notifier)
+                ref.read(pharmacySignUpProvider.notifier)
                     .changePostalCode(postalCode);
               },
               validation: (value) {
@@ -278,8 +270,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               hintText: "Enter the country...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String country) {
-                context
-                    .read(pharmacySignUpProvider.notifier)
+                ref.read(pharmacySignUpProvider.notifier)
                     .changeCountry(country);
               },
               validation: (value) {
@@ -298,8 +289,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               hintText: "Enter the pharmacy phone Number...",
               keyboardStyle: TextInputType.number,
               onChanged: (String phoneNumber) {
-                context
-                    .read(pharmacySignUpProvider.notifier)
+                ref.read(pharmacySignUpProvider.notifier)
                     .changePhoneNumberPharmacy(phoneNumber);
               },
               validation: (value) {
@@ -308,8 +298,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                 }
                 return null;
               },
-              initialValue: context
-                  .read(pharmacySignUpProvider.notifier)
+              initialValue: ref.read(pharmacySignUpProvider.notifier)
                   .phoneNumberPharmacy,
               formatter: [MaskedInputFormatter('(###) ###-####')],
             ),
@@ -321,8 +310,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               hintText: "Enter the pharmacy fax Number...",
               keyboardStyle: TextInputType.number,
               onChanged: (String faxNumber) {
-                context
-                    .read(pharmacySignUpProvider.notifier)
+                ref.read(pharmacySignUpProvider.notifier)
                     .changeFaxNumber(faxNumber);
               },
               validation: (value) {
@@ -332,7 +320,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                 return null;
               },
               initialValue:
-                  context.read(pharmacySignUpProvider.notifier).faxNumber,
+                  ref.read(pharmacySignUpProvider.notifier).faxNumber,
               formatter: [MaskedInputFormatter('(###) ###-####')],
             ),
             SizedBox(height: 20),
@@ -343,8 +331,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
               hintText: "Enter the accreditation province...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String accreditationProvince) {
-                context
-                    .read(pharmacySignUpProvider.notifier)
+                ref.read(pharmacySignUpProvider.notifier)
                     .changeAccreditationProvince(accreditationProvince);
               },
               validation: (value) {
@@ -355,8 +342,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                 }
                 return null;
               },
-              initialValue: context
-                  .read(pharmacySignUpProvider.notifier)
+              initialValue: ref.read(pharmacySignUpProvider.notifier)
                   .accreditationProvince,
             ),
             SizedBox(height: 20),
@@ -402,8 +388,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                         initialChildSize: 0.4,
                         decoration: BoxDecoration(),
                         listType: MultiSelectListType.CHIP,
-                        initialValue: context
-                            .read(pharmacySignUpProvider.notifier)
+                        initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .softwareList,
                         searchable: true,
                         items: _items,
@@ -411,24 +396,20 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                             style: GoogleFonts.inter(
                                 color: Color(0xFFBDBDBD), fontSize: 16)),
                         onConfirm: (values) {
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeSoftwareList(values);
                         },
                         chipDisplay: MultiSelectChipDisplay(
-                          items: context
-                              .read(pharmacySignUpProvider.notifier)
+                          items: ref.read(pharmacySignUpProvider.notifier)
                               .softwareList
                               ?.map((e) => MultiSelectItem(e, e.toString()))
                               .toList(),
                           chipColor: Color(0xFF5DB075),
                           onTap: (value) {
-                            context
-                                .read(pharmacySignUpProvider.notifier)
+                            ref.read(pharmacySignUpProvider.notifier)
                                 .softwareList
                                 ?.remove(value);
-                            return context
-                                .read(pharmacySignUpProvider.notifier)
+                            return ref.read(pharmacySignUpProvider.notifier)
                                 .softwareList;
                           },
                           textStyle: TextStyle(color: Colors.white),
@@ -442,8 +423,8 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
 
             SizedBox(height: 20),
             //Next Button
-            Consumer(builder: (context, watch, child) {
-              watch(pharmacySignUpProvider);
+            Consumer(builder: (context, ref, child) {
+              ref.watch(pharmacySignUpProvider);
               return SizedBox(
                 width: 324,
                 height: 51,
@@ -463,8 +444,7 @@ class _PharmacyInformationState extends State<PharmacyInformation> {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100),
                       ))),
-                  onPressed: (context
-                          .read(pharmacySignUpProvider.notifier)
+                  onPressed: (ref.read(pharmacySignUpProvider.notifier)
                           .isValidPharmacyInformation())
                       ? null
                       : () {

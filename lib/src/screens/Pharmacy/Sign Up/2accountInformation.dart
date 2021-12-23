@@ -10,7 +10,7 @@ import 'package:signature/signature.dart';
 
 import '../../../../main.dart';
 
-class AccountInformationPharmacy extends StatefulWidget {
+class AccountInformationPharmacy extends ConsumerStatefulWidget {
   const AccountInformationPharmacy({Key? key}) : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class AccountInformationPharmacy extends StatefulWidget {
 }
 
 class _AccountInformationPharmacyState
-    extends State<AccountInformationPharmacy> {
+    extends ConsumerState<AccountInformationPharmacy> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final SignatureController _sigController = SignatureController(
     penStrokeWidth: 3, //you can set pen stroke with by changing this value
@@ -122,8 +122,7 @@ class _AccountInformationPharmacyState
                         hintText: "Enter your First Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String firstName) {
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeFirstName(firstName);
                         },
                         validation: (value) {
@@ -134,8 +133,7 @@ class _AccountInformationPharmacyState
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacySignUpProvider.notifier)
+                        initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .firstName,
                       ),
                       SizedBox(height: 20),
@@ -146,8 +144,7 @@ class _AccountInformationPharmacyState
                         hintText: "Enter your Last Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String lastName) {
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changeLastName(lastName);
                         },
                         validation: (value) {
@@ -158,8 +155,7 @@ class _AccountInformationPharmacyState
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacySignUpProvider.notifier)
+                        initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .lastName,
                       ),
                       SizedBox(height: 20),
@@ -170,8 +166,7 @@ class _AccountInformationPharmacyState
                         hintText: "Enter your Phone Number...",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String phoneNumber) {
-                          context
-                              .read(pharmacySignUpProvider.notifier)
+                          ref.read(pharmacySignUpProvider.notifier)
                               .changePhoneNumber(phoneNumber);
                         },
                         validation: (value) {
@@ -180,8 +175,7 @@ class _AccountInformationPharmacyState
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacySignUpProvider.notifier)
+                        initialValue: ref.read(pharmacySignUpProvider.notifier)
                             .phoneNumber,
                         formatter: [MaskedInputFormatter('(###) ###-####')],
                       ),
@@ -220,8 +214,7 @@ class _AccountInformationPharmacyState
                               style: GoogleFonts.inter(
                                   color: Color(0xFFBDBDBD), fontSize: 16),
                             ),
-                            value: context
-                                .read(pharmacySignUpProvider.notifier)
+                            value: ref.read(pharmacySignUpProvider.notifier)
                                 .position,
                             decoration: InputDecoration(
                               filled: true,
@@ -240,8 +233,7 @@ class _AccountInformationPharmacyState
                                   child: Text(value), value: value);
                             }).toList(),
                             onChanged: (String? value) {
-                              context
-                                  .read(pharmacySignUpProvider.notifier)
+                              ref.read(pharmacySignUpProvider.notifier)
                                   .changePosition(value);
                             },
                             style: GoogleFonts.questrial(
@@ -275,8 +267,8 @@ class _AccountInformationPharmacyState
               //Next Button
               Center(
                 child: Consumer(
-                  builder: (context, watch, child) {
-                    watch(pharmacySignUpProvider);
+                  builder: (context, ref, child) {
+                    ref.watch(pharmacySignUpProvider);
                     return SizedBox(
                       width: 324,
                       height: 51,
@@ -294,8 +286,7 @@ class _AccountInformationPharmacyState
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
                             ))),
-                        onPressed: (context
-                                .read(pharmacySignUpProvider.notifier)
+                        onPressed: (ref.read(pharmacySignUpProvider.notifier)
                                 .isValidAccountInfo())
                             ? null
                             : () {
@@ -329,7 +320,7 @@ class _AccountInformationPharmacyState
   }
 }
 
-class SignatureBox extends StatefulWidget {
+class SignatureBox extends ConsumerStatefulWidget {
   const SignatureBox({
     Key? key,
     required SignatureController sigController,
@@ -342,7 +333,7 @@ class SignatureBox extends StatefulWidget {
   _SignatureBoxState createState() => _SignatureBoxState();
 }
 
-class _SignatureBoxState extends State<SignatureBox> {
+class _SignatureBoxState extends ConsumerState<SignatureBox> {
   bool signatureSaved = false;
 
   @override
@@ -407,8 +398,7 @@ class _SignatureBoxState extends State<SignatureBox> {
                             ),
                             onPressed: () async {
                               if (widget._sigController.isNotEmpty) {
-                                context
-                                    .read(pharmacySignUpProvider.notifier)
+                                ref.read(pharmacySignUpProvider.notifier)
                                     .changeSignature(await widget._sigController
                                         .toPngBytes());
                                 setState(() {

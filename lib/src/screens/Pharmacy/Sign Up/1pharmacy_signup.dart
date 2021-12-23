@@ -18,14 +18,14 @@ final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
-class PharmacySignUpPage extends StatefulWidget {
+class PharmacySignUpPage extends ConsumerStatefulWidget {
   const PharmacySignUpPage({Key? key}) : super(key: key);
 
   @override
   _PharmacySignUpPageState createState() => _PharmacySignUpPageState();
 }
 
-class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
+class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
   bool checkedValue = false;
   bool passwordVisibility = false;
 
@@ -40,8 +40,8 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, watch, child) {
-        watch(pharmacySignUpProvider);
+      builder: (context, ref, child) {
+        ref.watch(pharmacySignUpProvider);
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -118,8 +118,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                           keyboardStyle: TextInputType.emailAddress,
                           textCapitalization: TextCapitalization.none,
                           onChanged: (String emailAddress) {
-                            context
-                                .read(pharmacySignUpProvider.notifier)
+                            ref.read(pharmacySignUpProvider.notifier)
                                 .changeEmail(emailAddress);
                           },
                           validation: (value) {
@@ -128,8 +127,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                             }
                             return null;
                           },
-                          initialValue: context
-                              .read(pharmacySignUpProvider.notifier)
+                          initialValue: ref.read(pharmacySignUpProvider.notifier)
                               .email,
                           inputDecoration: InputDecoration(
                             focusedErrorBorder: OutlineInputBorder(
@@ -168,8 +166,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                           decoration: false,
                           keyboardStyle: TextInputType.emailAddress,
                           onChanged: (String password) {
-                            context
-                                .read(pharmacySignUpProvider.notifier)
+                            ref.read(pharmacySignUpProvider.notifier)
                                 .changePassword(password);
                           },
                           validation: (value) {
@@ -178,8 +175,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                             }
                             return null;
                           },
-                          initialValue: context
-                              .read(pharmacySignUpProvider.notifier)
+                          initialValue: ref.read(pharmacySignUpProvider.notifier)
                               .password,
                           inputDecoration: InputDecoration(
                             filled: true,
@@ -281,8 +277,7 @@ class _PharmacySignUpPageState extends State<PharmacySignUpPage> {
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100),
                               ))),
-                          onPressed: (context
-                                  .read(pharmacySignUpProvider.notifier)
+                          onPressed: (ref.read(pharmacySignUpProvider.notifier)
                                   .isValidSignUp())
                               ? null
                               : () async {

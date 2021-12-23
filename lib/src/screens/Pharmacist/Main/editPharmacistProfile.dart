@@ -18,14 +18,14 @@ import 'package:uuid/uuid.dart';
 import '../../../../all_used.dart';
 import '../../login.dart';
 
-class EditPharmacistProfile extends StatefulWidget {
+class EditPharmacistProfile extends ConsumerStatefulWidget {
   EditPharmacistProfile({Key? key}) : super(key: key);
 
   @override
   _EditPharmacistProfileState createState() => _EditPharmacistProfileState();
 }
 
-class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
+class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
   Map<String, dynamic> uploadDataMap = Map();
   List<Skill?>? skillList;
   List<Software?>? softwareList;
@@ -49,10 +49,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
       .map((language) => MultiSelectItem<Language>(language, language.name))
       .toList();
 
-  void checkIfChanged(String? currentVal, String firestoreVal) {
+  void checkIfChanged(WidgetRef ref, String? currentVal, String firestoreVal) {
     if (currentVal ==
-        context
-            .read(pharmacistMainProvider.notifier)
+        ref.read(pharmacistMainProvider.notifier)
             .userDataMap?[firestoreVal]) {
       uploadDataMap.remove(firestoreVal);
     } else {
@@ -108,35 +107,28 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      changeSkillToList(context
-          .read(pharmacistMainProvider.notifier)
+      changeSkillToList(ref.read(pharmacistMainProvider.notifier)
           .userDataMap?["knownSkills"]);
-      changeLanguageToList(context
-          .read(pharmacistMainProvider.notifier)
+      changeLanguageToList(ref.read(pharmacistMainProvider.notifier)
           .userDataMap?["knownLanguages"]);
-      changeSoftwareToList(context
-          .read(pharmacistMainProvider.notifier)
+      changeSoftwareToList(ref.read(pharmacistMainProvider.notifier)
           .userDataMap?["knownSoftware"]);
 
-      context.read(pharmacistSignUpProvider.notifier).changePharmacistAddress(
-          context
-              .read(pharmacistMainProvider.notifier)
+      ref.read(pharmacistSignUpProvider.notifier).changePharmacistAddress(
+          ref.read(pharmacistMainProvider.notifier)
               .userDataMap?["address"]);
 
       print(
-          "Known Software: ${context.read(pharmacistMainProvider.notifier).userDataMap?["knownSoftware"]}");
-      context.read(pharmacistMainProvider.notifier).clearResumePDF();
+          "Known Software: ${ref.read(pharmacistMainProvider.notifier).userDataMap?["knownSoftware"]}");
+      ref.read(pharmacistMainProvider.notifier).clearResumePDF();
 
-      context
-          .read(pharmacistSignUpProvider.notifier)
+      ref.read(pharmacistSignUpProvider.notifier)
           .changeSkillList(skillList as List<Skill?>);
 
-      context
-          .read(pharmacistSignUpProvider.notifier)
+      ref.read(pharmacistSignUpProvider.notifier)
           .changeSoftwareList(softwareList as List<Software?>);
 
-      context
-          .read(pharmacistSignUpProvider.notifier)
+      ref.read(pharmacistSignUpProvider.notifier)
           .changeLanguageList(languageList as List<Language?>);
     });
 
@@ -146,7 +138,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
   @override
   Widget build(BuildContext context) {
     TextEditingController streetAddress = TextEditingController(
-        text: context.read(pharmacistSignUpProvider.notifier).address);
+        text: ref.read(pharmacistSignUpProvider.notifier).address);
 
     return WillPopScope(
       onWillPop: () async {
@@ -167,8 +159,8 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
             backgroundColor: Color(0xFFF6F6F6),
           ),
           body: Consumer(
-            builder: (context, watch, child) {
-              watch(pharmacistSignUpProvider);
+            builder: (context, ref, child) {
+              ref.watch(pharmacistSignUpProvider);
               return SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
@@ -218,11 +210,10 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                             0.85,
                                     titleFont: 22,
                                     onChanged: (String firstName) {
-                                      context
-                                          .read(
+                                      ref.read(
                                               pharmacistSignUpProvider.notifier)
                                           .changeFirstName(firstName);
-                                      checkIfChanged(firstName, "firstName");
+                                      checkIfChanged(ref, firstName, "firstName");
                                     },
                                     validation: (value) {
                                       if (!RegExp(
@@ -232,8 +223,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                       }
                                       return null;
                                     },
-                                    initialValue: context
-                                        .read(pharmacistMainProvider.notifier)
+                                    initialValue: ref.read(pharmacistMainProvider.notifier)
                                         .userDataMap?["firstName"],
                                   ),
                                 ),
@@ -251,11 +241,10 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                             0.85,
                                     titleFont: 22,
                                     onChanged: (String lastName) {
-                                      context
-                                          .read(
+                                      ref.read(
                                               pharmacistSignUpProvider.notifier)
                                           .changeLastName(lastName);
-                                      checkIfChanged(lastName, "lastName");
+                                      checkIfChanged(ref, lastName, "lastName");
                                     },
                                     validation: (value) {
                                       if (!RegExp(
@@ -265,8 +254,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                       }
                                       return null;
                                     },
-                                    initialValue: context
-                                        .read(pharmacistMainProvider.notifier)
+                                    initialValue: ref.read(pharmacistMainProvider.notifier)
                                         .userDataMap?["lastName"],
                                   ),
                                 ),
@@ -284,12 +272,11 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                             0.85,
                                     titleFont: 22,
                                     onChanged: (String phoneNumber) {
-                                      context
-                                          .read(
+                                      ref.read(
                                               pharmacistSignUpProvider.notifier)
                                           .changePhoneNumber(phoneNumber);
                                       checkIfChanged(
-                                          phoneNumber, "phoneNumber");
+                                          ref, phoneNumber, "phoneNumber");
                                     },
                                     validation: (value) {
                                       if (value.length < 4) {
@@ -297,8 +284,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                       }
                                       return null;
                                     },
-                                    initialValue: context
-                                        .read(pharmacistMainProvider.notifier)
+                                    initialValue: ref.read(pharmacistMainProvider.notifier)
                                         .userDataMap?["phoneNumber"],
                                     formatter: [
                                       MaskedInputFormatter('(###) ###-####')
@@ -361,8 +347,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                           sessionToken)
                                                       .getPlaceDetailFromId(
                                                           result.placeId);
-                                              context
-                                                  .read(pharmacistSignUpProvider
+                                              ref.read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .changePharmacistAddress(
                                                       placeDetails
@@ -377,7 +362,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                           placeDetails.country
                                                               .toString());
                                               checkIfChanged(
-                                                  placeDetails.streetNumber! +
+                                                  ref, placeDetails.streetNumber! +
                                                       " " +
                                                       placeDetails.street
                                                           .toString() +
@@ -478,10 +463,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                   keyboardStyle: TextInputType.number,
                                   onChanged: (String licenseYear) {
                                     checkIfChanged(
-                                        licenseYear, "firstYearLicensed");
+                                        ref, licenseYear, "firstYearLicensed");
 
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .changeFirstYearLicensed(licenseYear);
                                   },
                                   validation: (value) {
@@ -491,8 +475,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
-                                      .read(pharmacistMainProvider.notifier)
+                                  initialValue: ref.read(pharmacistMainProvider.notifier)
                                       .userDataMap?["firstYearLicensed"],
                                 ),
                               ),
@@ -509,10 +492,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String registrationNumber) {
-                                    checkIfChanged(registrationNumber,
+                                    checkIfChanged(ref, registrationNumber,
                                         "registrationNumber");
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .changeRegistrationNumber(
                                             registrationNumber);
                                   },
@@ -522,8 +504,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
-                                      .read(pharmacistMainProvider.notifier)
+                                  initialValue: ref.read(pharmacistMainProvider.notifier)
                                       .userDataMap?["registrationNumber"],
                                 ),
                               ),
@@ -540,10 +521,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String registrationProvince) {
-                                    checkIfChanged(registrationProvince,
+                                    checkIfChanged(ref, registrationProvince,
                                         "registrationProvince");
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .changeRegistrationProvince(
                                             registrationProvince);
                                   },
@@ -553,8 +533,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
-                                      .read(pharmacistMainProvider.notifier)
+                                  initialValue: ref.read(pharmacistMainProvider.notifier)
                                       .userDataMap?["registrationProvince"],
                                 ),
                               ),
@@ -572,9 +551,8 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                   titleFont: 22,
                                   onChanged: (String graduationYear) {
                                     checkIfChanged(
-                                        graduationYear, "gradutationYear");
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        ref, graduationYear, "gradutationYear");
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .changeGraduationYear(graduationYear);
                                   },
                                   validation: (value) {
@@ -584,8 +562,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
-                                      .read(pharmacistMainProvider.notifier)
+                                  initialValue: ref.read(pharmacistMainProvider.notifier)
                                       .userDataMap?["gradutationYear"],
                                 ),
                               ),
@@ -603,10 +580,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                   titleFont: 22,
                                   onChanged: (String institutionName) {
                                     checkIfChanged(
-                                        institutionName, "institutionName");
+                                        ref, institutionName, "institutionName");
 
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .changeInstitutionName(institutionName);
                                   },
                                   validation: (value) {
@@ -615,8 +591,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
-                                      .read(pharmacistMainProvider.notifier)
+                                  initialValue: ref.read(pharmacistMainProvider.notifier)
                                       .userDataMap?["institutionName"],
                                 ),
                               ),
@@ -634,9 +609,8 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                   titleFont: 22,
                                   onChanged: (String workingExperience) {
                                     checkIfChanged(
-                                        workingExperience, "workingExperience");
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        ref, workingExperience, "workingExperience");
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .changeWorkingExperience(
                                             workingExperience);
                                   },
@@ -646,8 +620,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                     }
                                     return null;
                                   },
-                                  initialValue: context
-                                      .read(pharmacistMainProvider.notifier)
+                                  initialValue: ref.read(pharmacistMainProvider.notifier)
                                       .userDataMap?["workingExperience"],
                                 ),
                               ),
@@ -721,8 +694,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
                                             listType: MultiSelectListType.CHIP,
-                                            initialValue: context
-                                                .read(pharmacistSignUpProvider
+                                            initialValue: ref.read(pharmacistSignUpProvider
                                                     .notifier)
                                                 .softwareList,
                                             searchable: true,
@@ -735,15 +707,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                             onConfirm: (values) {
                                               softwareListToUpload
                                                   ?.addAll(values);
-                                              context
-                                                  .read(pharmacistSignUpProvider
+                                              ref.read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .changeSoftwareList(values);
                                             },
                                             chipDisplay:
                                                 CustomMultiSelectChipDisplay(
-                                              items: context
-                                                  .read(pharmacistSignUpProvider
+                                              items: ref.read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .softwareList
                                                   ?.map((e) => MultiSelectItem(
@@ -758,15 +728,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                         element?.name
                                                             .toString() ==
                                                         value.toString());
-                                                context
-                                                    .read(
+                                                ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .softwareList
                                                     ?.cast()
                                                     .remove(value);
-                                                context
-                                                    .read(
+                                                ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .softwareList
@@ -775,8 +743,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                             .toString() ==
                                                         value.toString());
 
-                                                return context
-                                                    .read(
+                                                return ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .softwareList;
@@ -836,8 +803,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
                                             listType: MultiSelectListType.CHIP,
-                                            initialValue: context
-                                                .read(pharmacistSignUpProvider
+                                            initialValue: ref.read(pharmacistSignUpProvider
                                                     .notifier)
                                                 .skillList,
                                             searchable: true,
@@ -849,15 +815,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                     fontSize: 16)),
                                             onConfirm: (values) {
                                               skillListToUpload?.addAll(values);
-                                              context
-                                                  .read(pharmacistSignUpProvider
+                                              ref.read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .changeSkillList(values);
                                             },
                                             chipDisplay:
                                                 CustomMultiSelectChipDisplay(
-                                              items: context
-                                                  .read(pharmacistSignUpProvider
+                                              items: ref.read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .skillList
                                                   ?.map((e) => MultiSelectItem(
@@ -872,15 +836,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                         element?.name
                                                             .toString() ==
                                                         value.toString());
-                                                context
-                                                    .read(
+                                                ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .skillList
                                                     ?.cast()
                                                     .remove(value);
-                                                context
-                                                    .read(
+                                                ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .skillList
@@ -888,8 +850,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                         element?.name
                                                             .toString() ==
                                                         value.toString());
-                                                return context
-                                                    .read(
+                                                return ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .skillList;
@@ -949,8 +910,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
                                             listType: MultiSelectListType.CHIP,
-                                            initialValue: context
-                                                .read(pharmacistSignUpProvider
+                                            initialValue: ref.read(pharmacistSignUpProvider
                                                     .notifier)
                                                 .languageList,
                                             searchable: true,
@@ -963,15 +923,13 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                             onConfirm: (values) {
                                               languageListToUpload
                                                   ?.addAll(values);
-                                              context
-                                                  .read(pharmacistSignUpProvider
+                                              ref.read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .changeLanguageList(values);
                                             },
                                             chipDisplay:
                                                 CustomMultiSelectChipDisplay(
-                                              items: context
-                                                  .read(pharmacistSignUpProvider
+                                              items: ref.read(pharmacistSignUpProvider
                                                       .notifier)
                                                   .languageList
                                                   ?.map((e) => MultiSelectItem(
@@ -986,14 +944,12 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                         element?.name
                                                             .toString() ==
                                                         value.toString());
-                                                context
-                                                    .read(
+                                                ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .languageList
                                                     ?.remove(value);
-                                                context
-                                                    .read(
+                                                ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .languageList
@@ -1001,8 +957,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                         element?.name
                                                             .toString() ==
                                                         value.toString());
-                                                return context
-                                                    .read(
+                                                return ref.read(
                                                         pharmacistSignUpProvider
                                                             .notifier)
                                                     .languageList;
@@ -1035,8 +990,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                           )),
                                     ),
                                     SizedBox(height: 10),
-                                    if (context
-                                            .read(
+                                    if (ref.read(
                                                 pharmacistMainProvider.notifier)
                                             .resumePDFData !=
                                         null)
@@ -1065,8 +1019,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                             10),
                                                   ))),
                                               onPressed: () async {
-                                                file = context
-                                                    .read(pharmacistMainProvider
+                                                file = ref.read(pharmacistMainProvider
                                                         .notifier)
                                                     .resumePDFData;
                                                 print("FILE PATH: " +
@@ -1111,8 +1064,7 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                   file = null;
                                                 });
 
-                                                context
-                                                    .read(pharmacistMainProvider
+                                                ref.read(pharmacistMainProvider
                                                         .notifier)
                                                     .clearResumePDF();
                                               },
@@ -1167,12 +1119,10 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                                     .files.first.path
                                                     .toString());
 
-                                                context
-                                                    .read(pharmacistMainProvider
+                                                ref.read(pharmacistMainProvider
                                                         .notifier)
                                                     .changeResumePDF(file);
-                                                print(context
-                                                    .read(pharmacistMainProvider
+                                                print(ref.read(pharmacistMainProvider
                                                         .notifier)
                                                     .resumePDFData);
                                               } else {
@@ -1244,62 +1194,49 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                   softwareListToUpload!.isNotEmpty ||
                                   skillListToUpload!.isNotEmpty ||
                                   languageListToUpload!.isNotEmpty ||
-                                  context
-                                          .read(pharmacistMainProvider.notifier)
+                                  ref.read(pharmacistMainProvider.notifier)
                                           .resumePDFData !=
                                       null)
                               ? () async {
-                                  print(context
-                                      .read(pharmacistSignUpProvider.notifier)
+                                  print(ref.read(pharmacistSignUpProvider.notifier)
                                       .skillList);
-                                  if (context
-                                          .read(
+                                  if (ref.read(
                                               pharmacistSignUpProvider.notifier)
                                           .softwareList !=
                                       null) {
-                                    uploadDataMap["knownSoftware"] = context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    uploadDataMap["knownSoftware"] = ref.read(pharmacistSignUpProvider.notifier)
                                         .softwareList
                                         .toString();
                                   }
-                                  if (context
-                                          .read(
+                                  if (ref.read(
                                               pharmacistSignUpProvider.notifier)
                                           .skillList !=
                                       null) {
-                                    uploadDataMap["knownSkills"] = context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    uploadDataMap["knownSkills"] = ref.read(pharmacistSignUpProvider.notifier)
                                         .skillList
                                         .toString();
                                   }
-                                  if (context
-                                          .read(
+                                  if (ref.read(
                                               pharmacistSignUpProvider.notifier)
                                           .languageList !=
                                       null) {
-                                    uploadDataMap["knownLanguages"] = context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    uploadDataMap["knownLanguages"] = ref.read(pharmacistSignUpProvider.notifier)
                                         .languageList
                                         .toString();
                                   }
-                                  if (context
-                                          .read(pharmacistMainProvider.notifier)
+                                  if (ref.read(pharmacistMainProvider.notifier)
                                           .resumePDFData !=
                                       null) {
-                                    String resumePDFURL = await context
-                                        .read(authProviderMain.notifier)
+                                    String resumePDFURL = await ref.read(authProviderMain.notifier)
                                         .saveAsset(
-                                            context
-                                                .read(pharmacistMainProvider
+                                            ref.read(pharmacistMainProvider
                                                     .notifier)
                                                 .resumePDFData,
-                                            context
-                                                .read(
+                                            ref.read(
                                                     userProviderLogin.notifier)
                                                 .userUID,
                                             "Resume",
-                                            context
-                                                .read(pharmacistMainProvider
+                                            ref.read(pharmacistMainProvider
                                                     .notifier)
                                                 .userDataMap?["firstName"]);
                                     uploadDataMap["resumeDownloadURL"] =
@@ -1307,11 +1244,9 @@ class _EditPharmacistProfileState extends State<EditPharmacistProfile> {
                                   }
                                   print("Upload Data Map: $uploadDataMap");
 
-                                  String? result = await context
-                                      .read(authProviderMain.notifier)
+                                  String? result = await ref.read(authProviderMain.notifier)
                                       .updatePharmacistUserInformation(
-                                          context
-                                              .read(userProviderLogin.notifier)
+                                          ref.read(userProviderLogin.notifier)
                                               .userUID,
                                           uploadDataMap);
 

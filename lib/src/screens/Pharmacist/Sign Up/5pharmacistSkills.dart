@@ -10,14 +10,14 @@ import 'package:signature/signature.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
 
-class PharmacistSkills extends StatefulWidget {
+class PharmacistSkills extends ConsumerStatefulWidget {
   PharmacistSkills({Key? key}) : super(key: key);
 
   @override
   _PharmacistSkillsState createState() => _PharmacistSkillsState();
 }
 
-class _PharmacistSkillsState extends State<PharmacistSkills> {
+class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
   final _softwareItems = software
       .map((software) => MultiSelectItem<Software>(software, software.name))
       .toList();
@@ -154,8 +154,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                 initialChildSize: 0.4,
                                 decoration: BoxDecoration(),
                                 listType: MultiSelectListType.CHIP,
-                                initialValue: context
-                                    .read(pharmacistSignUpProvider.notifier)
+                                initialValue: ref.read(pharmacistSignUpProvider.notifier)
                                     .softwareList,
                                 searchable: true,
                                 items: _softwareItems,
@@ -164,25 +163,21 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                         color: Color(0xFFBDBDBD),
                                         fontSize: 16)),
                                 onConfirm: (values) {
-                                  context
-                                      .read(pharmacistSignUpProvider.notifier)
+                                  ref.read(pharmacistSignUpProvider.notifier)
                                       .changeSoftwareList(values);
                                 },
                                 chipDisplay: MultiSelectChipDisplay(
-                                  items: context
-                                      .read(pharmacistSignUpProvider.notifier)
+                                  items: ref.read(pharmacistSignUpProvider.notifier)
                                       .softwareList
                                       ?.map((e) =>
                                           MultiSelectItem(e, e.toString()))
                                       .toList(),
                                   chipColor: Color(0xFF5DB075),
                                   onTap: (value) {
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .softwareList
                                         ?.remove(value);
-                                    return context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    return ref.read(pharmacistSignUpProvider.notifier)
                                         .softwareList;
                                   },
                                   textStyle: TextStyle(color: Colors.white),
@@ -237,8 +232,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                 initialChildSize: 0.4,
                                 decoration: BoxDecoration(),
                                 listType: MultiSelectListType.CHIP,
-                                initialValue: context
-                                    .read(pharmacistSignUpProvider.notifier)
+                                initialValue: ref.read(pharmacistSignUpProvider.notifier)
                                     .skillList,
                                 searchable: true,
                                 items: _skillItems,
@@ -247,25 +241,21 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                         color: Color(0xFFBDBDBD),
                                         fontSize: 16)),
                                 onConfirm: (values) {
-                                  context
-                                      .read(pharmacistSignUpProvider.notifier)
+                                  ref.read(pharmacistSignUpProvider.notifier)
                                       .changeSkillList(values);
                                 },
                                 chipDisplay: MultiSelectChipDisplay(
-                                  items: context
-                                      .read(pharmacistSignUpProvider.notifier)
+                                  items: ref.read(pharmacistSignUpProvider.notifier)
                                       .skillList
                                       ?.map((e) =>
                                           MultiSelectItem(e, e.toString()))
                                       .toList(),
                                   chipColor: Color(0xFF5DB075),
                                   onTap: (value) {
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .skillList
                                         ?.remove(value);
-                                    return context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    return ref.read(pharmacistSignUpProvider.notifier)
                                         .skillList;
                                   },
                                   textStyle: TextStyle(color: Colors.white),
@@ -320,8 +310,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                 initialChildSize: 0.4,
                                 decoration: BoxDecoration(),
                                 listType: MultiSelectListType.CHIP,
-                                initialValue: context
-                                    .read(pharmacistSignUpProvider.notifier)
+                                initialValue: ref.read(pharmacistSignUpProvider.notifier)
                                     .languageList,
                                 searchable: true,
                                 items: _languageItems,
@@ -330,25 +319,21 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                         color: Color(0xFFBDBDBD),
                                         fontSize: 16)),
                                 onConfirm: (values) {
-                                  context
-                                      .read(pharmacistSignUpProvider.notifier)
+                                  ref.read(pharmacistSignUpProvider.notifier)
                                       .changeLanguageList(values);
                                 },
                                 chipDisplay: MultiSelectChipDisplay(
-                                  items: context
-                                      .read(pharmacistSignUpProvider.notifier)
+                                  items: ref.read(pharmacistSignUpProvider.notifier)
                                       .languageList
                                       ?.map((e) =>
                                           MultiSelectItem(e, e.toString()))
                                       .toList(),
                                   chipColor: Color(0xFF5DB075),
                                   onTap: (value) {
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .languageList
                                         ?.remove(value);
-                                    return context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    return ref.read(pharmacistSignUpProvider.notifier)
                                         .languageList;
                                   },
                                   textStyle: TextStyle(color: Colors.white),
@@ -377,8 +362,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                               )),
                         ),
                         SizedBox(height: 10),
-                        if (context
-                                .read(pharmacistSignUpProvider.notifier)
+                        if (ref.read(pharmacistSignUpProvider.notifier)
                                 .resumePDFData !=
                             null)
                           Row(
@@ -400,8 +384,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                         borderRadius: BorderRadius.circular(10),
                                       ))),
                                   onPressed: () async {
-                                    file = context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    file = ref.read(pharmacistSignUpProvider.notifier)
                                         .resumePDFData;
                                     print(
                                         "FILE PATH: " + file!.path.toString());
@@ -440,14 +423,11 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                       _result = null;
                                       file = null;
                                     });
-                                    print(context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    print(ref.read(pharmacistSignUpProvider.notifier)
                                         .firstName);
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .clearResumePDF();
-                                    print(context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    print(ref.read(pharmacistSignUpProvider.notifier)
                                         .firstName);
                                   },
                                   child: RichText(
@@ -494,11 +474,9 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                     file = File(
                                         _result!.files.first.path.toString());
 
-                                    context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    ref.read(pharmacistSignUpProvider.notifier)
                                         .changeResumePDF(file);
-                                    print(context
-                                        .read(pharmacistSignUpProvider.notifier)
+                                    print(ref.read(pharmacistSignUpProvider.notifier)
                                         .resumePDFData);
                                   } else {
                                     // User canceled the picker
@@ -553,8 +531,8 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
             //Next
             Center(
               child: Consumer(
-                builder: (context, watch, child) {
-                  watch(pharmacistSignUpProvider);
+                builder: (context, ref, child) {
+                  ref.watch(pharmacistSignUpProvider);
                   return SizedBox(
                     width: 324,
                     height: 51,
@@ -573,8 +551,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ))),
-                      onPressed: (context
-                              .read(pharmacistSignUpProvider.notifier)
+                      onPressed: (ref.read(pharmacistSignUpProvider.notifier)
                               .isValidPharmacistSkills())
                           ? null
                           : () {
@@ -608,7 +585,7 @@ class _PharmacistSkillsState extends State<PharmacistSkills> {
   }
 }
 
-class SignatureBox extends StatefulWidget {
+class SignatureBox extends ConsumerStatefulWidget {
   const SignatureBox({
     Key? key,
     required SignatureController sigController,
@@ -621,7 +598,7 @@ class SignatureBox extends StatefulWidget {
   _SignatureBoxState createState() => _SignatureBoxState();
 }
 
-class _SignatureBoxState extends State<SignatureBox> {
+class _SignatureBoxState extends ConsumerState<SignatureBox> {
   bool signatureSaved = false;
 
   @override
@@ -686,8 +663,7 @@ class _SignatureBoxState extends State<SignatureBox> {
                             ),
                             onPressed: () async {
                               if (widget._sigController.isNotEmpty) {
-                                context
-                                    .read(pharmacistSignUpProvider.notifier)
+                                ref.read(pharmacistSignUpProvider.notifier)
                                     .changeSignature(await widget._sigController
                                         .toPngBytes());
                                 setState(() {

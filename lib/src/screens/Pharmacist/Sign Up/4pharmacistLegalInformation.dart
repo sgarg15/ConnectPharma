@@ -4,7 +4,7 @@ import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/5pharmacistSkills.dart';
 
-class PharmacistLegalInformation extends StatefulWidget {
+class PharmacistLegalInformation extends ConsumerStatefulWidget {
   PharmacistLegalInformation({Key? key}) : super(key: key);
 
   @override
@@ -13,11 +13,11 @@ class PharmacistLegalInformation extends StatefulWidget {
 }
 
 class _PharmacistLegalInformationState
-    extends State<PharmacistLegalInformation> {
+    extends ConsumerState<PharmacistLegalInformation> {
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, watch, child) {
-      final pharmacistSignUp = watch(pharmacistSignUpProvider);
+    return Consumer(builder: (context, ref, child) {
+      final pharmacistSignUp = ref.watch(pharmacistSignUpProvider);
       return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(
@@ -89,8 +89,7 @@ class _PharmacistLegalInformationState
                           child: Switch(
                             value: pharmacistSignUp.entitledToWork,
                             onChanged: (value) {
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
+                              ref.read(pharmacistSignUpProvider.notifier)
                                   .changeEntitledToWork(value);
                             },
                             activeTrackColor: Color(0xFF5DB075),
@@ -116,8 +115,7 @@ class _PharmacistLegalInformationState
                           child: Switch(
                             value: pharmacistSignUp.activeMember,
                             onChanged: (value) {
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
+                              ref.read(pharmacistSignUpProvider.notifier)
                                   .changeActiveMember(value);
                             },
                             activeTrackColor: Color(0xFF5DB075),
@@ -144,8 +142,7 @@ class _PharmacistLegalInformationState
                             value: pharmacistSignUp.liabilityInsurance,
                             onChanged: (value) {
                               print(value);
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
+                              ref.read(pharmacistSignUpProvider.notifier)
                                   .changeLiabilityInsurance(value);
                             },
                             activeTrackColor: Color(0xFF5DB075),
@@ -172,8 +169,7 @@ class _PharmacistLegalInformationState
                             value: pharmacistSignUp.licenseRestricted,
                             onChanged: (value) {
                               print(value);
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
+                              ref.read(pharmacistSignUpProvider.notifier)
                                   .changeLicenseRestricted(value);
                             },
                             activeTrackColor: Color(0xFF5DB075),
@@ -200,8 +196,7 @@ class _PharmacistLegalInformationState
                             value: pharmacistSignUp.malpractice,
                             onChanged: (value) {
                               print(value);
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
+                              ref.read(pharmacistSignUpProvider.notifier)
                                   .changeMalpractice(value);
                             },
                             activeTrackColor: Color(0xFF5DB075),
@@ -228,8 +223,7 @@ class _PharmacistLegalInformationState
                             value: pharmacistSignUp.felon,
                             onChanged: (value) {
                               print(value);
-                              context
-                                  .read(pharmacistSignUpProvider.notifier)
+                              ref.read(pharmacistSignUpProvider.notifier)
                                   .changeFelonStatus(value);
                             },
                             activeTrackColor: Color(0xFF5DB075),

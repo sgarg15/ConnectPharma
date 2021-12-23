@@ -21,7 +21,7 @@ final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
-class PharmacistSignUpPage extends StatefulWidget {
+class PharmacistSignUpPage extends ConsumerStatefulWidget {
   String userType = "";
   PharmacistSignUpPage({Key? key, required this.userType}) : super(key: key);
 
@@ -29,31 +29,30 @@ class PharmacistSignUpPage extends StatefulWidget {
   _PharmacistSignUpPageState createState() => _PharmacistSignUpPageState();
 }
 
-class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
+class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
   bool checkedValue = false;
   bool isSwitched = true;
   bool passwordVisibility = false;
   //String _password, _email;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
   void initState() {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       if (widget.userType == "Pharmacist") {
-        context
+        ref
             .read(pharmacistSignUpProvider.notifier)
             .changeUserType("Pharmacist");
       } else if (widget.userType == "Pharmacy Assistant") {
-        context
+        ref
             .read(pharmacistSignUpProvider.notifier)
             .changeUserType("Pharmacy Assistant");
       } else if (widget.userType == "Pharmacy Technician") {
-        context
+        ref
             .read(pharmacistSignUpProvider.notifier)
             .changeUserType("Pharmacy Technician");
       }
       print(
-          "User Type: ${context.read(pharmacistSignUpProvider.notifier).userType}");
+          "User Type: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
     });
     super.initState();
   }
@@ -61,8 +60,8 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (context, watch, child) {
-        watch(pharmacistSignUpProvider);
+      builder: (context, ref, child) {
+        ref.watch(pharmacistSignUpProvider);
         return Scaffold(
           resizeToAvoidBottomInset: false,
           body: Container(
@@ -138,7 +137,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                           keyboardStyle: TextInputType.emailAddress,
                           textCapitalization: TextCapitalization.none,
                           onChanged: (String emailAddress) {
-                            context
+                            ref
                                 .read(pharmacistSignUpProvider.notifier)
                                 .changeEmail(emailAddress);
                           },
@@ -148,9 +147,8 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                             }
                             return null;
                           },
-                          initialValue: context
-                              .read(pharmacistSignUpProvider.notifier)
-                              .email,
+                          initialValue:
+                              ref.read(pharmacistSignUpProvider.notifier).email,
                           inputDecoration: InputDecoration(
                             focusedErrorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -188,7 +186,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                           decoration: false,
                           keyboardStyle: TextInputType.emailAddress,
                           onChanged: (String password) {
-                            context
+                            ref
                                 .read(pharmacistSignUpProvider.notifier)
                                 .changePassword(password);
                           },
@@ -198,7 +196,7 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                             }
                             return null;
                           },
-                          initialValue: context
+                          initialValue: ref
                               .read(pharmacistSignUpProvider.notifier)
                               .password,
                           inputDecoration: InputDecoration(
@@ -301,19 +299,21 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100),
                               ))),
-                          onPressed: (context
+                          onPressed: (ref
                                   .read(pharmacistSignUpProvider.notifier)
                                   .isValidPharmacistSignUp())
                               ? null
                               : () async {
                                   List<String> signInMethod = await FirebaseAuth
                                       .instance
-                                      .fetchSignInMethodsForEmail(context
+                                      .fetchSignInMethodsForEmail(ref
                                           .read(
                                               pharmacistSignUpProvider.notifier)
                                           .email);
                                   if (signInMethod.isNotEmpty) {
-                                    showDialog(
+                                    print(
+                                        "-----------------ERROR------------------");
+                                    await showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
                                               title: Text("Error"),
@@ -328,12 +328,14 @@ class _PharmacistSignUpPageState extends State<PharmacistSignUpPage> {
                                                 ),
                                               ],
                                             ));
-                                  }
+                                  } else {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               PharmacistLocation()));
+
+                                  }
                                 },
                           child: Column(
                             mainAxisSize: MainAxisSize.min,

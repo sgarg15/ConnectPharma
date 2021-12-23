@@ -8,13 +8,13 @@ import 'package:pharma_connect/src/screens/login.dart';
 import 'jobHistoryPharmacist.dart';
 
 // ignore: must_be_immutable
-class JobDetails extends StatelessWidget {
+class JobDetails extends ConsumerWidget {
   Map<String, dynamic>? jobDetails = Map();
 
   JobDetails({Key? key, this.jobDetails}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -340,7 +340,7 @@ class JobDetails extends StatelessWidget {
                                       FutureBuilder(
                                         future: getDistance(
                                             jobDetails!,
-                                            context
+                                            ref
                                                 .read(pharmacistMainProvider
                                                     .notifier)
                                                 .userDataMap?["address"]),
@@ -668,9 +668,11 @@ class JobDetails extends StatelessWidget {
 
                                           //Follow step 1)
                                           await sendApplicantDataToPharmacy(
+                                              ref,
                                               context, jobApplicationBatch);
                                           //Follow step 2)
                                           await sendJobDataToPharmacist(
+                                              ref,
                                               context, jobApplicationBatch);
                                           jobApplicationBatch
                                               .commit()
@@ -721,28 +723,28 @@ class JobDetails extends StatelessWidget {
   }
 
   Future<void> sendJobDataToPharmacist(
-      BuildContext context, WriteBatch batchValue) async {
+      WidgetRef ref, BuildContext context, WriteBatch batchValue) async {
     jobDetails
         ?.addAll({"applicationStatus": "applied", "userType": "Pharmacist"});
     DocumentReference pharmacistJobsCollection = FirebaseFirestore.instance
         .collection("Users")
-        .doc(context.read(userProviderLogin.notifier).userUID)
+        .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("PharmacistJobs")
         .doc(jobDetails?["jobID"]);
     batchValue.set(pharmacistJobsCollection, jobDetails);
     // String? result = await context
     //     .read(authProviderMain.notifier)
     //     .sendJobInfoToPharmacistProfile(
-    //         context.read(userProviderLogin.notifier).userUID,
+    //         ref.read(userProviderLogin.notifier).userUID,
     //         jobDetails?["jobID"],
     //         jobDetails);
   }
 
   Future<void> sendApplicantDataToPharmacy(
-      BuildContext context, WriteBatch batchValue) async {
+      WidgetRef ref, BuildContext context, WriteBatch batchValue) async {
     Map<String, dynamic>? applicantInformation = Map();
     Map<String, dynamic>? userDataMap =
-        context.read(pharmacistMainProvider.notifier).userDataMap;
+        ref.read(pharmacistMainProvider.notifier).userDataMap;
     applicantInformation.addAll({
       "jobStatus": "applied",
       "availability": userDataMap?["availability"],
@@ -754,7 +756,7 @@ class JobDetails extends StatelessWidget {
       "phoneNumber": userDataMap?["phoneNumber"],
       "profilePhoto": userDataMap?["profilePhotoDownloadURL"],
       "resume": userDataMap?["resumeDownloadURL"],
-      "uid": context.read(userProviderLogin.notifier).userUID,
+      "uid": ref.read(userProviderLogin.notifier).userUID,
       "yearsOfExperience": userDataMap?["workingExperience"],
     });
 
@@ -765,7 +767,7 @@ class JobDetails extends StatelessWidget {
             .collection("Main")
             .doc(jobDetails?["jobID"]),
         {
-          "applicants.${context.read(userProviderLogin.notifier).userUID}":
+          "applicants.${ref.read(userProviderLogin.notifier).userUID}":
               applicantInformation
         });
 
@@ -774,7 +776,7 @@ class JobDetails extends StatelessWidget {
     //     .sendApplicantInfoToPharmacyJob(
     //         jobDetails?["pharmacyUID"],
     //         ,
-    //         context.read(userProviderLogin.notifier).userUID,
+    //         ref.read(userProviderLogin.notifier).userUID,
     //         applicantInformation);
 
     // if (result == "Applicant Upload Failed") {

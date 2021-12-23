@@ -12,20 +12,20 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 import '../../../../main.dart';
 
-class PharmacistLocation extends StatefulWidget {
+class PharmacistLocation extends ConsumerStatefulWidget {
   const PharmacistLocation({Key? key}) : super(key: key);
 
   @override
   _PharmacistLocationState createState() => _PharmacistLocationState();
 }
 
-class _PharmacistLocationState extends State<PharmacistLocation> {
+class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     TextEditingController streetAddress = TextEditingController(
-        text: context.read(pharmacistSignUpProvider.notifier).address);
+        text: ref.read(pharmacistSignUpProvider.notifier).address);
 
     return WillPopScope(
       onWillPop: () async {
@@ -43,8 +43,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                       style: TextStyle(color: Color(0xFF5DB075)),
                     ),
                     onPressed: () {
-                      context
-                          .read(pharmacistSignUpProvider.notifier)
+                      ref.read(pharmacistSignUpProvider.notifier)
                           .clearAllValues();
                       // Direct to whichever they are in Information Form pages
                       Navigator.pushReplacement(
@@ -122,8 +121,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                         hintText: "Enter your First Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String firstName) {
-                          context
-                              .read(pharmacistSignUpProvider.notifier)
+                          ref.read(pharmacistSignUpProvider.notifier)
                               .changeFirstName(firstName);
                         },
                         validation: (value) {
@@ -134,8 +132,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacistSignUpProvider.notifier)
+                        initialValue: ref.read(pharmacistSignUpProvider.notifier)
                             .firstName,
                       ),
                       SizedBox(height: 20),
@@ -146,8 +143,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                         hintText: "Enter your Last Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String lastName) {
-                          context
-                              .read(pharmacistSignUpProvider.notifier)
+                          ref.read(pharmacistSignUpProvider.notifier)
                               .changeLastName(lastName);
                         },
                         validation: (value) {
@@ -158,8 +154,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacistSignUpProvider.notifier)
+                        initialValue: ref.read(pharmacistSignUpProvider.notifier)
                             .lastName,
                       ),
                       SizedBox(height: 20),
@@ -209,8 +204,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                                   final placeDetails =
                                       await PlaceApiProvider(sessionToken)
                                           .getPlaceDetailFromId(result.placeId);
-                                  context
-                                      .read(pharmacistSignUpProvider.notifier)
+                                  ref.read(pharmacistSignUpProvider.notifier)
                                       .changePharmacistAddress(
                                           placeDetails.streetNumber! +
                                               " " +
@@ -269,8 +263,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                         hintText: "Enter your Phone Number...",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String phoneNumber) {
-                          context
-                              .read(pharmacistSignUpProvider.notifier)
+                          ref.read(pharmacistSignUpProvider.notifier)
                               .changePhoneNumber(phoneNumber);
                         },
                         validation: (value) {
@@ -279,8 +272,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                           }
                           return null;
                         },
-                        initialValue: context
-                            .read(pharmacistSignUpProvider.notifier)
+                        initialValue: ref.read(pharmacistSignUpProvider.notifier)
                             .phoneNumber,
                         formatter: [MaskedInputFormatter('(###) ###-####')],
                       ),
@@ -294,8 +286,8 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
               //Next Button
               Center(
                 child: Consumer(
-                  builder: (context, watch, child) {
-                    watch(pharmacistSignUpProvider);
+                  builder: (context, ref, child) {
+                    ref.watch(pharmacistSignUpProvider);
                     return SizedBox(
                       width: 324,
                       height: 51,
@@ -313,8 +305,7 @@ class _PharmacistLocationState extends State<PharmacistLocation> {
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
                             ))),
-                        onPressed: (context
-                                .read(pharmacistSignUpProvider.notifier)
+                        onPressed: (ref.read(pharmacistSignUpProvider.notifier)
                                 .isValidPharmacistLocation())
                             ? null
                             : () {

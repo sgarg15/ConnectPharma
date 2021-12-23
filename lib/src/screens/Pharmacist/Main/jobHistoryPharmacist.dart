@@ -30,14 +30,14 @@ final pharmacistMainProvider =
   return PharmacistMainProvider();
 });
 
-class JobHistoryPharmacist extends StatefulWidget {
+class JobHistoryPharmacist extends ConsumerStatefulWidget {
   JobHistoryPharmacist({Key? key}) : super(key: key);
 
   @override
   _JobHistoryState createState() => _JobHistoryState();
 }
 
-class _JobHistoryState extends State<JobHistoryPharmacist> {
+class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int segmentedControlGroupValue = 0;
   CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
@@ -72,17 +72,17 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
         "All Files: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}/jobsList")}");
   }
 
-  Future<void> updateJobAlerts() async {
+  Future<void> updateJobAlerts(WidgetRef ref) async {
     String jobsListDirectoryPath = "${await localStorage.localPath}/jobsList";
 
     String userDirectoryPath =
-        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}";
+        "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}";
 
     String userJobsFilePath =
-        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList";
+        "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList";
 
     String userNotificationsFilePath =
-        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/notifications";
+        "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/notifications";
 
     print("Jobs List Directory: $jobsListDirectoryPath");
 
@@ -114,18 +114,18 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
     print("Updated Job Alerts: $alertJobs");
   }
 
-  Future<void> checkIfJobUpdated(Map allJobs, BuildContext context) async {
+  Future<void> checkIfJobUpdated(WidgetRef ref, Map allJobs, BuildContext context) async {
     //print(allJobs);
     String jobsListDirectoryPath = "${await localStorage.localPath}/jobsList";
 
     String userDirectoryPath =
-        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}";
+        "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}";
 
     String userJobsFilePath =
-        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList";
+        "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList";
 
     String userNotificationsFilePath =
-        "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/notifications";
+        "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/notifications";
 
     Map storageJobsMap = Map();
     print(allJobs);
@@ -311,17 +311,17 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
   void initState() {
     super.initState();
 
-    print("User UID: ${context.read(userProviderLogin.notifier).userUID}");
+    print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
     clearFilesOrDirectory();
-    userDataFirestoreSort();
+    userDataFirestoreSort(ref);
 
-    jobsFirestoreSort();
+    jobsFirestoreSort(ref);
   }
 
-  void userDataFirestoreSort() {
+  void userDataFirestoreSort(WidgetRef ref) {
     userDataStreamSub?.cancel();
     userDataStreamSub = userRef
-        .doc(context.read(userProviderLogin.notifier).userUID)
+        .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("SignUp")
         .doc("Information")
         .snapshots()
@@ -329,13 +329,11 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
       setState(() {
         userDataMap = docData.data();
       });
-      context
-          .read(pharmacistMainProvider.notifier)
+      ref.read(pharmacistMainProvider.notifier)
           .changeUserDataMap(userDataMap);
       print(
-          "UserData Map: ${context.read(pharmacistMainProvider.notifier).userDataMap}");
-      if (context
-          .read(pharmacistMainProvider.notifier)
+          "UserData Map: ${ref.read(pharmacistMainProvider.notifier).userDataMap}");
+      if (ref.read(pharmacistMainProvider.notifier)
           .userDataMap?["availability"]
           .isEmpty) {
         showDialog(
@@ -349,9 +347,9 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
     });
   }
 
-  void jobsFirestoreSort() async {
+  void jobsFirestoreSort(WidgetRef ref) async {
     jobsStreamPharmacist = userRef
-        .doc(context.read(userProviderLogin.notifier).userUID)
+        .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("PharmacistJobs")
         .snapshots();
     //To Check if a job is deleted
@@ -367,25 +365,21 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
             allJobs[dataID] = doc.data();
           }
         });
-        print(context
-                .read(pharmacistMainProvider.notifier)
+        print(ref.read(pharmacistMainProvider.notifier)
                 .userDataMap?["userType"] ==
             "Pharmacist");
-        if (context
-                    .read(pharmacistMainProvider.notifier)
+        if (ref.read(pharmacistMainProvider.notifier)
                     .userDataMap?["userType"] ==
                 "Pharmacist" ||
-            context
-                    .read(pharmacistMainProvider.notifier)
+            ref.read(pharmacistMainProvider.notifier)
                     .userDataMap?["userType"] ==
                 "Pharmacy Assistant" ||
-            context
-                    .read(pharmacistMainProvider.notifier)
+            ref.read(pharmacistMainProvider.notifier)
                     .userDataMap?["userType"] ==
                 "Pharmacy Technician") {
-          await checkIfJobUpdated(allJobs, context);
+          await checkIfJobUpdated(ref, allJobs, context);
 
-          updateJobAlerts().whenComplete(() {
+          updateJobAlerts(ref).whenComplete(() {
             setState(() {});
           });
         }
@@ -393,17 +387,17 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
         print("Writing Empty File");
         userDirectory = await localStorage.createDirectory(
             path:
-                "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}");
+                "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}");
 
-        File("${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList")
+        File("${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList")
             .createSync();
 
-        File("${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/notifications")
+        File("${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/notifications")
             .createSync();
 
         localStorage.writeFile(
             filePath:
-                "${await localStorage.localPath}/jobsList/${context.read(userProviderLogin.notifier).userUID}/storageJobsList",
+                "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList",
             data: "");
       }
     });
@@ -514,12 +508,10 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
                   color: Color(0xFF5DB075),
                   size: 50,
                 ),
-                onTap: (context
-                                .read(pharmacistMainProvider.notifier)
+                onTap: (ref.read(pharmacistMainProvider.notifier)
                                 .userDataMap?["availability"] !=
                             null &&
-                        context
-                            .read(pharmacistMainProvider.notifier)
+                        ref.read(pharmacistMainProvider.notifier)
                             .userDataMap?["availability"]
                             .isNotEmpty)
                     ? () {
@@ -1078,7 +1070,7 @@ class _JobHistoryState extends State<JobHistoryPharmacist> {
 }
 
 // ignore: must_be_immutable
-class SideMenuDrawer extends StatelessWidget {
+class SideMenuDrawer extends ConsumerWidget {
   StreamSubscription? jobsStreamSub;
   StreamSubscription? userDataStreamSub;
 
@@ -1089,7 +1081,7 @@ class SideMenuDrawer extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       constraints: BoxConstraints(minWidth: 250, maxWidth: 290),
       child: Drawer(
@@ -1288,10 +1280,9 @@ class SideMenuDrawer extends StatelessWidget {
               onTap: () {
                 jobsStreamSub?.cancel();
                 userDataStreamSub?.cancel();
-                context.read(authProviderMain.notifier).signOut().then((value) {
-                  context.read(pharmacistMainProvider.notifier).resetValues();
-                  context
-                      .read(pharmacistSignUpProvider.notifier)
+                ref.read(authProviderMain.notifier).signOut().then((value) {
+                  ref.read(pharmacistMainProvider.notifier).resetValues();
+                  ref.read(pharmacistSignUpProvider.notifier)
                       .clearAllValues();
                 });
                 Navigator.pushReplacement(context,
@@ -1309,13 +1300,13 @@ class SideMenuDrawer extends StatelessWidget {
   }
 }
 
-class _CreateDrawerHeader extends StatelessWidget {
+class _CreateDrawerHeader extends ConsumerWidget {
   const _CreateDrawerHeader({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     print("Creating Header");
     return Container(
       height: 140,
@@ -1331,8 +1322,7 @@ class _CreateDrawerHeader extends StatelessWidget {
                 radius: 30.0,
                 backgroundColor: const Color(0xFF778899),
                 //Change to retrieve photo from firestore
-                backgroundImage: NetworkImage(context
-                    .read(pharmacistMainProvider.notifier)
+                backgroundImage: NetworkImage(ref.read(pharmacistMainProvider.notifier)
                     .userDataMap?["profilePhotoDownloadURL"])),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1343,12 +1333,10 @@ class _CreateDrawerHeader extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       //change to retrieve name from Firestore
-                      text: context
-                              .read(pharmacistMainProvider.notifier)
+                      text: ref.read(pharmacistMainProvider.notifier)
                               .userDataMap?["firstName"] +
                           " " +
-                          context
-                              .read(pharmacistMainProvider.notifier)
+                          ref.read(pharmacistMainProvider.notifier)
                               .userDataMap?["lastName"],
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
@@ -1362,8 +1350,7 @@ class _CreateDrawerHeader extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       //change to retrieve email from firestore
-                      text: context
-                          .read(pharmacistMainProvider.notifier)
+                      text: ref.read(pharmacistMainProvider.notifier)
                           .userDataMap?["email"],
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
