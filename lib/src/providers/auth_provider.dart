@@ -72,7 +72,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       if (asset != null) {
         Reference reference =
-            FirebaseStorage.instance.ref().child(userName + uidName).child(fileName);
+            FirebaseStorage.instance.ref().child(uidName).child(fileName);
         UploadTask uploadTask = reference.putFile(asset);
 
         String url = await (await uploadTask).ref.getDownloadURL();
@@ -91,7 +91,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       if (asset != null) {
         Reference reference =
-            FirebaseStorage.instance.ref().child(userName + uidName).child(fileName);
+            FirebaseStorage.instance.ref().child(uidName).child(fileName);
         UploadTask uploadTask = reference.putData(asset);
 
         String url = await (await uploadTask).ref.getDownloadURL();

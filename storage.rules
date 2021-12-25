@@ -1,8 +1,19 @@
+//Questions
+  //If you are using the download link provided with a file uploaded to storage, to view the file, is that considered a "get" from storage?
+
+//Access
+//Pharmacists
+  //Their own storage file {userID}
+//Pharmacy
+  //Their own storage file {userID}
+
+
 rules_version = '2';
+
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if request.auth!=null;
+    match /{userID} {
+      allow read, write: if request.auth != null && request.auth.uid == userID;
     }
   }
 }
