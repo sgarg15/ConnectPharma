@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import '../../../../main.dart';
 
 class PhotoInformation extends ConsumerStatefulWidget {
@@ -200,6 +203,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                               ref.read(pharmacistSignUpProvider.notifier).password.toString())
                           .then((value) async {
                         print("UPLOADING DATA");
+                        print("USER TYPE: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
                         if (value == null) {
                           print("ERROR");
                           final snackBar = SnackBar(
@@ -213,7 +217,19 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                           //value!.user!.delete();
                           return null;
                         } else {
-                          if (ref.read(pharmacistSignUpProvider.notifier).userType ==
+                          if (ref.read(pharmacistSignUpProvider.notifier).userType == null) {
+                            print("ERROR");
+                            final snackBar = SnackBar(
+                              content: Text(
+                                  "There was an error trying to register you. Please try again."),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            setState(() {
+                              disableButton = false;
+                            });
+                            //value!.user!.delete();
+                            return null;
+                          } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
                               "Pharmacist") {
                             ref
                                 .read(authProvider.notifier)
@@ -363,8 +379,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         SizedBox(height: 10),
-        if (ref.read(pharmacistSignUpProvider.notifier)
-                                  .profilePhotoData != null)
+        if (ref.read(pharmacistSignUpProvider.notifier).profilePhotoData != null)
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -381,14 +396,13 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                         borderRadius: BorderRadius.circular(10),
                       ))),
                   onPressed: () async {
-                                      profilePhotoFile = ref.read(pharmacistSignUpProvider.notifier).profilePhotoData;
-                    print("FILE PATH: " +
-                                          profilePhotoFile!.path.toString());
+                    profilePhotoFile = ref.read(pharmacistSignUpProvider.notifier).profilePhotoData;
+                    print("FILE PATH: " + profilePhotoFile!.path.toString());
                     OpenFile.open(profilePhotoFile!.path);
                   },
                   child: RichText(
                     text: TextSpan(
-                                        text: "View Profile Photo",
+                      text: "View Profile Photo",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -413,11 +427,11 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                       ))),
                   onPressed: () async {
                     setState(() {
-                                        _profilePhotoResult = null;
+                      _profilePhotoResult = null;
                       profilePhotoFile = null;
                     });
 
-                                      ref.read(pharmacistSignUpProvider.notifier).clearProfilePhotoImage();
+                    ref.read(pharmacistSignUpProvider.notifier).clearProfilePhotoImage();
                   },
                   child: RichText(
                     text: TextSpan(
@@ -447,16 +461,16 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                   ))),
               onPressed: () async {
                 try {
-                                    _profilePhotoResult = await FilePicker.platform.pickFiles(type: FileType.image
+                  _profilePhotoResult = await FilePicker.platform.pickFiles(type: FileType.image
                       //withData: true,
                       );
-                                    if (_profilePhotoResult!.files.first.path != null) {
+                  if (_profilePhotoResult!.files.first.path != null) {
                     setState(() {
-                                        profilePhotoPicked = true;
+                      profilePhotoPicked = true;
                     });
-                                      profilePhotoFile = File(_profilePhotoResult!.files.first.path.toString());
+                    profilePhotoFile = File(_profilePhotoResult!.files.first.path.toString());
 
-                                      ref
+                    ref
                         .read(pharmacistSignUpProvider.notifier)
                         .changeProfilePhotoImage(profilePhotoFile);
                   } else {
@@ -473,7 +487,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
               },
               child: RichText(
                 text: TextSpan(
-                                    text: "Select Profile Photo (HeadShot)",
+                  text: "Select Profile Photo (HeadShot)",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -484,7 +498,52 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
             ),
           )
       ],
-                      );
+    );
+  }
+
+  Future<List<int>> _readDocumentData(Uint8List data2) async {
+    final ByteData data = ByteData.view(data2.buffer);
+    return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+  }
+
+  Future<bool> checkRegistrationCertificate(Uint8List fileData) async {
+    //Load the existing PDF document.
+    PdfDocument document = PdfDocument(inputBytes: await _readDocumentData(fileData));
+
+    //Create the new instance of the PdfTextExtractor.
+    PdfTextExtractor extractor = PdfTextExtractor(document);
+
+    //Extract all the text from the document.
+    String text = extractor.extractText();
+
+    bool containsKeyword = text.contains("This is your annual registration card");
+
+    return containsKeyword;
+  }
+
+  void _showRegistrationCertificateError() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Wrong Registration Certificate'),
+            content: Scrollbar(
+              child: SingleChildScrollView(
+                child: Text(
+                    "Please provide an actual registration certificate, which can be found on the eservices website."),
+                physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              ),
+            ),
+            actions: [
+              FlatButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   Column selectRegistrationCertificate(BuildContext context) {
@@ -546,7 +605,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                       registrationFile = null;
                     });
 
-                                      ref.read(pharmacistSignUpProvider.notifier).clearRegistrationCertificatePDF();
+                    ref.read(pharmacistSignUpProvider.notifier).clearRegistrationCertificatePDF();
                   },
                   child: RichText(
                     text: TextSpan(
@@ -588,9 +647,22 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                     registrationFile =
                         File(_registrationCertificateResult!.files.first.path.toString());
 
-                                      ref
+                    ref
                         .read(pharmacistSignUpProvider.notifier)
                         .changeRegistrationCertificate(registrationFile);
+
+                    //Check if registrationCertificate is correct
+                    bool registrationCertificateCheck =
+                        await checkRegistrationCertificate(registrationFile!.readAsBytesSync());
+                    if (registrationCertificateCheck == false) {
+                      setState(() {
+                        _registrationCertificateResult = null;
+                        registrationFile = null;
+                      });
+
+                      ref.read(pharmacistSignUpProvider.notifier).clearRegistrationCertificatePDF();
+                      _showRegistrationCertificateError();
+                    }
                   } else {
                     // User canceled the picker
                   }
@@ -616,7 +688,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
             ),
           )
       ],
-                      );
+    );
   }
 
   Column selectBackID(BuildContext context) {

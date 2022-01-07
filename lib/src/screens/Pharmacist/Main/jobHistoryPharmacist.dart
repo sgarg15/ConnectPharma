@@ -319,7 +319,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
       });
       ref.read(pharmacistMainProvider.notifier).changeUserDataMap(userDataMap);
       print("UserData Map: ${ref.read(pharmacistMainProvider.notifier).userDataMap}");
-      if (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"].isEmpty) {
+      if (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"].isEmpty) { 
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -332,6 +332,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
   }
 
   void jobsFirestoreSort(WidgetRef ref) async {
+    print("--------------\nCALLING PHARMACIST JOBS\n-----------------");
     jobsStreamPharmacist = userRef
         .doc(ref.read(userProviderLogin.notifier).userUID)
         .collection("PharmacistJobs")
@@ -375,7 +376,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
         File("${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/notifications")
             .createSync();
-print(
+        print(
             "All Files USER: ${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList");
         localStorage.writeFile(
             filePath:

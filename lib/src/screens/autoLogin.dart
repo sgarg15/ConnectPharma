@@ -15,6 +15,7 @@ class AutoLogin extends ConsumerStatefulWidget {
 
 class _AutoLoginState extends ConsumerState<AutoLogin> {
   Future logInUser(WidgetRef ref) async {
+    
     String? userType = await ref.read(authProviderLogin.notifier)
         .getCurrentUserData(FirebaseAuth.instance.currentUser?.uid);
     print("User Type in Log In User: $userType");

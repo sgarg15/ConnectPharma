@@ -1,23 +1,60 @@
-//Questions:
-  //How do people who are registering (have not yet authorized) write to the data?
+// //Questions:
+//   //How do people who are registering (have not yet authorized) write to the data?
 
-//Access
-//Pharmacists
-  //Read and write their own document /Users/{userID}
-  //Read jobs document /aggregation/jobs
+// //Access
+// //Pharmacists
+//   //Read and write their own document /Users/{userID}
+//   //Read aggregated jobs document /aggregation/jobs
 
-//Pharmacy
-  //Read and write their own document /Users/{userID}
-  //Read aggregated pharmacists document /aggregation/pharmacists
-  //Read aggregated pharmacy assistant document /aggregation/pharmacyAssistant
-  //Read aggregated pharmacy technician document /aggregation/pharmacyTechnician
+// //Pharmacy
+//   //Read and write their own document /Users/{userID}
+//   //Write to aggregated jobs document /aggregation/jobs
+//   //Read aggregated pharmacists document /aggregation/pharmacists
+//   //Read aggregated pharmacy assistant document /aggregation/pharmacyAssistant
+//   //Read aggregated pharmacy technician document /aggregation/pharmacyTechnician
 
 
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userID}/{document=**} {
-      allow read, write: if request.auth.uid == userID
+    function isPharmacy(){
+        let userType = get(/databases/$(database)/documents/Users/$(request.auth.uid)/SignUp/Information).data.userType;
+
+        return userType == "Pharmacy";
+    }
+
+    //Reading and Writing their own document
+    match /Users/{userID}/{document=**} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == userID;
+      allow create: if request.auth != null;
+    }
+
+    //Writing only allowed if user is pharmacy
+    //Reading is only allowed if user is not a pharmacy
+    match /aggregation/jobs/{document=**} {
+      allow write: if isPharmacy();
+      allow read: if isPharmacy() == false;
+    }
+
+    //Writing not allowed by user
+    //Reading only allowed if user is pharmacy
+    match /aggregation/pharmacists/{document=**} {
+        allow write: if false;
+        allow read: if isPharmacy();
+    }
+
+    //Writing not allowed by user
+    //Reading only allowed if user is pharmacy
+    match /aggregation/pharmacyAssistant/{document=**} {
+        allow write: if false;
+        allow read: if isPharmacy();
+    }
+
+    //Writing not allowed by user
+    //Reading only allowed if user is pharmacy
+    match /aggregation/pharmacyTechnician/{document=**} {
+        allow write: if false;
+        allow read: if isPharmacy();
     }
   }
 }

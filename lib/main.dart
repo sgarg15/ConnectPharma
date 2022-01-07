@@ -13,8 +13,8 @@ import 'package:pharma_connect/src/screens/login.dart';
 import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
 import 'src/providers/auth_provider.dart';
-import 'src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
-//TODO: Add Pharmacy Assistant Option for signup but signup info for both pharmacist and pharmacy assistant is same
+import 'package:firebase_app_check/firebase_app_check.dart';
+
 
 final authProvider2 = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
@@ -23,8 +23,11 @@ final authProvider2 = ChangeNotifierProvider<AuthProvider>((ref) {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate();
+  //String? token = await FirebaseAppCheck.instance.getToken();
+  //print("The token is: $token");
 
-  const bool USE_EMULATOR = true;
+  const bool USE_EMULATOR = false;
 
   // ignore: dead_code
   if (USE_EMULATOR) {
@@ -78,8 +81,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
         print("Current User: ${FirebaseAuth.instance.currentUser}");
         print("Logging In");
         //logInUser();
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => AutoLogin()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AutoLogin()));
       }
     });
   }
@@ -97,10 +99,8 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
               child: RichText(
                 text: TextSpan(
                   text: "Pharma",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 50.0,
-                      color: Colors.black),
+                  style:
+                      TextStyle(fontWeight: FontWeight.w300, fontSize: 50.0, color: Colors.black),
                 ),
               ),
             ),
@@ -112,10 +112,8 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
               child: RichText(
                 text: TextSpan(
                   text: "Connect",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 50.0,
-                      color: Colors.black),
+                  style:
+                      TextStyle(fontWeight: FontWeight.w300, fontSize: 50.0, color: Colors.black),
                 ),
               ),
             ),
@@ -126,10 +124,8 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
               child: RichText(
                 text: TextSpan(
                   text: "Register",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 35.0,
-                      color: Colors.black),
+                  style:
+                      TextStyle(fontWeight: FontWeight.w300, fontSize: 35.0, color: Colors.black),
                 ),
               ),
             ),
@@ -227,9 +223,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
                   onPressed: () {
                     //Send to Pharmacy Sign Up Page
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PharmacySignUpPage()));
+                        context, MaterialPageRoute(builder: (context) => PharmacySignUpPage()));
                   },
                   child: RichText(
                     text: TextSpan(
@@ -359,8 +353,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
                 onTap: () {
                   //Push to Login Screen
 
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LogInPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LogInPage()));
                 },
               ),
             ),

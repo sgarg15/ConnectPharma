@@ -71,11 +71,11 @@ class AuthProvider extends ChangeNotifier {
   Future<String> saveAsset(File? asset, String uidName, String fileName, String userName) async {
     try {
       if (asset != null) {
-        Reference reference =
-            FirebaseStorage.instance.ref().child(uidName).child(fileName);
+        Reference reference = FirebaseStorage.instance.ref().child(uidName).child(fileName);
         UploadTask uploadTask = reference.putFile(asset);
 
         String url = await (await uploadTask).ref.getDownloadURL();
+        print("Uploaded $fileName");
         return url;
       } else {
         return "";
@@ -90,8 +90,7 @@ class AuthProvider extends ChangeNotifier {
       Uint8List? asset, String uidName, String fileName, String userName) async {
     try {
       if (asset != null) {
-        Reference reference =
-            FirebaseStorage.instance.ref().child(uidName).child(fileName);
+        Reference reference = FirebaseStorage.instance.ref().child(uidName).child(fileName);
         UploadTask uploadTask = reference.putData(asset);
 
         String url = await (await uploadTask).ref.getDownloadURL();
@@ -109,18 +108,15 @@ class AuthProvider extends ChangeNotifier {
   Future<UserCredential?> registerWithEmailAndPassword(String email, String password) async {
     try {
       _status = Status.Authenticating;
-      notifyListeners();
       final UserCredential result = await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .whenComplete(() {
         _status = Status.Authenticated;
-        notifyListeners();
       });
       return result;
     } catch (e) {
       print("Error on the new user registration = " + e.toString());
       _status = Status.Unauthenticated;
-      notifyListeners();
       return null;
     }
   }
@@ -130,6 +126,7 @@ class AuthProvider extends ChangeNotifier {
     if (user == null) {
       return null;
     }
+    print("Uploading Pharmacist User Info");
     String resumePDFURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).resumePDFData,
         user.user!.uid, "Resume", ref.read(pharmacistSignUpProvider.notifier).firstName);
     String frontIDURL = await saveAsset(ref.read(pharmacistSignUpProvider.notifier).frontIDData,
@@ -152,7 +149,7 @@ class AuthProvider extends ChangeNotifier {
         user.user!.uid,
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
-
+    print("Setting Info in Firestore");
     users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
       "userType": "Pharmacist",
@@ -183,6 +180,7 @@ class AuthProvider extends ChangeNotifier {
       "registrationCertificateDownloadURL": registrationCertificateURL,
       "profilePhotoDownloadURL": profilePhotoURL,
       "signatureDownloadURL": signaureImageURL,
+      "verified": false,
     });
     return user;
   }
@@ -246,6 +244,7 @@ class AuthProvider extends ChangeNotifier {
       "registrationCertificateDownloadURL": registrationCertificateURL,
       "profilePhotoDownloadURL": profilePhotoURL,
       "signatureDownloadURL": signaureImageURL,
+      "verified": false,
     });
     return user;
   }
@@ -309,6 +308,7 @@ class AuthProvider extends ChangeNotifier {
       "registrationCertificateDownloadURL": registrationCertificateURL,
       "profilePhotoDownloadURL": profilePhotoURL,
       "signatureDownloadURL": signaureImageURL,
+      "verified": false,
     });
     return user;
   }
@@ -348,6 +348,7 @@ class AuthProvider extends ChangeNotifier {
       "managerLicenseNumber": ref.read(pharmacySignUpProvider.notifier).licenseNumber,
       "signatureDownloadURL": signaureImageURL,
       "softwareList": ref.read(pharmacySignUpProvider.notifier).softwareList.toString(),
+      "verified": false,
     });
     return user;
   }
@@ -449,8 +450,7 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<UserCredential?>? uploadAvailalibitlityData(
-      String userUID, Map dataUpload, bool? permanentJobBool) async {
+  Future<UserCredential?>? uploadAvailalibitlityData(String userUID, Map dataUpload, bool? permanentJobBool) async {
     if (dataUpload.isEmpty) {
       users.doc(userUID).collection("SignUp").doc("Information").set({
         "permanentJob": permanentJobBool,
@@ -465,8 +465,7 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<UserCredential?>? uploadJobToPharmacy(
-      WidgetRef ref, String? userUID, BuildContext context) async {
+  Future<UserCredential?>? uploadJobToPharmacy(WidgetRef ref, String? userUID, BuildContext context) async {
     users.doc(userUID).collection("Main").add({
       "userType": "Pharmacy",
       "position": ref.read(pharmacyMainProvider).position,
@@ -511,13 +510,11 @@ class AuthProvider extends ChangeNotifier {
   Future<List?> signInWithEmailAndPassword(String email, String password) async {
     try {
       _status = Status.Authenticating;
-      notifyListeners();
       final UserCredential? result =
           await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       if (result!.user!.emailVerified) {
         _status = Status.Authenticated;
-        notifyListeners();
         print(
             "--------------------------------------HELOOOOO------------------------------------------");
         print("User verified: " + result.user!.emailVerified.toString());
@@ -552,7 +549,6 @@ class AuthProvider extends ChangeNotifier {
         }
         signOut();
         _status = Status.Unauthenticated;
-        notifyListeners();
         return [null, null, "user-not-verified"];
       }
     } on FirebaseAuthException catch (error) {
@@ -564,14 +560,12 @@ class AuthProvider extends ChangeNotifier {
       // }
       print("Error on the sign in = " + error.toString());
       _status = Status.Unauthenticated;
-      notifyListeners();
       return [null, null, error.code];
     }
   }
 
   Future<String?> getCurrentUserData(String? userUID) async {
     _status = Status.Authenticated;
-    notifyListeners();
     print("UserUID: $userUID");
     DocumentSnapshot user = await users.doc(userUID).collection("SignUp").doc("Information").get();
     print("UserData: $user");

@@ -61,31 +61,32 @@ class _PharmacistAvailabilityState
     });
   }
 
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    ref.read(pharmacistMainProvider.notifier).changeDateRanges(args.value);
+
+    ref
+        .read(pharmacistMainProvider.notifier)
+        .dateRanges
+        .sort((a, b) => a.startDate!.compareTo(b.startDate as DateTime));
+    dateRangesTemp.clear();
+    for (var i = 0; i < ref.read(pharmacistMainProvider.notifier).dateRanges.length; i++) {
+      dateRangesTemp[i.toString()] = {
+        "startDate": args.value[i].startDate,
+        "endDate": args.value[i].endDate
+      };
+    }
+    print("Before setstate");
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {
+          dateRangesToUpload = dateRangesTemp;
+    }));
+
+    print(dateRangesToUpload);
+    //print(ref.read(pharmacistMainProvider.notifier).dateRanges);
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-      ref.read(pharmacistMainProvider.notifier)
-          .changeDateRanges(args.value);
-
-      ref
-          .read(pharmacistMainProvider.notifier)
-          .dateRanges
-          .sort((a, b) => a.startDate!.compareTo(b.startDate as DateTime));
-      dateRangesTemp.clear();
-      for (var i = 0;
-          i < ref.read(pharmacistMainProvider.notifier).dateRanges.length;
-          i++) {
-        dateRangesTemp[i.toString()] = {
-          "startDate": args.value[i].startDate,
-          "endDate": args.value[i].endDate
-        };
-      }
-      setState(() {
-        dateRangesToUpload = dateRangesTemp;
-      });
-      print(dateRangesToUpload);
-      //print(ref.read(pharmacistMainProvider.notifier).dateRanges);
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -136,9 +137,7 @@ class _PharmacistAvailabilityState
             ),
 
             //List view of Calendar
-            Consumer(builder: (context, ref, child) {
-              ref.watch(pharmacistMainProvider);
-              return Center(
+           Center(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                   child: Material(
@@ -166,39 +165,31 @@ class _PharmacistAvailabilityState
                             ),
                           ),
                           //List view of calendar
-                          Expanded(
+                          Container(
+                          child: Expanded(
                             child: ListView(
                               children: <Widget>[
                                 for (var i = 0;
-                                    i <
-                                        ref
-                                            .read(
-                                                pharmacistMainProvider.notifier)
-                                            .dateRanges
-                                            .length;
+                                    i < ref.read(pharmacistMainProvider.notifier).dateRanges.length;
                                     i++) ...[
                                   ListTile(
-                                    visualDensity: VisualDensity(
-                                        horizontal: 0, vertical: -4),
+                                    visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                                     title: Text(bullet +
                                         " " +
                                         DateFormat.yMMMMd('en_US')
                                             .format(ref
-                                                .read(pharmacistMainProvider
-                                                    .notifier)
+                                                .read(pharmacistMainProvider.notifier)
                                                 .dateRanges[i]
                                                 .startDate as DateTime)
                                             .toString() +
                                         ' - ' +
                                         DateFormat.yMMMMd('en_US')
                                             .format(ref
-                                                    .read(pharmacistMainProvider
-                                                        .notifier)
+                                                    .read(pharmacistMainProvider.notifier)
                                                     .dateRanges[i]
                                                     .endDate ??
                                                 ref
-                                                    .read(pharmacistMainProvider
-                                                        .notifier)
+                                                    .read(pharmacistMainProvider.notifier)
                                                     .dateRanges[i]
                                                     .startDate as DateTime)
                                             .toString()),
@@ -209,8 +200,7 @@ class _PharmacistAvailabilityState
                                     .dateRanges
                                     .isEmpty) ...[
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 10, 5, 0),
+                                    padding: const EdgeInsets.fromLTRB(0, 10, 5, 0),
                                     child: RichText(
                                       textAlign: TextAlign.center,
                                       text: TextSpan(
@@ -224,6 +214,7 @@ class _PharmacistAvailabilityState
                                   ),
                                 ],
                               ],
+                              ),
                             ),
                           ),
                         ],
@@ -231,13 +222,10 @@ class _PharmacistAvailabilityState
                     ),
                   ),
                 ),
-              );
-            }),
-
+              ),
+           
             //Permanent job
-            Consumer(builder: (context, ref, child) {
-              ref.watch(pharmacistMainProvider);
-              return Padding(
+           Padding(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: CheckboxListTile(
                   contentPadding: EdgeInsets.fromLTRB(15, 0, 20, 0),
@@ -264,8 +252,7 @@ class _PharmacistAvailabilityState
                   controlAffinity:
                       ListTileControlAffinity.trailing, //  <-- leading Checkbox
                 ),
-              );
-            }),
+              ),
 
             //Save Button
             Center(

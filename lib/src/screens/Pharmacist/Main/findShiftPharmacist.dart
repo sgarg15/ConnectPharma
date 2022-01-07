@@ -23,10 +23,8 @@ class FindShiftForPharmacist extends ConsumerStatefulWidget {
 }
 
 class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist> {
-  CollectionReference aggregationRef =
-      FirebaseFirestore.instance.collection("aggregation");
-  Location pharmacistLocation =
-      Location(latitude: 0, longitude: 0, timestamp: DateTime(0));
+  CollectionReference aggregationRef = FirebaseFirestore.instance.collection("aggregation");
+  Location pharmacistLocation = Location(latitude: 0, longitude: 0, timestamp: DateTime(0));
   Map jobsDataMap = Map();
   Map jobsMap = Map();
   Map jobsDataMapTemp = Map();
@@ -42,8 +40,8 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
     // this will contain the result from Navigator.pop(context, result)
     final selectedFistance = await showDialog<double>(
       context: context,
-      builder: (context) => DistanceTravelPickerDialog(
-          distanceWillingToTravel: distanceWillingToTravel),
+      builder: (context) =>
+          DistanceTravelPickerDialog(distanceWillingToTravel: distanceWillingToTravel),
     );
 
     // execution of this code continues when the dialog was closed (popped)
@@ -102,8 +100,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
     print("Jobs Data Map: ${jobsDataMap.keys}");
     setState(() {
       sortedJobsDataMap = Map.fromEntries(jobsDataMap.entries.toList()
-        ..sort((e1, e2) =>
-            e1.value["startDate"].compareTo(e2.value["startDate"])));
+        ..sort((e1, e2) => e1.value["startDate"].compareTo(e2.value["startDate"])));
     });
   }
 
@@ -116,8 +113,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
         " " +
         value["pharmacyAddress"]["country"];
 
-    List<Location> pharmacyLocation =
-        await locationFromAddress(pharmacyAddress);
+    List<Location> pharmacyLocation = await locationFromAddress(pharmacyAddress);
 
     List<Location> pharmacistLocation = await locationFromAddress(
         ref.read(pharmacistMainProvider.notifier).userDataMap?["address"]);
@@ -132,25 +128,18 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
   }
 
   bool jobsBetweenDates(WidgetRef ref, value) {
-    return ((value["startDate"] as Timestamp).toDate().isAfter(ref.read(pharmacistMainProvider.notifier)
-                .startDate as DateTime) &&
-            ((value["startDate"] as Timestamp).toDate().isBefore(ref.read(pharmacistMainProvider.notifier)
-                .endDate as DateTime))) ||
+    return ((value["startDate"] as Timestamp)
+                .toDate()
+                .isAfter(ref.read(pharmacistMainProvider.notifier).startDate as DateTime) &&
+            ((value["startDate"] as Timestamp)
+                .toDate()
+                .isBefore(ref.read(pharmacistMainProvider.notifier).endDate as DateTime))) ||
         ((value["startDate"] as Timestamp).toDate().day ==
-            (ref.read(pharmacistMainProvider.notifier).startDate
-                    as DateTime)
-                .day);
+            (ref.read(pharmacistMainProvider.notifier).startDate as DateTime).day);
   }
 
   @override
   void initState() {
-    print(ref.read(pharmacistMainProvider.notifier).startDate);
-    scheduleJobsDataSub?.cancel();
-    scheduleJobsDataSub =
-        aggregationRef.doc("jobs").snapshots().listen((allJobsData) {
-      getAllJobs(allJobsData);
-    });
-
     super.initState();
   }
 
@@ -178,10 +167,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
               elevation: 12,
               title: Text(
                 "Find Shift",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
               ),
               backgroundColor: Color(0xFFF6F6F6),
             ),
@@ -206,8 +192,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                               Column(
                                 children: <Widget>[
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                                     child: RichText(
                                       text: TextSpan(
                                         text: "Start Date",
@@ -220,8 +205,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                   ),
                                   Container(
                                     height: 40,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.44,
+                                    width: MediaQuery.of(context).size.width * 0.44,
                                     padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                     child: DateTimeField(
                                       format: DateFormat("yyyy-MM-dd"),
@@ -229,27 +213,24 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                           contentPadding: EdgeInsets.all(12),
                                           isDense: true,
                                           border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
+                                              borderRadius: BorderRadius.circular(30)),
                                           labelText: "Select a date"),
-                                      onShowPicker:
-                                          (context, currentValue) async {
+                                      onShowPicker: (context, currentValue) async {
                                         final date = await showDatePicker(
                                             context: context,
                                             firstDate: DateTime.now(),
-                                            initialDate:
-                                                currentValue ?? DateTime.now(),
+                                            initialDate: currentValue ?? DateTime.now(),
                                             lastDate: DateTime(2100));
 
                                         if (date != null) {
-                                          ref.read(pharmacistMainProvider
-                                                  .notifier)
+                                          ref
+                                              .read(pharmacistMainProvider.notifier)
                                               .changeStartDate(date);
                                           print(date);
                                           return date;
                                         } else {
-                                          ref.read(pharmacistMainProvider
-                                                  .notifier)
+                                          ref
+                                              .read(pharmacistMainProvider.notifier)
                                               .changeStartDate(currentValue);
                                           return currentValue;
                                         }
@@ -263,8 +244,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                               Column(
                                 children: <Widget>[
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                                     child: RichText(
                                       text: TextSpan(
                                         text: "End Date",
@@ -277,8 +257,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                   ),
                                   Container(
                                     height: 40,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.44,
+                                    width: MediaQuery.of(context).size.width * 0.44,
                                     padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                     child: DateTimeField(
                                       format: DateFormat("yyyy-MM-dd"),
@@ -286,32 +265,30 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                           contentPadding: EdgeInsets.all(12),
                                           isDense: true,
                                           border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
+                                              borderRadius: BorderRadius.circular(30)),
                                           labelText: "Select a date"),
-                                      onShowPicker:
-                                          (context, currentValue) async {
+                                      onShowPicker: (context, currentValue) async {
                                         final date = await showDatePicker(
                                             context: context,
-                                            firstDate: ref.read(pharmacistMainProvider
-                                                        .notifier)
+                                            firstDate: ref
+                                                    .read(pharmacistMainProvider.notifier)
                                                     .startDate ??
                                                 DateTime.now(),
-                                            initialDate: ref.read(pharmacistMainProvider
-                                                        .notifier)
+                                            initialDate: ref
+                                                    .read(pharmacistMainProvider.notifier)
                                                     .startDate ??
                                                 DateTime.now(),
                                             lastDate: DateTime(2100));
 
                                         if (date != null) {
-                                          ref.read(pharmacistMainProvider
-                                                  .notifier)
+                                          ref
+                                              .read(pharmacistMainProvider.notifier)
                                               .changeEndDate(date);
                                           print(date);
                                           return date;
                                         } else {
-                                          ref.read(pharmacistMainProvider
-                                                  .notifier)
+                                          ref
+                                              .read(pharmacistMainProvider.notifier)
                                               .changeEndDate(currentValue);
                                           return currentValue;
                                         }
@@ -330,43 +307,34 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                                 child: SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
+                                  width: MediaQuery.of(context).size.width * 0.6,
                                   height: 51,
                                   child: ElevatedButton(
                                     style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty
-                                            .resolveWith<Color>((states) {
-                                          if (states.contains(
-                                              MaterialState.disabled)) {
-                                            return Colors
-                                                .grey; // Disabled color
+                                        backgroundColor:
+                                            MaterialStateProperty.resolveWith<Color>((states) {
+                                          if (states.contains(MaterialState.disabled)) {
+                                            return Colors.grey; // Disabled color
                                           }
-                                          return Color(
-                                              0xFF5DB075); // Regular color
+                                          return Color(0xFF5DB075); // Regular color
                                         }),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                             RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
+                                          borderRadius: BorderRadius.circular(100),
                                         ))),
-                                    onPressed: (ref.read(pharmacistMainProvider
-                                                        .notifier)
-                                                    .startDate !=
-                                                null &&
-                                            ref.read(pharmacistMainProvider
-                                                        .notifier)
-                                                    .endDate !=
-                                                null)
-                                        ? () {
-                                            print("Pressed");
-                                            //sortedJobsDataMap = {};
-                                            //jobsDataMap = {};
-
-                                            jobsSortedWithSchedule(ref);
-                                          }
-                                        : null,
+                                    onPressed:
+                                        (ref.read(pharmacistMainProvider.notifier).startDate !=
+                                                    null &&
+                                                ref.read(pharmacistMainProvider.notifier).endDate !=
+                                                    null)
+                                            ? () {
+                                                print("Pressed");
+                                                //sortedJobsDataMap = {};
+                                                //jobsDataMap = {};
+                                                getAndSetJobsFromFirestore(ref);
+                                                jobsSortedWithSchedule(ref);
+                                              }
+                                            : null,
                                     child: RichText(
                                       text: TextSpan(
                                         text: "Search",
@@ -392,8 +360,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                           ),
                         ],
                       ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30)),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
                     ),
                   ),
                 ),
@@ -409,38 +376,28 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                             ? Expanded(
                                 child: ListView.builder(
                                   itemCount: sortedJobsDataMap.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    String key =
-                                        sortedJobsDataMap.keys.elementAt(index);
+                                  itemBuilder: (BuildContext context, int index) {
+                                    String key = sortedJobsDataMap.keys.elementAt(index);
                                     //print(sortedJobsDataMap[key]);
                                     return FutureBuilder(
                                       future: getDistance(
                                           sortedJobsDataMap[key],
-                                          ref.read(pharmacistMainProvider
-                                                  .notifier)
+                                          ref
+                                              .read(pharmacistMainProvider.notifier)
                                               .userDataMap?["address"]),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot snapshot) {
+                                      builder: (BuildContext context, AsyncSnapshot snapshot) {
                                         if (!snapshot.hasData) {
-                                          return Center(
-                                              child:
-                                                  CircularProgressIndicator());
+                                          return Center(child: CircularProgressIndicator());
                                         }
                                         return Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Material(
                                               elevation: 10,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                                              borderRadius: BorderRadius.circular(20),
                                               child: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.97,
-                                                constraints: BoxConstraints(
-                                                    minHeight: 90),
+                                                width: MediaQuery.of(context).size.width * 0.97,
+                                                constraints: BoxConstraints(minHeight: 90),
                                                 child: Center(
                                                   child: ListTile(
                                                     isThreeLine: true,
@@ -450,8 +407,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                                           "${DateFormat("EE, MMM d yyyy").format((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate())}",
                                                       style: TextStyle(
                                                           fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                          fontWeight: FontWeight.bold),
                                                     ),
                                                     subtitle: RichText(
                                                       text: TextSpan(children: [
@@ -461,49 +417,36 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                                                 " - "
                                                                 "${DateFormat("jm").format((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate())} ",
                                                             style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
+                                                                color: Colors.black,
+                                                                fontWeight: FontWeight.w600,
                                                                 fontSize: 15)),
                                                         TextSpan(
                                                             text:
                                                                 "(${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[0]} hrs"
                                                                 "${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[1]}/day)\n",
                                                             style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
+                                                                color: Colors.black,
+                                                                fontWeight: FontWeight.w600,
                                                                 fontSize: 15)),
                                                         TextSpan(
-                                                            text:
-                                                                "${snapshot.data}",
+                                                            text: "${snapshot.data}",
                                                             style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 15)),
+                                                                color: Colors.black, fontSize: 15)),
                                                       ]),
                                                     ),
                                                     trailing: Text(
                                                       "${sortedJobsDataMap[key]["hourlyRate"]}/hr\n"
                                                       "Pharmacist",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600),
+                                                      style: TextStyle(fontWeight: FontWeight.w600),
                                                     ),
                                                     onTap: () {
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      JobDetails(
-                                                                        jobDetails:
-                                                                            sortedJobsDataMap[key],
-                                                                      )));
+                                                              builder: (context) => JobDetails(
+                                                                    jobDetails:
+                                                                        sortedJobsDataMap[key],
+                                                                  )));
                                                     },
                                                   ),
                                                 ),
@@ -549,23 +492,28 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
       },
     );
   }
+
+  void getAndSetJobsFromFirestore(WidgetRef ref) {
+    print(ref.read(pharmacistMainProvider.notifier).startDate);
+    scheduleJobsDataSub?.cancel();
+    scheduleJobsDataSub = aggregationRef.doc("jobs").snapshots().listen((allJobsData) {
+      getAllJobs(allJobsData);
+    });
+  }
 }
 
 class DistanceTravelPickerDialog extends StatefulWidget {
   /// initial selection for the slider
   final double distanceWillingToTravel;
 
-  const DistanceTravelPickerDialog(
-      {Key? key, required this.distanceWillingToTravel})
+  const DistanceTravelPickerDialog({Key? key, required this.distanceWillingToTravel})
       : super(key: key);
 
   @override
-  _DistanceTravelPickerDialogState createState() =>
-      _DistanceTravelPickerDialogState();
+  _DistanceTravelPickerDialogState createState() => _DistanceTravelPickerDialogState();
 }
 
-class _DistanceTravelPickerDialogState
-    extends State<DistanceTravelPickerDialog> {
+class _DistanceTravelPickerDialogState extends State<DistanceTravelPickerDialog> {
   /// current selection of the slider
   double _distanceWillingToTravel = 0;
 
@@ -594,8 +542,7 @@ class _DistanceTravelPickerDialogState
                 divisions: 20,
                 onChanged: (value) {
                   setState(() {
-                    _distanceWillingToTravel =
-                        num.parse(value.toStringAsFixed(0)).toDouble();
+                    _distanceWillingToTravel = num.parse(value.toStringAsFixed(0)).toDouble();
                   });
                 },
                 label: "$_distanceWillingToTravel km",
