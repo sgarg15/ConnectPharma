@@ -15,6 +15,9 @@ import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dar
 import 'src/providers/auth_provider.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
+//TODO: Change Registration Province In Pharmacist to ask for Full province and not abbreviation for pharmacist signup
+//Decrease Registration Number from 5 to 4 digits for pharmacist signup
+//Add a option to select usertype at the end of pharmacist signup in case the value is null or empty
 
 final authProvider2 = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
@@ -39,8 +42,8 @@ Future<void> main() async {
       persistenceEnabled: false,
     );
 
-    // [Authentication | localhost:9099]
-    await FirebaseAuth.instance.useEmulator("http://$localHostString:9099");
+    // [Authentication | localhost:9099] "http://$localHostString:9099"
+    await FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
 
     // [Storage | localhost:9199]
     await FirebaseStorage.instance.useStorageEmulator(

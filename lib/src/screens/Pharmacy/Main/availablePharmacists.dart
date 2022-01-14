@@ -10,16 +10,14 @@ import '../../../../all_used.dart';
 // ignore: must_be_immutable
 class AvailablePharmacists extends ConsumerStatefulWidget {
   bool showFullTimePharmacists;
-  AvailablePharmacists({Key? key, required this.showFullTimePharmacists})
-      : super(key: key);
+  AvailablePharmacists({Key? key, required this.showFullTimePharmacists}) : super(key: key);
 
   @override
   _AvailablePharmacistsState createState() => _AvailablePharmacistsState();
 }
 
 class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
-  CollectionReference aggregationRef =
-      FirebaseFirestore.instance.collection("aggregation");
+  CollectionReference aggregationRef = FirebaseFirestore.instance.collection("aggregation");
 
   List<Skill?>? skillList;
 
@@ -29,12 +27,10 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
   Map pharmacyAssistantDataMapTemp = Map();
   Map pharmacyTechnicianDataMapTemp = Map();
 
-
   void changeSkillToList(String? stringList) {
     int indexOfOpenBracket = stringList!.indexOf("[");
     int indexOfLastBracket = stringList.lastIndexOf("]");
-    var noBracketString =
-        stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
+    var noBracketString = stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
     List<Skill?>? templist = [];
     var list = noBracketString.split(", ");
     for (var i = 0; i < list.length; i++) {
@@ -47,29 +43,29 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
 
   void getAggregatedPharmacists(WidgetRef ref) async {
     DocumentReference pharmacistData = aggregationRef.doc("pharmacists");
-    DocumentReference pharmacyAssistantData =
-        aggregationRef.doc("pharmacyAssistant");
-    DocumentReference pharmacyTechnicianData =
-        aggregationRef.doc("pharmacyTechnician");
+    DocumentReference pharmacyAssistantData = aggregationRef.doc("pharmacyAssistant");
+    DocumentReference pharmacyTechnicianData = aggregationRef.doc("pharmacyTechnician");
 
     await pharmacyAssistantData.get().then((pharmacyAssistantData) {
       setState(() {
         pharmacyAssistantDataMapTemp = pharmacyAssistantData.data() as Map;
       });
       print("Pharmacy Assistant Data: $pharmacyAssistantDataMapTemp");
-    });
+    }).catchError((error) => print("Failed to search pharmacy assistant: $error"));
+
     await pharmacistData.get().then((pharmacistData) {
       setState(() {
         pharmacistDataMapTemp = pharmacistData.data() as Map;
       });
       print("Pharmacist Data: $pharmacistDataMapTemp");
-    });
+    }).catchError((error) => print("Failed to search Pharmacist: $error"));
+
     await pharmacyTechnicianData.get().then((pharmacyTechnicianData) {
       setState(() {
         pharmacyTechnicianDataMapTemp = pharmacyTechnicianData.data() as Map;
       });
-      print("Pharmacist Data: $pharmacyTechnicianDataMapTemp");
-    });
+      print("Pharmacy tech Data: $pharmacyTechnicianDataMapTemp");
+    }).catchError((error) => print("Failed to search Pharmacy tech: $error"));
 
     setState(() {
       allUserDataMapTemp = {
@@ -85,18 +81,15 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
       print("--------------------------------------------");
       print(value["uid"]);
       print("UserType: ${value["userType"]}");
-      print(
-          "Position: ${ref.read(pharmacyMainProvider.notifier).position}");
-      print(
-          "Permanent Job: ${ref.read(pharmacyMainProvider.notifier).fullTime}");
+      print("Position: ${ref.read(pharmacyMainProvider.notifier).position}");
+      print("Permanent Job: ${ref.read(pharmacyMainProvider.notifier).fullTime}");
 
       print("--------------------------------------------");
       for (var i = 0; i < value["availability"].length; i++) {
         if (widget.showFullTimePharmacists) {
           if (value["permanentJob"] != null &&
               value["permanentJob"] &&
-              value["userType"] ==
-                  ref.read(pharmacyMainProvider.notifier).position) {
+              value["userType"] == ref.read(pharmacyMainProvider.notifier).position) {
             print(value["uid"]);
             allUserDataMap[key] = value;
             print(allUserDataMap.keys);
@@ -104,11 +97,9 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
             print("YESR");
           }
         } else if (checkAvailability(ref, value, i) &&
-            value["userType"] ==
-                ref.read(pharmacyMainProvider.notifier).position) {
+            value["userType"] == ref.read(pharmacyMainProvider.notifier).position) {
           if (ref.read(pharmacyMainProvider.notifier).skillList != null) {
-            if (value["knownSkills"] != null)
-              changeSkillToList(value["knownSkills"]);
+            if (value["knownSkills"] != null) changeSkillToList(value["knownSkills"]);
             print(value["uid"]);
             allUserDataMap[key] = value;
             print(allUserDataMap.keys);
@@ -135,20 +126,16 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
   bool checkAvailability(WidgetRef ref, value, int i) {
     return ((value["availability"][i.toString()]["startDate"] as Timestamp)
                 .toDate()
-                .isAfter(ref.read(pharmacyMainProvider.notifier).startDate
-                    as DateTime) &&
+                .isAfter(ref.read(pharmacyMainProvider.notifier).startDate as DateTime) &&
             ((value["availability"][i.toString()]["startDate"] as Timestamp)
                 .toDate()
-                .isBefore(ref.read(pharmacyMainProvider.notifier).endDate
-                    as DateTime))) ||
+                .isBefore(ref.read(pharmacyMainProvider.notifier).endDate as DateTime))) ||
         ((value["availability"][i.toString()]["endDate"] as Timestamp)
                 .toDate()
-                .isAfter(ref.read(pharmacyMainProvider.notifier).startDate
-                    as DateTime) &&
+                .isAfter(ref.read(pharmacyMainProvider.notifier).startDate as DateTime) &&
             ((value["availability"][i.toString()]["endDate"] as Timestamp)
                 .toDate()
-                .isBefore(ref.read(pharmacyMainProvider.notifier).endDate
-                    as DateTime)));
+                .isBefore(ref.read(pharmacyMainProvider.notifier).endDate as DateTime)));
   }
 
   @override
@@ -167,8 +154,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
         elevation: 12,
         title: Text(
           "Available Pharmacists",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
         ),
         backgroundColor: Color(0xFFF6F6F6),
       ),
@@ -179,8 +165,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
             height: 10,
           ),
           if (widget.showFullTimePharmacists) ...[
-            if (ref.read(pharmacyMainProvider.notifier).position ==
-                "Pharmacist")
+            if (ref.read(pharmacyMainProvider.notifier).position == "Pharmacist")
               Center(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
@@ -191,8 +176,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                   ),
                 ),
               )
-            else if (ref.read(pharmacyMainProvider.notifier).position ==
-                "Pharmacy Assistant")
+            else if (ref.read(pharmacyMainProvider.notifier).position == "Pharmacy Assistant")
               Center(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
@@ -241,10 +225,8 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                ChosenPharmacistProfile(
-                                                  pharmacistDataMap:
-                                                      allUserDataMap[key],
+                                            builder: (context) => ChosenPharmacistProfile(
+                                                  pharmacistDataMap: allUserDataMap[key],
                                                 )));
                                   },
                                 ),
@@ -275,23 +257,19 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (ref.read(pharmacyMainProvider.notifier)
-                                    .position ==
+                            if (ref.read(pharmacyMainProvider.notifier).position ==
                                 "Pharmacist") ...[
                               Center(
                                   child: Text(
                                 "No available pharamcists found",
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 20),
+                                style: TextStyle(color: Colors.grey, fontSize: 20),
                               )),
-                            ] else if (ref.read(pharmacyMainProvider.notifier)
-                                    .position ==
+                            ] else if (ref.read(pharmacyMainProvider.notifier).position ==
                                 "Pharmacy Assistant") ...[
                               Center(
                                   child: Text(
                                 "No available pharmacy assistant found",
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 18),
+                                style: TextStyle(color: Colors.grey, fontSize: 18),
                               )),
                             ]
                           ],
@@ -307,21 +285,18 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
               width: MediaQuery.of(context).size.width * 0.9,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.resolveWith<Color>((states) {
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                       if (states.contains(MaterialState.disabled)) {
                         return Colors.grey; // Disabled color
                       }
                       return Color(0xFF5DB075); // Regular color
                     }),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
                     ))),
                 onPressed: () {
                   print("Pressed");
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CreateShift()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateShift()));
                 },
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -344,8 +319,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                       RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
-                          text:
-                              "Can’t find a pharmacist? Post a shift for a future date",
+                          text: "Can’t find a pharmacist? Post a shift for a future date",
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,

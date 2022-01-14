@@ -65,7 +65,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
 
       print("Sending to Pharmacist SignUp page3");
 
-      //send to pharmacy main page
+      //send to pharmacist main page
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
     }
@@ -123,6 +123,8 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
                       ))),
                   onPressed: () {
                     ref.read(authProviderLogin.notifier).signOut();
+                    ref.read(logInProvider.notifier).clearAllValue();
+                    ref.read(userProviderLogin.notifier).changeUserUID(null);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LogInPage()));
                   },

@@ -217,19 +217,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                           //value!.user!.delete();
                           return null;
                         } else {
-                          if (ref.read(pharmacistSignUpProvider.notifier).userType == null) {
-                            print("ERROR");
-                            final snackBar = SnackBar(
-                              content: Text(
-                                  "There was an error trying to register you. Please try again."),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            setState(() {
-                              disableButton = false;
-                            });
-                            //value!.user!.delete();
-                            return null;
-                          } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
+                          if (ref.read(pharmacistSignUpProvider.notifier).userType ==
                               "Pharmacist") {
                             ref
                                 .read(authProvider.notifier)
@@ -242,7 +230,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                               print("DATA UPLOADED");
                               await value?.user?.sendEmailVerification().then((_) {
                                 ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
-                                Navigator.push(context,
+                                Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) => PharmaConnect()));
                                 showDialog(
                                     context: context,
@@ -275,7 +263,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                               print("DATA UPLOADED");
                               await value?.user?.sendEmailVerification().then((_) {
                                 ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
-                                Navigator.push(context,
+                                Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) => PharmaConnect()));
                                 showDialog(
                                     context: context,
@@ -308,7 +296,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                               print("DATA UPLOADED");
                               await value?.user?.sendEmailVerification().then((_) {
                                 ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
-                                Navigator.push(context,
+                                Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) => PharmaConnect()));
                                 showDialog(
                                     context: context,
@@ -327,6 +315,18 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                                         ));
                               });
                             });
+                          } else {
+                            print("ERROR");
+                            final snackBar = SnackBar(
+                              content: Text(
+                                  "There was an error trying to register you. Please try again."),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            setState(() {
+                              disableButton = false;
+                            });
+                            //value!.user!.delete();
+                            return null;
                           }
                         }
                       });
