@@ -1,0 +1,19 @@
+{
+  "name": "KrishnaZltc8HbYsGrxgB0yX267t0DR7INS/Signature",
+  "bucket": "pharmaconnect-e59ba.appspot.com",
+  "contentType": "",
+  "metageneration": 1,
+  "generation": 1630193228946,
+  "storageClass": "STANDARD",
+  "etag": "someETag",
+  "contentDisposition": "inline",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "b5b808c1-d948-41a9-b825-d61756fa63fc"
+  ],
+  "timeCreated": "2021-08-28T23:27:08.945Z",
+  "updated": "2021-08-28T23:27:08.949Z",
+  "size": 9755,
+  "md5Hash": "2HRz9nG8vlDBE/QRBmAClQ==",
+  "crc32c": "814944597"
+}

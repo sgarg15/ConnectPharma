@@ -1,0 +1,19 @@
+{
+  "name": "Jivand7Zp1BHNbKBDOj1cg78Ddwl5Nyod/Signature",
+  "bucket": "pharmaconnect-e59ba.appspot.com",
+  "contentType": "",
+  "metageneration": 1,
+  "generation": 1630193426926,
+  "storageClass": "STANDARD",
+  "etag": "someETag",
+  "contentDisposition": "inline",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "8a7b2cb9-54db-40f9-8735-c42cb0c8a3ec"
+  ],
+  "timeCreated": "2021-08-28T23:30:26.925Z",
+  "updated": "2021-08-28T23:30:26.925Z",
+  "size": 8199,
+  "md5Hash": "V72MeUC7q9+utSAlQ25Jsg==",
+  "crc32c": "831475937"
+}

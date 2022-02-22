@@ -30,6 +30,39 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_svg: ^1.0.0
+  firebase_auth: ^3.3.4
+  firebase_database: ^9.0.4
+  cloud_firestore: ^3.1.5
+  firebase_core: ^1.10.6
+  cloud_functions: ^3.2.4
+  google_sign_in: ^5.2.1
+  google_fonts: ^2.2.0
+  signature: ^5.0.0
+  http: ^0.13.4
+  uuid: ^3.0.5
+  flutter_dotenv: ^5.0.2
+  multi_select_flutter: ^4.0.0
+  flutter_riverpod: ^1.0.1
+  get: ^4.6.1
+  email_validator: ^2.0.1
+  file_picker: ^4.3.0
+  open_file: ^3.2.1
+  firebase_storage: ^10.2.4
+  flutter_multi_formatter: ^2.5.1
+  syncfusion_flutter_datepicker: ^19.4.40
+  datetime_picker_formfield: ^2.0.0
+  url_launcher: ^6.0.17
+  flutter_cached_pdfview: ^0.4.1
+  geocoding: ^2.0.1
+  geolocator: ^8.0.1
+  dio: ^4.0.4
+  mailer: ^5.0.2
+  path_provider: ^2.0.8
+  syncfusion_flutter_pdf: ^19.4.40-beta
+  firebase_app_check: ^0.0.6+3
+  flutter_image_compress: ^1.1.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -56,6 +89,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:
