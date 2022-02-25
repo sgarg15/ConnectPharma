@@ -220,30 +220,20 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                             .registerWithEmailAndPassword(
                                 ref.read(pharmacistSignUpProvider.notifier).email.toString(),
                                 ref.read(pharmacistSignUpProvider.notifier).password.toString())
-                            .then((value) async {
+                            .then((user) async {
                           print("UPLOADING DATA");
                           print(
                               "USER TYPE: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
 
-                          if (value == null) {
-                            print("ERROR");
-                            final snackBar = SnackBar(
-                              content: Text(
-                                  "There was an error trying to register you. Please check your email and password and try again."),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            setState(() {
-                              disableButton = false;
-                            });
-                            //value!.user!.delete();
-                            return null;
+                          if (user == null) {
+                            return errorMethod(context);
                           } else {
                             if (ref.read(pharmacistSignUpProvider.notifier).userType ==
                                 "Pharmacist") {
                               showLoaderDialog(context);
                               ref
                                   .read(authProvider.notifier)
-                                  .uploadPharmacistUserInformation(ref, value, context)
+                                  .uploadPharmacistUserInformation(ref, user, context)
                                   .then((value) async {
                                 Navigator.pop(context);
                                 final snackBar = SnackBar(
@@ -255,6 +245,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                                   ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) => ConnectPharma()));
+                                  ref.read(authProvider.notifier).signOut();
                                   showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
@@ -271,13 +262,15 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                                             ],
                                           ));
                                 });
+                              }).catchError((e) {
+                                errorMethod(context);
                               });
                             } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
                                 "Pharmacy Assistant") {
                               print("Registering Pharmacy Assistant");
                               ref
                                   .read(authProvider.notifier)
-                                  .uploadPharmacyAssistantUserInformation(ref, value, context)
+                                  .uploadPharmacyAssistantUserInformation(ref, user, context)
                                   .then((value) async {
                                 final snackBar = SnackBar(
                                   content: Text("Pharmacy Assistant Registered"),
@@ -304,13 +297,15 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                                             ],
                                           ));
                                 });
+                              }).catchError((e) {
+                                errorMethod(context);
                               });
                             } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
                                 "Pharmacy Technician") {
                               print("Registering Pharmacy Technician");
                               ref
                                   .read(authProvider.notifier)
-                                  .uploadPharmacyTechnicianUserInformation(ref, value, context)
+                                  .uploadPharmacyTechnicianUserInformation(ref, user, context)
                                   .then((value) async {
                                 final snackBar = SnackBar(
                                   content: Text("Pharmacy Technician Registered"),
@@ -337,6 +332,8 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                                             ],
                                           ));
                                 });
+                              }).catchError((e) {
+                                errorMethod(context);
                               });
                             }
                           }
@@ -420,6 +417,20 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
         },
       ),
     );
+  }
+
+  Null errorMethod(BuildContext context) {
+    print("ERROR");
+    final snackBar = SnackBar(
+      content: Text(
+          "There was an error trying to register you. Please check your email and password and try again."),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    setState(() {
+      disableButton = false;
+    });
+    //value!.user!.delete();
+    return null;
   }
 
   CheckboxListTile newsLetterCheckBox() {
