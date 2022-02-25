@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/pharmacyMainModel.dart';
+import 'package:connectpharma/model/pharmacyMainModel.dart';
 import '../../all_used.dart';
 
 class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
@@ -26,9 +26,7 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   bool isValidSearchPharmacist(bool showAllPharmacist) {
     if (showAllPharmacist && state.position != null) {
       return true;
-    } else if (state.startDate != null &&
-        state.endDate != null &&
-        state.position != null) {
+    } else if (state.startDate != null && state.endDate != null && state.position != null) {
       return true;
     } else {
       return false;

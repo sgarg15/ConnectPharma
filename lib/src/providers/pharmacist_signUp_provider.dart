@@ -3,15 +3,14 @@ import 'dart:typed_data';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
+import 'package:connectpharma/model/pharmacistSignUpModel.dart';
 import '../../all_used.dart';
 
 class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   PharmacistSignUpProvider() : super(PharmacistSignUpModel());
 
   bool isValidPharmacistSignUp() {
-    if (EmailValidator.validate(state.email.toString()) == false ||
-        state.password.length < 6) {
+    if (EmailValidator.validate(state.email.toString()) == false || state.password.length < 6) {
       return true;
     } else {
       return false;
@@ -19,9 +18,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   bool isValidPharmacistLocation() {
-    if (state.firstName == "" ||
-        state.lastName == "" ||
-        state.phoneNumber == "") {
+    if (state.firstName == "" || state.lastName == "" || state.phoneNumber == "") {
       print("true account info");
       return true;
     } else {
@@ -46,9 +43,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   bool isValidPharmacistSkills() {
-    if (state.softwareList == null ||
-        state.skillList == null ||
-        state.languageList == null) {
+    if (state.softwareList == null || state.skillList == null || state.languageList == null) {
       print("true account info");
       return true;
     } else {

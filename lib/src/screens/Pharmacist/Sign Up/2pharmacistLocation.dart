@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/all_used.dart';
-import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
-import 'package:pharma_connect/src/Address%20Search/placeService.dart';
+import 'package:connectpharma/all_used.dart';
+import 'package:connectpharma/src/Address%20Search/locationSearch.dart';
+import 'package:connectpharma/src/Address%20Search/placeService.dart';
 import '1pharmacistSignUp.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/3pharmacistInformation.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/3pharmacistInformation.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
@@ -24,8 +24,8 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController streetAddress = TextEditingController(
-        text: ref.read(pharmacistSignUpProvider.notifier).address);
+    TextEditingController streetAddress =
+        TextEditingController(text: ref.read(pharmacistSignUpProvider.notifier).address);
 
     return WillPopScope(
       onWillPop: () async {
@@ -47,8 +47,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                       // Direct to whichever they are in Information Form pages
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => PharmaConnect()),
+                        MaterialPageRoute(builder: (context) => ConnectPharma()),
                       );
                     },
                   )
@@ -120,19 +119,16 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                         hintText: "Enter your First Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String firstName) {
-                          ref.read(pharmacistSignUpProvider.notifier)
-                              .changeFirstName(firstName);
+                          ref.read(pharmacistSignUpProvider.notifier).changeFirstName(firstName);
                         },
                         validation: (value) {
-                          if (!RegExp(
-                                  r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                          if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
                               .hasMatch(value)) {
                             return "Invalid field";
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                            .firstName,
+                        initialValue: ref.read(pharmacistSignUpProvider.notifier).firstName,
                       ),
                       SizedBox(height: 20),
 
@@ -142,19 +138,16 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                         hintText: "Enter your Last Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String lastName) {
-                          ref.read(pharmacistSignUpProvider.notifier)
-                              .changeLastName(lastName);
+                          ref.read(pharmacistSignUpProvider.notifier).changeLastName(lastName);
                         },
                         validation: (value) {
-                          if (!RegExp(
-                                  r"[^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                          if (!RegExp(r"[^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
                               .hasMatch(value)) {
                             return "Invalid field";
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                            .lastName,
+                        initialValue: ref.read(pharmacistSignUpProvider.notifier).lastName,
                       ),
                       SizedBox(height: 20),
 
@@ -181,23 +174,22 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
 
                       //Phone Number
                       CustomFormField(
-                        fieldTitle: "Phone Number",
-                        hintText: "+1 234 567 8910",
-                        keyboardStyle: TextInputType.number,
-                        onChanged: (String phoneNumber) {
-                          ref.read(pharmacistSignUpProvider.notifier)
-                              .changePhoneNumber(phoneNumber);
-                        },
-                        validation: (value) {
-                          if (value.length < 4) {
-                            return "Phone is invalid";
-                          }
-                          return null;
-                        },
-                        initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                            .phoneNumber,
-                        formatter: [PhoneInputFormatter()]
-                      ),
+                          fieldTitle: "Phone Number",
+                          hintText: "+1 234 567 8910",
+                          keyboardStyle: TextInputType.number,
+                          onChanged: (String phoneNumber) {
+                            ref
+                                .read(pharmacistSignUpProvider.notifier)
+                                .changePhoneNumber(phoneNumber);
+                          },
+                          validation: (value) {
+                            if (value.length < 4) {
+                              return "Phone is invalid";
+                            }
+                            return null;
+                          },
+                          initialValue: ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
+                          formatter: [PhoneInputFormatter()]),
 
                       SizedBox(height: 20),
                     ],
@@ -255,7 +247,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
           );
         },
       ),
-            );
+    );
   }
 
   Container streetAddressField(TextEditingController streetAddress, BuildContext context) {

@@ -3,14 +3,13 @@ import 'package:http/http.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Place {
-  String? streetNumber;
-  String? street;
-  String? city;
-  String? zipCode;
-  String? country;
+  String? streetNumber = "";
+  String? street = "";
+  String? city = "";
+  String? zipCode = "";
+  String? country = "";
 
-  Place(
-      {this.streetNumber, this.street, this.city, this.zipCode, this.country});
+  Place({this.streetNumber, this.street, this.city, this.zipCode, this.country});
 
   @override
   String toString() {
@@ -71,11 +70,10 @@ class PlaceApiProvider {
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
       if (result['status'] == 'OK') {
-        final components =
-            result['result']['address_components'] as List<dynamic>;
+        final components = result['result']['address_components'] as List<dynamic>;
         // build result
         final place = Place();
-        components.forEach((c) {
+        for (var c in components) {
           final List type = c['types'];
           if (type.contains('street_number')) {
             place.streetNumber = c['long_name'];
@@ -92,7 +90,7 @@ class PlaceApiProvider {
           if (type.contains('country')) {
             place.country = c['long_name'];
           }
-        });
+        }
         return place;
       }
       throw Exception(result['error_message']);

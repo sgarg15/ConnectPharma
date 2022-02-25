@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/4pharmacistLegalInformation.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/4pharmacistLegalInformation.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../all_used.dart';
@@ -50,8 +50,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                 child: RichText(
                   textAlign: TextAlign.left,
                   text: TextSpan(
-                    text:
-                        "Please provide us with your Pharmacist Information, to help us verify.",
+                    text: "Please provide us with your Pharmacist Information, to help us verify.",
                     style: GoogleFonts.questrial(
                       fontSize: 15,
                       color: Colors.black,
@@ -78,7 +77,8 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                       hintText: "First Year Licensed in Canada...",
                       keyboardStyle: TextInputType.number,
                       onChanged: (String licenseYear) {
-                        ref.read(pharmacistSignUpProvider.notifier)
+                        ref
+                            .read(pharmacistSignUpProvider.notifier)
                             .changeFirstYearLicensed(licenseYear);
                       },
                       validation: (value) {
@@ -87,8 +87,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                          .firstYearLicensed,
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
                     ),
                     SizedBox(height: 20),
 
@@ -98,7 +97,8 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                       hintText: "Registration Number...",
                       keyboardStyle: TextInputType.number,
                       onChanged: (String registrationNumber) {
-                        ref.read(pharmacistSignUpProvider.notifier)
+                        ref
+                            .read(pharmacistSignUpProvider.notifier)
                             .changeRegistrationNumber(registrationNumber);
                       },
                       validation: (value) {
@@ -107,8 +107,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                          .registrationNumber,
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier).registrationNumber,
                     ),
                     SizedBox(height: 20),
 
@@ -118,7 +117,8 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                       hintText: "Registration Province...",
                       keyboardStyle: TextInputType.streetAddress,
                       onChanged: (String registrationProvince) {
-                        ref.read(pharmacistSignUpProvider.notifier)
+                        ref
+                            .read(pharmacistSignUpProvider.notifier)
                             .changeRegistrationProvince(registrationProvince);
                       },
                       validation: (value) {
@@ -127,8 +127,8 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                          .registrationProvince,
+                      initialValue:
+                          ref.read(pharmacistSignUpProvider.notifier).registrationProvince,
                     ),
                     SizedBox(height: 20),
 
@@ -138,7 +138,8 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                       hintText: "Graduation Year...",
                       keyboardStyle: TextInputType.number,
                       onChanged: (String graduationYear) {
-                        ref.read(pharmacistSignUpProvider.notifier)
+                        ref
+                            .read(pharmacistSignUpProvider.notifier)
                             .changeGraduationYear(graduationYear);
                       },
                       validation: (value) {
@@ -147,8 +148,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                          .graduationYear,
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier).graduationYear,
                     ),
                     SizedBox(height: 20),
 
@@ -158,7 +158,8 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                       hintText: "Instituation Name...",
                       keyboardStyle: TextInputType.streetAddress,
                       onChanged: (String institutionName) {
-                        ref.read(pharmacistSignUpProvider.notifier)
+                        ref
+                            .read(pharmacistSignUpProvider.notifier)
                             .changeInstitutionName(institutionName);
                       },
                       validation: (value) {
@@ -167,8 +168,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                          .institutionName,
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier).institutionName,
                     ),
                     SizedBox(height: 20),
 
@@ -178,7 +178,8 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                       hintText: "Number of years...",
                       keyboardStyle: TextInputType.number,
                       onChanged: (String workingExperience) {
-                        ref.read(pharmacistSignUpProvider.notifier)
+                        ref
+                            .read(pharmacistSignUpProvider.notifier)
                             .changeWorkingExperience(workingExperience);
                       },
                       validation: (value) {
@@ -187,8 +188,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                         }
                         return null;
                       },
-                      initialValue: ref.read(pharmacistSignUpProvider.notifier)
-                          .workingExperience,
+                      initialValue: ref.read(pharmacistSignUpProvider.notifier).workingExperience,
                     ),
                     SizedBox(height: 20),
 
@@ -210,11 +210,11 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                         return Transform.scale(
                           scale: 1.5,
                           child: Switch(
-                            value: ref.read(pharmacistSignUpProvider.notifier)
-                                .willingToMove,
+                            value: ref.read(pharmacistSignUpProvider.notifier).willingToMove,
                             onChanged: (value) {
                               print(value);
-                              ref.read(pharmacistSignUpProvider.notifier)
+                              ref
+                                  .read(pharmacistSignUpProvider.notifier)
                                   .changeWillingToMove(value);
                             },
                             activeTrackColor: Color(0xFF5DB075),
@@ -280,6 +280,6 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
           );
         },
       ),
-          );
+    );
   }
 }

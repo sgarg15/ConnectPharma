@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/createShift.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/availablePharmacistProfile.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/createShift.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/availablePharmacistProfile.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 
 import '../../../../all_used.dart';
 

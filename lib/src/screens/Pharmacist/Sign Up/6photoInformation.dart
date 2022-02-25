@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -171,6 +171,24 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
     );
   }
 
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(margin: EdgeInsets.only(left: 7), child: Text("Loading...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Center submitButton() {
     return Center(
       child: Consumer(
@@ -196,140 +214,192 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                       setState(() {
                         disableButton = true;
                       });
-                      ref
-                          .read(authProvider.notifier)
-                          .registerWithEmailAndPassword(
-                              ref.read(pharmacistSignUpProvider.notifier).email.toString(),
-                              ref.read(pharmacistSignUpProvider.notifier).password.toString())
-                          .then((value) async {
-                        print("UPLOADING DATA");
-                        print("USER TYPE: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
-                        if (value == null) {
-                          print("ERROR");
-                          final snackBar = SnackBar(
-                            content: Text(
-                                "There was an error trying to register you. Please check your email and password and try again."),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          setState(() {
-                            disableButton = false;
-                          });
-                          //value!.user!.delete();
-                          return null;
-                        } else {
-                          if (ref.read(pharmacistSignUpProvider.notifier).userType ==
-                              "Pharmacist") {
-                            ref
-                                .read(authProvider.notifier)
-                                .uploadPharmacistUserInformation(ref, value, context)
-                                .then((value) async {
-                              final snackBar = SnackBar(
-                                content: Text("Pharmacist Registered"),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                              print("DATA UPLOADED");
-                              await value?.user?.sendEmailVerification().then((_) {
-                                ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context) => PharmaConnect()));
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          title: Text("Verification Email"),
-                                          content: Text(
-                                              "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
-                                          actions: <Widget>[
-                                            new TextButton(
-                                              child: new Text("Ok"),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ));
-                              });
-                            });
-                          } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
-                              "Pharmacy Assistant") {
-                            print("Registering Pharmacy Assistant");
-                            ref
-                                .read(authProvider.notifier)
-                                .uploadPharmacyAssistantUserInformation(ref, value, context)
-                                .then((value) async {
-                              final snackBar = SnackBar(
-                                content: Text("Pharmacy Assistant Registered"),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                              print("DATA UPLOADED");
-                              await value?.user?.sendEmailVerification().then((_) {
-                                ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context) => PharmaConnect()));
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          title: Text("Verification Email"),
-                                          content: Text(
-                                              "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
-                                          actions: <Widget>[
-                                            new TextButton(
-                                              child: new Text("Ok"),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ));
-                              });
-                            });
-                          } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
-                              "Pharmacy Technician") {
-                            print("Registering Pharmacy Technician");
-                            ref
-                                .read(authProvider.notifier)
-                                .uploadPharmacyTechnicianUserInformation(ref, value, context)
-                                .then((value) async {
-                              final snackBar = SnackBar(
-                                content: Text("Pharmacy Technician Registered"),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                              print("DATA UPLOADED");
-                              await value?.user?.sendEmailVerification().then((_) {
-                                ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context) => PharmaConnect()));
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          title: Text("Verification Email"),
-                                          content: Text(
-                                              "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
-                                          actions: <Widget>[
-                                            new TextButton(
-                                              child: new Text("Ok"),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        ));
-                              });
-                            });
+                      if (ref.read(pharmacistSignUpProvider.notifier).userType!.isNotEmpty) {
+                        ref
+                            .read(authProvider.notifier)
+                            .registerWithEmailAndPassword(
+                                ref.read(pharmacistSignUpProvider.notifier).email.toString(),
+                                ref.read(pharmacistSignUpProvider.notifier).password.toString())
+                            .then((user) async {
+                          print("UPLOADING DATA");
+                          print(
+                              "USER TYPE: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
+
+                          if (user == null) {
+                            return errorMethod(context);
                           } else {
-                            print("ERROR");
-                            final snackBar = SnackBar(
-                              content: Text(
-                                  "There was an error trying to register you. Please try again."),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                            setState(() {
-                              disableButton = false;
-                            });
-                            //value!.user!.delete();
-                            return null;
+                            if (ref.read(pharmacistSignUpProvider.notifier).userType ==
+                                "Pharmacist") {
+                              showLoaderDialog(context);
+                              ref
+                                  .read(authProvider.notifier)
+                                  .uploadPharmacistUserInformation(ref, user, context)
+                                  .then((value) async {
+                                Navigator.pop(context);
+                                final snackBar = SnackBar(
+                                  content: Text("Pharmacist Registered"),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                print("DATA UPLOADED");
+                                await value?.user?.sendEmailVerification().then((_) {
+                                  ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) => ConnectPharma()));
+                                  ref.read(authProvider.notifier).signOut();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            title: Text("Verification Email"),
+                                            content: Text(
+                                                "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
+                                            actions: <Widget>[
+                                              new TextButton(
+                                                child: new Text("Ok"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ));
+                                });
+                              }).catchError((e) {
+                                errorMethod(context);
+                              });
+                            } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
+                                "Pharmacy Assistant") {
+                              print("Registering Pharmacy Assistant");
+                              ref
+                                  .read(authProvider.notifier)
+                                  .uploadPharmacyAssistantUserInformation(ref, user, context)
+                                  .then((value) async {
+                                final snackBar = SnackBar(
+                                  content: Text("Pharmacy Assistant Registered"),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                print("DATA UPLOADED");
+                                await value?.user?.sendEmailVerification().then((_) {
+                                  ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) => ConnectPharma()));
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            title: Text("Verification Email"),
+                                            content: Text(
+                                                "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
+                                            actions: <Widget>[
+                                              new TextButton(
+                                                child: new Text("Ok"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ));
+                                });
+                              }).catchError((e) {
+                                errorMethod(context);
+                              });
+                            } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
+                                "Pharmacy Technician") {
+                              print("Registering Pharmacy Technician");
+                              ref
+                                  .read(authProvider.notifier)
+                                  .uploadPharmacyTechnicianUserInformation(ref, user, context)
+                                  .then((value) async {
+                                final snackBar = SnackBar(
+                                  content: Text("Pharmacy Technician Registered"),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                print("DATA UPLOADED");
+                                await value?.user?.sendEmailVerification().then((_) {
+                                  ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) => ConnectPharma()));
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            title: Text("Verification Email"),
+                                            content: Text(
+                                                "An verification email was sent to you. Please follow the link and verify your email. Once finished you may log in using your email and password."),
+                                            actions: <Widget>[
+                                              new TextButton(
+                                                child: new Text("Ok"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ));
+                                });
+                              }).catchError((e) {
+                                errorMethod(context);
+                              });
+                            }
                           }
-                        }
-                      });
+                        });
+                      } else {
+                        //Show Dialog to reselect user type
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text("Please Select a User Type Again"),
+                                  content: Text("Please select a user type below."),
+                                  actions: <Widget>[
+                                    DropdownButtonFormField<String>(
+                                        hint: Text(
+                                          "Select your Position...",
+                                          style: GoogleFonts.inter(
+                                              color: Color(0xFFBDBDBD), fontSize: 16),
+                                        ),
+                                        value: "",
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Color(0xFFF0F0F0),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                                        ),
+                                        items: <String>[
+                                          'Pharmacy',
+                                          'Pharmacist',
+                                          'Technician',
+                                        ].map<DropdownMenuItem<String>>((String value) {
+                                          return DropdownMenuItem<String>(
+                                              child: Text(value), value: value);
+                                        }).toList(),
+                                        onChanged: (String? value) {
+                                          ref
+                                              .read(pharmacistSignUpProvider.notifier)
+                                              .changeUserType(value);
+                                        },
+                                        style: GoogleFonts.questrial(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        )),
+                                    new TextButton(
+                                      child: new Text("Ok"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                ));
+                        print("ERROR");
+                        final snackBar = SnackBar(
+                          content:
+                              Text("There was an error trying to register you. Please try again."),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        ref.read(authProvider.notifier).deleteUserAccount();
+                        print("USER DELETED");
+
+                        setState(() {
+                          disableButton = false;
+                        });
+                        //value!.user!.delete();
+                      }
                     }
                   : null,
               child: RichText(
@@ -347,6 +417,20 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
         },
       ),
     );
+  }
+
+  Null errorMethod(BuildContext context) {
+    print("ERROR");
+    final snackBar = SnackBar(
+      content: Text(
+          "There was an error trying to register you. Please check your email and password and try again."),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    setState(() {
+      disableButton = false;
+    });
+    //value!.user!.delete();
+    return null;
   }
 
   CheckboxListTile newsLetterCheckBox() {

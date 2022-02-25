@@ -1,6 +1,7 @@
+// ignore_for_file: file_names
+
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show TextInputFormatter;
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
@@ -275,8 +276,9 @@ class _DateTimeFieldState extends FormFieldState<DateTime> {
     // notifications for changes originating from within this class -- for
     // example, the reset() method. In such cases, the FormField value will
     // already have been set.
-    if (_effectiveController!.text != format(value))
+    if (_effectiveController!.text != format(value)) {
       didChange(parse(_effectiveController!.text));
+    }
   }
 
   String format(DateTime? date) => DateTimeField.tryFormat(date, widget.format);

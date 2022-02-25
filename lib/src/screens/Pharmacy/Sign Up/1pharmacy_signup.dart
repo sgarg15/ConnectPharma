@@ -2,11 +2,11 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/pharmacySignUpModel.dart';
-import 'package:pharma_connect/src/providers/auth_provider.dart';
-import 'package:pharma_connect/src/providers/pharmacy_signup_provider.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/2accountInformation.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/model/pharmacySignUpModel.dart';
+import 'package:connectpharma/src/providers/auth_provider.dart';
+import 'package:connectpharma/src/providers/pharmacy_signup_provider.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign Up/2accountInformation.dart';
+import 'package:connectpharma/src/screens/login.dart';
 
 import '../../../../all_used.dart';
 
@@ -80,13 +80,15 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                     (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.pressed))
+                      if (states.contains(MaterialState.pressed)) {
                         return Color(0xFF5DB075);
-                      else if (states.contains(MaterialState.disabled)) return Colors.grey;
+                      } else if (states.contains(MaterialState.disabled)) {
+                        return Colors.grey;
+                      }
                       return Color(0xFF5DB075); // Use the component's default.
                     },
                   ),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100),
                   ))),
               onPressed: (ref.read(pharmacySignUpProvider.notifier).isValidSignUp())
@@ -109,29 +111,28 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                              ),
-                                            ],
+                                    ),
+                                  ],
                                 ));
                       } else {
-                        Navigator.push(
-                            context,
+                        Navigator.push(context,
                             MaterialPageRoute(builder: (context) => AccountInformationPharmacy()));
                       }
                     },
               child: RichText(
                 text: TextSpan(
-                            text: "Sign Up as a pharmacy",
+                  text: "Sign Up as a pharmacy",
                   style: TextStyle(
-                              fontSize: 16,
+                    fontSize: 16,
                     color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
-              );
+    );
   }
 
   Align signUpInfo(WidgetRef ref) {
@@ -184,7 +185,7 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
               ),
             ),
 
-                      //Password
+            //Password
             CustomFormField(
               hintText: "Password",
               obscureText: !passwordVisibility,
@@ -239,7 +240,7 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
             ),
             SizedBox(height: 10),
 
-                      //Newsletter Check Box
+            //Newsletter Check Box
             CheckboxListTile(
               title: RichText(
                 text: TextSpan(
@@ -263,9 +264,9 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
               controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
             ),
           ],
-                  ),
+        ),
       ),
-              );
+    );
   }
 
   Align signUpHeader(BuildContext context) {
@@ -274,7 +275,7 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-                    //Back Button
+          //Back Button
           Padding(
             padding: EdgeInsets.only(left: 10),
             child: GestureDetector(
@@ -283,7 +284,7 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
                 Navigator.pop(context);
               },
             ),
-                    ),
+          ),
           //Sign Up Text
           RichText(
             text: TextSpan(
@@ -301,15 +302,15 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
               },
               child: RichText(
                 text: TextSpan(
-                            text: "Log In",
+                  text: "Log In",
                   style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 15.0, color: Color(0xFF5DB075)),
+                      fontWeight: FontWeight.w500, fontSize: 15.0, color: Color(0xFF5DB075)),
                 ),
-                        ),
+              ),
             ),
-                    )
+          )
         ],
       ),
-              );
+    );
   }
 }

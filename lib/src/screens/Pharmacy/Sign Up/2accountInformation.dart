@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/all_used.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/3pharmacyInformation.dart';
+import 'package:connectpharma/all_used.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign Up/3pharmacyInformation.dart';
 import 'package:signature/signature.dart';
 
 import '../../../../main.dart';
@@ -14,18 +13,15 @@ class AccountInformationPharmacy extends ConsumerStatefulWidget {
   const AccountInformationPharmacy({Key? key}) : super(key: key);
 
   @override
-  _AccountInformationPharmacyState createState() =>
-      _AccountInformationPharmacyState();
+  _AccountInformationPharmacyState createState() => _AccountInformationPharmacyState();
 }
 
-class _AccountInformationPharmacyState
-    extends ConsumerState<AccountInformationPharmacy> {
+class _AccountInformationPharmacyState extends ConsumerState<AccountInformationPharmacy> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final SignatureController _sigController = SignatureController(
     penStrokeWidth: 3, //you can set pen stroke with by changing this value
     penColor: Colors.black, // change your pen color
-    exportBackgroundColor:
-        Colors.white, //set the color you want to see in final result
+    exportBackgroundColor: Colors.white, //set the color you want to see in final result
   );
 
   @override
@@ -51,8 +47,7 @@ class _AccountInformationPharmacyState
                       // Direct to whichever they are in Information Form pages
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => PharmaConnect()),
+                        MaterialPageRoute(builder: (context) => ConnectPharma()),
                       );
                     },
                   )
@@ -122,19 +117,16 @@ class _AccountInformationPharmacyState
                         hintText: "Enter your First Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String firstName) {
-                          ref.read(pharmacySignUpProvider.notifier)
-                              .changeFirstName(firstName);
+                          ref.read(pharmacySignUpProvider.notifier).changeFirstName(firstName);
                         },
                         validation: (value) {
-                          if (!RegExp(
-                                  r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                          if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
                               .hasMatch(value)) {
                             return "Invalid field";
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacySignUpProvider.notifier)
-                            .firstName,
+                        initialValue: ref.read(pharmacySignUpProvider.notifier).firstName,
                       ),
                       SizedBox(height: 20),
 
@@ -144,19 +136,16 @@ class _AccountInformationPharmacyState
                         hintText: "Enter your Last Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String lastName) {
-                          ref.read(pharmacySignUpProvider.notifier)
-                              .changeLastName(lastName);
+                          ref.read(pharmacySignUpProvider.notifier).changeLastName(lastName);
                         },
                         validation: (value) {
-                          if (!RegExp(
-                                  r"[^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                          if (!RegExp(r"[^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
                               .hasMatch(value)) {
                             return "Invalid field";
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacySignUpProvider.notifier)
-                            .lastName,
+                        initialValue: ref.read(pharmacySignUpProvider.notifier).lastName,
                       ),
                       SizedBox(height: 20),
 
@@ -166,8 +155,7 @@ class _AccountInformationPharmacyState
                         hintText: "+1 234 567 8910",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String phoneNumber) {
-                          ref.read(pharmacySignUpProvider.notifier)
-                              .changePhoneNumber(phoneNumber);
+                          ref.read(pharmacySignUpProvider.notifier).changePhoneNumber(phoneNumber);
                         },
                         validation: (value) {
                           if (value.length < 4) {
@@ -175,8 +163,7 @@ class _AccountInformationPharmacyState
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacySignUpProvider.notifier)
-                            .phoneNumber,
+                        initialValue: ref.read(pharmacySignUpProvider.notifier).phoneNumber,
                         formatter: [PhoneInputFormatter()],
                       ),
                       SizedBox(height: 20),
@@ -254,7 +241,7 @@ class _AccountInformationPharmacyState
           );
         },
       ),
-            );
+    );
   }
 
   Column positionSelectDropDown() {
@@ -344,10 +331,8 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
       height: 40,
       child: ElevatedButton(
         style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ))),
         onPressed: () {
@@ -394,14 +379,13 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                           child: TextButton.icon(
                             clipBehavior: Clip.none,
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xFF5DB075)),
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
                             ),
                             onPressed: () async {
                               if (widget._sigController.isNotEmpty) {
-                                ref.read(pharmacySignUpProvider.notifier)
-                                    .changeSignature(await widget._sigController
-                                        .toPngBytes());
+                                ref
+                                    .read(pharmacySignUpProvider.notifier)
+                                    .changeSignature(await widget._sigController.toPngBytes());
                                 setState(() {
                                   signatureSaved = true;
                                 });
@@ -416,8 +400,7 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                             ),
                             label: Text(
                               "Apply",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              style: TextStyle(color: Colors.white, fontSize: 13),
                             ),
                           ),
                         ),

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/userModel.dart';
+import 'package:connectpharma/model/userModel.dart';
 
 class UserProvider extends StateNotifier<UserModel> {
   UserProvider() : super(UserModel());

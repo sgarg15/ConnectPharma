@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/jobDetails.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/jobDetails.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/src/screens/login.dart';
 
 import '../../../../all_used.dart';
 import '../../../../Custom Widgets/fileStorage.dart';

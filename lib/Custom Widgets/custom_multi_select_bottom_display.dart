@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, no_logic_in_create_state, prefer_if_null_operators
+
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -74,7 +76,7 @@ class CustomMultiSelectBottomSheet<V> extends StatefulWidget
   /// Set the color of the check in the checkbox
   final Color? checkColor;
 
-  CustomMultiSelectBottomSheet({
+  CustomMultiSelectBottomSheet({Key? key, 
     required this.items,
     required this.initialValue,
     this.title,
@@ -98,7 +100,7 @@ class CustomMultiSelectBottomSheet<V> extends StatefulWidget
     this.searchHintStyle,
     this.selectedItemsTextStyle,
     this.checkColor,
-  });
+  }) : super(key: key);
 
   @override
   _MultiSelectBottomSheetState<V> createState() =>
@@ -113,6 +115,7 @@ class _MultiSelectBottomSheetState<V>
 
   _MultiSelectBottomSheetState(this._items);
 
+  @override
   void initState() {
     super.initState();
     if (widget.initialValue != null) {
@@ -125,8 +128,7 @@ class _MultiSelectBottomSheetState<V>
   Widget _buildListItem(MultiSelectItem<V> item) {
     return Theme(
       data: ThemeData(
-        unselectedWidgetColor: widget.unselectedColor ?? Colors.black54,
-        accentColor: widget.selectedColor ?? Theme.of(context).primaryColor,
+        unselectedWidgetColor: widget.unselectedColor ?? Colors.black54, colorScheme: ColorScheme.fromSwatch().copyWith(secondary: widget.selectedColor ?? Theme.of(context).primaryColor),
       ),
       child: CheckboxListTile(
         checkColor: widget.checkColor,

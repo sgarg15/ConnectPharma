@@ -3,17 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
-import 'package:pharma_connect/src/providers/auth_provider.dart';
-import 'package:pharma_connect/src/providers/pharmacist_signUp_provider.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/2pharmacistLocation.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/model/pharmacistSignUpModel.dart';
+import 'package:connectpharma/src/providers/auth_provider.dart';
+import 'package:connectpharma/src/providers/pharmacist_signUp_provider.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/2pharmacistLocation.dart';
+import 'package:connectpharma/src/screens/login.dart';
 
 import '../../../../all_used.dart';
 
 final pharmacistSignUpProvider =
-    StateNotifierProvider<PharmacistSignUpProvider, PharmacistSignUpModel>(
-        (ref) {
+    StateNotifierProvider<PharmacistSignUpProvider, PharmacistSignUpModel>((ref) {
   return PharmacistSignUpProvider();
 });
 
@@ -39,8 +38,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
   void initState() {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       ref.read(pharmacistSignUpProvider.notifier).changeUserType(widget.userType);
-      print(
-          "User Type: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
+      print("User Type: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
     });
     super.initState();
   }
@@ -78,7 +76,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-                    //Sign Up Button
+          //Sign Up Button
           SizedBox(
             width: 324,
             height: 51,
@@ -92,7 +90,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                       return Color(0xFF5DB075); // Use the component's default.
                     },
                   ),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100),
                   ))),
               onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistSignUp())
@@ -115,8 +113,8 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                              ),
-                                            ],
+                                    ),
+                                  ],
                                 ));
                       } else {
                         Navigator.push(
@@ -129,24 +127,24 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                   if (widget.userType == "Pharmacist") ...[
                     RichText(
                       text: TextSpan(
-                                  text: "Sign Up as a pharmacist",
+                        text: "Sign Up as a pharmacist",
                         style: TextStyle(
-                                    fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                              ),
-                  ] else if (widget.userType == "Pharmacy Assistant") ...[
-                    RichText(
-                      text: TextSpan(
-                                  text: "Sign Up as a pharmacy assistant",
-                        style: TextStyle(
-                                    fontSize: 16,
+                          fontSize: 16,
                           color: Colors.white,
                         ),
                       ),
                     ),
-                            ] else if (widget.userType == "Pharmacy Technician") ...[
+                  ] else if (widget.userType == "Pharmacy Assistant") ...[
+                    RichText(
+                      text: TextSpan(
+                        text: "Sign Up as a pharmacy assistant",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ] else if (widget.userType == "Pharmacy Technician") ...[
                     RichText(
                       text: TextSpan(
                         text: "Sign Up as a pharmacy technician",
@@ -160,7 +158,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                 ],
               ),
             ),
-                    ),
+          ),
         ],
       ),
     );
@@ -216,7 +214,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               ),
             ),
 
-                      //Password
+            //Password
             CustomFormField(
               hintText: "Password",
               obscureText: !passwordVisibility,
@@ -271,7 +269,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
             ),
             SizedBox(height: 10),
 
-                      //Newsletter Check Box
+            //Newsletter Check Box
             CheckboxListTile(
               title: RichText(
                 text: TextSpan(
@@ -295,9 +293,9 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
             ),
           ],
-                  ),
+        ),
       ),
-              );
+    );
   }
 
   Align signUpHeader(BuildContext context) {
@@ -306,7 +304,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-                    //Back Button
+          //Back Button
           Padding(
             padding: EdgeInsets.only(left: 10),
             child: GestureDetector(
@@ -314,17 +312,16 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               onTap: () {
                 Navigator.pop(context);
               },
-                      ),
-          ),
-                    //Sign Up Text
-          RichText(
-            text: TextSpan(
-                        text: "Sign Up",
-              style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 35.0, color: Colors.black),
             ),
           ),
-                    //Log In Text
+          //Sign Up Text
+          RichText(
+            text: TextSpan(
+              text: "Sign Up",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 35.0, color: Colors.black),
+            ),
+          ),
+          //Log In Text
           Padding(
             padding: EdgeInsets.only(right: 10),
             child: GestureDetector(
@@ -334,15 +331,15 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               },
               child: RichText(
                 text: TextSpan(
-                            text: "Log In",
+                  text: "Log In",
                   style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 15.0, color: Color(0xFF5DB075)),
+                      fontWeight: FontWeight.w500, fontSize: 15.0, color: Color(0xFF5DB075)),
                 ),
-                        ),
+              ),
             ),
-                    )
+          )
         ],
       ),
-              );
+    );
   }
 }

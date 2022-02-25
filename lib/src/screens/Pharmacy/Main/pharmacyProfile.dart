@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/all_used.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/editProfile.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import 'package:connectpharma/all_used.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/editProfile.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 
 class PharmacyProfile extends ConsumerWidget {
   const PharmacyProfile({Key? key}) : super(key: key);
@@ -16,8 +16,7 @@ class PharmacyProfile extends ConsumerWidget {
         elevation: 12,
         title: Text(
           "Profile",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
         ),
         backgroundColor: Color(0xFFF6F6F6),
       ),
@@ -48,8 +47,7 @@ class PharmacyProfile extends ConsumerWidget {
                               children: [
                                 //Title Text/Edit Button
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     RichText(
                                       textAlign: TextAlign.start,
@@ -66,13 +64,11 @@ class PharmacyProfile extends ConsumerWidget {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditPharmacyProfile()));
+                                                builder: (context) => EditPharmacyProfile()));
                                       },
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Color(0xFF5DB075))),
+                                              MaterialStateProperty.all<Color>(Color(0xFF5DB075))),
                                       child: RichText(
                                         textAlign: TextAlign.start,
                                         text: TextSpan(
@@ -88,8 +84,7 @@ class PharmacyProfile extends ConsumerWidget {
                                 ),
                                 //Profile Picture
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: CircleAvatar(
                                     radius: 52,
                                     backgroundColor: Color(0xFF5DB075),
@@ -98,11 +93,11 @@ class PharmacyProfile extends ConsumerWidget {
                                       backgroundColor: Colors.grey,
                                       child: Text(
                                           getInitials(
-                                              ref.read(pharmacyMainProvider
-                                                      .notifier)
+                                              ref
+                                                  .read(pharmacyMainProvider.notifier)
                                                   .userData?["firstName"],
-                                              ref.read(pharmacyMainProvider
-                                                      .notifier)
+                                              ref
+                                                  .read(pharmacyMainProvider.notifier)
                                                   .userData?["lastName"]),
                                           style: TextStyle(
                                               color: Colors.white,
@@ -119,20 +114,16 @@ class PharmacyProfile extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.47,
+                                  width: MediaQuery.of(context).size.width * 0.47,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       //Name
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -145,48 +136,38 @@ class PharmacyProfile extends ConsumerWidget {
                                               ),
                                             ),
                                             RichText(
-                                              text: ref.read(
-                                                                  pharmacyMainProvider
-                                                                      .notifier)
-                                                              .userData?[
-                                                          "firstName"] !=
+                                              text: ref
+                                                          .read(pharmacyMainProvider.notifier)
+                                                          .userData?["firstName"] !=
                                                       null
                                                   ? TextSpan(
-                                                      text: ref.read(pharmacyMainProvider
-                                                                      .notifier)
-                                                                  .userData?[
-                                                              "firstName"] +
+                                                      text: ref
+                                                              .read(pharmacyMainProvider.notifier)
+                                                              .userData?["firstName"] +
                                                           " " +
-                                                          ref.read(
-                                                                  pharmacyMainProvider
-                                                                      .notifier)
+                                                          ref
+                                                              .read(pharmacyMainProvider.notifier)
                                                               .userData?["lastName"],
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
+                                                          fontWeight: FontWeight.w600,
                                                           fontSize: 20.0,
-                                                          color:
-                                                              Colors.grey[800]),
+                                                          color: Colors.grey[800]),
                                                     )
                                                   : TextSpan(
                                                       text: "N/A",
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
+                                                          fontWeight: FontWeight.w600,
                                                           fontSize: 20.0,
-                                                          color: Colors
-                                                              .grey[800])),
+                                                          color: Colors.grey[800])),
                                             ),
                                           ],
                                         ),
                                       ),
                                       //Email
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -201,14 +182,12 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: ref.read(
-                                                              pharmacyMainProvider
-                                                                  .notifier)
+                                                  text: ref
+                                                          .read(pharmacyMainProvider.notifier)
                                                           .userData?["email"] ??
                                                       "N/A",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 20.0,
                                                       color: Colors.grey[800]),
                                                 )),
@@ -217,11 +196,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Signature
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -234,11 +211,9 @@ class PharmacyProfile extends ConsumerWidget {
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: ref.read(
-                                                                  pharmacyMainProvider
-                                                                      .notifier)
-                                                              .userData?[
-                                                          "signatureDownloadURL"] !=
+                                              onTap: ref
+                                                          .read(pharmacyMainProvider.notifier)
+                                                          .userData?["signatureDownloadURL"] !=
                                                       null
                                                   ? () {
                                                       showDialog(
@@ -248,18 +223,17 @@ class PharmacyProfile extends ConsumerWidget {
                                                               child: Container(
                                                                 height: 120,
                                                                 //padding: EdgeInsets.all(3),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  border: Border
-                                                                      .all(
+                                                                decoration: BoxDecoration(
+                                                                  border: Border.all(
                                                                     width: 3,
-                                                                    color: Color(
-                                                                        0xFF5DB075),
+                                                                    color: Color(0xFF5DB075),
                                                                   ),
                                                                 ),
-                                                                child: Image.network(ref.read(pharmacyMainProvider
-                                                                        .notifier)
-                                                                    .userData?["signatureDownloadURL"]),
+                                                                child: Image.network(ref
+                                                                        .read(pharmacyMainProvider
+                                                                            .notifier)
+                                                                        .userData?[
+                                                                    "signatureDownloadURL"]),
                                                               ),
                                                             );
                                                           });
@@ -270,8 +244,7 @@ class PharmacyProfile extends ConsumerWidget {
                                                 text: TextSpan(
                                                   text: "View",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 18.0,
                                                       color: Color(0xFF5DB075)),
                                                 ),
@@ -284,20 +257,16 @@ class PharmacyProfile extends ConsumerWidget {
                                   ),
                                 ),
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.42,
+                                  width: MediaQuery.of(context).size.width * 0.42,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       //Position
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 12, 0, 15),
+                                        padding: const EdgeInsets.fromLTRB(0, 12, 0, 15),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -312,9 +281,8 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(
-                                                            pharmacyMainProvider
-                                                                .notifier)
+                                                text: ref
+                                                        .read(pharmacyMainProvider.notifier)
                                                         .userData?["position"] ??
                                                     "N/A",
                                                 style: TextStyle(
@@ -328,11 +296,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Phone
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -347,9 +313,8 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(
-                                                            pharmacyMainProvider
-                                                                .notifier)
+                                                text: ref
+                                                        .read(pharmacyMainProvider.notifier)
                                                         .userData?["phoneNumber"] ??
                                                     "N/A",
                                                 style: TextStyle(
@@ -402,8 +367,7 @@ class PharmacyProfile extends ConsumerWidget {
                                 ),
                                 //Title Text
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     RichText(
                                       textAlign: TextAlign.start,
@@ -442,20 +406,16 @@ class PharmacyProfile extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.47,
+                                  width: MediaQuery.of(context).size.width * 0.47,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       //PharmacyName
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -470,11 +430,9 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(
-                                                                pharmacyMainProvider
-                                                                    .notifier)
-                                                            .userData?[
-                                                        "pharmacyName"] ??
+                                                text: ref
+                                                        .read(pharmacyMainProvider.notifier)
+                                                        .userData?["pharmacyName"] ??
                                                     "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -487,11 +445,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Address
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -508,32 +464,28 @@ class PharmacyProfile extends ConsumerWidget {
                                               text: TextSpan(
                                                 children: [
                                                   TextSpan(
-                                                      text: ref.read(pharmacyMainProvider
-                                                                      .notifier)
-                                                                  .userData?["address"]
-                                                              [
-                                                              "streetAddress"] ??
-                                                          "N/A"),
+                                                      text:
+                                                          ref
+                                                                      .read(pharmacyMainProvider
+                                                                          .notifier)
+                                                                      .userData?["address"]
+                                                                  ["streetAddress"] ??
+                                                              "N/A"),
                                                   TextSpan(text: "\n"),
                                                   TextSpan(
-                                                      text: ref.read(
-                                                                  pharmacyMainProvider
-                                                                      .notifier)
-                                                              .userData?[
-                                                          "address"]["city"]),
+                                                      text: ref
+                                                          .read(pharmacyMainProvider.notifier)
+                                                          .userData?["address"]["city"]),
                                                   TextSpan(text: " "),
                                                   TextSpan(
-                                                      text: ref.read(
-                                                                  pharmacyMainProvider
-                                                                      .notifier)
-                                                              .userData?[
-                                                          "address"]["country"]),
+                                                      text: ref
+                                                          .read(pharmacyMainProvider.notifier)
+                                                          .userData?["address"]["country"]),
                                                   TextSpan(text: "\n"),
                                                   TextSpan(
-                                                      text: ref.read(pharmacyMainProvider
-                                                                      .notifier)
-                                                                  .userData?["address"]
-                                                              ["postalCode"] ??
+                                                      text: ref
+                                                              .read(pharmacyMainProvider.notifier)
+                                                              .userData?["address"]["postalCode"] ??
                                                           "N/A"),
                                                 ],
                                                 style: TextStyle(
@@ -547,11 +499,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Pharmacy Phone Number
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -566,11 +516,9 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(
-                                                                pharmacyMainProvider
-                                                                    .notifier)
-                                                            .userData?[
-                                                        "pharmacyPhoneNumber"] ??
+                                                text: ref
+                                                        .read(pharmacyMainProvider.notifier)
+                                                        .userData?["pharmacyPhoneNumber"] ??
                                                     "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -583,11 +531,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Manager Number
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -602,15 +548,13 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(pharmacyMainProvider
-                                                                    .notifier)
-                                                                .userData?[
-                                                            "managerFirstName"] +
+                                                text: ref
+                                                            .read(pharmacyMainProvider.notifier)
+                                                            .userData?["managerFirstName"] +
                                                         " " +
-                                                        ref.read(pharmacyMainProvider
-                                                                    .notifier)
-                                                                .userData?[
-                                                            "managerLastName"] ??
+                                                        ref
+                                                            .read(pharmacyMainProvider.notifier)
+                                                            .userData?["managerLastName"] ??
                                                     "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -623,11 +567,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Manager license number
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -642,11 +584,9 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(
-                                                                pharmacyMainProvider
-                                                                    .notifier)
-                                                            .userData?[
-                                                        "managerLicenseNumber"] ??
+                                                text: ref
+                                                        .read(pharmacyMainProvider.notifier)
+                                                        .userData?["managerLicenseNumber"] ??
                                                     "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -661,19 +601,15 @@ class PharmacyProfile extends ConsumerWidget {
                                   ),
                                 ),
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.42,
+                                  width: MediaQuery.of(context).size.width * 0.42,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       //Store Number
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 14, 0, 15),
+                                        padding: const EdgeInsets.fromLTRB(0, 14, 0, 15),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -688,9 +624,8 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(
-                                                            pharmacyMainProvider
-                                                                .notifier)
+                                                text: ref
+                                                        .read(pharmacyMainProvider.notifier)
                                                         .userData?["storeNumber"] ??
                                                     "N/A",
                                                 style: TextStyle(
@@ -704,11 +639,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Software
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -723,31 +656,25 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(pharmacyMainProvider
-                                                                    .notifier)
-                                                                .userData?[
-                                                            "softwareList"] !=
+                                                text: ref
+                                                            .read(pharmacyMainProvider.notifier)
+                                                            .userData?["softwareList"] !=
                                                         null
-                                                    ? ref.read(
-                                                            pharmacyMainProvider
-                                                                .notifier)
-                                                        .userData![
-                                                            "softwareList"]
+                                                    ? ref
+                                                        .read(pharmacyMainProvider.notifier)
+                                                        .userData!["softwareList"]
                                                         .toString()
                                                         .substring(
-                                                            ref.read(pharmacyMainProvider
+                                                            ref
+                                                                    .read(pharmacyMainProvider
                                                                         .notifier)
-                                                                    .userData?[
-                                                                        "softwareList"]
-                                                                    .indexOf(
-                                                                        "[") +
+                                                                    .userData?["softwareList"]
+                                                                    .indexOf("[") +
                                                                 1,
-                                                            ref.read(pharmacyMainProvider
-                                                                    .notifier)
-                                                                .userData?[
-                                                                    "softwareList"]
-                                                                .lastIndexOf(
-                                                                    "]"))
+                                                            ref
+                                                                .read(pharmacyMainProvider.notifier)
+                                                                .userData?["softwareList"]
+                                                                .lastIndexOf("]"))
                                                     : "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -760,11 +687,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Pharmacy Fax Number
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 60, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -779,11 +704,9 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(
-                                                                pharmacyMainProvider
-                                                                    .notifier)
-                                                            .userData?[
-                                                        "pharmacyFaxNumber"] ??
+                                                text: ref
+                                                        .read(pharmacyMainProvider.notifier)
+                                                        .userData?["pharmacyFaxNumber"] ??
                                                     "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -796,11 +719,9 @@ class PharmacyProfile extends ConsumerWidget {
                                       ),
                                       //Manager Number
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -815,11 +736,9 @@ class PharmacyProfile extends ConsumerWidget {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: ref.read(
-                                                                pharmacyMainProvider
-                                                                    .notifier)
-                                                            .userData?[
-                                                        "managerPhoneNumber"] ??
+                                                text: ref
+                                                        .read(pharmacyMainProvider.notifier)
+                                                        .userData?["managerPhoneNumber"] ??
                                                     "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,

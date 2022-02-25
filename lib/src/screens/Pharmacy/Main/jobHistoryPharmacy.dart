@@ -1,30 +1,28 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/all_used.dart';
-import 'package:pharma_connect/main.dart';
-import 'package:pharma_connect/model/pharmacyMainModel.dart';
-import 'package:pharma_connect/src/providers/pharmacyMainProvider.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/appliedPharmacists.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/editShift.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/pharmacyProfile.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/searchPharmacist.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/all_used.dart';
+import 'package:connectpharma/main.dart';
+import 'package:connectpharma/model/pharmacyMainModel.dart';
+import 'package:connectpharma/src/providers/pharmacyMainProvider.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/appliedPharmacists.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/editShift.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/pharmacyProfile.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/searchPharmacist.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
+import 'package:connectpharma/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
 //TODO: Permanent Hiring for Pharmacy, show permanent option, for pharmacist in availability show looking for permanent job
 
-final pharmacyMainProvider =
-    StateNotifierProvider<PharmacyMainProvider, PharmacyMainModel>((ref) {
+final pharmacyMainProvider = StateNotifierProvider<PharmacyMainProvider, PharmacyMainModel>((ref) {
   return PharmacyMainProvider();
 });
 
 class JobHistoryPharmacy extends ConsumerStatefulWidget {
-  JobHistoryPharmacy({Key? key}) : super(key: key);
+  const JobHistoryPharmacy({Key? key}) : super(key: key);
 
   @override
   _JobHistoryState createState() => _JobHistoryState();
@@ -58,10 +56,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
     numActiveJobs = 0;
     numPastJobs = 0;
     //getJobs();
-    jobsStreamPharmacy = usersRef
-        .doc(ref.read(userProviderLogin.notifier).userUID)
-        .collection("Main")
-        .snapshots();
+    jobsStreamPharmacy =
+        usersRef.doc(ref.read(userProviderLogin.notifier).userUID).collection("Main").snapshots();
 
     jobsDataSub = usersRef
         .doc(ref.read(userProviderLogin.notifier).userUID)
@@ -78,13 +74,10 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
       setState(() {
         userDataMap = docData.data();
       });
-      ref.read(pharmacyMainProvider.notifier)
-          .changeUserDataMap(userDataMap);
+      ref.read(pharmacyMainProvider.notifier).changeUserDataMap(userDataMap);
       print(ref.read(pharmacyMainProvider.notifier).userData);
-      print(
-          "First Name: ${ref.read(pharmacyMainProvider.notifier).userData?["firstName"]}");
-      print(
-          "Last Name: ${ref.read(pharmacyMainProvider.notifier).userData?["lastName"]}");
+      print("First Name: ${ref.read(pharmacyMainProvider.notifier).userData?["firstName"]}");
+      print("Last Name: ${ref.read(pharmacyMainProvider.notifier).userData?["lastName"]}");
     });
 
     ref.read(pharmacyMainProvider.notifier).clearDateValues();
@@ -120,10 +113,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
           title: RichText(
             text: TextSpan(
               text: "Job History Pharmacy",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24.0,
-                  color: Colors.black),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24.0, color: Colors.black),
             ),
           ),
           leading: IconButton(
@@ -161,10 +151,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                     size: 50,
                   ),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SearchPharmacistPharmacy()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SearchPharmacistPharmacy()));
                   },
                 ),
               ),
@@ -202,8 +190,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                       children: <int, Widget>{
                         0: Container(
                           alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 34),
+                          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 34),
                           child: segmentedControlGroupValue == 0
                               ? Text(
                                   "Active Jobs",
@@ -215,15 +202,12 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                 )
                               : Text(
                                   "Active Jobs",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                                 ),
                         ),
                         1: Container(
                           alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 40.45),
+                          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40.45),
                           child: segmentedControlGroupValue == 1
                               ? Text(
                                   "Past Jobs",
@@ -235,9 +219,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                 )
                               : Text(
                                   "Past Jobs",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                                 ),
                         ),
                       },
@@ -270,28 +252,23 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                   Expanded(
                     child: StreamBuilder(
                       stream: jobsStreamPharmacy,
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError)
-                          return Text('Error: ${snapshot.error}');
-                        if (!snapshot.hasData)
-                          return Center(child: CircularProgressIndicator());
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
                         if (snapshot.data != null) {
                           snapshot.data?.docs.forEach((doc) {
                             dataID = doc.id;
                             jobDataMap[dataID] = doc.data();
                           });
 
-                          sortedJobDataMap = Map.fromEntries(
-                              jobDataMap.entries.toList()
-                                ..sort((e1, e2) => e1.value["startDate"]
-                                    .compareTo(e2.value["startDate"])));
+                          sortedJobDataMap = Map.fromEntries(jobDataMap.entries.toList()
+                            ..sort((e1, e2) =>
+                                e1.value["startDate"].compareTo(e2.value["startDate"])));
 
                           if (jobDataMap.isEmpty) {
-                            WidgetsBinding.instance
-                                ?.addPostFrameCallback((_) => setState(() {
-                                      jobDataMapEmpty = true;
-                                    }));
+                            WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {
+                                  jobDataMapEmpty = true;
+                                }));
 
                             return Container();
                           } else {
@@ -299,82 +276,59 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                               itemCount: sortedJobDataMap.length,
                               itemBuilder: (BuildContext context, int index) {
-                                String key = sortedJobDataMap.keys
-                                    .elementAt(index)
-                                    .toString();
-                                if (sortedJobDataMap[key]["jobStatus"] ==
-                                    "active") {
+                                String key = sortedJobDataMap.keys.elementAt(index).toString();
+                                if (sortedJobDataMap[key]["jobStatus"] == "active") {
                                   numActiveJobs = 0;
                                   numActiveJobs += 1;
                                 }
-                                if (index == (sortedJobDataMap.length - 1) &&
-                                    numActiveJobs == 0) {
+                                if (index == (sortedJobDataMap.length - 1) && numActiveJobs == 0) {
                                   return Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        10, 10, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                                     child: Material(
                                       elevation: 10,
                                       borderRadius: BorderRadius.circular(20),
                                       child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.95,
+                                        width: MediaQuery.of(context).size.width * 0.95,
                                         height: 50,
                                         child: Center(
                                             child: Text(
                                           "No active jobs found",
-                                          style: TextStyle(
-                                              color: Colors.grey, fontSize: 20),
+                                          style: TextStyle(color: Colors.grey, fontSize: 20),
                                         )),
                                       ),
                                     ),
                                   );
                                 }
-                                if (sortedJobDataMap[key]["jobStatus"] ==
-                                    "past") {
+                                if (sortedJobDataMap[key]["jobStatus"] == "past") {
                                   return Container();
                                 }
 
                                 if (numActiveJobs > 0) {
-                                  if (sortedJobDataMap[key]["jobStatus"] ==
-                                      "active") {
+                                  if (sortedJobDataMap[key]["jobStatus"] == "active") {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Material(
                                         elevation: 10,
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.95,
-                                          constraints:
-                                              BoxConstraints(minHeight: 90),
+                                          width: MediaQuery.of(context).size.width * 0.95,
+                                          constraints: BoxConstraints(minHeight: 90),
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               ListTile(
                                                 title: new Text(
-                                                  DateFormat("MMM d, y").format(
-                                                          DateTime.parse(
-                                                              sortedJobDataMap[
-                                                                          key][
-                                                                      "startDate"]
-                                                                  .toDate()
-                                                                  .toString())) +
+                                                  DateFormat("MMM d, y").format(DateTime.parse(
+                                                          sortedJobDataMap[key]["startDate"]
+                                                              .toDate()
+                                                              .toString())) +
                                                       " to " +
-                                                      DateFormat("MMM d, y")
-                                                          .format(DateTime.parse(
-                                                              sortedJobDataMap[
-                                                                          key][
-                                                                      "endDate"]
-                                                                  .toDate()
-                                                                  .toString())),
-                                                  style:
-                                                      TextStyle(fontSize: 18),
+                                                      DateFormat("MMM d, y").format(DateTime.parse(
+                                                          sortedJobDataMap[key]["endDate"]
+                                                              .toDate()
+                                                              .toString())),
+                                                  style: TextStyle(fontSize: 18),
                                                 ),
                                                 subtitle: Text(
                                                   "${DateFormat("jm").format(DateTime.parse(sortedJobDataMap[key]["startDate"].toDate().toString()))} - "
@@ -383,56 +337,40 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                                   style: TextStyle(
                                                       color: Colors.black54,
                                                       fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                      fontWeight: FontWeight.bold),
                                                 ),
                                                 onTap: () {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              EditShift(
-                                                                jobDataMap:
-                                                                    sortedJobDataMap[
-                                                                        key],
+                                                          builder: (context) => EditShift(
+                                                                jobDataMap: sortedJobDataMap[key],
                                                                 jobUID: key,
                                                               )));
                                                 },
                                               ),
                                               Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.9,
+                                                  width: MediaQuery.of(context).size.width * 0.9,
                                                   child: Divider(
                                                     height: 5,
                                                     thickness: 2,
                                                   )),
                                               Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        17, 5, 0, 10),
+                                                padding: const EdgeInsets.fromLTRB(17, 5, 0, 10),
                                                 child: GestureDetector(
                                                   child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.95,
+                                                    width: MediaQuery.of(context).size.width * 0.95,
                                                     child: Text(
                                                       "Number of Applicants: ${sortedJobDataMap[key]["applicants"] != null ? sortedJobDataMap[key]["applicants"].length : "0"}",
-                                                      textAlign:
-                                                          TextAlign.start,
+                                                      textAlign: TextAlign.start,
                                                       style: TextStyle(
                                                           color: Colors.black54,
                                                           fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                          fontWeight: FontWeight.bold),
                                                     ),
                                                   ),
                                                   onTap: () {
-                                                    if (sortedJobDataMap[key]
-                                                            ["applicants"] !=
+                                                    if (sortedJobDataMap[key]["applicants"] !=
                                                         null) {
                                                       Navigator.push(
                                                           context,
@@ -442,8 +380,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                                                     jodID: key,
                                                                     applicants:
                                                                         sortedJobDataMap[key]
-                                                                            [
-                                                                            "applicants"],
+                                                                            ["applicants"],
                                                                   )));
                                                     }
                                                   },
@@ -457,21 +394,17 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                   }
                                 } else
                                   return Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                     child: Material(
                                       elevation: 10,
                                       borderRadius: BorderRadius.circular(20),
                                       child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.95,
+                                        width: MediaQuery.of(context).size.width * 0.95,
                                         height: 50,
                                         child: Center(
                                             child: Text(
                                           "No active jobs found",
-                                          style: TextStyle(
-                                              color: Colors.grey, fontSize: 20),
+                                          style: TextStyle(color: Colors.grey, fontSize: 20),
                                         )),
                                       ),
                                     ),
@@ -509,27 +442,22 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                   Expanded(
                     child: StreamBuilder(
                       stream: jobsStreamPharmacy,
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError)
-                          return Text('Error: ${snapshot.error}');
-                        if (!snapshot.hasData)
-                          return Center(child: CircularProgressIndicator());
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                        if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
                         if (snapshot.data != null) {
                           snapshot.data?.docs.forEach((doc) {
                             dataID = doc.id;
                             jobDataMap[dataID] = doc.data();
                           });
 
-                          sortedJobDataMap = Map.fromEntries(
-                              jobDataMap.entries.toList()
-                                ..sort((e1, e2) => e1.value["startDate"]
-                                    .compareTo(e2.value["startDate"])));
+                          sortedJobDataMap = Map.fromEntries(jobDataMap.entries.toList()
+                            ..sort((e1, e2) =>
+                                e1.value["startDate"].compareTo(e2.value["startDate"])));
                           if (jobDataMap.isEmpty) {
-                            WidgetsBinding.instance
-                                ?.addPostFrameCallback((_) => setState(() {
-                                      jobDataMapEmpty = true;
-                                    }));
+                            WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {
+                                  jobDataMapEmpty = true;
+                                }));
                             return Container();
                           }
 
@@ -537,70 +465,55 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                             padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                             itemCount: sortedJobDataMap.length,
                             itemBuilder: (BuildContext context, int index) {
-                              String key = sortedJobDataMap.keys
-                                  .elementAt(index)
-                                  .toString();
-                              if (sortedJobDataMap[key]["jobStatus"] ==
-                                  "past") {
+                              String key = sortedJobDataMap.keys.elementAt(index).toString();
+                              if (sortedJobDataMap[key]["jobStatus"] == "past") {
                                 numPastJobs = 0;
                                 numPastJobs += 1;
                               }
-                              if (index == (sortedJobDataMap.length - 1) &&
-                                  numPastJobs == 0) {
+                              if (index == (sortedJobDataMap.length - 1) && numPastJobs == 0) {
                                 return Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                                   child: Material(
                                     elevation: 10,
                                     borderRadius: BorderRadius.circular(20),
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.95,
+                                      width: MediaQuery.of(context).size.width * 0.95,
                                       height: 50,
                                       child: Center(
                                           child: Text(
                                         "No past jobs found",
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 20),
+                                        style: TextStyle(color: Colors.grey, fontSize: 20),
                                       )),
                                     ),
                                   ),
                                 );
                               }
-                              if (sortedJobDataMap[key]["jobStatus"] ==
-                                  "active") {
+                              if (sortedJobDataMap[key]["jobStatus"] == "active") {
                                 return Container();
                               }
 
                               if (numPastJobs > 0) {
-                                if (sortedJobDataMap[key]["jobStatus"] ==
-                                    "past") {
+                                if (sortedJobDataMap[key]["jobStatus"] == "past") {
                                   return Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Material(
                                       elevation: 10,
                                       borderRadius: BorderRadius.circular(20),
                                       child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.95,
+                                        width: MediaQuery.of(context).size.width * 0.95,
                                         height: 90,
                                         child: Center(
                                           child: ListTile(
                                             title: new Text(
-                                              DateFormat("MMMM d, y").format(
-                                                      DateTime.parse(
-                                                          sortedJobDataMap[key]
-                                                                  ["startDate"]
-                                                              .toDate()
-                                                              .toString())) +
+                                              DateFormat("MMMM d, y").format(DateTime.parse(
+                                                      sortedJobDataMap[key]["startDate"]
+                                                          .toDate()
+                                                          .toString())) +
                                                   " to " +
-                                                  DateFormat("MMMM d, y")
-                                                      .format(DateTime.parse(
-                                                          sortedJobDataMap[key]
-                                                                  ["endDate"]
-                                                              .toDate()
-                                                              .toString())),
+                                                  DateFormat("MMMM d, y").format(DateTime.parse(
+                                                      sortedJobDataMap[key]["endDate"]
+                                                          .toDate()
+                                                          .toString())),
                                               style: TextStyle(fontSize: 18),
                                             ),
                                             subtitle: Text(
@@ -626,8 +539,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                     elevation: 10,
                                     borderRadius: BorderRadius.circular(20),
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.95,
+                                      width: MediaQuery.of(context).size.width * 0.95,
                                       height: 90,
                                       child: Center(
                                         child: ListTile(
@@ -696,9 +608,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Home",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -706,9 +616,7 @@ class SideMenuDrawer extends ConsumerWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => JobHistoryPharmacy()));
+                    context, MaterialPageRoute(builder: (context) => JobHistoryPharmacy()));
               },
             ),
 
@@ -727,17 +635,14 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Profile",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
                 ],
               ),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PharmacyProfile()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PharmacyProfile()));
               },
             ),
 
@@ -756,9 +661,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Terms of Service",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -788,9 +691,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Privacy Policy",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -828,9 +729,7 @@ class SideMenuDrawer extends ConsumerWidget {
                       text: TextSpan(
                         text: "Sign Out",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.blue),
+                            fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
                       ),
                     ),
                   ),
@@ -843,12 +742,10 @@ class SideMenuDrawer extends ConsumerWidget {
                   ref.read(pharmacyMainProvider.notifier).resetValues();
                   ref.read(pharmacySignUpProvider.notifier).resetValues();
                 });
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => PharmaConnect()),
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => ConnectPharma()),
                     result: Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PharmaConnect())));
+                        context, MaterialPageRoute(builder: (context) => ConnectPharma())));
               },
             ),
           ],
@@ -880,17 +777,10 @@ class _CreateDrawerHeader extends ConsumerWidget {
                 radius: 30,
                 backgroundColor: Colors.grey,
                 child: Text(
-                    getInitials(
-                        ref
-                            .read(pharmacyMainProvider.notifier)
-                            .userData?["firstName"],
-                        ref
-                            .read(pharmacyMainProvider.notifier)
-                            .userData?["lastName"]),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold)),
+                    getInitials(ref.read(pharmacyMainProvider.notifier).userData?["firstName"],
+                        ref.read(pharmacyMainProvider.notifier).userData?["lastName"]),
+                    style:
+                        TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold)),
               ),
             ),
             Column(
@@ -901,17 +791,11 @@ class _CreateDrawerHeader extends ConsumerWidget {
                   padding: EdgeInsets.fromLTRB(15, 8, 0, 5),
                   child: RichText(
                     text: TextSpan(
-                      text: ref
-                              .read(pharmacyMainProvider.notifier)
-                              .userData?["firstName"] +
+                      text: ref.read(pharmacyMainProvider.notifier).userData?["firstName"] +
                           " " +
-                          ref
-                              .read(pharmacyMainProvider.notifier)
-                              .userData?["lastName"],
+                          ref.read(pharmacyMainProvider.notifier).userData?["lastName"],
                       style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.0,
-                          color: Colors.black),
+                          fontWeight: FontWeight.w700, fontSize: 18.0, color: Colors.black),
                     ),
                   ),
                 ),
@@ -919,13 +803,9 @@ class _CreateDrawerHeader extends ConsumerWidget {
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: RichText(
                     text: TextSpan(
-                      text: ref
-                          .read(pharmacyMainProvider.notifier)
-                          .userData?["email"],
+                      text: ref.read(pharmacyMainProvider.notifier).userData?["email"],
                       style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13.0,
-                          color: Colors.black),
+                          fontWeight: FontWeight.w400, fontSize: 13.0, color: Colors.black),
                     ),
                   ),
                 ),

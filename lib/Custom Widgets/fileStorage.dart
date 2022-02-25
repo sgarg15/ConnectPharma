@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_interpolations
+
 library basic_local_file_storage;
 
 import 'dart:async';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/all_used.dart';
+import 'package:connectpharma/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
 import '../../../../main.dart';
 
@@ -11,12 +11,10 @@ class PharmacyManagerInformation extends ConsumerStatefulWidget {
   PharmacyManagerInformation({Key? key}) : super(key: key);
 
   @override
-  _PharmacyManagerInformationState createState() =>
-      _PharmacyManagerInformationState();
+  _PharmacyManagerInformationState createState() => _PharmacyManagerInformationState();
 }
 
-class _PharmacyManagerInformationState
-    extends ConsumerState<PharmacyManagerInformation> {
+class _PharmacyManagerInformationState extends ConsumerState<PharmacyManagerInformation> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool disableButton = false;
 
@@ -55,8 +53,7 @@ class _PharmacyManagerInformationState
                   child: RichText(
                     textAlign: TextAlign.left,
                     text: TextSpan(
-                      text:
-                          "Please provide us with the Pharmacies Owner’s contact information.",
+                      text: "Please provide us with the Pharmacies Owner’s contact information.",
                       style: GoogleFonts.questrial(
                         fontSize: 15,
                         color: Colors.black,
@@ -84,19 +81,18 @@ class _PharmacyManagerInformationState
                         hintText: "Enter manager's First Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String managerFirstName) {
-                          ref.read(pharmacySignUpProvider.notifier)
+                          ref
+                              .read(pharmacySignUpProvider.notifier)
                               .changeManagerFirstName(managerFirstName);
                         },
                         validation: (value) {
-                          if (!RegExp(
-                                  r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                          if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
                               .hasMatch(value)) {
                             return "Invalid field";
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacySignUpProvider.notifier)
-                            .managerFirstName,
+                        initialValue: ref.read(pharmacySignUpProvider.notifier).managerFirstName,
                       ),
                       SizedBox(height: 20),
 
@@ -106,19 +102,18 @@ class _PharmacyManagerInformationState
                         hintText: "Enter manager's Last Name...",
                         keyboardStyle: TextInputType.name,
                         onChanged: (String managerLastName) {
-                          ref.read(pharmacySignUpProvider.notifier)
+                          ref
+                              .read(pharmacySignUpProvider.notifier)
                               .changeMangagerLastName(managerLastName);
                         },
                         validation: (value) {
-                          if (!RegExp(
-                                  r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                          if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
                               .hasMatch(value)) {
                             return "Invalid field";
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacySignUpProvider.notifier)
-                            .managerLastName,
+                        initialValue: ref.read(pharmacySignUpProvider.notifier).managerLastName,
                       ),
                       SizedBox(height: 20),
 
@@ -128,7 +123,8 @@ class _PharmacyManagerInformationState
                         hintText: "+1 234 567 8910",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String managerPhoneNumber) {
-                          ref.read(pharmacySignUpProvider.notifier)
+                          ref
+                              .read(pharmacySignUpProvider.notifier)
                               .changeManagerPhoneNumber(managerPhoneNumber);
                         },
                         validation: (value) {
@@ -137,8 +133,7 @@ class _PharmacyManagerInformationState
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacySignUpProvider.notifier)
-                            .managerPhoneNumber,
+                        initialValue: ref.read(pharmacySignUpProvider.notifier).managerPhoneNumber,
                         formatter: [PhoneInputFormatter()],
                       ),
                       SizedBox(height: 20),
@@ -149,7 +144,8 @@ class _PharmacyManagerInformationState
                         hintText: "Enter license Number...",
                         keyboardStyle: TextInputType.number,
                         onChanged: (String licenseNumber) {
-                          ref.read(pharmacySignUpProvider.notifier)
+                          ref
+                              .read(pharmacySignUpProvider.notifier)
                               .changeLicenseNumber(licenseNumber);
                         },
                         validation: (value) {
@@ -158,8 +154,7 @@ class _PharmacyManagerInformationState
                           }
                           return null;
                         },
-                        initialValue: ref.read(pharmacySignUpProvider.notifier)
-                            .licenseNumber,
+                        initialValue: ref.read(pharmacySignUpProvider.notifier).licenseNumber,
                       ),
                       SizedBox(height: 20),
                     ],
@@ -203,16 +198,14 @@ class _PharmacyManagerInformationState
                       setState(() {
                         disableButton = true;
                       });
-                      
                       ref
                           .read(authProvider.notifier)
                           .registerWithEmailAndPassword(
                               ref.read(pharmacySignUpProvider.notifier).email.toString(),
                               ref.read(pharmacySignUpProvider.notifier).password.toString())
                           .then((value) async {
-                      
                         print("UPLOADING DATA");
-                        
+
                         if (value == null) {
                           print("ERROR");
                           final snackBar = SnackBar(
@@ -238,7 +231,7 @@ class _PharmacyManagerInformationState
                             await value?.user?.sendEmailVerification().then((_) {
                               ref.read(pharmacySignUpProvider.notifier).resetValues();
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => PharmaConnect()));
+                                  MaterialPageRoute(builder: (context) => ConnectPharma()));
                               showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
@@ -274,6 +267,6 @@ class _PharmacyManagerInformationState
           );
         },
       ),
-            );
+    );
   }
 }

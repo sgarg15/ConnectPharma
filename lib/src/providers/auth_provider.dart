@@ -3,15 +3,14 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated, Registering }
 
@@ -360,6 +359,7 @@ class AuthProvider extends ChangeNotifier {
     } catch (error) {
       return "Profile Upload Failed";
     }
+    return null;
   }
 
   Future<String?>? updatePharmacistUserInformation(
@@ -369,6 +369,7 @@ class AuthProvider extends ChangeNotifier {
     } catch (error) {
       return "Profile Upload Failed";
     }
+    return null;
   }
 
   Future<UserCredential?> uploadTestInformaiton(UserCredential? user, BuildContext context) async {
@@ -450,7 +451,8 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<UserCredential?>? uploadAvailalibitlityData(String userUID, Map dataUpload, bool? permanentJobBool) async {
+  Future<UserCredential?>? uploadAvailalibitlityData(
+      String userUID, Map dataUpload, bool? permanentJobBool) async {
     if (dataUpload.isEmpty) {
       users.doc(userUID).collection("SignUp").doc("Information").set({
         "permanentJob": permanentJobBool,
@@ -465,7 +467,8 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<UserCredential?>? uploadJobToPharmacy(WidgetRef ref, String? userUID, BuildContext context) async {
+  Future<UserCredential?>? uploadJobToPharmacy(
+      WidgetRef ref, String? userUID, BuildContext context) async {
     users.doc(userUID).collection("Main").add({
       "userType": "Pharmacy",
       "position": ref.read(pharmacyMainProvider).position,
@@ -495,6 +498,7 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       return "Job Delete Failed";
     }
+    return null;
   }
 
   Future<String?>? updateJobInformation(
@@ -504,6 +508,7 @@ class AuthProvider extends ChangeNotifier {
     } catch (error) {
       return "Profile Upload Failed";
     }
+    return null;
   }
 
   //Method to handle user sign in using email and password
@@ -562,6 +567,7 @@ class AuthProvider extends ChangeNotifier {
       _status = Status.Unauthenticated;
       return [null, null, error.code];
     }
+    return null;
   }
 
   Future<String?> getCurrentUserData(String? userUID) async {
@@ -588,6 +594,7 @@ class AuthProvider extends ChangeNotifier {
       //Send to pharmacy main page
       return "Pharmacy Technician";
     }
+    return null;
   }
 
   // Future<UserModel?> signInWithGoogle() async {
@@ -622,6 +629,11 @@ class AuthProvider extends ChangeNotifier {
   //Method to handle password reset email
   Future<void> sendPasswordResetEmail(String email) async {
     await _auth.sendPasswordResetEmail(email: email);
+  }
+
+  //method to delete user account from firebase auth
+  Future<void> deleteUserAccount() async {
+    await _auth.currentUser?.delete();
   }
 
   //Method to handle user signing out

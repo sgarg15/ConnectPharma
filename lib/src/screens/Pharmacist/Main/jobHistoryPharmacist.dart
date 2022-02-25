@@ -5,16 +5,16 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/main.dart';
-import 'package:pharma_connect/model/pharmacistMainModel.dart';
-import 'package:pharma_connect/src/providers/auth_provider.dart';
-import 'package:pharma_connect/src/providers/pharmacist_mainProvider.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/findShiftPharmacist.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/notifications.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistAvailibility.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/pharmacistProfile.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign%20Up/1pharmacistSignUp.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/main.dart';
+import 'package:connectpharma/model/pharmacistMainModel.dart';
+import 'package:connectpharma/src/providers/auth_provider.dart';
+import 'package:connectpharma/src/providers/pharmacist_mainProvider.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/findShiftPharmacist.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/notifications.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/pharmacistAvailibility.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/pharmacistProfile.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign%20Up/1pharmacistSignUp.dart';
+import 'package:connectpharma/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
 import '../../../../Custom Widgets/fileStorage.dart';
@@ -62,8 +62,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
   Map rejectedJobDataMap = Map();
 
   void clearFilesOrDirectory() async {
-    print(
-        "All Files Local: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}")}");
+    print("All Files Local: ${localStorage.allDirectoryFiles(path: await localStorage.localPath)}");
 
     final directory = Directory("${await localStorage.localPath}/jobsList");
     //directory.deleteSync(recursive: true);
@@ -86,13 +85,12 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
     print("Jobs List Directory: $jobsListDirectoryPath");
 
-    print("All Files: ${localStorage.allDirectoryFiles(path: "$jobsListDirectoryPath")}");
-    print("All User Files: ${localStorage.allDirectoryFiles(path: "$userDirectoryPath")}");
+    print("All Files: ${localStorage.allDirectoryFiles(path: jobsListDirectoryPath)}");
+    print("All User Files: ${localStorage.allDirectoryFiles(path: userDirectoryPath)}");
 
-    print("All User Jobs Storage: ${localStorage.readFile(filePath: "$userJobsFilePath")}");
+    print("All User Jobs Storage: ${localStorage.readFile(filePath: userJobsFilePath)}");
 
-    print(
-        "All User Notifications: ${localStorage.readFile(filePath: "$userNotificationsFilePath")}");
+    print("All User Notifications: ${localStorage.readFile(filePath: userNotificationsFilePath)}");
 
     if (!File(userNotificationsFilePath).existsSync()) {
       File(userNotificationsFilePath).createSync();
@@ -319,10 +317,10 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
       });
       ref.read(pharmacistMainProvider.notifier).changeUserDataMap(userDataMap);
       print("UserData Map: ${ref.read(pharmacistMainProvider.notifier).userDataMap}");
-      if (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"].isEmpty) { 
+      if (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"].isEmpty) {
         showDialog(
             context: context,
-            builder: (context) => AlertDialog(
+            builder: (context) => const AlertDialog(
                   title: Text("Availability Status"),
                   content: Text(
                       "Please fill out your availability to use this app to its full potential. And allow pharmacies to discover your profile."),
@@ -401,7 +399,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        backgroundColor: Color(0xFFE3E3E3),
+        backgroundColor: const Color(0xFFE3E3E3),
         key: _scaffoldKey,
         drawer: SideMenuDrawer(
           jobsStreamSub: jobsStreamSub,
@@ -412,13 +410,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
           centerTitle: true,
           backgroundColor: Colors.white,
           title: RichText(
-            text: TextSpan(
+            text: const TextSpan(
               text: "Job History",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24.0, color: Colors.black),
             ),
           ),
           leading: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
               color: Colors.black,
             ),
@@ -433,12 +431,12 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                   new Positioned(
                     right: 0,
                     child: new Container(
-                      padding: EdgeInsets.all(1),
+                      padding: const EdgeInsets.all(1),
                       decoration: new BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         minWidth: 12,
                         minHeight: 12,
                       ),
@@ -454,7 +452,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                   )
                 ],
               ),
-              color: Color(0xFF5DB075),
+              color: const Color(0xFF5DB075),
               onPressed: () {
                 Navigator.push(
                     context,
@@ -468,7 +466,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         ),
         bottomNavigationBar: Container(
           height: 55,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
@@ -483,7 +481,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GestureDetector(
-                child: Icon(
+                child: const Icon(
                   Icons.search,
                   color: Color(0xFF5DB075),
                   size: 50,
@@ -501,7 +499,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     : () {
                         showDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
+                            builder: (context) => const AlertDialog(
                                   title: Text("Availability Status"),
                                   content: Text(
                                       "Please fill out your availability to use this app to its full potential. And allow pharmacies to discover your profile."),
@@ -517,12 +515,12 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             children: <Widget>[
               //Slider
               Container(
-                padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
                 width: MediaQuery.of(context).size.width,
                 height: 75,
                 alignment: Alignment.topCenter,
                 //color: Colors.white,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -535,15 +533,15 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 ),
                 child: CupertinoSlidingSegmentedControl(
                     thumbColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                    backgroundColor: Color(0xFFC4C4C4),
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                    backgroundColor: const Color(0xFFC4C4C4),
                     groupValue: segmentedControlGroupValue,
                     children: <int, Widget>{
                       0: Container(
                         alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 34),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 34),
                         child: segmentedControlGroupValue == 0
-                            ? Text(
+                            ? const Text(
                                 "Active Jobs",
                                 style: TextStyle(
                                   color: Color(0xFF5DB075),
@@ -551,16 +549,16 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                                   fontSize: 17,
                                 ),
                               )
-                            : Text(
+                            : const Text(
                                 "Active Jobs",
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                               ),
                       ),
                       1: Container(
                         alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40.45),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40.45),
                         child: segmentedControlGroupValue == 1
-                            ? Text(
+                            ? const Text(
                                 "Past Jobs",
                                 style: TextStyle(
                                   color: Color(0xFF5DB075),
@@ -568,7 +566,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                                   fontSize: 17,
                                 ),
                               )
-                            : Text(
+                            : const Text(
                                 "Past Jobs",
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                               ),
@@ -586,7 +584,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     stream: jobsStreamPharmacist,
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+                      if (!snapshot.hasData)
+                        return const Center(child: CircularProgressIndicator());
                       if (snapshot.data != null) {
                         appliedJobDataMap.clear();
                         currentJobDataMap.clear();
@@ -622,7 +621,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     stream: jobsStreamPharmacist,
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+                      if (!snapshot.hasData)
+                        return const Center(child: CircularProgressIndicator());
                       if (snapshot.data != null) {
                         snapshot.data?.docs.forEach((doc) {
                           if ((doc.data() as Map)["applicationStatus"] == "past") {
@@ -666,14 +666,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         Expanded(
           child: new Container(
               margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: Divider(
+              child: const Divider(
                 color: Colors.grey,
                 height: 36,
                 thickness: 4,
               )),
         ),
       ]),
-      if (currentJobDataMap.length == 0)
+      if (currentJobDataMap.isEmpty)
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
           child: Material(
@@ -682,7 +682,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
               height: 30,
-              child: Center(
+              child: const Center(
                   child: Text(
                 "No current jobs found",
                 style: TextStyle(color: Colors.grey, fontSize: 15),
@@ -704,7 +704,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.95,
-                  constraints: BoxConstraints(minHeight: 90),
+                  constraints: const BoxConstraints(minHeight: 90),
                   child: Center(
                     child: ListTile(
                       title: new Text(
@@ -713,13 +713,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                             " to " +
                             DateFormat("MMM d, y").format(DateTime.parse(
                                 currentJobDataMap[key]["endDate"].toDate().toString())),
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(
                         "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["startDate"].toDate().toString()))} - "
                         "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["endDate"].toDate().toString()))} \n"
                         "${currentJobDataMap[key]["hourlyRate"] + "/hr"}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
@@ -754,14 +754,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         Expanded(
           child: new Container(
               margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: Divider(
+              child: const Divider(
                 color: Colors.grey,
                 height: 36,
                 thickness: 4,
               )),
         ),
       ]),
-      if (appliedJobDataMap.length == 0)
+      if (appliedJobDataMap.isEmpty)
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
           child: Material(
@@ -770,7 +770,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
               height: 30,
-              child: Center(
+              child: const Center(
                   child: Text(
                 "No applied jobs found",
                 style: TextStyle(color: Colors.grey, fontSize: 15),
@@ -792,7 +792,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.95,
-                  constraints: BoxConstraints(minHeight: 90),
+                  constraints: const BoxConstraints(minHeight: 90),
                   child: Center(
                     child: ListTile(
                       title: new Text(
@@ -801,13 +801,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                             " to " +
                             DateFormat("MMM d, y").format(DateTime.parse(
                                 appliedJobDataMap[key]["endDate"].toDate().toString())),
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(
                         "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["startDate"].toDate().toString()))} - "
                         "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["endDate"].toDate().toString()))} \n"
                         "${appliedJobDataMap[key]["hourlyRate"] + "/hr"}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
@@ -842,14 +842,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         Expanded(
           child: new Container(
               margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: Divider(
+              child: const Divider(
                 color: Colors.grey,
                 height: 36,
                 thickness: 4,
               )),
         ),
       ]),
-      if (pastJobDataMap.length == 0)
+      if (pastJobDataMap.isEmpty)
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
           child: Material(
@@ -858,7 +858,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
               height: 30,
-              child: Center(
+              child: const Center(
                   child: Text(
                 "No past jobs found",
                 style: TextStyle(color: Colors.grey, fontSize: 15),
@@ -880,7 +880,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.95,
-                  constraints: BoxConstraints(minHeight: 90),
+                  constraints: const BoxConstraints(minHeight: 90),
                   child: Center(
                     child: ListTile(
                       title: new Text(
@@ -889,13 +889,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                             " to " +
                             DateFormat("MMM d, y").format(
                                 DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString())),
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(
                         "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["startDate"].toDate().toString()))} - "
                         "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString()))} \n"
                         "${pastJobDataMap[key]["hourlyRate"] + "/hr"}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
@@ -930,14 +930,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         Expanded(
           child: new Container(
               margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: Divider(
+              child: const Divider(
                 color: Colors.grey,
                 height: 36,
                 thickness: 4,
               )),
         ),
       ]),
-      if (rejectedJobDataMap.length == 0)
+      if (rejectedJobDataMap.isEmpty)
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
           child: Material(
@@ -946,7 +946,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
               height: 30,
-              child: Center(
+              child: const Center(
                   child: Text(
                 "No rejected jobs found",
                 style: TextStyle(color: Colors.grey, fontSize: 15),
@@ -968,7 +968,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.95,
-                  constraints: BoxConstraints(minHeight: 90),
+                  constraints: const BoxConstraints(minHeight: 90),
                   child: Center(
                     child: ListTile(
                       title: new Text(
@@ -977,13 +977,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                             " to " +
                             DateFormat("MMM d, y").format(DateTime.parse(
                                 rejectedJobDataMap[key]["endDate"].toDate().toString())),
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       subtitle: Text(
                         "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["startDate"].toDate().toString()))} - "
                         "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["endDate"].toDate().toString()))} \n"
                         "${rejectedJobDataMap[key]["hourlyRate"] + "/hr"}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       onTap: () {
@@ -1023,17 +1023,17 @@ class SideMenuDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      constraints: BoxConstraints(minWidth: 250, maxWidth: 290),
+      constraints: const BoxConstraints(minWidth: 250, maxWidth: 290),
       child: Drawer(
         child: Column(
           children: <Widget>[
             //Drawer Header
-            _CreateDrawerHeader(),
+            const _CreateDrawerHeader(),
             //Home Button
             ListTile(
               title: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.home,
                     color: Colors.lightBlue,
                     size: 30,
@@ -1041,7 +1041,7 @@ class SideMenuDrawer extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                     child: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: "Home",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
@@ -1060,7 +1060,7 @@ class SideMenuDrawer extends ConsumerWidget {
             ListTile(
               title: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.person,
                     color: Colors.lightBlue,
                     size: 30,
@@ -1068,7 +1068,7 @@ class SideMenuDrawer extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                     child: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: "Profile",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
@@ -1087,7 +1087,7 @@ class SideMenuDrawer extends ConsumerWidget {
             ListTile(
               title: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.event_available,
                     color: Colors.lightBlue,
                     size: 30,
@@ -1095,7 +1095,7 @@ class SideMenuDrawer extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                     child: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: "Availability",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
@@ -1114,7 +1114,7 @@ class SideMenuDrawer extends ConsumerWidget {
             ListTile(
               title: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.info_outline,
                     color: Colors.lightBlue,
                     size: 30,
@@ -1122,7 +1122,7 @@ class SideMenuDrawer extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                     child: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: "Terms of Service",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
@@ -1144,7 +1144,7 @@ class SideMenuDrawer extends ConsumerWidget {
             ListTile(
               title: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.info_outline,
                     color: Colors.lightBlue,
                     size: 30,
@@ -1152,7 +1152,7 @@ class SideMenuDrawer extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                     child: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: "Privacy Policy",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
@@ -1171,7 +1171,7 @@ class SideMenuDrawer extends ConsumerWidget {
             ),
 
             //Sign Out Button
-            Expanded(
+            const Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Divider(
@@ -1182,7 +1182,7 @@ class SideMenuDrawer extends ConsumerWidget {
             ListTile(
               title: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.exit_to_app,
                     color: Colors.lightBlue,
                     size: 30,
@@ -1190,7 +1190,7 @@ class SideMenuDrawer extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                     child: RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         text: "Sign Out",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 17.0, color: Colors.blue),
@@ -1207,9 +1207,9 @@ class SideMenuDrawer extends ConsumerWidget {
                   ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
                 });
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => PharmaConnect()),
+                    context, MaterialPageRoute(builder: (context) => ConnectPharma()),
                     result: Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (context) => PharmaConnect())));
+                        context, MaterialPageRoute(builder: (context) => ConnectPharma())));
               },
             ),
           ],
@@ -1231,7 +1231,7 @@ class _CreateDrawerHeader extends ConsumerWidget {
       height: 140,
       child: DrawerHeader(
         margin: EdgeInsets.zero,
-        padding: EdgeInsets.fromLTRB(17, 24, 0, 0),
+        padding: const EdgeInsets.fromLTRB(17, 24, 0, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1249,25 +1249,25 @@ class _CreateDrawerHeader extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.fromLTRB(15, 8, 0, 5),
+                  padding: const EdgeInsets.fromLTRB(15, 8, 0, 5),
                   child: RichText(
                     text: TextSpan(
                       //change to retrieve name from Firestore
                       text: ref.read(pharmacistMainProvider.notifier).userDataMap?["firstName"] +
                           " " +
                           ref.read(pharmacistMainProvider.notifier).userDataMap?["lastName"],
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.w700, fontSize: 18.0, color: Colors.black),
                     ),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                   child: RichText(
                     text: TextSpan(
                       //change to retrieve email from firestore
                       text: ref.read(pharmacistMainProvider.notifier).userDataMap?["email"],
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.w400, fontSize: 13.0, color: Colors.black),
                     ),
                   ),

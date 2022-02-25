@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/6photoInformation.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/6photoInformation.dart';
 import 'package:signature/signature.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_file/open_file.dart';
@@ -18,21 +18,17 @@ class PharmacistSkills extends ConsumerStatefulWidget {
 }
 
 class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
-  final _softwareItems = software
-      .map((software) => MultiSelectItem<Software>(software, software.name))
-      .toList();
-  final _skillItems =
-      skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+  final _softwareItems =
+      software.map((software) => MultiSelectItem<Software>(software, software.name)).toList();
+  final _skillItems = skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
 
-  final _languageItems = language
-      .map((language) => MultiSelectItem<Language>(language, language.name))
-      .toList();
+  final _languageItems =
+      language.map((language) => MultiSelectItem<Language>(language, language.name)).toList();
 
   final SignatureController _sigController = SignatureController(
     penStrokeWidth: 3, //you can set pen stroke with by changing this value
     penColor: Colors.black, // change your pen color
-    exportBackgroundColor:
-        Colors.white, //set the color you want to see in final result
+    exportBackgroundColor: Colors.white, //set the color you want to see in final result
   );
 
   bool filePicked = false;
@@ -91,8 +87,7 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                 child: RichText(
                   textAlign: TextAlign.left,
                   text: TextSpan(
-                    text:
-                        "Please select all applicable skills, software and languages",
+                    text: "Please select all applicable skills, software and languages",
                     style: GoogleFonts.questrial(
                       fontSize: 15,
                       color: Colors.black,
@@ -185,19 +180,19 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                     },
               child: RichText(
                 text: TextSpan(
-                        text: "Next",
+                  text: "Next",
                   style: TextStyle(
                     fontSize: 16,
-                          color: Colors.white,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
                   ),
-          );
-        },
+                ),
+              ),
             ),
           );
+        },
+      ),
+    );
   }
 
   Column selectResume(BuildContext context) {
@@ -310,7 +305,7 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                     });
                     file = File(_result!.files.first.path.toString());
 
-                                  ref.read(pharmacistSignUpProvider.notifier).changeResumePDF(file);
+                    ref.read(pharmacistSignUpProvider.notifier).changeResumePDF(file);
                     print(ref.read(pharmacistSignUpProvider.notifier).resumePDFData);
                   } else {
                     // User canceled the picker
@@ -338,7 +333,7 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
             ),
           )
       ],
-                  );
+    );
   }
 
   Column selectLanguages() {
@@ -349,14 +344,14 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
         RichText(
           textAlign: TextAlign.left,
           text: TextSpan(
-                            text: "Languages",
+              text: "Languages",
               style: GoogleFonts.questrial(
-                              fontSize: 16,
+                fontSize: 16,
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
               )),
         ),
-                      SizedBox(height: 10),
+        SizedBox(height: 10),
         Container(
           width: 335,
           decoration: BoxDecoration(
@@ -367,7 +362,7 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                   spreadRadius: 0.5,
                   color: Colors.grey.shade400)
             ],
-                          color: Color(0xFFF0F0F0),
+            color: Color(0xFFF0F0F0),
             border: Border.all(
               color: Color(0xFFE8E8E8),
               width: 2,
@@ -403,11 +398,11 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                   },
                   textStyle: TextStyle(color: Colors.white),
                 ),
-                            ),
-                          ],
-                        ),
+              ),
+            ],
+          ),
         ),
-                    ],
+      ],
     );
   }
 
@@ -418,11 +413,11 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
       children: <Widget>[
         RichText(
           textAlign: TextAlign.left,
-                        text: TextSpan(
-                            text: "Skill",
+          text: TextSpan(
+              text: "Skill",
               style: GoogleFonts.questrial(
                 fontSize: 16,
-                              color: Colors.black,
+                color: Colors.black,
                 fontWeight: FontWeight.w500,
               )),
         ),
@@ -474,11 +469,11 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                   textStyle: TextStyle(color: Colors.white),
                 ),
               ),
-                          ],
-                        ),
+            ],
+          ),
         ),
-                    ],
-                  );
+      ],
+    );
   }
 
   Column selectSoftware() {
@@ -540,15 +535,15 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
                   onTap: (value) {
                     ref.read(pharmacistSignUpProvider.notifier).softwareList?.remove(value);
                     return ref.read(pharmacistSignUpProvider.notifier).softwareList;
-                                },
-                                textStyle: TextStyle(color: Colors.white),
-                              ),
+                  },
+                  textStyle: TextStyle(color: Colors.white),
+                ),
               ),
-                          ],
+            ],
           ),
         ),
-                    ],
-                  );
+      ],
+    );
   }
 }
 
@@ -575,10 +570,8 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
       height: 40,
       child: ElevatedButton(
         style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ))),
         onPressed: () {
@@ -625,14 +618,13 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                           child: TextButton.icon(
                             clipBehavior: Clip.none,
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xFF5DB075)),
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
                             ),
                             onPressed: () async {
                               if (widget._sigController.isNotEmpty) {
-                                ref.read(pharmacistSignUpProvider.notifier)
-                                    .changeSignature(await widget._sigController
-                                        .toPngBytes());
+                                ref
+                                    .read(pharmacistSignUpProvider.notifier)
+                                    .changeSignature(await widget._sigController.toPngBytes());
                                 setState(() {
                                   signatureSaved = true;
                                 });
@@ -647,8 +639,7 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                             ),
                             label: Text(
                               "Apply",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              style: TextStyle(color: Colors.white, fontSize: 13),
                             ),
                           ),
                         ),

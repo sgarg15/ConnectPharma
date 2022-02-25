@@ -6,11 +6,11 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
-import 'package:pharma_connect/src/screens/autoLogin.dart';
-import 'package:pharma_connect/src/screens/login.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
+import './src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
+import './src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import './src/screens/autoLogin.dart';
+import './src/screens/login.dart';
+import './src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
 import 'src/providers/auth_provider.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -30,10 +30,10 @@ Future<void> main() async {
   //String? token = await FirebaseAppCheck.instance.getToken();
   //print("The token is: $token");
 
-  const bool USE_EMULATOR = false;
+  const bool useEmulator = false;
 
   // ignore: dead_code
-  if (USE_EMULATOR) {
+  if (useEmulator) {
     const localHostString = "192.168.1.93";
     // [Firestore | localhost:8080]
     FirebaseFirestore.instance.settings = const Settings(
@@ -47,31 +47,33 @@ Future<void> main() async {
 
     // [Storage | localhost:9199]
     await FirebaseStorage.instance.useStorageEmulator(
-      "$localHostString",
+      localHostString,
       9199,
     );
 
     FirebaseFunctions functions = FirebaseFunctions.instance;
-    functions.useFunctionsEmulator("$localHostString", 5001);
+    functions.useFunctionsEmulator(localHostString, 5001);
   }
 
   await dotenv.load();
   runApp(
-    ProviderScope(
+    const ProviderScope(
       child: MaterialApp(
-        home: PharmaConnect(),
+        home: ConnectPharma(),
         debugShowCheckedModeBanner: false,
       ),
     ),
   );
 }
 
-class PharmaConnect extends ConsumerStatefulWidget {
+class ConnectPharma extends ConsumerStatefulWidget {
+  const ConnectPharma({Key? key}) : super(key: key);
+
   @override
-  _PharmaConnectState createState() => _PharmaConnectState();
+  _ConnectPharmaState createState() => _ConnectPharmaState();
 }
 
-class _PharmaConnectState extends ConsumerState<PharmaConnect> {
+class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
   @override
   void initState() {
     super.initState();
@@ -98,9 +100,9 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
           children: <Widget>[
             //Pharma Text
             Container(
-              alignment: Alignment(-0.45, -0.55),
+              alignment: const Alignment(-0.45, -0.55),
               child: RichText(
-                text: TextSpan(
+                text: const TextSpan(
                   text: "Pharma",
                   style:
                       TextStyle(fontWeight: FontWeight.w300, fontSize: 50.0, color: Colors.black),
@@ -111,9 +113,9 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
             Container(
               //top: 240,
               // left: 130,
-              alignment: Alignment(0.45, -0.35),
+              alignment: const Alignment(0.45, -0.35),
               child: RichText(
-                text: TextSpan(
+                text: const TextSpan(
                   text: "Connect",
                   style:
                       TextStyle(fontWeight: FontWeight.w300, fontSize: 50.0, color: Colors.black),
@@ -123,9 +125,9 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
             //Register Text
             Container(
               //top: 360,
-              alignment: Alignment(0, -0.1),
+              alignment: const Alignment(0, -0.1),
               child: RichText(
-                text: TextSpan(
+                text: const TextSpan(
                   text: "Register",
                   style:
                       TextStyle(fontWeight: FontWeight.w300, fontSize: 35.0, color: Colors.black),
@@ -134,7 +136,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
             ),
             //Button For Pharmacist Registration
             Container(
-              alignment: Alignment(0, 0.1),
+              alignment: const Alignment(0, 0.1),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -149,7 +151,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
                                 )));
                   },
                   child: RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       text: "Pharmacist",
                       style: TextStyle(
                         fontSize: 20,
@@ -162,7 +164,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
 
             //Pharmacy Assistant
             Container(
-              alignment: Alignment(0, 0.3),
+              alignment: const Alignment(0, 0.3),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -177,7 +179,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
                                 )));
                   },
                   child: RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       text: "Pharmacy Assistant",
                       style: TextStyle(
                         fontSize: 20,
@@ -190,7 +192,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
 
             //Pharmacy Technician
             Container(
-              alignment: Alignment(0, 0.5),
+              alignment: const Alignment(0, 0.5),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -205,7 +207,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
                                 )));
                   },
                   child: RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       text: "Pharmacy Technician",
                       style: TextStyle(
                         fontSize: 20,
@@ -218,7 +220,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
 
             //Button For Pharmacy Registration
             Container(
-              alignment: Alignment(0, 0.7),
+              alignment: const Alignment(0, 0.7),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -226,10 +228,10 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
                   onPressed: () {
                     //Send to Pharmacy Sign Up Page
                     Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => PharmacySignUpPage()));
+                        context, MaterialPageRoute(builder: (context) => const PharmacySignUpPage()));
                   },
                   child: RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       text: "Pharmacy",
                       style: TextStyle(
                         fontSize: 20,
@@ -340,10 +342,10 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
 
             //Log In Text and Button
             Container(
-              alignment: Alignment(0, 0.95),
+              alignment: const Alignment(0, 0.95),
               child: GestureDetector(
                 child: RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                     text: "Log In",
                     style: TextStyle(
                       fontWeight: FontWeight.w300,
@@ -356,7 +358,7 @@ class _PharmaConnectState extends ConsumerState<PharmaConnect> {
                 onTap: () {
                   //Push to Login Screen
 
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LogInPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const LogInPage()));
                 },
               ),
             ),

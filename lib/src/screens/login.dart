@@ -1,13 +1,13 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/main.dart';
-import 'package:pharma_connect/model/loginModel.dart';
-import 'package:pharma_connect/src/providers/auth_provider.dart';
-import 'package:pharma_connect/src/providers/login_provider.dart';
-import 'package:pharma_connect/src/providers/user_provider.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import 'package:connectpharma/main.dart';
+import 'package:connectpharma/model/loginModel.dart';
+import 'package:connectpharma/src/providers/auth_provider.dart';
+import 'package:connectpharma/src/providers/login_provider.dart';
+import 'package:connectpharma/src/providers/user_provider.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 
 import '../../all_used.dart';
 
@@ -50,8 +50,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
         return WillPopScope(
           onWillPop: () async {
             print("Sending");
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PharmaConnect()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ConnectPharma()));
             return true;
           },
           child: Scaffold(
@@ -70,13 +69,10 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                         Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: GestureDetector(
-                            child: Icon(Icons.keyboard_backspace,
-                                size: 35.0, color: Colors.grey),
+                            child: Icon(Icons.keyboard_backspace, size: 35.0, color: Colors.grey),
                             onTap: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PharmaConnect()));
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) => ConnectPharma()));
                             },
                           ),
                         ),
@@ -85,9 +81,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                           text: TextSpan(
                             text: "Log In",
                             style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 35.0,
-                                color: Colors.black),
+                                fontWeight: FontWeight.w500, fontSize: 35.0, color: Colors.black),
                           ),
                         ),
                         //Log In Text
@@ -96,10 +90,8 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                           child: GestureDetector(
                             onTap: () {
                               //Go to Log In Page
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => PharmaConnect()));
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => ConnectPharma()));
                             },
                             child: RichText(
                               text: TextSpan(
@@ -132,8 +124,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                             keyboardStyle: TextInputType.emailAddress,
                             textCapitalization: TextCapitalization.none,
                             onChanged: (String emailAddress) {
-                              ref.read(logInProvider.notifier)
-                                  .changeEmail(emailAddress);
+                              ref.read(logInProvider.notifier).changeEmail(emailAddress);
                             },
                             validation: (value) {
                               if (!EmailValidator.validate(value)) {
@@ -141,31 +132,25 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                               }
                               return null;
                             },
-                            initialValue:
-                                ref.read(logInProvider.notifier).email,
+                            initialValue: ref.read(logInProvider.notifier).email,
                             inputDecoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
+                                  borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                               errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
+                                  borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                               filled: true,
                               fillColor: Color(0xFFF6F6F6),
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
+                                  borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                               focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFE8E8E8)),
+                                borderSide: BorderSide(color: Color(0xFFE8E8E8)),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               hintText: 'Email',
-                              hintStyle: TextStyle(
-                                  color: Color(0xFFBDBDBD), fontSize: 16),
+                              hintStyle: TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
                               prefixIcon: Icon(
                                 Icons.email,
                                 color: Color(0xFFBDBDBD),
@@ -181,8 +166,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                             decoration: false,
                             keyboardStyle: TextInputType.text,
                             onChanged: (String password) {
-                              ref.read(logInProvider.notifier)
-                                  .changePassword(password);
+                              ref.read(logInProvider.notifier).changePassword(password);
                             },
                             validation: (value) {
                               if (value!.length < 6) {
@@ -190,31 +174,25 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                               }
                               return null;
                             },
-                            initialValue:
-                                ref.read(logInProvider.notifier).password,
+                            initialValue: ref.read(logInProvider.notifier).password,
                             inputDecoration: InputDecoration(
                               filled: true,
                               fillColor: Color(0xFFF6F6F6),
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
+                                  borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                               errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
+                                  borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Color(0xFFE8E8E8))),
+                                  borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                               focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFE8E8E8)),
+                                borderSide: BorderSide(color: Color(0xFFE8E8E8)),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               hintText: 'Password',
-                              hintStyle: TextStyle(
-                                  color: Color(0xFFBDBDBD), fontSize: 16),
+                              hintStyle: TextStyle(color: Color(0xFFBDBDBD), fontSize: 16),
                               prefixIcon: Icon(
                                 Icons.lock_outline,
                                 color: Color(0xFFBDBDBD),
@@ -251,32 +229,26 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                           height: 51,
                           child: ElevatedButton(
                             style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
+                                backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.disabled))
+                                    if (states.contains(MaterialState.disabled)) {
                                       return Colors.grey;
-                                    else {
+                                    } else {
                                       return Color(0xFF5DB075);
                                     }
                                   },
                                 ),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(100),
                                 ))),
-                            onPressed: (!ref.read(logInProvider.notifier)
-                                        .isValid() &&
-                                    !logginIn)
+                            onPressed: (!ref.read(logInProvider.notifier).isValid() && !logginIn)
                                 ? () async {
                                     setState(() {
                                       logginIn = true;
                                     });
-                                    List? user = await authModel
-                                        .signInWithEmailAndPassword(
-                                            logIn.email.toString(),
-                                            logIn.password.toString());
+                                    List? user = await authModel.signInWithEmailAndPassword(
+                                        logIn.email.toString(), logIn.password.toString());
                                     print("----------User[0]----: ${user?[0]}");
                                     if (user?[0] == null) {
                                       var errorMessage = "";
@@ -296,8 +268,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                                           errorMessage =
                                               "Please check your email and password and try logging in again after a few minutes.";
                                         });
-                                      } else if (user?[2] ==
-                                          "user-not-verified") {
+                                      } else if (user?[2] == "user-not-verified") {
                                         setState(() {
                                           errorMessage =
                                               "Before logging in, please verify your email.";
@@ -317,8 +288,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                                                   new TextButton(
                                                     child: new Text("Ok"),
                                                     onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
+                                                      Navigator.of(context).pop();
                                                     },
                                                   ),
                                                 ],
@@ -329,33 +299,29 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                                       });
                                     } else if (user?[1] == "Pharmacist") {
                                       print("Pharmacist");
-                                      ref.read(logInProvider.notifier)
-                                          .clearAllValue();
-                                      ref.read(userProviderLogin.notifier)
-                                          .changeUserUID(
-                                              user?[0].user.uid.toString());
+                                      ref.read(logInProvider.notifier).clearAllValue();
+                                      ref
+                                          .read(userProviderLogin.notifier)
+                                          .changeUserUID(user?[0].user.uid.toString());
 
                                       //send to pharmacist main page
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  JobHistoryPharmacist()));
+                                              builder: (context) => JobHistoryPharmacist()));
                                     } else if (user?[1] == "Pharmacy") {
                                       print("Pharmacy");
 
-                                      ref.read(logInProvider.notifier)
-                                          .clearAllValue();
-                                      ref.read(userProviderLogin.notifier)
-                                          .changeUserUID(
-                                              user?[0].user.uid.toString());
+                                      ref.read(logInProvider.notifier).clearAllValue();
+                                      ref
+                                          .read(userProviderLogin.notifier)
+                                          .changeUserUID(user?[0].user.uid.toString());
 
                                       //send to pharmacy main page
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  JobHistoryPharmacy()));
+                                              builder: (context) => JobHistoryPharmacy()));
                                     }
                                   }
                                 : null,

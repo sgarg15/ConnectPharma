@@ -22,7 +22,7 @@ class CustomFormField extends StatelessWidget {
   double containerWidth;
   double titleFont;
 
-  CustomFormField({
+  CustomFormField({Key? key, 
     this.fieldTitle,
     this.hintText,
     this.keyboardStyle,
@@ -37,7 +37,7 @@ class CustomFormField extends StatelessWidget {
     this.formatter,
     this.containerWidth = 335,
     this.titleFont = 16,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class CustomFormField extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               )),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Container(
           width: containerWidth,
           //height: 50,
@@ -66,33 +66,31 @@ class CustomFormField extends StatelessWidget {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             initialValue: initialValue,
             textAlignVertical: TextAlignVertical.center,
-            textCapitalization:
-                textCapitalization ?? TextCapitalization.sentences,
+            textCapitalization: textCapitalization ?? TextCapitalization.sentences,
             keyboardType: keyboardStyle,
             onChanged: onChanged,
             validator: validation,
             decoration: inputDecoration ??
                 InputDecoration(
-                  errorStyle: TextStyle(fontWeight: FontWeight.w500),
-                  contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 30),
+                  errorStyle: const TextStyle(fontWeight: FontWeight.w500),
+                  contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 30),
                   filled: true,
-                  fillColor: Color(0xFFF0F0F0),
+                  fillColor: const Color(0xFFF0F0F0),
                   focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                      borderSide: const BorderSide(color: Color(0xFFE8E8E8))),
                   errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                      borderSide: const BorderSide(color: Color(0xFFE8E8E8))),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Color(0xFFE8E8E8))),
+                      borderSide: const BorderSide(color: Color(0xFFE8E8E8))),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                    borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   hintText: hintText,
-                  hintStyle:
-                      GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16),
+                  hintStyle: GoogleFonts.inter(color: const Color(0xFFBDBDBD), fontSize: 16),
                 ),
             style: GoogleFonts.inter(color: Colors.black, fontSize: 16),
           ),
@@ -101,7 +99,7 @@ class CustomFormField extends StatelessWidget {
               ? BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                        offset: Offset(0.3, 3),
+                        offset: const Offset(0.3, 3),
                         blurRadius: 3.0,
                         spreadRadius: 0.5,
                         color: Colors.grey.shade400)
@@ -127,7 +125,7 @@ class Software {
 
   @override
   String toString() {
-    return "$name";
+    return name;
   }
 }
 
@@ -141,7 +139,7 @@ class Skill {
   });
   @override
   String toString() {
-    return "$name";
+    return name;
   }
 }
 
@@ -155,7 +153,7 @@ class Language {
   });
   @override
   String toString() {
-    return "$name";
+    return name;
   }
 }
 
@@ -238,7 +236,7 @@ String getInitials(String? firstName, String? lastName) {
   return initials;
 }
 
-Dio dio = new Dio();
+Dio dio = Dio();
 final String? googleMapsKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
 final apiKey = googleMapsKey;
 
@@ -250,11 +248,9 @@ Future<Location> getLocationFromAddress(String address) async {
 }
 
 List<String> getHourDiff(TimeOfDay tod1, TimeOfDay tod2) {
-  var totalDifferenceInMin =
-      (tod1.hour * 60 + tod1.minute) - (tod2.hour * 60 + tod2.minute);
+  var totalDifferenceInMin = (tod1.hour * 60 + tod1.minute) - (tod2.hour * 60 + tod2.minute);
   var leftOverminutes = (totalDifferenceInMin % 60);
-  var totalHours =
-      ((totalDifferenceInMin - leftOverminutes) / 60).abs().toStringAsFixed(0);
+  var totalHours = ((totalDifferenceInMin - leftOverminutes) / 60).abs().toStringAsFixed(0);
   if (leftOverminutes == 0) {
     return [totalHours, ""];
   } else {
@@ -264,20 +260,20 @@ List<String> getHourDiff(TimeOfDay tod1, TimeOfDay tod2) {
 
 Future getDistance(Map pharmacyData, String pharmacistAddress) async {
   var distance = "";
-  Location startingLocation = await getLocationFromAddress(
-      pharmacyData["pharmacyAddress"]["streetAddress"] +
-          " " +
-          pharmacyData["pharmacyAddress"]["city"] +
-          " " +
-          pharmacyData["pharmacyAddress"]["country"]);
+  Location startingLocation = await getLocationFromAddress(pharmacyData["pharmacyAddress"]
+          ["streetAddress"] +
+      " " +
+      pharmacyData["pharmacyAddress"]["city"] +
+      " " +
+      pharmacyData["pharmacyAddress"]["country"]);
   Location endingLocation = await getLocationFromAddress(pharmacistAddress);
   Response response = await dio.get(
       "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${startingLocation.latitude},${startingLocation.longitude}&destinations=${endingLocation.latitude},${endingLocation.longitude}&key=$apiKey");
   //print(response);
   if (response.data != null) {
-    distance = double.parse(
-            "${response.data["rows"][0]["elements"][0]["distance"]["value"] / 1000}")
-        .toStringAsFixed(2);
+    distance =
+        double.parse("${response.data["rows"][0]["elements"][0]["distance"]["value"] / 1000}")
+            .toStringAsFixed(2);
   } else {
     distance = "";
   }

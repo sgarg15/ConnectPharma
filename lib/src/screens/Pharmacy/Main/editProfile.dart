@@ -3,13 +3,13 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:pharma_connect/Custom%20Widgets/custom_multiSelect_field.dart';
-import 'package:pharma_connect/Custom%20Widgets/custom_multi_select_display.dart';
-import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
-import 'package:pharma_connect/src/Address%20Search/placeService.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/Custom%20Widgets/custom_multiSelect_field.dart';
+import 'package:connectpharma/Custom%20Widgets/custom_multi_select_display.dart';
+import 'package:connectpharma/src/Address%20Search/locationSearch.dart';
+import 'package:connectpharma/src/Address%20Search/placeService.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
+import 'package:connectpharma/src/screens/login.dart';
 import 'package:signature/signature.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,20 +26,17 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
   final SignatureController _sigController = SignatureController(
     penStrokeWidth: 3, //you can set pen stroke with by changing this value
     penColor: Colors.black, // change your pen color
-    exportBackgroundColor:
-        Colors.white, //set the color you want to see in final result
+    exportBackgroundColor: Colors.white, //set the color you want to see in final result
   );
   Map<String, dynamic> uploadDataMap = Map();
   List<Software?>? softwareList;
   List<Software?>? softwareListToUpload = [];
 
-  final _items = software
-      .map((software) => MultiSelectItem<Software>(software, software.name))
-      .toList();
+  final _items =
+      software.map((software) => MultiSelectItem<Software>(software, software.name)).toList();
 
   void checkIfChanged(WidgetRef ref, String? currentVal, String firestoreVal) {
-    if (currentVal ==
-        ref.read(pharmacyMainProvider.notifier).userData?[firestoreVal]) {
+    if (currentVal == ref.read(pharmacyMainProvider.notifier).userData?[firestoreVal]) {
       uploadDataMap.remove(firestoreVal);
     } else {
       uploadDataMap[firestoreVal] = currentVal;
@@ -49,8 +46,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
   void changeSoftwareToList(String? stringList) {
     int indexOfOpenBracket = stringList!.indexOf("[");
     int indexOfLastBracket = stringList.lastIndexOf("]");
-    var noBracketString =
-        stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
+    var noBracketString = stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
     List<Software?>? templist = [];
     var list = noBracketString.split(", ");
     for (var i = 0; i < list.length; i++) {
@@ -64,27 +60,20 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      changeSoftwareToList(
-          ref.read(pharmacyMainProvider.notifier)
-          .userData?["softwareList"]);
-      ref
-          .read(pharmacySignUpProvider.notifier)
-          .changeSoftwareList(softwareList as List<Software?>);
+      changeSoftwareToList(ref.read(pharmacyMainProvider.notifier).userData?["softwareList"]);
+      ref.read(pharmacySignUpProvider.notifier).changeSoftwareList(softwareList as List<Software?>);
 
       setState(() {
-        ref.read(pharmacySignUpProvider.notifier).changeStreetAddress(ref
-            .read(pharmacyMainProvider.notifier)
-            .userData?["address"]
-                ["streetAddress"]);
-        ref.read(pharmacySignUpProvider.notifier).changeCity(ref
-            .read(pharmacyMainProvider.notifier)
-            .userData?["address"]["city"]);
-        ref.read(pharmacySignUpProvider.notifier).changePostalCode(ref
-            .read(pharmacyMainProvider.notifier)
-            .userData?["address"]["postalCode"]);
-        ref.read(pharmacySignUpProvider.notifier).changeCountry(ref
-            .read(pharmacyMainProvider.notifier)
-            .userData?["address"]["country"]);
+        ref.read(pharmacySignUpProvider.notifier).changeStreetAddress(
+            ref.read(pharmacyMainProvider.notifier).userData?["address"]["streetAddress"]);
+        ref
+            .read(pharmacySignUpProvider.notifier)
+            .changeCity(ref.read(pharmacyMainProvider.notifier).userData?["address"]["city"]);
+        ref.read(pharmacySignUpProvider.notifier).changePostalCode(
+            ref.read(pharmacyMainProvider.notifier).userData?["address"]["postalCode"]);
+        ref
+            .read(pharmacySignUpProvider.notifier)
+            .changeCountry(ref.read(pharmacyMainProvider.notifier).userData?["address"]["country"]);
       });
     });
     super.initState();
@@ -92,14 +81,14 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController city = TextEditingController(
-        text: ref.read(pharmacySignUpProvider.notifier).city);
-    TextEditingController streetAddress = TextEditingController(
-        text: ref.read(pharmacySignUpProvider.notifier).streetAddress);
-    TextEditingController postalCode = TextEditingController(
-        text: ref.read(pharmacySignUpProvider.notifier).postalCode);
-    TextEditingController country = TextEditingController(
-        text: ref.read(pharmacySignUpProvider.notifier).country);
+    TextEditingController city =
+        TextEditingController(text: ref.read(pharmacySignUpProvider.notifier).city);
+    TextEditingController streetAddress =
+        TextEditingController(text: ref.read(pharmacySignUpProvider.notifier).streetAddress);
+    TextEditingController postalCode =
+        TextEditingController(text: ref.read(pharmacySignUpProvider.notifier).postalCode);
+    TextEditingController country =
+        TextEditingController(text: ref.read(pharmacySignUpProvider.notifier).country);
 
     return Scaffold(
       appBar: AppBar(
@@ -108,8 +97,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
         elevation: 12,
         title: Text(
           "Edit Profile",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
         ),
         backgroundColor: Color(0xFFF6F6F6),
       ),
@@ -159,8 +147,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                               fieldTitle: "First Name",
                               hintText: "Enter your First Name...",
                               keyboardStyle: TextInputType.name,
-                              containerWidth:
-                                  MediaQuery.of(context).size.width * 0.85,
+                              containerWidth: MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String firstName) {
                                 ref
@@ -169,16 +156,14 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                 checkIfChanged(ref, firstName, "firstName");
                               },
                               validation: (value) {
-                                if (!RegExp(
-                                        r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                                if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
                                     .hasMatch(value)) {
                                   return "Invalid field";
                                 }
                                 return null;
                               },
-                              initialValue: ref
-                                  .read(pharmacyMainProvider.notifier)
-                                  .userData?["firstName"],
+                              initialValue:
+                                  ref.read(pharmacyMainProvider.notifier).userData?["firstName"],
                             ),
                           ),
                           SizedBox(height: 20),
@@ -189,26 +174,21 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                               fieldTitle: "Last Name",
                               hintText: "Enter your Last Name...",
                               keyboardStyle: TextInputType.name,
-                              containerWidth:
-                                  MediaQuery.of(context).size.width * 0.85,
+                              containerWidth: MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String lastName) {
-                                ref
-                                    .read(pharmacySignUpProvider.notifier)
-                                    .changeLastName(lastName);
+                                ref.read(pharmacySignUpProvider.notifier).changeLastName(lastName);
                                 checkIfChanged(ref, lastName, "lastName");
                               },
                               validation: (value) {
-                                if (!RegExp(
-                                        r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                                if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
                                     .hasMatch(value)) {
                                   return "Invalid field";
                                 }
                                 return null;
                               },
-                              initialValue: ref
-                                  .read(pharmacyMainProvider.notifier)
-                                  .userData?["lastName"],
+                              initialValue:
+                                  ref.read(pharmacyMainProvider.notifier).userData?["lastName"],
                             ),
                           ),
                           SizedBox(height: 20),
@@ -219,8 +199,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                               fieldTitle: "Phone Number",
                               hintText: "Enter your Phone Number...",
                               keyboardStyle: TextInputType.number,
-                              containerWidth:
-                                  MediaQuery.of(context).size.width * 0.85,
+                              containerWidth: MediaQuery.of(context).size.width * 0.85,
                               titleFont: 22,
                               onChanged: (String phoneNumber) {
                                 ref
@@ -234,12 +213,9 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                 }
                                 return null;
                               },
-                              initialValue: ref
-                                  .read(pharmacyMainProvider.notifier)
-                                  .userData?["phoneNumber"],
-                              formatter: [
-                                MaskedInputFormatter('(###) ###-####')
-                              ],
+                              initialValue:
+                                  ref.read(pharmacyMainProvider.notifier).userData?["phoneNumber"],
+                              formatter: [MaskedInputFormatter('(###) ###-####')],
                             ),
                           ),
                           SizedBox(height: 20),
@@ -261,10 +237,8 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                 ),
                                 SizedBox(height: 10),
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.85,
-                                  constraints: BoxConstraints(
-                                      maxHeight: 60, minHeight: 50),
+                                  width: MediaQuery.of(context).size.width * 0.85,
+                                  constraints: BoxConstraints(maxHeight: 60, minHeight: 50),
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
@@ -280,8 +254,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                       hint: Text(
                                         "Select your Position...",
                                         style: GoogleFonts.inter(
-                                            color: Color(0xFFBDBDBD),
-                                            fontSize: 16),
+                                            color: Color(0xFFBDBDBD), fontSize: 16),
                                       ),
                                       value: ref
                                           .read(pharmacyMainProvider.notifier)
@@ -290,24 +263,20 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                         filled: true,
                                         fillColor: Color(0xFFF0F0F0),
                                         enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Color(0xFFE8E8E8))),
+                                            borderRadius: BorderRadius.circular(10),
+                                            borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                                       ),
                                       items: <String>[
                                         'Pharmacy',
                                         'Pharmacist',
                                         'Technician',
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
+                                      ].map<DropdownMenuItem<String>>((String value) {
                                         return DropdownMenuItem<String>(
                                             child: Text(value), value: value);
                                       }).toList(),
                                       onChanged: (String? value) {
                                         ref
-                                            .read(
-                                                pharmacySignUpProvider.notifier)
+                                            .read(pharmacySignUpProvider.notifier)
                                             .changePosition(value);
                                         checkIfChanged(ref, value, "position");
                                       },
@@ -366,14 +335,12 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
 
                               //Pharmacy Name
                               Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(11, 10, 0, 0),
+                                padding: const EdgeInsets.fromLTRB(11, 10, 0, 0),
                                 child: CustomFormField(
                                   fieldTitle: "Pharmacy Name",
                                   hintText: "Enter the pharmacy name...",
                                   keyboardStyle: TextInputType.name,
-                                  containerWidth:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                  containerWidth: MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String value) {
                                     ref
@@ -413,8 +380,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                     ),
                                     SizedBox(height: 10),
                                     Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.85,
+                                      width: MediaQuery.of(context).size.width * 0.85,
 
                                       //height: 50,
                                       decoration: BoxDecoration(
@@ -433,77 +399,51 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                         controller: streetAddress,
                                         onTap: () async {
                                           final sessionToken = Uuid().v4();
-                                          final Suggestion? result =
-                                              await showSearch<Suggestion?>(
+                                          final Suggestion? result = await showSearch<Suggestion?>(
                                             context: context,
-                                            delegate:
-                                                AddressSearch(sessionToken),
+                                            delegate: AddressSearch(sessionToken),
                                           );
 
                                           if (result != null) {
                                             final placeDetails =
-                                                await PlaceApiProvider(
-                                                        sessionToken)
-                                                    .getPlaceDetailFromId(
-                                                        result.placeId);
+                                                await PlaceApiProvider(sessionToken)
+                                                    .getPlaceDetailFromId(result.placeId);
                                             ref
-                                                .read(pharmacySignUpProvider
-                                                    .notifier)
-                                                .changeStreetAddress(
-                                                    placeDetails.streetNumber! +
-                                                        " " +
-                                                        placeDetails.street
-                                                            .toString());
+                                                .read(pharmacySignUpProvider.notifier)
+                                                .changeStreetAddress(placeDetails.streetNumber! +
+                                                    " " +
+                                                    placeDetails.street.toString());
                                             ref
-                                                .read(pharmacySignUpProvider
-                                                    .notifier)
+                                                .read(pharmacySignUpProvider.notifier)
                                                 .changeCity(placeDetails.city);
                                             ref
-                                                .read(pharmacySignUpProvider
-                                                    .notifier)
-                                                .changePostalCode(
-                                                    placeDetails.zipCode);
+                                                .read(pharmacySignUpProvider.notifier)
+                                                .changePostalCode(placeDetails.zipCode);
                                             ref
-                                                .read(pharmacySignUpProvider
-                                                    .notifier)
-                                                .changeCountry(
-                                                    placeDetails.country);
+                                                .read(pharmacySignUpProvider.notifier)
+                                                .changeCountry(placeDetails.country);
                                             uploadDataMap["address"] = {
-                                              "streetAddress":
-                                                  placeDetails.streetNumber! +
-                                                      " " +
-                                                      placeDetails.street
-                                                          .toString(),
-                                              "postalCode": placeDetails.zipCode
-                                                  .toString(),
-                                              "country": placeDetails.country
-                                                  .toString(),
-                                              "city":
-                                                  placeDetails.city.toString()
+                                              "streetAddress": placeDetails.streetNumber! +
+                                                  " " +
+                                                  placeDetails.street.toString(),
+                                              "postalCode": placeDetails.zipCode.toString(),
+                                              "country": placeDetails.country.toString(),
+                                              "city": placeDetails.city.toString()
                                             };
 
                                             setState(() {
-                                              streetAddress.text =
-                                                  placeDetails.streetNumber! +
-                                                      " " +
-                                                      placeDetails.street
-                                                          .toString();
-                                              postalCode.text = placeDetails
-                                                  .zipCode
-                                                  .toString();
-                                              country.text = placeDetails
-                                                  .country
-                                                  .toString();
-                                              city.text =
-                                                  placeDetails.city.toString();
+                                              streetAddress.text = placeDetails.streetNumber! +
+                                                  " " +
+                                                  placeDetails.street.toString();
+                                              postalCode.text = placeDetails.zipCode.toString();
+                                              country.text = placeDetails.country.toString();
+                                              city.text = placeDetails.city.toString();
                                             });
                                           }
                                         },
                                         decoration: InputDecoration(
-                                          errorStyle: TextStyle(
-                                              fontWeight: FontWeight.w500),
-                                          contentPadding:
-                                              EdgeInsets.fromLTRB(10, 0, 0, 30),
+                                          errorStyle: TextStyle(fontWeight: FontWeight.w500),
+                                          contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 30),
                                           filled: true,
                                           fillColor: Color(0xFFF0F0F0),
                                           // focusedErrorBorder: OutlineInputBorder(
@@ -513,24 +453,17 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                           //     borderRadius: BorderRadius.circular(8),
                                           //     borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                                           enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              borderSide: BorderSide(
-                                                  color: Color(0xFFE8E8E8))),
+                                              borderRadius: BorderRadius.circular(10),
+                                              borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Color(0xFFE8E8E8)),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            borderSide: BorderSide(color: Color(0xFFE8E8E8)),
+                                            borderRadius: BorderRadius.circular(8.0),
                                           ),
-                                          hintText:
-                                              "Enter the street address...",
+                                          hintText: "Enter the street address...",
                                           hintStyle: GoogleFonts.inter(
-                                              color: Color(0xFFBDBDBD),
-                                              fontSize: 16),
+                                              color: Color(0xFFBDBDBD), fontSize: 16),
                                         ),
-                                        style: GoogleFonts.inter(
-                                            color: Colors.black, fontSize: 16),
+                                        style: GoogleFonts.inter(color: Colors.black, fontSize: 16),
                                       ),
                                     ),
                                   ],
@@ -545,15 +478,13 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                   fieldTitle: "Store Number",
                                   hintText: "Enter the Store Number...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                  containerWidth: MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String storeNumber) {
                                     ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changeStoreNumber(storeNumber);
-                                    uploadDataMap["address"]["storeNumber"] =
-                                        storeNumber;
+                                    uploadDataMap["address"]["storeNumber"] = storeNumber;
                                   },
                                   validation: (value) {
                                     if (value == null || value.isEmpty) {
@@ -575,13 +506,10 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                   fieldTitle: "City",
                                   hintText: "Enter the city...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                  containerWidth: MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String city) {
-                                    ref
-                                        .read(pharmacySignUpProvider.notifier)
-                                        .changeCity(city);
+                                    ref.read(pharmacySignUpProvider.notifier).changeCity(city);
                                     uploadDataMap["address"]["city"] = city;
                                   },
                                   validation: (value) {
@@ -602,15 +530,13 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                   fieldTitle: "Postal Code",
                                   hintText: "Enter the postal code...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                  containerWidth: MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String postalCode) {
                                     ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changePostalCode(postalCode);
-                                    uploadDataMap["address"]["postalCode"] =
-                                        postalCode;
+                                    uploadDataMap["address"]["postalCode"] = postalCode;
                                   },
                                   validation: (value) {
                                     if (value == null || value.isEmpty) {
@@ -630,16 +556,14 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                   fieldTitle: "Country",
                                   hintText: "Enter the country...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                  containerWidth: MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String country) {
                                     ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changeCountry(country);
 
-                                    uploadDataMap["address"]["country"] =
-                                        country;
+                                    uploadDataMap["address"]["country"] = country;
                                   },
                                   validation: (value) {
                                     if (value == null || value.isEmpty) {
@@ -657,20 +581,16 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
                                 child: CustomFormField(
                                   fieldTitle: "Pharmacy Phone Number",
-                                  hintText:
-                                      "Enter the pharmacy phone Number...",
+                                  hintText: "Enter the pharmacy phone Number...",
                                   keyboardStyle: TextInputType.number,
-                                  containerWidth:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                  containerWidth: MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String phoneNumber) {
                                     ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changePhoneNumberPharmacy(phoneNumber);
 
-                                    checkIfChanged(
-                                        ref, phoneNumber,
-                                        "pharmacyPhoneNumber");
+                                    checkIfChanged(ref, phoneNumber, "pharmacyPhoneNumber");
                                   },
                                   validation: (value) {
                                     if (value.length < 4) {
@@ -681,9 +601,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                   initialValue: ref
                                       .read(pharmacyMainProvider.notifier)
                                       .userData?["pharmacyPhoneNumber"],
-                                  formatter: [
-                                    MaskedInputFormatter('(###) ###-####')
-                                  ],
+                                  formatter: [MaskedInputFormatter('(###) ###-####')],
                                 ),
                               ),
                               SizedBox(height: 20),
@@ -695,17 +613,14 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                   fieldTitle: "Pharmacy Fax Number",
                                   hintText: "Enter the pharmacy fax Number...",
                                   keyboardStyle: TextInputType.number,
-                                  containerWidth:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                  containerWidth: MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String faxNumber) {
                                     ref
                                         .read(pharmacySignUpProvider.notifier)
                                         .changeFaxNumber(faxNumber);
-                                    uploadDataMap["pharmacyFaxNumber"] =
-                                        faxNumber;
-                                    checkIfChanged(
-                                        ref, faxNumber, "pharmacyFaxNumber");
+                                    uploadDataMap["pharmacyFaxNumber"] = faxNumber;
+                                    checkIfChanged(ref, faxNumber, "pharmacyFaxNumber");
                                   },
                                   validation: (value) {
                                     if (value.length < 4) {
@@ -716,9 +631,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                   initialValue: ref
                                       .read(pharmacyMainProvider.notifier)
                                       .userData?["pharmacyFaxNumber"],
-                                  formatter: [
-                                    MaskedInputFormatter('(###) ###-####')
-                                  ],
+                                  formatter: [MaskedInputFormatter('(###) ###-####')],
                                 ),
                               ),
                               SizedBox(height: 20),
@@ -728,20 +641,17 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                 padding: const EdgeInsets.fromLTRB(11, 0, 0, 0),
                                 child: CustomFormField(
                                   fieldTitle: "Accreditation Province",
-                                  hintText:
-                                      "Enter the accreditation province...",
+                                  hintText: "Enter the accreditation province...",
                                   keyboardStyle: TextInputType.streetAddress,
-                                  containerWidth:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                  containerWidth: MediaQuery.of(context).size.width * 0.85,
                                   titleFont: 22,
                                   onChanged: (String accreditationProvince) {
                                     ref
                                         .read(pharmacySignUpProvider.notifier)
-                                        .changeAccreditationProvince(
-                                            accreditationProvince);
+                                        .changeAccreditationProvince(accreditationProvince);
 
-                                    checkIfChanged(ref, accreditationProvince,
-                                        "accreditationProvice");
+                                    checkIfChanged(
+                                        ref, accreditationProvince, "accreditationProvice");
                                   },
                                   validation: (value) {
                                     if (value == null || value.isEmpty) {
@@ -775,8 +685,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                     ),
                                     SizedBox(height: 10),
                                     Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.85,
+                                      width: MediaQuery.of(context).size.width * 0.85,
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
@@ -794,73 +703,54 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                       ),
                                       child: Column(
                                         children: <Widget>[
-                                          CustomMultiSelectBottomSheetField<
-                                              Software?>(
+                                          CustomMultiSelectBottomSheetField<Software?>(
                                             selectedColor: Color(0xFF5DB075),
-                                            selectedItemsTextStyle:
-                                                TextStyle(color: Colors.white),
+                                            selectedItemsTextStyle: TextStyle(color: Colors.white),
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
                                             listType: MultiSelectListType.CHIP,
                                             initialValue: ref
-                                                .read(pharmacySignUpProvider
-                                                    .notifier)
+                                                .read(pharmacySignUpProvider.notifier)
                                                 .softwareList,
                                             searchable: true,
                                             items: _items,
-                                            buttonText: Text(
-                                                "Select Pharmacy Software...",
+                                            buttonText: Text("Select Pharmacy Software...",
                                                 style: GoogleFonts.inter(
-                                                    color: Color(0xFFBDBDBD),
-                                                    fontSize: 16)),
+                                                    color: Color(0xFFBDBDBD), fontSize: 16)),
                                             onConfirm: (values) {
-                                              softwareListToUpload
-                                                  ?.addAll(values);
+                                              softwareListToUpload?.addAll(values);
                                               ref
-                                                  .read(pharmacySignUpProvider
-                                                      .notifier)
+                                                  .read(pharmacySignUpProvider.notifier)
                                                   .changeSoftwareList(values);
                                             },
-                                            chipDisplay:
-                                                CustomMultiSelectChipDisplay(
+                                            chipDisplay: CustomMultiSelectChipDisplay(
                                               items: ref
-                                                  .read(pharmacySignUpProvider
-                                                      .notifier)
+                                                  .read(pharmacySignUpProvider.notifier)
                                                   .softwareList
-                                                  ?.map((e) => MultiSelectItem(
-                                                      e, e.toString()))
+                                                  ?.map((e) => MultiSelectItem(e, e.toString()))
                                                   .toList(),
                                               chipColor: Color(0xFF5DB075),
                                               onTap: (value) {
-                                                softwareListToUpload
-                                                    ?.remove(value);
-                                                softwareListToUpload
-                                                    ?.removeWhere((element) =>
-                                                        element?.name
-                                                            .toString() ==
-                                                        value.toString());
+                                                softwareListToUpload?.remove(value);
+                                                softwareListToUpload?.removeWhere((element) =>
+                                                    element?.name.toString() == value.toString());
                                                 ref
-                                                    .read(pharmacySignUpProvider
-                                                        .notifier)
+                                                    .read(pharmacySignUpProvider.notifier)
                                                     .softwareList
                                                     ?.cast()
                                                     .remove(value);
                                                 ref
-                                                    .read(pharmacySignUpProvider
-                                                        .notifier)
+                                                    .read(pharmacySignUpProvider.notifier)
                                                     .softwareList
                                                     ?.removeWhere((element) =>
-                                                        element?.name
-                                                            .toString() ==
+                                                        element?.name.toString() ==
                                                         value.toString());
 
                                                 return ref
-                                                    .read(pharmacySignUpProvider
-                                                        .notifier)
+                                                    .read(pharmacySignUpProvider.notifier)
                                                     .softwareList;
                                               },
-                                              textStyle: TextStyle(
-                                                  color: Colors.white),
+                                              textStyle: TextStyle(color: Colors.white),
                                             ),
                                           ),
                                         ],
@@ -888,43 +778,30 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                   height: 51,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed))
                               return Color(0xFF5DB075);
-                            else if (states.contains(MaterialState.disabled))
-                              return Colors.grey;
-                            return Color(
-                                0xFF5DB075); // Use the component's default.
+                            else if (states.contains(MaterialState.disabled)) return Colors.grey;
+                            return Color(0xFF5DB075); // Use the component's default.
                           },
                         ),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100),
                         ))),
-                    onPressed: (uploadDataMap.isNotEmpty ||
-                            softwareListToUpload!.isNotEmpty)
+                    onPressed: (uploadDataMap.isNotEmpty || softwareListToUpload!.isNotEmpty)
                         ? () async {
                             print(uploadDataMap);
-                            if (ref
-                                    .read(pharmacySignUpProvider.notifier)
-                                    .softwareList !=
-                                null) {
-                              uploadDataMap["softwareList"] = ref
-                                  .read(pharmacySignUpProvider.notifier)
-                                  .softwareList
-                                  .toString();
+                            if (ref.read(pharmacySignUpProvider.notifier).softwareList != null) {
+                              uploadDataMap["softwareList"] =
+                                  ref.read(pharmacySignUpProvider.notifier).softwareList.toString();
                             }
                             print("Upload Data Map: $uploadDataMap");
                             String? result = await ref
                                 .read(authProvider.notifier)
                                 .updatePharmacyUserInformation(
-                                    ref
-                                        .read(userProviderLogin.notifier)
-                                        .userUID,
-                                    uploadDataMap);
+                                    ref.read(userProviderLogin.notifier).userUID, uploadDataMap);
 
                             if (result == "Profile Upload Failed") {
                               showDialog(
@@ -938,8 +815,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                         TextButton(
                                           child: Text(
                                             "Ok",
-                                            style: TextStyle(
-                                                color: Color(0xFF5DB075)),
+                                            style: TextStyle(color: Color(0xFF5DB075)),
                                           ),
                                           onPressed: () {
                                             Navigator.pop(context);
@@ -949,11 +825,8 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                     );
                                   });
                             } else {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          JobHistoryPharmacy()));
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => JobHistoryPharmacy()));
                             }
                           }
                         : null,
@@ -1003,10 +876,8 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
       height: 40,
       child: ElevatedButton(
         style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ))),
         onPressed: () {
@@ -1053,15 +924,13 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                           child: TextButton.icon(
                             clipBehavior: Clip.none,
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Color(0xFF5DB075)),
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
                             ),
                             onPressed: () async {
                               if (widget._sigController.isNotEmpty) {
                                 ref
                                     .read(pharmacySignUpProvider.notifier)
-                                    .changeSignature(await widget._sigController
-                                        .toPngBytes());
+                                    .changeSignature(await widget._sigController.toPngBytes());
                                 setState(() {
                                   signatureSaved = true;
                                 });
@@ -1076,8 +945,7 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                             ),
                             label: Text(
                               "Apply",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              style: TextStyle(color: Colors.white, fontSize: 13),
                             ),
                           ),
                         ),

@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-import 'package:pharma_connect/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
+import 'package:connectpharma/src/screens/login.dart';
 import '../../../../Custom Widgets/custom_dateTimeField.dart';
 import '../../../../all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,11 +19,9 @@ class CreateShift extends ConsumerStatefulWidget {
 }
 
 class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
-  final _softwareItems = software
-      .map((software) => MultiSelectItem<Software>(software, software.name))
-      .toList();
-  final _skillItems =
-      skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+  final _softwareItems =
+      software.map((software) => MultiSelectItem<Software>(software, software.name)).toList();
+  final _skillItems = skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
 
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
@@ -51,8 +49,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
           elevation: 12,
           title: Text(
             "Create Shift",
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
           ),
           backgroundColor: Color(0xFFF6F6F6),
         ),
@@ -72,8 +69,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                       child: Container(
                         alignment: Alignment.topLeft,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.grey[100]),
+                            borderRadius: BorderRadius.circular(20), color: Colors.grey[100]),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                           child: Column(
@@ -97,21 +93,16 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                     ),
                                     //Date and Time Picker
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          40, 0, 0, 0),
+                                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 0),
                                       child: Material(
                                         elevation: 7,
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
                                           height: 55,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.55,
+                                          width: MediaQuery.of(context).size.width * 0.55,
                                           child: DateTimeField(
                                             controller: startDateController,
-                                            format: DateFormat(
-                                                "MM/dd/yyyy hh:mm a"),
+                                            format: DateFormat("MM/dd/yyyy hh:mm a"),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
@@ -119,56 +110,39 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                             ),
                                             decoration: InputDecoration(
                                               enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                    width: 1.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
+                                                borderSide:
+                                                    BorderSide(color: Colors.black, width: 1.5),
+                                                borderRadius: BorderRadius.circular(15),
                                               ),
                                               focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                    width: 1.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
+                                                borderSide:
+                                                    BorderSide(color: Colors.black, width: 1.5),
+                                                borderRadius: BorderRadius.circular(15),
                                               ),
                                             ),
-                                            onShowPicker:
-                                                (context, currentValue) async {
+                                            onShowPicker: (context, currentValue) async {
                                               if (!showAllPharmacists) {
-                                                final date =
-                                                    await showDatePicker(
-                                                        context: context,
-                                                        firstDate:
-                                                            DateTime.now(),
-                                                        initialDate:
-                                                            currentValue ??
-                                                                DateTime.now(),
-                                                        lastDate:
-                                                            DateTime(2100));
-                                                if (date != null) {
-                                                  final time =
-                                                      await showTimePicker(
+                                                final date = await showDatePicker(
                                                     context: context,
-                                                    initialTime:
-                                                        TimeOfDay.fromDateTime(
-                                                            currentValue ??
-                                                                DateTime.now()),
+                                                    firstDate: DateTime.now(),
+                                                    initialDate: currentValue ?? DateTime.now(),
+                                                    lastDate: DateTime(2100));
+                                                if (date != null) {
+                                                  final time = await showTimePicker(
+                                                    context: context,
+                                                    initialTime: TimeOfDay.fromDateTime(
+                                                        currentValue ?? DateTime.now()),
                                                   );
-                                                  ref.read(pharmacyMainProvider
-                                                          .notifier)
+                                                  ref
+                                                      .read(pharmacyMainProvider.notifier)
                                                       .changeStartDate(
-                                                          DateTimeField.combine(
-                                                              date, time));
-                                                  print(DateTimeField.combine(
-                                                      date, time));
-                                                  return DateTimeField.combine(
-                                                      date, time);
+                                                          DateTimeField.combine(date, time));
+                                                  print(DateTimeField.combine(date, time));
+                                                  return DateTimeField.combine(date, time);
                                                 } else {
-                                                  ref.read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .changeStartDate(
-                                                          currentValue);
+                                                  ref
+                                                      .read(pharmacyMainProvider.notifier)
+                                                      .changeStartDate(currentValue);
                                                   return currentValue;
                                                 }
                                               }
@@ -198,78 +172,60 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                     ),
                                     //Date and Time Picker
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          50, 0, 0, 0),
+                                      padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
                                       child: Material(
                                         elevation: 7,
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
                                           height: 55,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.55,
+                                          width: MediaQuery.of(context).size.width * 0.55,
                                           child: DateTimeField(
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 17,
                                             ),
                                             controller: endDateController,
-                                            format: DateFormat(
-                                                "MM/dd/yyyy hh:mm a"),
+                                            format: DateFormat("MM/dd/yyyy hh:mm a"),
                                             textAlign: TextAlign.center,
                                             decoration: InputDecoration(
                                               enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                    width: 1.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
+                                                borderSide:
+                                                    BorderSide(color: Colors.black, width: 1.5),
+                                                borderRadius: BorderRadius.circular(15),
                                               ),
                                               focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                    width: 1.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
+                                                borderSide:
+                                                    BorderSide(color: Colors.black, width: 1.5),
+                                                borderRadius: BorderRadius.circular(15),
                                               ),
                                             ),
-                                            onShowPicker:
-                                                (context, currentValue) async {
+                                            onShowPicker: (context, currentValue) async {
                                               if (!showAllPharmacists) {
                                                 final date = await showDatePicker(
                                                     context: context,
-                                                    firstDate: ref.read(
-                                                            pharmacyMainProvider
-                                                                .notifier)
+                                                    firstDate: ref
+                                                        .read(pharmacyMainProvider.notifier)
                                                         .startDate as DateTime,
-                                                    initialDate: ref.read(
-                                                            pharmacyMainProvider
-                                                                .notifier)
+                                                    initialDate: ref
+                                                        .read(pharmacyMainProvider.notifier)
                                                         .startDate as DateTime,
                                                     lastDate: DateTime(2100));
                                                 if (date != null) {
-                                                  final time =
-                                                      await showTimePicker(
+                                                  final time = await showTimePicker(
                                                     context: context,
-                                                    initialTime:
-                                                        TimeOfDay.fromDateTime(
-                                                            currentValue ??
-                                                                DateTime.now()),
+                                                    initialTime: TimeOfDay.fromDateTime(
+                                                        currentValue ?? DateTime.now()),
                                                   );
-                                                  ref.read(pharmacyMainProvider
-                                                          .notifier)
+                                                  ref
+                                                      .read(pharmacyMainProvider.notifier)
                                                       .changeEndDate(
-                                                          DateTimeField.combine(
-                                                              date, time));
+                                                          DateTimeField.combine(date, time));
 
-                                                  return DateTimeField.combine(
-                                                      date, time);
+                                                  return DateTimeField.combine(date, time);
                                                 } else {
-                                                  ref.read(pharmacyMainProvider
-                                                          .notifier)
-                                                      .changeEndDate(
-                                                          currentValue);
+                                                  ref
+                                                      .read(pharmacyMainProvider.notifier)
+                                                      .changeEndDate(currentValue);
                                                   return currentValue;
                                                 }
                                               }
@@ -296,23 +252,20 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                     ),
                                   ),
                                   activeColor: Color(0xFF5DB075),
-                                  value: ref.read(pharmacyMainProvider.notifier)
-                                      .fullTime,
+                                  value: ref.read(pharmacyMainProvider.notifier).fullTime,
                                   onChanged: (value) {
-                                    ref.read(pharmacyMainProvider.notifier)
+                                    ref
+                                        .read(pharmacyMainProvider.notifier)
                                         .changeFullTimeStatus(value);
                                     setState(() {
-                                      startDateController.text =
-                                          "dd/mm/yyyy hh:mm";
-                                      endDateController.text =
-                                          "dd/mm/yyyy hh:mm";
+                                      startDateController.text = "dd/mm/yyyy hh:mm";
+                                      endDateController.text = "dd/mm/yyyy hh:mm";
 
-                                      ref.read(pharmacyMainProvider.notifier)
-                                          .clearDateValues();
+                                      ref.read(pharmacyMainProvider.notifier).clearDateValues();
                                     });
                                   },
-                                  controlAffinity: ListTileControlAffinity
-                                      .trailing, //  <-- leading Checkbox
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing, //  <-- leading Checkbox
                                 ),
                               ),
 
@@ -333,10 +286,8 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                               Container(
                                 height: 45,
                                 child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.7,
-                                  constraints: BoxConstraints(
-                                      maxHeight: 60, minHeight: 10),
+                                  width: MediaQuery.of(context).size.width * 0.7,
+                                  constraints: BoxConstraints(maxHeight: 60, minHeight: 10),
                                   padding: EdgeInsets.zero,
                                   decoration: BoxDecoration(
                                     boxShadow: [
@@ -351,37 +302,31 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                   ),
                                   child: DropdownButtonFormField<String>(
                                       itemHeight: 80,
-                                      icon: Icon(Icons.arrow_downward,
-                                          color: Colors.black),
+                                      icon: Icon(Icons.arrow_downward, color: Colors.black),
                                       hint: Text(
                                         "Select your Position...",
                                         style: GoogleFonts.inter(
-                                            color: Color(0xFFBDBDBD),
-                                            fontSize: 16),
+                                            color: Color(0xFFBDBDBD), fontSize: 16),
                                       ),
-                                      value: ref.read(pharmacyMainProvider.notifier)
-                                          .position,
+                                      value: ref.read(pharmacyMainProvider.notifier).position,
                                       decoration: InputDecoration(
                                         filled: true,
                                         fillColor: Color(0xFFF0F0F0),
-                                        contentPadding:
-                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                         enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            borderSide: BorderSide(
-                                                color: Color(0xFFE8E8E8))),
+                                            borderRadius: BorderRadius.circular(10),
+                                            borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                                       ),
                                       items: <String>[
                                         'Pharmacist',
                                         'Pharmacy Assistant',
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
+                                      ].map<DropdownMenuItem<String>>((String value) {
                                         return DropdownMenuItem<String>(
                                             child: Text(value), value: value);
                                       }).toList(),
                                       onChanged: (String? value) {
-                                        ref.read(pharmacyMainProvider.notifier)
+                                        ref
+                                            .read(pharmacyMainProvider.notifier)
                                             .changePosition(value);
                                       },
                                       style: GoogleFonts.questrial(
@@ -414,8 +359,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                       height: 10,
                                     ),
                                     Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.9,
+                                      width: MediaQuery.of(context).size.width * 0.9,
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
@@ -435,45 +379,39 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                         children: <Widget>[
                                           MultiSelectBottomSheetField<Skill?>(
                                             selectedColor: Color(0xFF5DB075),
-                                            selectedItemsTextStyle:
-                                                TextStyle(color: Colors.white),
+                                            selectedItemsTextStyle: TextStyle(color: Colors.white),
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
                                             listType: MultiSelectListType.CHIP,
-                                            initialValue: ref.read(pharmacyMainProvider
-                                                    .notifier)
-                                                .skillList,
+                                            initialValue:
+                                                ref.read(pharmacyMainProvider.notifier).skillList,
                                             searchable: true,
                                             items: _skillItems,
-                                            buttonText: Text(
-                                                "Select known skills...",
+                                            buttonText: Text("Select known skills...",
                                                 style: GoogleFonts.inter(
-                                                    color: Color(0xFFBDBDBD),
-                                                    fontSize: 16)),
+                                                    color: Color(0xFFBDBDBD), fontSize: 16)),
                                             onConfirm: (values) {
-                                              ref.read(pharmacyMainProvider
-                                                      .notifier)
+                                              ref
+                                                  .read(pharmacyMainProvider.notifier)
                                                   .changeSkillList(values);
                                             },
                                             chipDisplay: MultiSelectChipDisplay(
-                                              items: ref.read(pharmacyMainProvider
-                                                      .notifier)
+                                              items: ref
+                                                  .read(pharmacyMainProvider.notifier)
                                                   .skillList
-                                                  ?.map((e) => MultiSelectItem(
-                                                      e, e.toString()))
+                                                  ?.map((e) => MultiSelectItem(e, e.toString()))
                                                   .toList(),
                                               chipColor: Color(0xFF5DB075),
                                               onTap: (value) {
-                                                ref.read(pharmacyMainProvider
-                                                        .notifier)
+                                                ref
+                                                    .read(pharmacyMainProvider.notifier)
                                                     .skillList
                                                     ?.remove(value);
-                                                return ref.read(pharmacyMainProvider
-                                                        .notifier)
+                                                return ref
+                                                    .read(pharmacyMainProvider.notifier)
                                                     .skillList;
                                               },
-                                              textStyle: TextStyle(
-                                                  color: Colors.white),
+                                              textStyle: TextStyle(color: Colors.white),
                                             ),
                                           ),
                                         ],
@@ -513,8 +451,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                               value: softwareFieldEnabled,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  softwareFieldEnabled =
-                                                      !softwareFieldEnabled;
+                                                  softwareFieldEnabled = !softwareFieldEnabled;
                                                   //print(softwareFieldEnabled);
                                                 });
                                               }),
@@ -525,8 +462,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                       height: 10,
                                     ),
                                     Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.9,
+                                      width: MediaQuery.of(context).size.width * 0.9,
                                       decoration: softwareFieldEnabled
                                           ? BoxDecoration(
                                               boxShadow: [
@@ -541,66 +477,49 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                                 color: Color(0xFFE8E8E8),
                                                 width: 2,
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
+                                              borderRadius: BorderRadius.circular(8),
                                             )
                                           : null,
                                       child: Column(
                                         children: <Widget>[
                                           softwareFieldEnabled
-                                              ? MultiSelectBottomSheetField<
-                                                  Software?>(
+                                              ? MultiSelectBottomSheetField<Software?>(
                                                   //enabled: softwareFieldEnabled,
-                                                  selectedColor:
-                                                      Color(0xFF5DB075),
+                                                  selectedColor: Color(0xFF5DB075),
                                                   selectedItemsTextStyle:
-                                                      TextStyle(
-                                                          color: Colors.white),
+                                                      TextStyle(color: Colors.white),
                                                   initialChildSize: 0.4,
                                                   decoration: BoxDecoration(),
-                                                  listType:
-                                                      MultiSelectListType.CHIP,
+                                                  listType: MultiSelectListType.CHIP,
 
                                                   searchable: true,
                                                   items: _softwareItems,
-                                                  buttonText: Text(
-                                                      "Select known skills...",
+                                                  buttonText: Text("Select known skills...",
                                                       style: GoogleFonts.inter(
-                                                          color:
-                                                              Color(0xFFBDBDBD),
-                                                          fontSize: 16)),
+                                                          color: Color(0xFFBDBDBD), fontSize: 16)),
                                                   onConfirm: (values) {
-                                                    ref.read(
-                                                            pharmacyMainProvider
-                                                                .notifier)
-                                                        .changeSoftwareList(
-                                                            values);
+                                                    ref
+                                                        .read(pharmacyMainProvider.notifier)
+                                                        .changeSoftwareList(values);
                                                   },
-                                                  chipDisplay:
-                                                      MultiSelectChipDisplay(
-                                                    items: ref.read(
-                                                            pharmacyMainProvider
-                                                                .notifier)
+                                                  chipDisplay: MultiSelectChipDisplay(
+                                                    items: ref
+                                                        .read(pharmacyMainProvider.notifier)
                                                         .softwareList
-                                                        ?.map((e) =>
-                                                            MultiSelectItem(e,
-                                                                e.toString()))
+                                                        ?.map(
+                                                            (e) => MultiSelectItem(e, e.toString()))
                                                         .toList(),
-                                                    chipColor:
-                                                        Color(0xFF5DB075),
+                                                    chipColor: Color(0xFF5DB075),
                                                     onTap: (value) {
-                                                      ref.read(
-                                                              pharmacyMainProvider
-                                                                  .notifier)
+                                                      ref
+                                                          .read(pharmacyMainProvider.notifier)
                                                           .softwareList
                                                           ?.remove(value);
-                                                      return ref.read(
-                                                              pharmacyMainProvider
-                                                                  .notifier)
+                                                      return ref
+                                                          .read(pharmacyMainProvider.notifier)
                                                           .softwareList;
                                                     },
-                                                    textStyle: TextStyle(
-                                                        color: Colors.white),
+                                                    textStyle: TextStyle(color: Colors.white),
                                                   ),
                                                 )
                                               : Container(),
@@ -627,14 +546,14 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: ref.read(pharmacyMainProvider.notifier)
-                                        .techOnSite,
+                                    value: ref.read(pharmacyMainProvider.notifier).techOnSite,
                                     onChanged: (value) {
-                                      ref.read(pharmacyMainProvider.notifier)
+                                      ref
+                                          .read(pharmacyMainProvider.notifier)
                                           .changeTechOnSite(value);
                                     },
-                                    controlAffinity: ListTileControlAffinity
-                                        .trailing, //  <-- leading Checkbox
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing, //  <-- leading Checkbox
                                   ),
                                 ),
                               ),
@@ -655,14 +574,14 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: ref.read(pharmacyMainProvider.notifier)
-                                        .assistantOnSite,
+                                    value: ref.read(pharmacyMainProvider.notifier).assistantOnSite,
                                     onChanged: (value) {
-                                      ref.read(pharmacyMainProvider.notifier)
+                                      ref
+                                          .read(pharmacyMainProvider.notifier)
                                           .changeAssistantOnSite(value);
                                     },
-                                    controlAffinity: ListTileControlAffinity
-                                        .trailing, //  <-- leading Checkbox
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing, //  <-- leading Checkbox
                                   ),
                                 ),
                               ),
@@ -683,22 +602,18 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          47, 0, 0, 0),
+                                      padding: const EdgeInsets.fromLTRB(47, 0, 0, 0),
                                       child: Material(
                                         elevation: 7,
                                         borderRadius: BorderRadius.circular(15),
                                         child: Container(
                                           height: 55,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.48,
+                                          width: MediaQuery.of(context).size.width * 0.48,
                                           alignment: Alignment.center,
                                           child: TextField(
                                             onChanged: (value) {
-                                              ref.read(pharmacyMainProvider
-                                                      .notifier)
+                                              ref
+                                                  .read(pharmacyMainProvider.notifier)
                                                   .changeHourlyRate(value);
                                             },
                                             keyboardType: TextInputType.number,
@@ -709,23 +624,17 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                             ),
                                             decoration: InputDecoration(
                                               enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                    width: 1.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
+                                                borderSide:
+                                                    BorderSide(color: Colors.black, width: 1.5),
+                                                borderRadius: BorderRadius.circular(15),
                                               ),
                                               focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black,
-                                                    width: 1.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
+                                                borderSide:
+                                                    BorderSide(color: Colors.black, width: 1.5),
+                                                borderRadius: BorderRadius.circular(15),
                                               ),
                                             ),
-                                            inputFormatters: [
-                                              MaskedInputFormatter('\$##.##')
-                                            ],
+                                            inputFormatters: [MaskedInputFormatter('\$##.##')],
                                           ),
                                         ),
                                       ),
@@ -750,14 +659,14 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                       ),
                                     ),
                                     activeColor: Color(0xFF5DB075),
-                                    value: ref.read(pharmacyMainProvider.notifier)
-                                        .limaStatus,
+                                    value: ref.read(pharmacyMainProvider.notifier).limaStatus,
                                     onChanged: (value) {
-                                      ref.read(pharmacyMainProvider.notifier)
+                                      ref
+                                          .read(pharmacyMainProvider.notifier)
                                           .changeLIMAStatus(value);
                                     },
-                                    controlAffinity: ListTileControlAffinity
-                                        .trailing, //  <-- leading Checkbox
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing, //  <-- leading Checkbox
                                   ),
                                 ),
                               ),
@@ -778,20 +687,18 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                       child: Container(
                                         color: Colors.white,
                                         width: 324,
-                                        constraints:
-                                            BoxConstraints(minHeight: 60),
+                                        constraints: BoxConstraints(minHeight: 60),
                                         child: TextField(
                                           maxLines: 3,
                                           keyboardType: TextInputType.text,
                                           textAlign: TextAlign.start,
                                           onChanged: (value) {
-                                            ref.read(pharmacyMainProvider
-                                                    .notifier)
+                                            ref
+                                                .read(pharmacyMainProvider.notifier)
                                                 .changeComments(value);
                                           },
                                           style: TextStyle(
@@ -802,18 +709,14 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                             hintText:
                                                 "Include any important comments for the pharmacist...",
                                             enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.black,
-                                                  width: 1.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
+                                              borderSide:
+                                                  BorderSide(color: Colors.black, width: 1.5),
+                                              borderRadius: BorderRadius.circular(5),
                                             ),
                                             focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.black,
-                                                  width: 1.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
+                                              borderSide:
+                                                  BorderSide(color: Colors.black, width: 1.5),
+                                              borderRadius: BorderRadius.circular(5),
                                             ),
                                           ),
                                         ),
@@ -840,35 +743,27 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                         height: 51,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
-                                      (states) {
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                                 if (states.contains(MaterialState.disabled)) {
                                   return Colors.grey; // Disabled color
                                 }
                                 return Color(0xFF5DB075); // Regular color
                               }),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(100),
                               ))),
-                          onPressed: (!ref.read(pharmacyMainProvider.notifier)
-                                  .isValidCreateShift())
+                          onPressed: (!ref.read(pharmacyMainProvider.notifier).isValidCreateShift())
                               ? () {
                                   print("Pressed");
 
-                                  ref.read(authProvider.notifier)
-                                      .uploadJobToPharmacy(
-                                          ref, ref.read(userProviderLogin.notifier)
-                                              .userUID,
-                                          context);
+                                  ref.read(authProvider.notifier).uploadJobToPharmacy(
+                                      ref, ref.read(userProviderLogin.notifier).userUID, context);
 
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              JobHistoryPharmacy()));
+                                          builder: (context) => JobHistoryPharmacy()));
                                 }
                               : null,
                           child: RichText(

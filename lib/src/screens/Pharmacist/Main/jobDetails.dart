@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pharma_connect/all_used.dart';
+import 'package:connectpharma/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/src/screens/login.dart';
 
 import 'jobHistoryPharmacist.dart';
 
@@ -22,8 +22,7 @@ class JobDetails extends ConsumerWidget {
         elevation: 12,
         title: Text(
           "Shift Details",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
         ),
         backgroundColor: Color(0xFFF6F6F6),
       ),
@@ -38,8 +37,7 @@ class JobDetails extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.grey[100]),
+                      borderRadius: BorderRadius.circular(20), color: Colors.grey[100]),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,13 +54,11 @@ class JobDetails extends ConsumerWidget {
                               children: <Widget>[
                                 //From Date
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -92,13 +88,11 @@ class JobDetails extends ConsumerWidget {
                                 ),
                                 //Time
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -130,13 +124,11 @@ class JobDetails extends ConsumerWidget {
                                 ),
                                 //City
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -152,8 +144,7 @@ class JobDetails extends ConsumerWidget {
                                       RichText(
                                         textAlign: TextAlign.start,
                                         text: TextSpan(
-                                          text:
-                                              "${jobDetails?["pharmacyAddress"]["city"]} ",
+                                          text: "${jobDetails?["pharmacyAddress"]["city"]} ",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.black,
@@ -166,13 +157,11 @@ class JobDetails extends ConsumerWidget {
                                 ),
                                 //Hourly Rate
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -188,8 +177,7 @@ class JobDetails extends ConsumerWidget {
                                       RichText(
                                         textAlign: TextAlign.start,
                                         text: TextSpan(
-                                          text:
-                                              "${jobDetails?["hourlyRate"]}/hr ",
+                                          text: "${jobDetails?["hourlyRate"]}/hr ",
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.black,
@@ -202,13 +190,11 @@ class JobDetails extends ConsumerWidget {
                                 ),
                                 //Tech On Site
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -245,13 +231,11 @@ class JobDetails extends ConsumerWidget {
                               children: <Widget>[
                                 //To Date
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(5, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -281,13 +265,11 @@ class JobDetails extends ConsumerWidget {
                                 ),
                                 //Duration
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 14, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(5, 14, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -318,13 +300,11 @@ class JobDetails extends ConsumerWidget {
                                 ),
                                 //Distance
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(5, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -341,11 +321,9 @@ class JobDetails extends ConsumerWidget {
                                         future: getDistance(
                                             jobDetails!,
                                             ref
-                                                .read(pharmacistMainProvider
-                                                    .notifier)
+                                                .read(pharmacistMainProvider.notifier)
                                                 .userDataMap?["address"]),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot snapshot) {
+                                        builder: (BuildContext context, AsyncSnapshot snapshot) {
                                           return RichText(
                                             textAlign: TextAlign.start,
                                             text: TextSpan(
@@ -364,13 +342,11 @@ class JobDetails extends ConsumerWidget {
                                 ),
                                 //Job Type
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(5, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -399,13 +375,11 @@ class JobDetails extends ConsumerWidget {
                                 ),
                                 //Assistant Site
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 15, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(5, 15, 0, 0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     //mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       RichText(
                                         textAlign: TextAlign.start,
@@ -472,14 +446,9 @@ class JobDetails extends ConsumerWidget {
                                       ),
                                     )
                                   : TextSpan(
-                                      text: jobDetails?["softwareNeeded"]
-                                          .toString()
-                                          .substring(
-                                              jobDetails?["softwareNeeded"]
-                                                      .indexOf("[") +
-                                                  1,
-                                              jobDetails?["softwareNeeded"]
-                                                  .lastIndexOf("]")),
+                                      text: jobDetails?["softwareNeeded"].toString().substring(
+                                          jobDetails?["softwareNeeded"].indexOf("[") + 1,
+                                          jobDetails?["softwareNeeded"].lastIndexOf("]")),
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.black,
@@ -512,14 +481,9 @@ class JobDetails extends ConsumerWidget {
                             RichText(
                               textAlign: TextAlign.start,
                               text: TextSpan(
-                                text: jobDetails?["skillsNeeded"]
-                                    .toString()
-                                    .substring(
-                                        jobDetails?["skillsNeeded"]
-                                                .indexOf("[") +
-                                            1,
-                                        jobDetails?["skillsNeeded"]
-                                            .lastIndexOf("]")),
+                                text: jobDetails?["skillsNeeded"].toString().substring(
+                                    jobDetails?["skillsNeeded"].indexOf("[") + 1,
+                                    jobDetails?["skillsNeeded"].lastIndexOf("]")),
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.black,
@@ -577,15 +541,14 @@ class JobDetails extends ConsumerWidget {
                 height: 51,
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith<Color>((states) {
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                         if (states.contains(MaterialState.disabled)) {
                           return Colors.grey; // Disabled color
                         }
                         return Color(0xFF5DB075); // Regular color
                       }),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
+                      shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100),
                       ))),
                   onPressed: () {
@@ -619,11 +582,9 @@ class JobDetails extends ConsumerWidget {
                                 children: [
                                   RichText(
                                     text: TextSpan(
-                                        text:
-                                            "Are you sure you want to apply for this job? \n\n\n",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 18),
-                                        children: [
+                                        text: "Are you sure you want to apply for this job? \n\n\n",
+                                        style: TextStyle(color: Colors.black, fontSize: 18),
+                                        children: const [
                                           TextSpan(
                                             text:
                                                 "Please only apply for jobs you are interested in and do not spam the pharmacy email or phone, you can and will be reported for such actions. Resulting in withrawal from this service.",
@@ -638,16 +599,13 @@ class JobDetails extends ConsumerWidget {
                                     height: 20,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       TextButton(
                                         child: new Text(
                                           "No",
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              color: Colors.red[400],
-                                              fontSize: 16),
+                                          style: TextStyle(color: Colors.red[400], fontSize: 16),
                                         ),
                                         onPressed: () {
                                           Navigator.of(context).pop();
@@ -657,31 +615,23 @@ class JobDetails extends ConsumerWidget {
                                         child: new Text(
                                           "Yes",
                                           textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                              color: Color(0xFF5DB075),
-                                              fontSize: 16),
+                                          style: TextStyle(color: Color(0xFF5DB075), fontSize: 16),
                                         ),
                                         onPressed: () async {
                                           WriteBatch jobApplicationBatch =
-                                              FirebaseFirestore.instance
-                                                  .batch();
+                                              FirebaseFirestore.instance.batch();
 
                                           //Follow step 1)
                                           await sendApplicantDataToPharmacy(
-                                              ref,
-                                              context, jobApplicationBatch);
+                                              ref, context, jobApplicationBatch);
                                           //Follow step 2)
                                           await sendJobDataToPharmacist(
-                                              ref,
-                                              context, jobApplicationBatch);
-                                          jobApplicationBatch
-                                              .commit()
-                                              .onError((error, stackTrace) {
+                                              ref, context, jobApplicationBatch);
+                                          jobApplicationBatch.commit().onError((error, stackTrace) {
                                             print("ERROR APPLYING: $error");
                                             showDialog(
                                                 context: context,
-                                                builder: (context) =>
-                                                    AlertDialog(
+                                                builder: (context) => AlertDialog(
                                                       title: Text("Error"),
                                                       content: Text(
                                                           "There was an error trying to apply for this job. Please try again after restarting the app."),
@@ -690,8 +640,7 @@ class JobDetails extends ConsumerWidget {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      JobHistoryPharmacist()));
+                                                  builder: (context) => JobHistoryPharmacist()));
                                         },
                                       ),
                                     ],
@@ -724,8 +673,7 @@ class JobDetails extends ConsumerWidget {
 
   Future<void> sendJobDataToPharmacist(
       WidgetRef ref, BuildContext context, WriteBatch batchValue) async {
-    jobDetails
-        ?.addAll({"applicationStatus": "applied", "userType": "Pharmacist"});
+    jobDetails?.addAll({"applicationStatus": "applied", "userType": "Pharmacist"});
     DocumentReference pharmacistJobsCollection = FirebaseFirestore.instance
         .collection("Users")
         .doc(ref.read(userProviderLogin.notifier).userUID)
@@ -743,8 +691,7 @@ class JobDetails extends ConsumerWidget {
   Future<void> sendApplicantDataToPharmacy(
       WidgetRef ref, BuildContext context, WriteBatch batchValue) async {
     Map<String, dynamic>? applicantInformation = Map();
-    Map<String, dynamic>? userDataMap =
-        ref.read(pharmacistMainProvider.notifier).userDataMap;
+    Map<String, dynamic>? userDataMap = ref.read(pharmacistMainProvider.notifier).userDataMap;
     applicantInformation.addAll({
       "jobStatus": "applied",
       "availability": userDataMap?["availability"],
@@ -766,10 +713,7 @@ class JobDetails extends ConsumerWidget {
             .doc(jobDetails?["pharmacyUID"])
             .collection("Main")
             .doc(jobDetails?["jobID"]),
-        {
-          "applicants.${ref.read(userProviderLogin.notifier).userUID}":
-              applicantInformation
-        });
+        {"applicants.${ref.read(userProviderLogin.notifier).userUID}": applicantInformation});
 
     // String? result = await context
     //     .read(authProviderMain.notifier)

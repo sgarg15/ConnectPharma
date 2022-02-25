@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/editPharmacistProfile.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/editPharmacistProfile.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 
 class PharmacistProfile extends ConsumerStatefulWidget {
@@ -31,8 +31,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
         elevation: 12,
         title: Text(
           "Profile",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
         ),
         backgroundColor: Color(0xFFF6F6F6),
       ),
@@ -63,8 +62,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                               children: [
                                 //Title Text/Edit Button
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     RichText(
                                       textAlign: TextAlign.start,
@@ -81,13 +79,11 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditPharmacistProfile()));
+                                                builder: (context) => EditPharmacistProfile()));
                                       },
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Color(0xFF5DB075))),
+                                              MaterialStateProperty.all<Color>(Color(0xFF5DB075))),
                                       child: RichText(
                                         textAlign: TextAlign.start,
                                         text: TextSpan(
@@ -103,17 +99,15 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                 ),
                                 //Profile Picture
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: CircleAvatar(
                                     radius: 52,
                                     backgroundColor: Color(0xFF5DB075),
                                     child: CircleAvatar(
                                       radius: 49,
                                       backgroundColor: Colors.grey,
-                                      backgroundImage: NetworkImage(
-                                          userDataMap?[
-                                              "profilePhotoDownloadURL"]),
+                                      backgroundImage:
+                                          NetworkImage(userDataMap?["profilePhotoDownloadURL"]),
                                     ),
                                   ),
                                 ),
@@ -125,20 +119,16 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.48,
+                                  width: MediaQuery.of(context).size.width * 0.48,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       //Name
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -151,40 +141,31 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                               ),
                                             ),
                                             RichText(
-                                              text: userDataMap?["firstName"] !=
-                                                      null
+                                              text: userDataMap?["firstName"] != null
                                                   ? TextSpan(
-                                                      text: userDataMap?[
-                                                              "firstName"] +
+                                                      text: userDataMap?["firstName"] +
                                                           " " +
-                                                          userDataMap?[
-                                                              "lastName"],
+                                                          userDataMap?["lastName"],
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
+                                                          fontWeight: FontWeight.w600,
                                                           fontSize: 20.0,
-                                                          color:
-                                                              Colors.grey[800]),
+                                                          color: Colors.grey[800]),
                                                     )
                                                   : TextSpan(
                                                       text: "N/A",
                                                       style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
+                                                          fontWeight: FontWeight.w600,
                                                           fontSize: 20.0,
-                                                          color: Colors
-                                                              .grey[800])),
+                                                          color: Colors.grey[800])),
                                             ),
                                           ],
                                         ),
                                       ),
                                       //Email
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -199,11 +180,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: userDataMap?["email"] ??
-                                                      "N/A",
+                                                  text: userDataMap?["email"] ?? "N/A",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 20.0,
                                                       color: Colors.grey[800]),
                                                 )),
@@ -212,11 +191,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       ),
                                       //Address
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -231,12 +208,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text:
-                                                      userDataMap?["address"] ??
-                                                          "N/A",
+                                                  text: userDataMap?["address"] ?? "N/A",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 20.0,
                                                       color: Colors.grey[800]),
                                                 )),
@@ -245,11 +219,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       ),
                                       //Graduation Date
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -264,12 +236,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: userDataMap?[
-                                                          "gradutationYear"] ??
-                                                      "N/A",
+                                                  text: userDataMap?["gradutationYear"] ?? "N/A",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 20.0,
                                                       color: Colors.grey[800]),
                                                 )),
@@ -278,11 +247,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       ),
                                       //First Year Licensed Date
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -297,12 +264,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: userDataMap?[
-                                                          "firstYearLicensed"] ??
-                                                      "N/A",
+                                                  text: userDataMap?["firstYearLicensed"] ?? "N/A",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 20.0,
                                                       color: Colors.grey[800]),
                                                 )),
@@ -312,11 +276,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
 
                                       //Signature
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -329,9 +291,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: userDataMap?[
-                                                          "signatureDownloadURL"] !=
-                                                      null
+                                              onTap: userDataMap?["signatureDownloadURL"] != null
                                                   ? () {
                                                       showDialog(
                                                           context: context,
@@ -340,44 +300,33 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                                               child: Container(
                                                                 height: 120,
                                                                 //padding: EdgeInsets.all(3),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  border: Border
-                                                                      .all(
+                                                                decoration: BoxDecoration(
+                                                                  border: Border.all(
                                                                     width: 3,
-                                                                    color: Color(
-                                                                        0xFF5DB075),
+                                                                    color: Color(0xFF5DB075),
                                                                   ),
                                                                 ),
-                                                                child: Image.network(
-                                                                    userDataMap?[
-                                                                        "signatureDownloadURL"]),
+                                                                child: Image.network(userDataMap?[
+                                                                    "signatureDownloadURL"]),
                                                               ),
                                                             );
                                                           });
                                                     }
                                                   : () {
                                                       final snackBar = SnackBar(
-                                                        content: Text(
-                                                            "No Signature Found."),
-                                                        behavior:
-                                                            SnackBarBehavior
-                                                                .floating,
-                                                        duration: Duration(
-                                                            seconds: 2),
+                                                        content: Text("No Signature Found."),
+                                                        behavior: SnackBarBehavior.floating,
+                                                        duration: Duration(seconds: 2),
                                                       );
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                              snackBar);
+                                                      ScaffoldMessenger.of(context)
+                                                          .showSnackBar(snackBar);
                                                     },
                                               child: RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
                                                   text: "View",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 18.0,
                                                       color: Color(0xFF5DB075)),
                                                 ),
@@ -390,19 +339,15 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                   ),
                                 ),
                                 Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.41,
+                                  width: MediaQuery.of(context).size.width * 0.41,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       //Type
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 12, 0, 15),
+                                        padding: const EdgeInsets.fromLTRB(0, 12, 0, 15),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -417,9 +362,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text:
-                                                    userDataMap?["userType"] ??
-                                                        "N/A",
+                                                text: userDataMap?["userType"] ?? "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 20.0,
@@ -431,11 +374,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       ),
                                       //Phone
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -450,9 +391,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                               textAlign: TextAlign.start,
                                               text: TextSpan(
-                                                text: userDataMap?[
-                                                        "phoneNumber"] ??
-                                                    "N/A",
+                                                text: userDataMap?["phoneNumber"] ?? "N/A",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 20.0,
@@ -467,11 +406,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       ),
                                       //Graduated From
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -486,12 +423,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: userDataMap?[
-                                                          "institutionName"] ??
-                                                      "N/A",
+                                                  text: userDataMap?["institutionName"] ?? "N/A",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 20.0,
                                                       color: Colors.grey[800]),
                                                 )),
@@ -503,11 +437,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       ),
                                       //License Number
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -522,12 +454,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: userDataMap?[
-                                                          "registrationNumber"] ??
-                                                      "N/A",
+                                                  text: userDataMap?["registrationNumber"] ?? "N/A",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 20.0,
                                                       color: Colors.grey[800]),
                                                 )),
@@ -539,11 +468,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       ),
                                       //First Year Licensed Date
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -558,12 +485,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                             RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
-                                                  text: userDataMap?[
-                                                          "firstYearLicensed"] ??
-                                                      "N/A",
+                                                  text: userDataMap?["firstYearLicensed"] ?? "N/A",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 20.0,
                                                       color: Colors.grey[800]),
                                                 )),
@@ -575,11 +499,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       ),
                                       //Resume
                                       Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 15, 0, 0),
+                                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
                                             RichText(
                                               textAlign: TextAlign.start,
@@ -592,18 +514,13 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: userDataMap?[
-                                                          "resumeDownloadURL"] !=
-                                                      null
+                                              onTap: userDataMap?["resumeDownloadURL"] != null
                                                   ? () {
                                                       Navigator.push(
                                                         context,
-                                                        MaterialPageRoute<
-                                                            dynamic>(
-                                                          builder: (_) =>
-                                                              PDFViewerCachedFromUrl(
-                                                            url: userDataMap![
-                                                                    "resumeDownloadURL"]
+                                                        MaterialPageRoute<dynamic>(
+                                                          builder: (_) => PDFViewerCachedFromUrl(
+                                                            url: userDataMap!["resumeDownloadURL"]
                                                                 .toString(),
                                                           ),
                                                         ),
@@ -611,26 +528,19 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                                     }
                                                   : () {
                                                       final snackBar = SnackBar(
-                                                        content: Text(
-                                                            "No Resume Found."),
-                                                        behavior:
-                                                            SnackBarBehavior
-                                                                .floating,
-                                                        duration: Duration(
-                                                            seconds: 2),
+                                                        content: Text("No Resume Found."),
+                                                        behavior: SnackBarBehavior.floating,
+                                                        duration: Duration(seconds: 2),
                                                       );
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                              snackBar);
+                                                      ScaffoldMessenger.of(context)
+                                                          .showSnackBar(snackBar);
                                                     },
                                               child: RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
                                                   text: "View",
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                      fontWeight: FontWeight.w600,
                                                       fontSize: 18.0,
                                                       color: Color(0xFF5DB075)),
                                                 ),
@@ -675,14 +585,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: userDataMap?["knownSoftware"]
-                                            .toString()
-                                            .substring(
-                                                userDataMap?["knownSoftware"]
-                                                        .indexOf("[") +
-                                                    1,
-                                                userDataMap?["knownSoftware"]
-                                                    .lastIndexOf("]")),
+                                        text: userDataMap?["knownSoftware"].toString().substring(
+                                            userDataMap?["knownSoftware"].indexOf("[") + 1,
+                                            userDataMap?["knownSoftware"].lastIndexOf("]")),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 18.0,
@@ -724,14 +629,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: userDataMap?["knownSkills"]
-                                            .toString()
-                                            .substring(
-                                                userDataMap?["knownSkills"]
-                                                        .indexOf("[") +
-                                                    1,
-                                                userDataMap?["knownSkills"]
-                                                    .lastIndexOf("]")),
+                                        text: userDataMap?["knownSkills"].toString().substring(
+                                            userDataMap?["knownSkills"].indexOf("[") + 1,
+                                            userDataMap?["knownSkills"].lastIndexOf("]")),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 18.0,
@@ -758,8 +658,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                           color: Colors.grey),
                                     ),
                                   ),
-                                  if (userDataMap!["knownLanguages"] ==
-                                      null) ...[
+                                  if (userDataMap!["knownLanguages"] == null) ...[
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
@@ -774,14 +673,9 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: userDataMap?["knownLanguages"]
-                                            .toString()
-                                            .substring(
-                                                userDataMap?["knownLanguages"]
-                                                        .indexOf("[") +
-                                                    1,
-                                                userDataMap?["knownLanguages"]
-                                                    .lastIndexOf("]")),
+                                        text: userDataMap?["knownLanguages"].toString().substring(
+                                            userDataMap?["knownLanguages"].indexOf("[") + 1,
+                                            userDataMap?["knownLanguages"].lastIndexOf("]")),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 18.0,
@@ -824,13 +718,10 @@ class PDFViewerCachedFromUrl extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.7,
-          child: const PDF(fitEachPage: false, fitPolicy: FitPolicy.WIDTH)
-              .cachedFromUrl(
+          child: const PDF(fitEachPage: false, fitPolicy: FitPolicy.WIDTH).cachedFromUrl(
             url,
-            placeholder: (double progress) =>
-                Center(child: Text('$progress %')),
-            errorWidget: (dynamic error) =>
-                Center(child: Text(error.toString())),
+            placeholder: (double progress) => Center(child: Text('$progress %')),
+            errorWidget: (dynamic error) => Center(child: Text(error.toString())),
           ),
         ),
       ),

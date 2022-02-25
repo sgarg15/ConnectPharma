@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/login.dart';
+import 'package:connectpharma/src/screens/login.dart';
 
 import 'Pharmacist/Main/jobHistoryPharmacist.dart';
 import 'Pharmacy/Main/jobHistoryPharmacy.dart';
@@ -15,30 +15,28 @@ class AutoLogin extends ConsumerStatefulWidget {
 
 class _AutoLoginState extends ConsumerState<AutoLogin> {
   Future logInUser(WidgetRef ref) async {
-    
-    String? userType = await ref.read(authProviderLogin.notifier)
+    String? userType = await ref
+        .read(authProviderLogin.notifier)
         .getCurrentUserData(FirebaseAuth.instance.currentUser?.uid);
     print("User Type in Log In User: $userType");
 
     if (userType == "Pharmacist") {
       print("Pharmacist");
       ref.read(logInProvider.notifier).clearAllValue();
-      ref.read(userProviderLogin.notifier)
-          .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
+      ref.read(userProviderLogin.notifier).changeUserUID(FirebaseAuth.instance.currentUser?.uid);
 
       //send to pharmacist main page
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
     } else if (userType == "Pharmacy") {
       print("Pharmacy");
 
       ref.read(logInProvider.notifier).clearAllValue();
-      ref.read(userProviderLogin.notifier)
-          .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
+      ref.read(userProviderLogin.notifier).changeUserUID(FirebaseAuth.instance.currentUser?.uid);
 
       //send to pharmacy main page
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => JobHistoryPharmacy()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => JobHistoryPharmacy()));
     } else if (userType == "Pharmacy Assistant") {
       print("Pharmacy Assistant");
 
@@ -46,8 +44,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
       ref.read(logInProvider.notifier).clearAllValue();
 
       print("Sending to Pharmacist SignUp page2");
-      ref.read(userProviderLogin.notifier)
-          .changeUserUID(FirebaseAuth.instance.currentUser?.uid);
+      ref.read(userProviderLogin.notifier).changeUserUID(FirebaseAuth.instance.currentUser?.uid);
 
       print("Sending to Pharmacist SignUp page3");
 
@@ -66,8 +63,8 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
       print("Sending to Pharmacist SignUp page3");
 
       //send to pharmacist main page
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => JobHistoryPharmacist()));
     }
   }
 
@@ -110,23 +107,21 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
                 height: 51,
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith<Color>((states) {
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                         if (states.contains(MaterialState.disabled)) {
                           return Colors.grey; // Disabled color
                         }
                         return Color(0xFF5DB075); // Regular color
                       }),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
+                      shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100),
                       ))),
                   onPressed: () {
                     ref.read(authProviderLogin.notifier).signOut();
                     ref.read(logInProvider.notifier).clearAllValue();
                     ref.read(userProviderLogin.notifier).changeUserUID(null);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LogInPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LogInPage()));
                   },
                   child: RichText(
                     text: TextSpan(

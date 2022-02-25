@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pharma_connect/model/pharmacistSignUpModel.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
+import 'package:connectpharma/model/pharmacistSignUpModel.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/screens/Pharmacist/Sign Up/5pharmacistSkills.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Sign Up/5pharmacistSkills.dart';
 
 class PharmacistLegalInformation extends ConsumerStatefulWidget {
   PharmacistLegalInformation({Key? key}) : super(key: key);
@@ -120,7 +120,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                 .changeLicenseRestricted(value);
                           },
                         ),
-                       SizedBox(height: 20),
+                        SizedBox(height: 20),
 
                         // //Professional Malpractice
                         customTextAndToggle(
@@ -131,7 +131,6 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                             ref.read(pharmacistSignUpProvider.notifier).changeMalpractice(value);
                           },
                         ),
-                      
                         SizedBox(height: 20),
 
                         // //Convicted Felon
@@ -165,20 +164,19 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
         height: 51,
         child: ElevatedButton(
           style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
                 if (states.contains(MaterialState.disabled)) {
                   return Colors.grey; // Disabled color
                 }
                 return Color(0xFF5DB075); // Regular color
               }),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100),
               ))),
           onPressed: () {
             print("Pressed");
 
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => PharmacistSkills()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PharmacistSkills()));
           },
           child: RichText(
             text: TextSpan(
@@ -192,7 +190,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
           ),
         ),
       ),
-              );
+    );
   }
 
   Column customTextAndToggle(

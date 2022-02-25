@@ -22,11 +22,5 @@
     "ui": {
       "enabled": true
     }
-  },
-  "storage": {
-    "rules": "storage.rules"
-  },
-  "firestore": {
-    "rules": "firestore.rules"
   }
 }

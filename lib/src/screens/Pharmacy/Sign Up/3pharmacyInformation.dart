@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:pharma_connect/all_used.dart';
+import 'package:connectpharma/all_used.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/src/Address%20Search/locationSearch.dart';
-import 'package:pharma_connect/src/Address%20Search/placeService.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/4pharmacyManagerInformation.dart';
+import 'package:connectpharma/src/Address%20Search/locationSearch.dart';
+import 'package:connectpharma/src/Address%20Search/placeService.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign Up/4pharmacyManagerInformation.dart';
 import 'package:uuid/uuid.dart';
-import 'package:pharma_connect/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
+import 'package:connectpharma/src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
 
 class PharmacyInformation extends ConsumerStatefulWidget {
   PharmacyInformation({Key? key}) : super(key: key);
@@ -18,9 +18,8 @@ class PharmacyInformation extends ConsumerStatefulWidget {
 }
 
 class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
-  final _items = software
-      .map((software) => MultiSelectItem<Software>(software, software.name))
-      .toList();
+  final _items =
+      software.map((software) => MultiSelectItem<Software>(software, software.name)).toList();
 
   @override
   void initState() {
@@ -29,14 +28,14 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController city = TextEditingController(
-        text: ref.read(pharmacySignUpProvider.notifier).city);
-    TextEditingController streetAddress = TextEditingController(
-        text: ref.read(pharmacySignUpProvider.notifier).streetAddress);
-    TextEditingController postalCode = TextEditingController(
-        text: ref.read(pharmacySignUpProvider.notifier).postalCode);
-    TextEditingController country = TextEditingController(
-        text: ref.read(pharmacySignUpProvider.notifier).country);
+    TextEditingController city =
+        TextEditingController(text: ref.read(pharmacySignUpProvider.notifier).city);
+    TextEditingController streetAddress =
+        TextEditingController(text: ref.read(pharmacySignUpProvider.notifier).streetAddress);
+    TextEditingController postalCode =
+        TextEditingController(text: ref.read(pharmacySignUpProvider.notifier).postalCode);
+    TextEditingController country =
+        TextEditingController(text: ref.read(pharmacySignUpProvider.notifier).country);
 
     return Scaffold(
       appBar: AppBar(
@@ -69,8 +68,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
                 child: RichText(
                   textAlign: TextAlign.left,
                   text: TextSpan(
-                    text:
-                        "Please provide us with information about the pharmacy.",
+                    text: "Please provide us with information about the pharmacy.",
                     style: GoogleFonts.questrial(
                       fontSize: 15,
                       color: Colors.black,
@@ -88,8 +86,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               hintText: "Enter the Pharmacy name...",
               keyboardStyle: TextInputType.name,
               onChanged: (String pharmacyName) {
-                ref.read(pharmacySignUpProvider.notifier)
-                    .changePharmacyName(pharmacyName);
+                ref.read(pharmacySignUpProvider.notifier).changePharmacyName(pharmacyName);
               },
               validation: (value) {
                 if (value == null || value.isEmpty) {
@@ -97,8 +94,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
                 }
                 return null;
               },
-              initialValue:
-                  ref.read(pharmacySignUpProvider.notifier).pharmacyName,
+              initialValue: ref.read(pharmacySignUpProvider.notifier).pharmacyName,
             ),
             SizedBox(height: 20),
 
@@ -112,8 +108,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               hintText: "Enter the Store Number...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String storeNumber) {
-                ref.read(pharmacySignUpProvider.notifier)
-                    .changeStoreNumber(storeNumber);
+                ref.read(pharmacySignUpProvider.notifier).changeStoreNumber(storeNumber);
               },
               validation: (value) {
                 if (value == null || value.isEmpty) {
@@ -121,8 +116,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
                 }
                 return null;
               },
-              initialValue:
-                  ref.read(pharmacySignUpProvider.notifier).storeNumber,
+              initialValue: ref.read(pharmacySignUpProvider.notifier).storeNumber,
             ),
             SizedBox(height: 20),
 
@@ -151,8 +145,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               hintText: "Enter the postal code...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String postalCode) {
-                ref.read(pharmacySignUpProvider.notifier)
-                    .changePostalCode(postalCode);
+                ref.read(pharmacySignUpProvider.notifier).changePostalCode(postalCode);
               },
               validation: (value) {
                 if (value == null || value.isEmpty) {
@@ -170,8 +163,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               hintText: "Enter the country...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String country) {
-                ref.read(pharmacySignUpProvider.notifier)
-                    .changeCountry(country);
+                ref.read(pharmacySignUpProvider.notifier).changeCountry(country);
               },
               validation: (value) {
                 if (value == null || value.isEmpty) {
@@ -189,8 +181,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               hintText: "+1 234 567 8910",
               keyboardStyle: TextInputType.number,
               onChanged: (String phoneNumber) {
-                ref.read(pharmacySignUpProvider.notifier)
-                    .changePhoneNumberPharmacy(phoneNumber);
+                ref.read(pharmacySignUpProvider.notifier).changePhoneNumberPharmacy(phoneNumber);
               },
               validation: (value) {
                 if (value.length < 4) {
@@ -198,8 +189,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
                 }
                 return null;
               },
-              initialValue: ref.read(pharmacySignUpProvider.notifier)
-                  .phoneNumberPharmacy,
+              initialValue: ref.read(pharmacySignUpProvider.notifier).phoneNumberPharmacy,
               formatter: [PhoneInputFormatter()],
             ),
             SizedBox(height: 20),
@@ -210,8 +200,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               hintText: "+1 234 567 8910",
               keyboardStyle: TextInputType.number,
               onChanged: (String faxNumber) {
-                ref.read(pharmacySignUpProvider.notifier)
-                    .changeFaxNumber(faxNumber);
+                ref.read(pharmacySignUpProvider.notifier).changeFaxNumber(faxNumber);
               },
               validation: (value) {
                 if (value.length < 4) {
@@ -219,8 +208,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
                 }
                 return null;
               },
-              initialValue:
-                  ref.read(pharmacySignUpProvider.notifier).faxNumber,
+              initialValue: ref.read(pharmacySignUpProvider.notifier).faxNumber,
               formatter: [PhoneInputFormatter()],
             ),
             SizedBox(height: 20),
@@ -231,7 +219,8 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
               hintText: "Enter the accreditation province...",
               keyboardStyle: TextInputType.streetAddress,
               onChanged: (String accreditationProvince) {
-                ref.read(pharmacySignUpProvider.notifier)
+                ref
+                    .read(pharmacySignUpProvider.notifier)
                     .changeAccreditationProvince(accreditationProvince);
               },
               validation: (value) {
@@ -242,8 +231,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
                 }
                 return null;
               },
-              initialValue: ref.read(pharmacySignUpProvider.notifier)
-                  .accreditationProvince,
+              initialValue: ref.read(pharmacySignUpProvider.notifier).accreditationProvince,
             ),
             SizedBox(height: 20),
 
@@ -270,9 +258,11 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed))
+                  if (states.contains(MaterialState.pressed)) {
                     return Color(0xFF5DB075);
-                  else if (states.contains(MaterialState.disabled)) return Colors.grey;
+                  } else if (states.contains(MaterialState.disabled)) {
+                    return Colors.grey;
+                  }
                   return Color(0xFF5DB075); // Use the component's default.
                 },
               ),
@@ -367,7 +357,7 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
           ),
         ),
       ],
-          );
+    );
   }
 
   Column getPharmacyAddress(TextEditingController streetAddress, BuildContext context,

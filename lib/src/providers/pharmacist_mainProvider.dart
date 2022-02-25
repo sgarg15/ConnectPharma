@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/pharmacistMainModel.dart';
+import 'package:connectpharma/model/pharmacistMainModel.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
@@ -9,7 +9,6 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
 
   List<PickerDateRange> get dateRanges => state.dateRanges;
   Map<String, dynamic>? get userDataMap => state.userData;
-  
   DateTime? get startDate => state.startDate;
   DateTime? get endDate => state.endDate;
   File? get resumePDFData => state.resumePDF;

@@ -113,7 +113,7 @@ class PharmacistSignUpModel {
       registrationNumber: registrationNumber ?? this.registrationNumber,
       registrationProvince: registrationProvince ?? this.registrationProvince,
       graduationYear: graduationYear ?? this.graduationYear,
-      institutionName: instituationName ?? this.institutionName,
+      institutionName: instituationName ?? institutionName,
       workingExperiance: workingExperiance ?? this.workingExperiance,
       willingToMove: willingToMove ?? this.willingToMove,
       entitledToWork: entitledToWork ?? this.entitledToWork,

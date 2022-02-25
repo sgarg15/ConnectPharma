@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/pharmacySignUpModel.dart';
+import 'package:connectpharma/model/pharmacySignUpModel.dart';
 import 'package:email_validator/email_validator.dart';
 
 import '../../all_used.dart';
@@ -10,8 +10,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   PharmacySignUpProvider() : super(PharmacySignUpModel());
 
   bool isValidSignUp() {
-    if (EmailValidator.validate(state.email.toString()) == false ||
-        state.password.length < 6) {
+    if (EmailValidator.validate(state.email.toString()) == false || state.password.length < 6) {
       return true;
     } else {
       return false;

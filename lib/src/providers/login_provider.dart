@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pharma_connect/model/loginModel.dart';
+import 'package:connectpharma/model/loginModel.dart';
 
 class LogInProvider extends StateNotifier<LogInModel> {
   LogInProvider() : super(LogInModel());
@@ -9,8 +9,7 @@ class LogInProvider extends StateNotifier<LogInModel> {
   String get password => state.password;
 
   bool isValid() {
-    if (EmailValidator.validate(state.email.toString()) == false ||
-        state.password.length < 6) {
+    if (EmailValidator.validate(state.email.toString()) == false || state.password.length < 6) {
       print("true");
       return true;
     } else {
