@@ -198,7 +198,6 @@ class _PharmacyManagerInformationState extends ConsumerState<PharmacyManagerInfo
                       setState(() {
                         disableButton = true;
                       });
-
                       ref
                           .read(authProvider.notifier)
                           .registerWithEmailAndPassword(

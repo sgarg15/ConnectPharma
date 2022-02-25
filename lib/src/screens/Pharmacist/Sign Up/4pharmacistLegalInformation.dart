@@ -131,7 +131,6 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                             ref.read(pharmacistSignUpProvider.notifier).changeMalpractice(value);
                           },
                         ),
-
                         SizedBox(height: 20),
 
                         // //Convicted Felon
