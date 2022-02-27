@@ -6,6 +6,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import './src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import './src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import './src/screens/autoLogin.dart';
@@ -93,54 +94,156 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
   @override
   Widget build(BuildContext context) {
+    var selectUserTypeButtonStyle = ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.black.withOpacity(0.36)),
+        elevation: MaterialStateProperty.all(0),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        )));
     return Scaffold(
       body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        //set background color to gradient
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: const [
+              Color(0xFF194EB6),
+              Color(0xFF1C7E9D),
+              Color(0xFF0798B8),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: const [0.0, 0.55, 1.0],
+            tileMode: TileMode.clamp,
+          ),
+        ),
         child: Stack(
-          alignment: Alignment.center,
           children: <Widget>[
-            //Pharma Text
+            //Top Left corner circles
+            SizedBox(
+              height: 220,
+              width: 220,
+              child: Container(
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.02)),
+                transform:
+                    Matrix4.translationValues(MediaQuery.of(context).size.width * -0.2, -85, 0),
+              ),
+            ),
+            SizedBox(
+              height: 260,
+              width: 260,
+              child: Container(
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.02)),
+                transform:
+                    Matrix4.translationValues(MediaQuery.of(context).size.width * -0.2, -85, 0),
+              ),
+            ),
+
+            // Bottom Right Corner Circles
+            SizedBox(
+              height: 180,
+              width: 180,
+              child: Container(
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.03)),
+                transform:
+                    Matrix4.translationValues(MediaQuery.of(context).size.width * 0.75, 700, 0),
+              ),
+            ),
+            SizedBox(
+              height: 220,
+              width: 220,
+              child: Container(
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.03)),
+                transform:
+                    Matrix4.translationValues(MediaQuery.of(context).size.width * 0.65, 665, 0),
+              ),
+            ),
+
+            //Connect Text
             Container(
-              alignment: const Alignment(-0.45, -0.55),
+              alignment: const Alignment(0, -0.55),
               child: RichText(
-                text: const TextSpan(
-                  text: "Pharma",
+                text: TextSpan(
+                  text: "Connect",
                   style:
-                      TextStyle(fontWeight: FontWeight.w300, fontSize: 50.0, color: Colors.black),
+                      TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40.0,
+                      color: Colors.white,
+                      fontFamily: GoogleFonts.montserrat().fontFamily),
+                      
                 ),
               ),
             ),
-            //Connect Text
+            
+            //Pharma Text
             Container(
               //top: 240,
               // left: 130,
-              alignment: const Alignment(0.45, -0.35),
+              alignment: const Alignment(0, -0.43),
               child: RichText(
-                text: const TextSpan(
-                  text: "Connect",
+                text: TextSpan(
+                  text: "Pharma",
                   style:
-                      TextStyle(fontWeight: FontWeight.w300, fontSize: 50.0, color: Colors.black),
+                      TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40.0,
+                      color: Colors.white,
+                      fontFamily: GoogleFonts.montserrat().fontFamily),
                 ),
               ),
             ),
+
             //Register Text
             Container(
-              //top: 360,
-              alignment: const Alignment(0, -0.1),
-              child: RichText(
-                text: const TextSpan(
-                  text: "Register",
-                  style:
-                      TextStyle(fontWeight: FontWeight.w300, fontSize: 35.0, color: Colors.black),
-                ),
+              alignment: const Alignment(0, -0.12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                        margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                        child: Divider(
+                          color: Colors.white.withOpacity(0.18),
+                          thickness: 1.5,
+                        )),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: "Register as",
+                      style:
+                          TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 18.0,
+                          color: Colors.white.withOpacity(0.57),
+                          fontFamily: GoogleFonts.montserrat().fontFamily),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                        margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+                        child: Divider(
+                          color: Colors.white.withOpacity(0.18),
+                          thickness: 1.5,
+                        )),
+                  ),
+                ],
               ),
             ),
+            
             //Button For Pharmacist Registration
             Container(
-              alignment: const Alignment(0, 0.1),
+              alignment: const Alignment(0, 0.05),
               child: SizedBox(
                 width: 300,
                 height: 50,
                 child: ElevatedButton(
+                  style: selectUserTypeButtonStyle,
                   onPressed: () {
                     //Send to Pharmacist Sign Up Page
                     Navigator.push(
@@ -151,10 +254,12 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                                 )));
                   },
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: "Pharmacist",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                     ),
                   ),
@@ -164,11 +269,12 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Pharmacy Assistant
             Container(
-              alignment: const Alignment(0, 0.3),
+              alignment: const Alignment(0, 0.25),
               child: SizedBox(
                 width: 300,
                 height: 50,
                 child: ElevatedButton(
+                  style: selectUserTypeButtonStyle,
                   onPressed: () {
                     //Send to Pharmacy Assistant Sign Up Page
                     Navigator.push(
@@ -179,10 +285,12 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                                 )));
                   },
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: "Pharmacy Assistant",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                     ),
                   ),
@@ -192,11 +300,12 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Pharmacy Technician
             Container(
-              alignment: const Alignment(0, 0.5),
+              alignment: const Alignment(0, 0.45),
               child: SizedBox(
                 width: 300,
                 height: 50,
                 child: ElevatedButton(
+                  style: selectUserTypeButtonStyle,
                   onPressed: () {
                     //Send to Pharmacy Assistant Sign Up Page
                     Navigator.push(
@@ -207,10 +316,12 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                                 )));
                   },
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: "Pharmacy Technician",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                     ),
                   ),
@@ -220,21 +331,24 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Button For Pharmacy Registration
             Container(
-              alignment: const Alignment(0, 0.7),
+              alignment: const Alignment(0, 0.65),
               child: SizedBox(
                 width: 300,
                 height: 50,
                 child: ElevatedButton(
+                  style: selectUserTypeButtonStyle,
                   onPressed: () {
                     //Send to Pharmacy Sign Up Page
                     Navigator.push(
                         context, MaterialPageRoute(builder: (context) => const PharmacySignUpPage()));
                   },
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       text: "Pharmacy",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                     ),
                   ),
@@ -342,16 +456,16 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Log In Text and Button
             Container(
-              alignment: const Alignment(0, 0.95),
+              alignment: const Alignment(0, 0.9),
               child: GestureDetector(
                 child: RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                     text: "Log In",
                     style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 25.0,
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 18.0,
+                      color: Colors.white,
+                      fontFamily: GoogleFonts.montserrat().fontFamily,
                     ),
                   ),
                 ),
