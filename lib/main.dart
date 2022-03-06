@@ -12,9 +12,11 @@ import './src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import './src/screens/autoLogin.dart';
 import './src/screens/login.dart';
 import './src/screens/Pharmacy/Sign Up/1pharmacy_signup.dart';
-
 import 'src/providers/auth_provider.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/services.dart';
+import 'package:device_preview/device_preview.dart';
+
 
 //TODO: Change Registration Province In Pharmacist to ask for Full province and not abbreviation for pharmacist signup
 //Decrease Registration Number from 5 to 4 digits for pharmacist signup
@@ -58,12 +60,21 @@ Future<void> main() async {
 
   await dotenv.load();
   runApp(
-    const ProviderScope(
+    DevicePreview(
+      enabled: false,
+      builder: (context) {
+        return ProviderScope(
       child: MaterialApp(
+            useInheritedMediaQuery: true,
+            locale: DevicePreview.locale(context),
+            builder: DevicePreview.appBuilder,
         home: ConnectPharma(),
         debugShowCheckedModeBanner: false,
       ),
+        );
+      },
     ),
+    
   );
 }
 
@@ -94,6 +105,10 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     var selectUserTypeButtonStyle = ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.black.withOpacity(0.36)),
         elevation: MaterialStateProperty.all(0),
