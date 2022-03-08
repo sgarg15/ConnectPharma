@@ -216,7 +216,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Register Text
             Container(
-              alignment: const Alignment(0, -0.12),
+              alignment: const Alignment(0, -0.09),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -253,7 +253,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
             
             //Button For Pharmacist Registration
             Container(
-              alignment: const Alignment(0, 0.05),
+              alignment: const Alignment(0, 0.07),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -284,7 +284,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Pharmacy Assistant
             Container(
-              alignment: const Alignment(0, 0.25),
+              alignment: const Alignment(0, 0.27),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -315,7 +315,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Pharmacy Technician
             Container(
-              alignment: const Alignment(0, 0.45),
+              alignment: const Alignment(0, 0.47),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -346,7 +346,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Button For Pharmacy Registration
             Container(
-              alignment: const Alignment(0, 0.65),
+              alignment: const Alignment(0, 0.67),
               child: SizedBox(
                 width: 300,
                 height: 50,
