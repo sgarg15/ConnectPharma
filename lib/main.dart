@@ -251,7 +251,9 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
               ),
             ),
             
-            //Button For Pharmacist Registration
+            //Buttons
+
+            //Button For Pharmacy Registration
             Container(
               alignment: const Alignment(0, 0.07),
               child: SizedBox(
@@ -260,7 +262,35 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                 child: ElevatedButton(
                   style: selectUserTypeButtonStyle,
                   onPressed: () {
-                    //Send to Pharmacist Sign Up Page
+                    //Send to Pharmacy Sign Up Page
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const PharmacySignUpPage()));
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Pharmacy",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            //Pharmacist
+            Container(
+              alignment: const Alignment(0, 0.27),
+              child: SizedBox(
+                width: 300,
+                height: 50,
+                child: ElevatedButton(
+                  style: selectUserTypeButtonStyle,
+                  onPressed: () {
+                    //Send to Pharmacy Assistant Sign Up Page
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -284,7 +314,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Pharmacy Assistant
             Container(
-              alignment: const Alignment(0, 0.27),
+              alignment: const Alignment(0, 0.47),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -315,7 +345,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
 
             //Pharmacy Technician
             Container(
-              alignment: const Alignment(0, 0.47),
+              alignment: const Alignment(0, 0.67),
               child: SizedBox(
                 width: 300,
                 height: 50,
@@ -333,33 +363,6 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                   child: RichText(
                     text: TextSpan(
                       text: "Pharmacy Technician",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.montserrat().fontFamily,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            //Button For Pharmacy Registration
-            Container(
-              alignment: const Alignment(0, 0.67),
-              child: SizedBox(
-                width: 300,
-                height: 50,
-                child: ElevatedButton(
-                  style: selectUserTypeButtonStyle,
-                  onPressed: () {
-                    //Send to Pharmacy Sign Up Page
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => const PharmacySignUpPage()));
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Pharmacy",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

@@ -1227,6 +1227,8 @@ class _CreateDrawerHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     print("Creating Header");
+    String? profilePhotoDownloadURL =
+        ref.read(pharmacistMainProvider.notifier).userDataMap?["profilePhotoDownloadURL"];
     return Container(
       height: 140,
       child: DrawerHeader(
@@ -1241,9 +1243,7 @@ class _CreateDrawerHeader extends ConsumerWidget {
                 radius: 30.0,
                 backgroundColor: const Color(0xFF778899),
                 //Change to retrieve photo from firestore
-                backgroundImage: NetworkImage(ref
-                    .read(pharmacistMainProvider.notifier)
-                    .userDataMap?["profilePhotoDownloadURL"])),
+                backgroundImage: NetworkImage(profilePhotoDownloadURL ?? "")),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
