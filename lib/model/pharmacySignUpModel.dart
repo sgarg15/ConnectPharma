@@ -18,6 +18,7 @@ class PharmacySignUpModel {
   String storeNumber;
   String city;
   String postalCode;
+  String province;
   String country;
   String phoneNumberPharmacy;
   String faxNumberPharmacy;
@@ -43,6 +44,7 @@ class PharmacySignUpModel {
     this.storeNumber = "",
     this.city = "",
     this.postalCode = "",
+    this.province = "",
     this.country = "",
     this.phoneNumberPharmacy = "",
     this.faxNumberPharmacy = "",
@@ -68,6 +70,7 @@ class PharmacySignUpModel {
     String? storeNumber,
     String? city,
     String? postalCode,
+    String? province,
     String? country,
     String? phoneNumberPharmacy,
     String? faxNumberPharmacy,
@@ -92,11 +95,11 @@ class PharmacySignUpModel {
       storeNumber: storeNumber ?? this.storeNumber,
       city: city ?? this.city,
       postalCode: postalCode ?? this.postalCode,
+      province: province ?? this.province,
       country: country ?? this.country,
       phoneNumberPharmacy: phoneNumberPharmacy ?? this.phoneNumberPharmacy,
       faxNumberPharmacy: faxNumberPharmacy ?? this.faxNumberPharmacy,
-      accreditationProvince:
-          accreditationProvince ?? this.accreditationProvince,
+      accreditationProvince: accreditationProvince ?? this.accreditationProvince,
       softwareList: softwareList ?? this.softwareList,
       managerFirstName: managerFirstName ?? this.managerFirstName,
       managerLastName: managerLastName ?? this.managerLastName,

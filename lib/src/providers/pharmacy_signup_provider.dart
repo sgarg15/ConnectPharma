@@ -35,6 +35,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
         state.streetAddress == "" ||
         state.city == "" ||
         state.postalCode == "" ||
+        state.province == "" ||
         state.country == "" ||
         state.phoneNumberPharmacy == "" ||
         state.faxNumberPharmacy == "" ||
@@ -74,6 +75,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
     state.storeNumber = "";
     state.city = "";
     state.postalCode = "";
+    state.province = "";
     state.country = "";
     state.phoneNumberPharmacy = "";
     state.faxNumberPharmacy = "";
@@ -101,6 +103,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   String get storeNumber => state.storeNumber;
   String get city => state.city;
   String get postalCode => state.postalCode;
+  String get province => state.province;
   String get country => state.country;
   String get phoneNumberPharmacy => state.phoneNumberPharmacy;
   String get faxNumber => state.faxNumberPharmacy;
@@ -169,6 +172,10 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
 
   void changePostalCode(String? value) {
     state = state.copyWithPharmacySignUp(postalCode: value?.trim());
+  }
+
+  void changeProvince(String? value) {
+    state = state.copyWithPharmacySignUp(province: value?.trim());
   }
 
   void changeCountry(String? value) {

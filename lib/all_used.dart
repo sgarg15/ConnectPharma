@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,7 +24,8 @@ class CustomFormField extends StatelessWidget {
   double containerWidth;
   double titleFont;
 
-  CustomFormField({Key? key, 
+  CustomFormField({
+    Key? key,
     this.fieldTitle,
     this.hintText,
     this.keyboardStyle,
@@ -111,6 +114,93 @@ class CustomFormField extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+// ignore: must_be_immutable
+class CustomInputField extends StatelessWidget {
+  String? fieldTitle;
+  String? hintText;
+  String? icon;
+  TextInputType? keyboardStyle;
+  Function(String)? onChanged;
+  String? initialValue;
+  FormFieldValidator? validation;
+  TextEditingController? controller;
+  bool decoration;
+  InputDecoration? inputDecoration;
+  TextCapitalization? textCapitalization;
+  bool obscureText;
+  List<TextInputFormatter>? formatter;
+  double containerWidth;
+  double titleFont;
+
+  CustomInputField({
+    Key? key,
+    this.fieldTitle,
+    this.hintText,
+    this.icon,
+    this.keyboardStyle,
+    this.onChanged,
+    this.initialValue,
+    this.validation,
+    this.controller,
+    this.decoration = true,
+    this.inputDecoration,
+    this.textCapitalization,
+    this.obscureText = false,
+    this.formatter,
+    this.containerWidth = 335,
+    this.titleFont = 16,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                SvgPicture.asset(icon!, width: 16, height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(left: 7),
+                  child: RichText(
+                      text: TextSpan(
+                          text: fieldTitle,
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: Color(0xFF4A4848),
+                              fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal)
+                                  .fontFamily))),
+                ),
+              ],
+            ),
+            TextFormField(
+              keyboardType: keyboardStyle,
+              textCapitalization: textCapitalization ?? TextCapitalization.sentences,
+              onChanged: onChanged,
+              validator: validation,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              initialValue: initialValue,
+              controller: controller,
+              inputFormatters: formatter,
+              decoration: InputDecoration(
+                isDense: true,
+                hintText: hintText,
+                hintStyle: TextStyle(
+                  fontSize: 14.0,
+                  color: Color(0xFFC6C6C6),
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 0,
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }
 

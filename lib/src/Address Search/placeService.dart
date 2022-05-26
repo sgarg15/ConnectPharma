@@ -7,13 +7,14 @@ class Place {
   String? street = "";
   String? city = "";
   String? zipCode = "";
+  String? province = "";
   String? country = "";
 
-  Place({this.streetNumber, this.street, this.city, this.zipCode, this.country});
+  Place({this.streetNumber, this.street, this.city, this.zipCode, this.province, this.country});
 
   @override
   String toString() {
-    return 'Place(streetNumber: $streetNumber, street: $street, city: $city, zipCode: $zipCode, country: $country)';
+    return 'Place(streetNumber: $streetNumber, street: $street, city: $city, zipCode: $zipCode, province: $province, country: $country)';
   }
 }
 
@@ -75,6 +76,9 @@ class PlaceApiProvider {
         final place = Place();
         for (var c in components) {
           final List type = c['types'];
+          print(type);
+          print(c);
+          print(c['long_name']);
           if (type.contains('street_number')) {
             place.streetNumber = c['long_name'];
           }
@@ -86,6 +90,9 @@ class PlaceApiProvider {
           }
           if (type.contains('postal_code')) {
             place.zipCode = c['long_name'];
+          }
+          if (type.contains('administrative_area_level_1')) {
+            place.province = c['long_name'];
           }
           if (type.contains('country')) {
             place.country = c['long_name'];

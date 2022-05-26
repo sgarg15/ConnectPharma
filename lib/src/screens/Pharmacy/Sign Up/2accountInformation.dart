@@ -63,6 +63,7 @@ class _AccountInformationPharmacyState extends ConsumerState<AccountInformationP
           bottomOpacity: 1,
           shadowColor: Colors.white,
         ),
+        
         body: Stack(
           children: <Widget>[
             Center(
@@ -114,6 +115,7 @@ class _AccountInformationPharmacyState extends ConsumerState<AccountInformationP
                                   SizedBox(height: 90),
 
                                   nextButton(),
+                                  SizedBox(height: 30),
                                 ],
                               ),
                             ));
