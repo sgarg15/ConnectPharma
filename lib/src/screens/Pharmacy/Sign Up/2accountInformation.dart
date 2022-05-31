@@ -112,7 +112,7 @@ class _AccountInformationPharmacyState extends ConsumerState<AccountInformationP
 
                                   SizedBox(height: 30),
                                   signatureInput(context, ref),
-                                  SizedBox(height: 90),
+                                  SizedBox(height: 30),
 
                                   nextButton(),
                                   SizedBox(height: 30),

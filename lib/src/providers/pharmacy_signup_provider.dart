@@ -53,7 +53,7 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
     if (state.managerFirstName == "" ||
         state.managerLastName == "" ||
         state.managerPhoneNumber.length < 4 ||
-        state.licenseNumber.length < 5) {
+        state.licenseNumber.length != 5) {
       print("true manager info");
       return true;
     } else {
