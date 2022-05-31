@@ -53,7 +53,7 @@ class _PharmacyManagerInformationState extends ConsumerState<PharmacyManagerInfo
             child: Column(children: <Widget>[
               Expanded(child: LayoutBuilder(
                 builder: (context, constraints) {
-                  return NotificationListener(
+                  return NotificationListener<OverscrollIndicatorNotification>(
                     onNotification: (OverscrollIndicatorNotification overscroll) {
                       overscroll.disallowIndicator();
                       return true;
