@@ -69,6 +69,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                             overscroll.disallowIndicator();
                             return true;
                           },
+                          
                           child: SingleChildScrollView(
                             physics: ClampingScrollPhysics(),
                             child: Column(
@@ -133,7 +134,6 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                                 },
                                 initialValue: ref.read(pharmacistSignUpProvider.notifier).lastName,
                               ),
-                              
                               SizedBox(height: 30),
 
                               streetAddressContainer(context, ref, streetAddress),
@@ -204,133 +204,6 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
           ],
         ));
   }
-
-  // SingleChildScrollView(
-  //       scrollDirection: Axis.vertical,
-  //       child: Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: <Widget>[
-  //           //Information Text
-  //           Align(
-  //             alignment: Alignment(0, -0.96),
-  //             child: Padding(
-  //               padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
-  //               child: RichText(
-  //                 textAlign: TextAlign.left,
-  //                 text: TextSpan(
-  //                   text:
-  //                       "Please provide us with your Location Information, to help us provide results tailored to you.",
-  //                   style: GoogleFonts.questrial(
-  //                     fontSize: 15,
-  //                     color: Colors.black,
-  //                     fontWeight: FontWeight.w500,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-
-  //           //All Fields
-  //           Align(
-  //             alignment: Alignment(-0.35, -0.70),
-  //             child: Form(
-  //               key: _formKey,
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 children: <Widget>[
-  //                   SizedBox(height: 20),
-
-  //                   //First Name
-  //                   CustomFormField(
-  //                     fieldTitle: "First Name",
-  //                     hintText: "Enter your First Name...",
-  //                     keyboardStyle: TextInputType.name,
-  //                     onChanged: (String firstName) {
-  //                       ref.read(pharmacistSignUpProvider.notifier).changeFirstName(firstName);
-  //                     },
-  //                     validation: (value) {
-  //                       if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
-  //                           .hasMatch(value)) {
-  //                         return "Invalid field";
-  //                       }
-  //                       return null;
-  //                     },
-  //                     initialValue: ref.read(pharmacistSignUpProvider.notifier).firstName,
-  //                   ),
-  //                   SizedBox(height: 20),
-
-  //                   //Last Name
-  //                   CustomFormField(
-  //                     fieldTitle: "Last Name",
-  //                     hintText: "Enter your Last Name...",
-  //                     keyboardStyle: TextInputType.name,
-  //                     onChanged: (String lastName) {
-  //                       ref.read(pharmacistSignUpProvider.notifier).changeLastName(lastName);
-  //                     },
-  //                     validation: (value) {
-  //                       if (!RegExp(r"[^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
-  //                           .hasMatch(value)) {
-  //                         return "Invalid field";
-  //                       }
-  //                       return null;
-  //                     },
-  //                     initialValue: ref.read(pharmacistSignUpProvider.notifier).lastName,
-  //                   ),
-  //                   SizedBox(height: 20),
-
-  //                   //Street Address
-  //                   Column(
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     mainAxisSize: MainAxisSize.min,
-  //                     children: <Widget>[
-  //                       RichText(
-  //                         textAlign: TextAlign.left,
-  //                         text: TextSpan(
-  //                             text: "Address",
-  //                             style: GoogleFonts.questrial(
-  //                               fontSize: 16,
-  //                               color: Colors.black,
-  //                               fontWeight: FontWeight.w500,
-  //                             )),
-  //                       ),
-  //                       SizedBox(height: 10),
-  //                       streetAddressField(streetAddress, context),
-  //                     ],
-  //                   ),
-  //                   SizedBox(height: 20),
-
-  //                   //Phone Number
-  //                   CustomFormField(
-  //                       fieldTitle: "Phone Number",
-  //                       hintText: "+1 234 567 8910",
-  //                       keyboardStyle: TextInputType.number,
-  //                       onChanged: (String phoneNumber) {
-  //                         ref
-  //                             .read(pharmacistSignUpProvider.notifier)
-  //                             .changePhoneNumber(phoneNumber);
-  //                       },
-  //                       validation: (value) {
-  //                         if (value.length < 4) {
-  //                           return "Phone is invalid";
-  //                         }
-  //                         return null;
-  //                       },
-  //                       initialValue: ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
-  //                       formatter: [PhoneInputFormatter()]),
-
-  //                   SizedBox(height: 20),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-
-  //           //Next Button
-  //           nextButton(),
-  //           SizedBox(height: 15),
-  //         ],
-  //       ),
-  //     ),
 
   Center nextButton() {
     return Center(
