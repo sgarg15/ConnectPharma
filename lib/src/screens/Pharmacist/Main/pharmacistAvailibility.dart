@@ -108,10 +108,10 @@ class _PharmacistAvailabilityState extends ConsumerState<PharmacistAvailability>
                     selectionShape: DateRangePickerSelectionShape.rectangle,
                     selectionMode: DateRangePickerSelectionMode.multiRange,
                     selectionTextStyle: TextStyle(color: Colors.white, fontSize: 20),
-                    selectionColor: Color(0xFF5DB075),
+                    selectionColor: Color(0xFFF0069C1),
                     startRangeSelectionColor: Color(0xFF228a4d),
                     endRangeSelectionColor: Color(0xFF228a4d),
-                    rangeSelectionColor: Color(0xFF5DB075),
+                    rangeSelectionColor: Color(0xFFF0069C1),
                     rangeTextStyle: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
@@ -219,7 +219,7 @@ class _PharmacistAvailabilityState extends ConsumerState<PharmacistAvailability>
                         TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0, color: Colors.black),
                   ),
                 ),
-                activeColor: Color(0xFF5DB075),
+                activeColor: Color(0xFFF0069C1),
                 value: ref.read(pharmacistMainProvider.notifier).permanentJob,
                 onChanged: (value) {
                   setState(() {
@@ -244,7 +244,7 @@ class _PharmacistAvailabilityState extends ConsumerState<PharmacistAvailability>
                           if (states.contains(MaterialState.disabled)) {
                             return Colors.grey; // Disabled color
                           }
-                          return Color(0xFF5DB075); // Regular color
+                          return Color(0xFFF0069C1); // Regular color
                         }),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(

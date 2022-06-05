@@ -210,7 +210,7 @@ class JobDetails extends ConsumerWidget {
                                       jobDetails?["techOnSite"]
                                           ? Icon(
                                               Icons.check,
-                                              color: Color(0xFF5DB075),
+                                              color: Color(0xFFF0069C1),
                                               size: 30,
                                             )
                                           : Icon(
@@ -395,7 +395,7 @@ class JobDetails extends ConsumerWidget {
                                       jobDetails?["assistantOnSite"]
                                           ? Icon(
                                               Icons.check,
-                                              color: Color(0xFF5DB075),
+                                              color: Color(0xFFF0069C1),
                                               size: 30,
                                             )
                                           : Icon(
@@ -545,7 +545,7 @@ class JobDetails extends ConsumerWidget {
                         if (states.contains(MaterialState.disabled)) {
                           return Colors.grey; // Disabled color
                         }
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -615,7 +615,7 @@ class JobDetails extends ConsumerWidget {
                                         child: new Text(
                                           "Yes",
                                           textAlign: TextAlign.right,
-                                          style: TextStyle(color: Color(0xFF5DB075), fontSize: 16),
+                                          style: TextStyle(color: Color(0xFFF0069C1), fontSize: 16),
                                         ),
                                         onPressed: () async {
                                           WriteBatch jobApplicationBatch =

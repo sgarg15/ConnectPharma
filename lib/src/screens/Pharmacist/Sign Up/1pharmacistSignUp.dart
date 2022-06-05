@@ -441,9 +441,9 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
   //                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
   //                   (Set<MaterialState> states) {
   //                     if (states.contains(MaterialState.pressed))
-  //                       return Color(0xFF5DB075);
+  //                       return Color(0xFFF0069C1);
   //                     else if (states.contains(MaterialState.disabled)) return Colors.grey;
-  //                     return Color(0xFF5DB075); // Use the component's default.
+  //                     return Color(0xFFF0069C1); // Use the component's default.
   //                   },
   //                 ),
   //                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -638,7 +638,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                   ),
                 ),
               ),
-              activeColor: Color(0xFF5DB075),
+              activeColor: Color(0xFFF0069C1),
               value: checkedValue,
               onChanged: (newValue) {
                 //todo: Save the check value information to save to account
@@ -689,7 +689,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                 text: TextSpan(
                   text: "Log In",
                   style: TextStyle(
-                      fontWeight: FontWeight.w500, fontSize: 15.0, color: Color(0xFF5DB075)),
+                      fontWeight: FontWeight.w500, fontSize: 15.0, color: Color(0xFFF0069C1)),
                 ),
               ),
             ),

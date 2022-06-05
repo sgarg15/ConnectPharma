@@ -138,7 +138,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                           Divider(
                             height: 0,
                             thickness: 2,
-                            color: Color(0xFF5DB075),
+                            color: Color(0xFFF0069C1),
                           ),
                           //First Name
                           Padding(
@@ -330,7 +330,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                               Divider(
                                 height: 0,
                                 thickness: 2,
-                                color: Color(0xFF5DB075),
+                                color: Color(0xFFF0069C1),
                               ),
 
                               //Pharmacy Name
@@ -704,7 +704,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                       child: Column(
                                         children: <Widget>[
                                           CustomMultiSelectBottomSheetField<Software?>(
-                                            selectedColor: Color(0xFF5DB075),
+                                            selectedColor: Color(0xFFF0069C1),
                                             selectedItemsTextStyle: TextStyle(color: Colors.white),
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
@@ -729,7 +729,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                                   .softwareList
                                                   ?.map((e) => MultiSelectItem(e, e.toString()))
                                                   .toList(),
-                                              chipColor: Color(0xFF5DB075),
+                                              chipColor: Color(0xFFF0069C1),
                                               onTap: (value) {
                                                 softwareListToUpload?.remove(value);
                                                 softwareListToUpload?.removeWhere((element) =>
@@ -781,9 +781,9 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed))
-                              return Color(0xFF5DB075);
+                              return Color(0xFFF0069C1);
                             else if (states.contains(MaterialState.disabled)) return Colors.grey;
-                            return Color(0xFF5DB075); // Use the component's default.
+                            return Color(0xFFF0069C1); // Use the component's default.
                           },
                         ),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -815,7 +815,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
                                         TextButton(
                                           child: Text(
                                             "Ok",
-                                            style: TextStyle(color: Color(0xFF5DB075)),
+                                            style: TextStyle(color: Color(0xFFF0069C1)),
                                           ),
                                           onPressed: () {
                                             Navigator.pop(context);
@@ -876,7 +876,7 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
       height: 40,
       child: ElevatedButton(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
+            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF0069C1)),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ))),
@@ -895,7 +895,7 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 3,
-                        color: Color(0xFF5DB075),
+                        color: Color(0xFFF0069C1),
                       ),
                     ),
                     child: Signature(
@@ -924,7 +924,7 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                           child: TextButton.icon(
                             clipBehavior: Clip.none,
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF5DB075)),
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFF0069C1)),
                             ),
                             onPressed: () async {
                               if (widget._sigController.isNotEmpty) {

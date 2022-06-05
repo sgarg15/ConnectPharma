@@ -404,7 +404,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                       child: Column(
                                         children: <Widget>[
                                           CustomMultiSelectBottomSheetField<Skill?>(
-                                            selectedColor: Color(0xFF5DB075),
+                                            selectedColor: Color(0xFFF0069C1),
                                             selectedItemsTextStyle: TextStyle(color: Colors.white),
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
@@ -428,7 +428,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                                   .skillList
                                                   ?.map((e) => MultiSelectItem(e, e.toString()))
                                                   .toList(),
-                                              chipColor: Color(0xFF5DB075),
+                                              chipColor: Color(0xFFF0069C1),
                                               onTap: (value) {
                                                 skillListToUpload?.remove(value);
                                                 skillListToUpload?.removeWhere((element) =>
@@ -484,7 +484,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                           height: 24,
                                           width: 24,
                                           child: Checkbox(
-                                              activeColor: Color(0xFF5DB075),
+                                              activeColor: Color(0xFFF0069C1),
                                               value: softwareFieldEnabled,
                                               onChanged: (value) {
                                                 setState(() {
@@ -521,7 +521,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                         children: <Widget>[
                                           softwareFieldEnabled
                                               ? CustomMultiSelectBottomSheetField<Software?>(
-                                                  selectedColor: Color(0xFF5DB075),
+                                                  selectedColor: Color(0xFFF0069C1),
                                                   selectedItemsTextStyle:
                                                       TextStyle(color: Colors.white),
                                                   initialChildSize: 0.4,
@@ -548,7 +548,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                                         ?.map(
                                                             (e) => MultiSelectItem(e, e.toString()))
                                                         .toList(),
-                                                    chipColor: Color(0xFF5DB075),
+                                                    chipColor: Color(0xFFF0069C1),
                                                     onTap: (value) {
                                                       softwareListToUpload?.remove(value);
                                                       softwareListToUpload?.removeWhere((element) =>
@@ -597,7 +597,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                             color: Colors.black),
                                       ),
                                     ),
-                                    activeColor: Color(0xFF5DB075),
+                                    activeColor: Color(0xFFF0069C1),
                                     value: ref.read(pharmacyMainProvider.notifier).techOnSite,
                                     onChanged: (value) {
                                       checkIfChanged(ref, value, "techOnSite");
@@ -626,7 +626,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                             color: Colors.black),
                                       ),
                                     ),
-                                    activeColor: Color(0xFF5DB075),
+                                    activeColor: Color(0xFFF0069C1),
                                     value: ref.read(pharmacyMainProvider.notifier).assistantOnSite,
                                     onChanged: (value) {
                                       checkIfChanged(ref, value, "assistantOnSite");
@@ -714,7 +714,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                             color: Colors.black),
                                       ),
                                     ),
-                                    activeColor: Color(0xFF5DB075),
+                                    activeColor: Color(0xFFF0069C1),
                                     value: ref.read(pharmacyMainProvider.notifier).limaStatus,
                                     onChanged: (value) {
                                       checkIfChanged(ref, value, "limaStatus");
@@ -806,7 +806,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                 if (states.contains(MaterialState.disabled)) {
                                   return Colors.grey; // Disabled color
                                 }
-                                return Color(0xFF5DB075); // Regular color
+                                return Color(0xFFF0069C1); // Regular color
                               }),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
@@ -851,7 +851,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                               TextButton(
                                                 child: Text(
                                                   "Ok",
-                                                  style: TextStyle(color: Color(0xFF5DB075)),
+                                                  style: TextStyle(color: Color(0xFFF0069C1)),
                                                 ),
                                                 onPressed: () {
                                                   Navigator.pop(context);
@@ -914,7 +914,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                       TextButton(
                                         child: Text(
                                           "Ok",
-                                          style: TextStyle(color: Color(0xFF5DB075)),
+                                          style: TextStyle(color: Color(0xFFF0069C1)),
                                         ),
                                         onPressed: () async {
                                           String? result = await ref
@@ -935,7 +935,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
                                                         child: Text(
                                                           "Ok",
                                                           style:
-                                                              TextStyle(color: Color(0xFF5DB075)),
+                                                              TextStyle(color: Color(0xFFF0069C1)),
                                                         ),
                                                         onPressed: () {
                                                           Navigator.pop(context);

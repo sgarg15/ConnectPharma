@@ -251,7 +251,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                           color: Colors.black),
                                     ),
                                   ),
-                                  activeColor: Color(0xFF5DB075),
+                                  activeColor: Color(0xFFF0069C1),
                                   value: ref.read(pharmacyMainProvider.notifier).fullTime,
                                   onChanged: (value) {
                                     ref
@@ -378,7 +378,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                       child: Column(
                                         children: <Widget>[
                                           MultiSelectBottomSheetField<Skill?>(
-                                            selectedColor: Color(0xFF5DB075),
+                                            selectedColor: Color(0xFFF0069C1),
                                             selectedItemsTextStyle: TextStyle(color: Colors.white),
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
@@ -401,7 +401,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                                   .skillList
                                                   ?.map((e) => MultiSelectItem(e, e.toString()))
                                                   .toList(),
-                                              chipColor: Color(0xFF5DB075),
+                                              chipColor: Color(0xFFF0069C1),
                                               onTap: (value) {
                                                 ref
                                                     .read(pharmacyMainProvider.notifier)
@@ -447,7 +447,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                           height: 24,
                                           width: 24,
                                           child: Checkbox(
-                                              activeColor: Color(0xFF5DB075),
+                                              activeColor: Color(0xFFF0069C1),
                                               value: softwareFieldEnabled,
                                               onChanged: (value) {
                                                 setState(() {
@@ -485,7 +485,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                           softwareFieldEnabled
                                               ? MultiSelectBottomSheetField<Software?>(
                                                   //enabled: softwareFieldEnabled,
-                                                  selectedColor: Color(0xFF5DB075),
+                                                  selectedColor: Color(0xFFF0069C1),
                                                   selectedItemsTextStyle:
                                                       TextStyle(color: Colors.white),
                                                   initialChildSize: 0.4,
@@ -509,7 +509,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                                         ?.map(
                                                             (e) => MultiSelectItem(e, e.toString()))
                                                         .toList(),
-                                                    chipColor: Color(0xFF5DB075),
+                                                    chipColor: Color(0xFFF0069C1),
                                                     onTap: (value) {
                                                       ref
                                                           .read(pharmacyMainProvider.notifier)
@@ -545,7 +545,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                             color: Colors.black),
                                       ),
                                     ),
-                                    activeColor: Color(0xFF5DB075),
+                                    activeColor: Color(0xFFF0069C1),
                                     value: ref.read(pharmacyMainProvider.notifier).techOnSite,
                                     onChanged: (value) {
                                       ref
@@ -573,7 +573,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                             color: Colors.black),
                                       ),
                                     ),
-                                    activeColor: Color(0xFF5DB075),
+                                    activeColor: Color(0xFFF0069C1),
                                     value: ref.read(pharmacyMainProvider.notifier).assistantOnSite,
                                     onChanged: (value) {
                                       ref
@@ -658,7 +658,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                             color: Colors.black),
                                       ),
                                     ),
-                                    activeColor: Color(0xFF5DB075),
+                                    activeColor: Color(0xFFF0069C1),
                                     value: ref.read(pharmacyMainProvider.notifier).limaStatus,
                                     onChanged: (value) {
                                       ref
@@ -747,7 +747,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                 if (states.contains(MaterialState.disabled)) {
                                   return Colors.grey; // Disabled color
                                 }
-                                return Color(0xFF5DB075); // Regular color
+                                return Color(0xFFF0069C1); // Regular color
                               }),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(

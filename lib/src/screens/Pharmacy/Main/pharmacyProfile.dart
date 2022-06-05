@@ -68,7 +68,7 @@ class PharmacyProfile extends ConsumerWidget {
                                       },
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all<Color>(Color(0xFF5DB075))),
+                                              MaterialStateProperty.all<Color>(Color(0xFFF0069C1))),
                                       child: RichText(
                                         textAlign: TextAlign.start,
                                         text: TextSpan(
@@ -87,7 +87,7 @@ class PharmacyProfile extends ConsumerWidget {
                                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: CircleAvatar(
                                     radius: 52,
-                                    backgroundColor: Color(0xFF5DB075),
+                                    backgroundColor: Color(0xFFF0069C1),
                                     child: CircleAvatar(
                                       radius: 49,
                                       backgroundColor: Colors.grey,
@@ -226,7 +226,7 @@ class PharmacyProfile extends ConsumerWidget {
                                                                 decoration: BoxDecoration(
                                                                   border: Border.all(
                                                                     width: 3,
-                                                                    color: Color(0xFF5DB075),
+                                                                    color: Color(0xFFF0069C1),
                                                                   ),
                                                                 ),
                                                                 child: Image.network(ref
@@ -246,7 +246,7 @@ class PharmacyProfile extends ConsumerWidget {
                                                   style: TextStyle(
                                                       fontWeight: FontWeight.w600,
                                                       fontSize: 18.0,
-                                                      color: Color(0xFF5DB075)),
+                                                      color: Color(0xFFF0069C1)),
                                                 ),
                                               ),
                                             ),
@@ -384,7 +384,7 @@ class PharmacyProfile extends ConsumerWidget {
                                     //   style: ButtonStyle(
                                     //       backgroundColor:
                                     //           MaterialStateProperty.all<Color>(
-                                    //               Color(0xFF5DB075))),
+                                    //               Color(0xFFF0069C1))),
                                     //   child: RichText(
                                     //     textAlign: TextAlign.start,
                                     //     text: TextSpan(

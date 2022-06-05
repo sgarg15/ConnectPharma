@@ -83,7 +83,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                       },
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all<Color>(Color(0xFF5DB075))),
+                                              MaterialStateProperty.all<Color>(Color(0xFFF0069C1))),
                                       child: RichText(
                                         textAlign: TextAlign.start,
                                         text: TextSpan(
@@ -102,7 +102,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: CircleAvatar(
                                     radius: 52,
-                                    backgroundColor: Color(0xFF5DB075),
+                                    backgroundColor: Color(0xFFF0069C1),
                                     child: CircleAvatar(
                                       radius: 49,
                                       backgroundColor: Colors.grey,
@@ -303,7 +303,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                                                 decoration: BoxDecoration(
                                                                   border: Border.all(
                                                                     width: 3,
-                                                                    color: Color(0xFF5DB075),
+                                                                    color: Color(0xFFF0069C1),
                                                                   ),
                                                                 ),
                                                                 child: Image.network(userDataMap?[
@@ -328,7 +328,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                                   style: TextStyle(
                                                       fontWeight: FontWeight.w600,
                                                       fontSize: 18.0,
-                                                      color: Color(0xFF5DB075)),
+                                                      color: Color(0xFFF0069C1)),
                                                 ),
                                               ),
                                             ),
@@ -542,7 +542,7 @@ class _PharmacistProfileState extends ConsumerState<PharmacistProfile> {
                                                   style: TextStyle(
                                                       fontWeight: FontWeight.w600,
                                                       fontSize: 18.0,
-                                                      color: Color(0xFF5DB075)),
+                                                      color: Color(0xFFF0069C1)),
                                                 ),
                                               ),
                                             ),

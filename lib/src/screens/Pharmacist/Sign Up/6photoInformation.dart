@@ -203,7 +203,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                     if (states.contains(MaterialState.disabled)) {
                       return Colors.grey; // Disabled color
                     }
-                    return Color(0xFF5DB075); // Regular color
+                    return Color(0xFFF0069C1); // Regular color
                   }),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(100),
@@ -445,7 +445,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
           ),
         ),
       ),
-      activeColor: Color(0xFF5DB075),
+      activeColor: Color(0xFFF0069C1),
       value: agreeToTermsAndConditions,
       onChanged: (newValue) {
         //todo: Save the check value information to save to account
@@ -473,7 +473,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -503,7 +503,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -538,7 +538,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
             child: ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                    return Color(0xFF5DB075); // Regular color
+                    return Color(0xFFF0069C1); // Regular color
                   }),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -646,7 +646,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -677,7 +677,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -712,7 +712,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
             child: ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                    return Color(0xFF5DB075); // Regular color
+                    return Color(0xFFF0069C1); // Regular color
                   }),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -791,7 +791,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -821,7 +821,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -856,7 +856,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
             child: ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                    return Color(0xFF5DB075); // Regular color
+                    return Color(0xFFF0069C1); // Regular color
                   }),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -918,7 +918,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -948,7 +948,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape:
                           MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -983,7 +983,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
             child: ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                    return Color(0xFF5DB075); // Regular color
+                    return Color(0xFFF0069C1); // Regular color
                   }),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

@@ -573,7 +573,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                         if (states.contains(MaterialState.disabled)) {
                           return Colors.grey; // Disabled color
                         }
-                        return Color(0xFF5DB075); // Regular color
+                        return Color(0xFFF0069C1); // Regular color
                       }),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -688,7 +688,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
             initialSelectedRanges: availabilityPharmacist,
             startRangeSelectionColor: Color(0xFF228a4d),
             endRangeSelectionColor: Color(0xFF228a4d),
-            rangeSelectionColor: Color(0xFF5DB075),
+            rangeSelectionColor: Color(0xFFF0069C1),
             onSelectionChanged: selectionChanged,
             monthViewSettings: DateRangePickerMonthViewSettings(
               blackoutDates: _blackoutDateCollection,

@@ -225,7 +225,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                       color: Colors.black),
                                 ),
                               ),
-                              activeColor: Color(0xFF5DB075),
+                              activeColor: Color(0xFFF0069C1),
                               value: showAllPharmacists,
                               onChanged: (value) {
                                 setState(() {
@@ -332,7 +332,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                       height: 24,
                                       width: 24,
                                       child: Checkbox(
-                                          activeColor: Color(0xFF5DB075),
+                                          activeColor: Color(0xFFF0069C1),
                                           value: skillFieldEnabled,
                                           onChanged: (value) {
                                             setState(() {
@@ -370,7 +370,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                       skillFieldEnabled
                                           ? MultiSelectBottomSheetField<Skill?>(
                                               //enabled: softwareFieldEnabled,
-                                              selectedColor: Color(0xFF5DB075),
+                                              selectedColor: Color(0xFFF0069C1),
                                               selectedItemsTextStyle:
                                                   TextStyle(color: Colors.white),
                                               initialChildSize: 0.4,
@@ -394,7 +394,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                                     .skillList
                                                     ?.map((e) => MultiSelectItem(e, e.toString()))
                                                     .toList(),
-                                                chipColor: Color(0xFF5DB075),
+                                                chipColor: Color(0xFFF0069C1),
                                                 onTap: (value) {
                                                   ref
                                                       .read(pharmacyMainProvider.notifier)
@@ -442,7 +442,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                       height: 24,
                                       width: 24,
                                       child: Checkbox(
-                                          activeColor: Color(0xFF5DB075),
+                                          activeColor: Color(0xFFF0069C1),
                                           value: softwareFieldEnabled,
                                           onChanged: (value) {
                                             setState(() {
@@ -480,7 +480,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                       softwareFieldEnabled
                                           ? MultiSelectBottomSheetField<Software?>(
                                               //enabled: softwareFieldEnabled,
-                                              selectedColor: Color(0xFF5DB075),
+                                              selectedColor: Color(0xFFF0069C1),
                                               selectedItemsTextStyle:
                                                   TextStyle(color: Colors.white),
                                               initialChildSize: 0.4,
@@ -505,7 +505,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                                     .softwareList
                                                     ?.map((e) => MultiSelectItem(e, e.toString()))
                                                     .toList(),
-                                                chipColor: Color(0xFF5DB075),
+                                                chipColor: Color(0xFFF0069C1),
                                                 onTap: (value) {
                                                   ref
                                                       .read(pharmacyMainProvider.notifier)
@@ -548,7 +548,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
               //             if (states.contains(MaterialState.disabled)) {
               //               return Colors.grey; // Disabled color
               //             }
-              //             return Color(0xFF5DB075); // Regular color
+              //             return Color(0xFFF0069C1); // Regular color
               //           }),
               //           shape:
               //               MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -598,7 +598,7 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                 if (states.contains(MaterialState.disabled)) {
                                   return Colors.grey; // Disabled color
                                 }
-                                return Color(0xFF5DB075); // Regular color
+                                return Color(0xFFF0069C1); // Regular color
                               }),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(

@@ -182,7 +182,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                 Divider(
                                   height: 0,
                                   thickness: 2,
-                                  color: Color(0xFF5DB075),
+                                  color: Color(0xFFF0069C1),
                                 ),
                                 //First Name
                                 Padding(
@@ -632,7 +632,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       child: Column(
                                         children: <Widget>[
                                           CustomMultiSelectBottomSheetField<Software?>(
-                                            selectedColor: Color(0xFF5DB075),
+                                            selectedColor: Color(0xFFF0069C1),
                                             selectedItemsTextStyle: TextStyle(color: Colors.white),
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
@@ -657,7 +657,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                                   .softwareList
                                                   ?.map((e) => MultiSelectItem(e, e.toString()))
                                                   .toList(),
-                                              chipColor: Color(0xFF5DB075),
+                                              chipColor: Color(0xFFF0069C1),
                                               onTap: (value) {
                                                 softwareListToUpload?.remove(value);
                                                 softwareListToUpload?.removeWhere((element) =>
@@ -724,7 +724,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       child: Column(
                                         children: <Widget>[
                                           CustomMultiSelectBottomSheetField<Skill?>(
-                                            selectedColor: Color(0xFF5DB075),
+                                            selectedColor: Color(0xFFF0069C1),
                                             selectedItemsTextStyle: TextStyle(color: Colors.white),
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
@@ -749,7 +749,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                                   .skillList
                                                   ?.map((e) => MultiSelectItem(e, e.toString()))
                                                   .toList(),
-                                              chipColor: Color(0xFF5DB075),
+                                              chipColor: Color(0xFFF0069C1),
                                               onTap: (value) {
                                                 skillListToUpload?.remove(value);
                                                 skillListToUpload?.removeWhere((element) =>
@@ -815,7 +815,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       child: Column(
                                         children: <Widget>[
                                           CustomMultiSelectBottomSheetField<Language?>(
-                                            selectedColor: Color(0xFF5DB075),
+                                            selectedColor: Color(0xFFF0069C1),
                                             selectedItemsTextStyle: TextStyle(color: Colors.white),
                                             initialChildSize: 0.4,
                                             decoration: BoxDecoration(),
@@ -840,7 +840,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                                   .languageList
                                                   ?.map((e) => MultiSelectItem(e, e.toString()))
                                                   .toList(),
-                                              chipColor: Color(0xFF5DB075),
+                                              chipColor: Color(0xFFF0069C1),
                                               onTap: (value) {
                                                 languageListToUpload?.remove(value);
                                                 languageListToUpload?.removeWhere((element) =>
@@ -900,7 +900,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                                   backgroundColor:
                                                       MaterialStateProperty.resolveWith<Color>(
                                                           (states) {
-                                                    return Color(0xFF5DB075); // Regular color
+                                                    return Color(0xFFF0069C1); // Regular color
                                                   }),
                                                   shape: MaterialStateProperty.all<
                                                           RoundedRectangleBorder>(
@@ -935,7 +935,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                                   backgroundColor:
                                                       MaterialStateProperty.resolveWith<Color>(
                                                           (states) {
-                                                    return Color(0xFF5DB075); // Regular color
+                                                    return Color(0xFFF0069C1); // Regular color
                                                   }),
                                                   shape: MaterialStateProperty.all<
                                                           RoundedRectangleBorder>(
@@ -975,7 +975,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                               backgroundColor:
                                                   MaterialStateProperty.resolveWith<Color>(
                                                       (states) {
-                                                return Color(0xFF5DB075); // Regular color
+                                                return Color(0xFFF0069C1); // Regular color
                                               }),
                                               shape:
                                                   MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -1049,11 +1049,11 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                               backgroundColor: MaterialStateProperty.resolveWith<Color>(
                                 (Set<MaterialState> states) {
                                   if (states.contains(MaterialState.pressed)) {
-                                    return Color(0xFF5DB075);
+                                    return Color(0xFFF0069C1);
                                   } else if (states.contains(MaterialState.disabled)) {
                                     return Colors.grey;
                                   }
-                                  return Color(0xFF5DB075); // Use the component's default.
+                                  return Color(0xFFF0069C1); // Use the component's default.
                                 },
                               ),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -1121,7 +1121,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                               TextButton(
                                                 child: Text(
                                                   "Ok",
-                                                  style: TextStyle(color: Color(0xFF5DB075)),
+                                                  style: TextStyle(color: Color(0xFFF0069C1)),
                                                 ),
                                                 onPressed: () {
                                                   Navigator.pop(context);

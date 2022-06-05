@@ -362,8 +362,8 @@ SingleChildScrollView(
           child: Switch(
             value: valueName,
             onChanged: onChanged,
-            activeTrackColor: Color(0xFF5DB075),
-            activeColor: Color(0xFF5DB075),
+            activeTrackColor: Color(0xFFF0069C1),
+            activeColor: Color(0xFFF0069C1),
           ),
         ),
       ],

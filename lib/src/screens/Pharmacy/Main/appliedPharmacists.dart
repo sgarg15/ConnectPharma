@@ -110,7 +110,7 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                                               if (states.contains(MaterialState.disabled)) {
                                                 return Colors.grey; // Disabled color
                                               }
-                                              return Color(0xFF5DB075); // Regular color
+                                              return Color(0xFFF0069C1); // Regular color
                                             }),
                                             shape:
                                                 MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -300,7 +300,7 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                                               if (states.contains(MaterialState.disabled)) {
                                                 return Colors.grey; // Disabled color
                                               }
-                                              return Color(0xFF5DB075); // Regular color
+                                              return Color(0xFFF0069C1); // Regular color
                                             }),
                                             shape:
                                                 MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -385,7 +385,7 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                               if (states.contains(MaterialState.disabled)) {
                                 return Colors.grey; // Disabled color
                               }
-                              return Color(0xFF5DB075); // Regular color
+                              return Color(0xFFF0069C1); // Regular color
                             }),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -509,7 +509,7 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                               if (states.contains(MaterialState.disabled)) {
                                 return Colors.grey; // Disabled color
                               }
-                              return Color(0xFF5DB075); // Regular color
+                              return Color(0xFFF0069C1); // Regular color
                             }),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(

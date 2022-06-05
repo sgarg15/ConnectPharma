@@ -452,7 +452,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                   )
                 ],
               ),
-              color: const Color(0xFF5DB075),
+              color: const Color(0xFFF0069C1),
               onPressed: () {
                 Navigator.push(
                     context,
@@ -483,7 +483,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
               GestureDetector(
                 child: const Icon(
                   Icons.search,
-                  color: Color(0xFF5DB075),
+                  color: Color(0xFFF0069C1),
                   size: 50,
                 ),
                 onTap: (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"] !=
@@ -544,7 +544,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                             ? const Text(
                                 "Active Jobs",
                                 style: TextStyle(
-                                  color: Color(0xFF5DB075),
+                                  color: Color(0xFFF0069C1),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 17,
                                 ),
@@ -561,7 +561,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                             ? const Text(
                                 "Past Jobs",
                                 style: TextStyle(
-                                  color: Color(0xFF5DB075),
+                                  color: Color(0xFFF0069C1),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 17,
                                 ),

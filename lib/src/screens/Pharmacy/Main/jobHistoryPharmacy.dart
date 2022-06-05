@@ -147,7 +147,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                 child: GestureDetector(
                   child: Icon(
                     Icons.perm_contact_calendar_outlined,
-                    color: Color(0xFF5DB075),
+                    color: Color(0xFFF0069C1),
                     size: 50,
                   ),
                   onTap: () {
@@ -195,7 +195,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                               ? Text(
                                   "Active Jobs",
                                   style: TextStyle(
-                                    color: Color(0xFF5DB075),
+                                    color: Color(0xFFF0069C1),
                                     fontWeight: FontWeight.bold,
                                     fontSize: 17,
                                   ),
@@ -212,7 +212,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                               ? Text(
                                   "Past Jobs",
                                   style: TextStyle(
-                                    color: Color(0xFF5DB075),
+                                    color: Color(0xFFF0069C1),
                                     fontWeight: FontWeight.bold,
                                     fontSize: 17,
                                   ),
@@ -772,7 +772,7 @@ class _CreateDrawerHeader extends ConsumerWidget {
             //Profile Photo
             CircleAvatar(
               radius: 32,
-              backgroundColor: Color(0xFF5DB075),
+              backgroundColor: Color(0xFFF0069C1),
               child: CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.grey,

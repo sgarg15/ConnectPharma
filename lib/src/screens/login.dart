@@ -523,7 +523,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                     text: TextSpan(
                       text: "Sign Up",
                       style: TextStyle(
-                          fontWeight: FontWeight.w500, fontSize: 15.0, color: Color(0xFF5DB075)),
+                          fontWeight: FontWeight.w500, fontSize: 15.0, color: Color(0xFFF0069C1)),
                     ),
                   ),
                 ),
@@ -658,7 +658,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                           if (states.contains(MaterialState.disabled)) {
                             return Colors.grey;
                           } else {
-                            return Color(0xFF5DB075);
+                            return Color(0xFFF0069C1);
                           }
                         },
                       ),
@@ -764,7 +764,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16.0,
-                        color: Color(0xFF5DB075),
+                        color: Color(0xFFF0069C1),
                       ),
                     ),
                   ),

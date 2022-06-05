@@ -229,9 +229,9 @@ class _NotificationsPharmacistState extends ConsumerState<NotificationsPharmacis
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (Set<MaterialState> states) {
                           if (states.contains(MaterialState.pressed))
-                            return Color(0xFF5DB075);
+                            return Color(0xFFF0069C1);
                           else if (states.contains(MaterialState.disabled)) return Colors.grey;
-                          return Color(0xFF5DB075); // Use the component's default.
+                          return Color(0xFFF0069C1); // Use the component's default.
                         },
                       ),
                       shape:

@@ -63,7 +63,7 @@ class AddressSearch extends SearchDelegate<Suggestion?> {
                 )
               : Center(
                   child: CircularProgressIndicator(
-                    color: Color(0xFF5DB075),
+                    color: Color(0xFFF0069C1),
                   ),
                 ),
     );
