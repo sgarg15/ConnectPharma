@@ -163,7 +163,7 @@ class CustomInputField extends StatelessWidget {
           children: <Widget>[
             Row(
               children: <Widget>[
-                SvgPicture.asset(icon!, width: 16, height: 16),
+                SvgPicture.asset(icon!, width: 21, height: 21),
                 Padding(
                   padding: const EdgeInsets.only(left: 7),
                   child: RichText(
