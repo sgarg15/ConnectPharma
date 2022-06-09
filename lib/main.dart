@@ -92,7 +92,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
     print("Inside main page");
     print("Current User: ${FirebaseAuth.instance.currentUser?.uid}");
     print(ref.read(pharmacyMainProvider.notifier).userData);
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (FirebaseAuth.instance.currentUser != null &&
           FirebaseAuth.instance.currentUser!.emailVerified) {
         print("Current User: ${FirebaseAuth.instance.currentUser}");

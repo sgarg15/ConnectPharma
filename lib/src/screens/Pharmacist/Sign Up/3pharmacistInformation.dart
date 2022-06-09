@@ -288,7 +288,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
         builder: (context, ref, child) {
           ref.watch(pharmacistSignUpProvider);
           return SizedBox(
-            width: 324,
+            width: MediaQuery.of(context).size.width * 0.8,
             height: 51,
             child: ElevatedButton(
               style: ButtonStyle(
@@ -301,6 +301,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ))),
+              
               onPressed: (ref
                       .read(pharmacistSignUpProvider.notifier)
                       .isValidPharmacistInformation())

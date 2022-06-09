@@ -266,7 +266,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                 e1.value["startDate"].compareTo(e2.value["startDate"])));
 
                           if (jobDataMap.isEmpty) {
-                            WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {
+                            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
                                   jobDataMapEmpty = true;
                                 }));
 
@@ -455,7 +455,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                             ..sort((e1, e2) =>
                                 e1.value["startDate"].compareTo(e2.value["startDate"])));
                           if (jobDataMap.isEmpty) {
-                            WidgetsBinding.instance?.addPostFrameCallback((_) => setState(() {
+                            WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
                                   jobDataMapEmpty = true;
                                 }));
                             return Container();

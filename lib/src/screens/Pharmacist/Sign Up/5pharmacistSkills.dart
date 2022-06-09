@@ -221,7 +221,7 @@ SingleChildScrollView(
         builder: (context, ref, child) {
           ref.watch(pharmacistSignUpProvider);
           return SizedBox(
-            width: 324,
+            width: MediaQuery.of(context).size.width * 0.8,
             height: 51,
             child: ElevatedButton(
               style: ButtonStyle(
@@ -234,6 +234,7 @@ SingleChildScrollView(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ))),
+              
               onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistSkills())
                   ? null
                   : () {

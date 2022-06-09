@@ -70,7 +70,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       logInUser(ref);
     });
     super.initState();

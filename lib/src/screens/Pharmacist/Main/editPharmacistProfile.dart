@@ -98,7 +98,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       changeSkillToList(ref.read(pharmacistMainProvider.notifier).userDataMap?["knownSkills"]);
       changeLanguageToList(
           ref.read(pharmacistMainProvider.notifier).userDataMap?["knownLanguages"]);

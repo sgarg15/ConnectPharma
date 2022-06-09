@@ -79,7 +79,7 @@ class _EditShiftPharmacyState extends ConsumerState<EditShift> {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.jobDataMap?["skillsNeeded"] != "null") {
         changeSkillToList(widget.jobDataMap?["skillsNeeded"]);
       } else {

@@ -59,7 +59,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
       }
       _blackDates.add(date);
     }
-    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       setState(() {
         _blackoutDateCollection = _blackDates;
       });

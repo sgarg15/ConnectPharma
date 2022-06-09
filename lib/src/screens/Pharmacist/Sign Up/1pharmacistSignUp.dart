@@ -45,7 +45,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
   final String cornerCircles = 'assets/icons/CornerDesigns.svg';
 
   void initState() {
-    SchedulerBinding.instance?.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       ref.read(pharmacistSignUpProvider.notifier).changeUserType(widget.userType);
       print("User Type: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
     });

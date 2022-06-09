@@ -60,6 +60,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                             physics: ClampingScrollPhysics(),
                             child: Column(
                               children: <Widget>[
+
                                 SizedBox(height: 30),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -82,7 +83,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   context,
                                   ref,
                                   certificateIcon,
-                                  "Are you legally entitled to work in Canada",
+                                  "Are you legally entitled to work in Canada?",
                                   ref.read(pharmacistSignUpProvider).entitledToWork,
                                   (value) {
                                     ref
@@ -184,7 +185,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
   }
 
   /*
-SingleChildScrollView(
+          SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -307,7 +308,7 @@ SingleChildScrollView(
   Center nextButton(BuildContext context) {
     return Center(
       child: SizedBox(
-        width: 324,
+        width: MediaQuery.of(context).size.width * 0.8,
         height: 51,
         child: ElevatedButton(
           style: ButtonStyle(
@@ -320,6 +321,7 @@ SingleChildScrollView(
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ))),
+         
           onPressed: () {
             print("Pressed");
 
@@ -381,44 +383,50 @@ SingleChildScrollView(
     Function(bool) onChanged,
   ) {
     return Container(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width: MediaQuery.of(context).size.width * 0.84,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
               children: <Widget>[
-                SvgPicture.asset(iconString, width: 21, height: 21),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 7),
+                    padding: const EdgeInsets.only(left: 2),
                     child: RichText(
                         text: TextSpan(
                             text: title,
                             style: TextStyle(
-                                fontSize: 14.0,
+                                fontSize: 12.0,
                                 color: Color(0xFF4A4848),
-                                fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal)
+                                fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.w500)
                                     .fontFamily))),
                   ),
                 ),
-              ],
-            ),
-            Consumer(
+                Consumer(
               builder: (context, ref, child) {
                 ref.watch(pharmacistSignUpProvider);
                 return Padding(
-                  padding: const EdgeInsets.only(left: 25),
+                      padding: const EdgeInsets.only(left: 5),
                   child: Transform.scale(
                     scale: 1.3,
                     child: Switch(
                       value: currentValue,
                       onChanged: onChanged,
-                      activeTrackColor: Color(0xFFF0069C1),
-                      activeColor: Color(0xFFF0069C1),
+                          activeTrackColor: Color(0xFFE2F2FF),
+                          activeColor: Color(0xFF0069C1),
+                          inactiveTrackColor: Color(0xFFDDDFE0),
+                          inactiveThumbColor: Colors.white,
                     ),
                   ),
                 );
               },
+            ),
+         
+              ],
+            ),
+            Divider(
+              color: Color.fromARGB(255, 185, 185, 185),
+              thickness: 1,
             ),
           ],
         ));

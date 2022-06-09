@@ -59,7 +59,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       changeSoftwareToList(ref.read(pharmacyMainProvider.notifier).userData?["softwareList"]);
       ref.read(pharmacySignUpProvider.notifier).changeSoftwareList(softwareList as List<Software?>);
 

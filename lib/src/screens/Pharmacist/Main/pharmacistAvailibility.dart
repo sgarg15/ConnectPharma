@@ -46,7 +46,7 @@ class _PharmacistAvailabilityState extends ConsumerState<PharmacistAvailability>
   void initState() {
     super.initState();
     changeAvailabilityToCalendar(ref);
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(pharmacistMainProvider.notifier).changeDateRanges(dateRangesFromFirestore);
     });
   }
@@ -66,7 +66,7 @@ class _PharmacistAvailabilityState extends ConsumerState<PharmacistAvailability>
       };
     }
     print("Before setstate");
-    WidgetsBinding.instance!.addPostFrameCallback((_) => setState(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
           dateRangesToUpload = dateRangesTemp;
         }));
 
