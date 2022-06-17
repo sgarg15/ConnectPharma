@@ -15,6 +15,8 @@ import 'package:connectpharma/src/screens/Pharmacist/Main/pharmacistAvailibility
 import 'package:connectpharma/src/screens/Pharmacist/Main/pharmacistProfile.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Sign%20Up/1pharmacistSignUp.dart';
 import 'package:connectpharma/src/screens/login.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
 import '../../../../Custom Widgets/fileStorage.dart';
@@ -60,6 +62,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
   Map appliedJobDataMap = Map();
   Map pastJobDataMap = Map();
   Map rejectedJobDataMap = Map();
+
+  String magnifyIcon = "assets/icons/magnify.svg";
 
   void clearFilesOrDirectory() async {
     print("All Files Local: ${localStorage.allDirectoryFiles(path: await localStorage.localPath)}");
@@ -298,7 +302,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
     super.initState();
 
     print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
-    clearFilesOrDirectory();
+    //clearFilesOrDirectory();
     userDataFirestoreSort(ref);
     checkIfJobUpdated(ref, allJobs);
     jobsFirestoreSort(ref);
@@ -396,97 +400,117 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return DefaultTabController(
+      initialIndex: 0,
+      length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFFE3E3E3),
-        key: _scaffoldKey,
-        drawer: SideMenuDrawer(
-          jobsStreamSub: jobsStreamSub,
-          userDataStreamSub: userDataStreamSub,
-        ),
-        appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
           backgroundColor: Colors.white,
-          title: RichText(
-            text: const TextSpan(
-              text: "Job History",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24.0, color: Colors.black),
-            ),
+          key: _scaffoldKey,
+          drawer: SideMenuDrawer(
+            jobsStreamSub: jobsStreamSub,
+            userDataStreamSub: userDataStreamSub,
           ),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.black,
-            ),
-            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-          ),
-          actions: [
-            IconButton(
-              padding: EdgeInsets.zero,
-              icon: new Stack(
-                children: <Widget>[
-                  new Icon(Icons.notifications, size: 30),
-                  new Positioned(
-                    right: 0,
-                    child: new Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: new BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 12,
-                        minHeight: 12,
-                      ),
-                      child: new Text(
-                        '${alertJobs.length}',
-                        style: new TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+          appBar: AppBar(
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(50.0),
+              child: ColoredBox(
+                color: Colors.white,
+                child: TabBar(
+                    labelColor: Color(0xFFF0069C1),
+                    unselectedLabelColor: Color(0xFF4F4F4F),
+                    unselectedLabelStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                      fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
                     ),
-                  )
-                ],
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+                    ),
+                    tabs: const [
+                      Tab(
+                        text: "Active Jobs",
+                      ),
+                      Tab(
+                        text: "Past Jobs",
+                      ),
+                    ]),
               ),
-              color: const Color(0xFFF0069C1),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NotificationsPharmacist(
-                              jobAlerts: alertJobs,
-                            )));
-              },
             ),
-          ],
-        ),
-        bottomNavigationBar: Container(
-          height: 55,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              stops: [
-                0.9,
-                1,
-              ],
-              colors: [Colors.white, Color(0xFFE3E3E3)],
+            iconTheme: IconThemeData(
+              color: Colors.white, //change your color here
             ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              GestureDetector(
-                child: const Icon(
-                  Icons.search,
-                  color: Color(0xFFF0069C1),
-                  size: 50,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+            ),
+            title: new Text(
+              "Job History",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+              ),
+            ),
+            actions: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                icon: new Stack(
+                  children: <Widget>[
+                    new Icon(Icons.notifications, size: 30),
+                    new Positioned(
+                      right: 0,
+                      child: new Container(
+                        padding: const EdgeInsets.all(1),
+                        decoration: new BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 12,
+                          minHeight: 12,
+                        ),
+                        child: new Text(
+                          '${alertJobs.length}',
+                          style: new TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                onTap: (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"] !=
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotificationsPharmacist(
+                                jobAlerts: alertJobs,
+                              )));
+                },
+              ),
+            ],
+            backgroundColor: Color(0xFFF0069C1),
+            foregroundColor: Colors.white,
+            elevation: 0,
+            bottomOpacity: 1,
+            shadowColor: Colors.white,
+          ),
+          floatingActionButton: Container(
+            height: 60.0,
+            width: 60.0,
+            margin: EdgeInsets.only(bottom: 10, right: 10),
+            child: FloatingActionButton(
+              onPressed:
+                  (ref.read(pharmacistMainProvider.notifier).userDataMap?["availability"] !=
                             null &&
                         ref
                             .read(pharmacistMainProvider.notifier)
@@ -497,6 +521,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                             MaterialPageRoute(builder: (context) => FindShiftForPharmacist()));
                       }
                     : () {
+                          print("No Shifts Available");
                         showDialog(
                             context: context,
                             builder: (context) => const AlertDialog(
@@ -505,19 +530,187 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                                       "Please fill out your availability to use this app to its full potential. And allow pharmacies to discover your profile."),
                                 ));
                       },
-              ),
-              //SizedBox(width: MediaQuery.of(context).size.width * 0.3),
-            ],
+              child: SvgPicture.asset(magnifyIcon),
+              backgroundColor: Color(0xFF0069C1),
+            ),
           ),
-        ),
-        body: Container(
+          body: TabBarView(
+            children: [
+              //Active Jobs
+              Column(
+                children: [
+                  StreamBuilder(
+                      stream: jobsStreamPharmacist,
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                        if (!snapshot.hasData) {
+                          print("No data");
+                          return ExpansionTile(
+                              textColor: Color(0xFF0069C1),
+                              title: Text(
+                                "Current Jobs (${currentJobDataMap.length})",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: GoogleFonts.montserrat().fontFamily),
+                              ),
+                              children: [buildCurrentJobsList(context)]);
+                        }
+                        if (snapshot.data != null) {
+                          appliedJobDataMap.clear();
+                          currentJobDataMap.clear();
+                          snapshot.data?.docs.forEach((doc) {
+                            if ((doc.data() as Map)["applicationStatus"] == "current" ||
+                                (doc.data() as Map)["applicationStatus"] == "accept") {
+                              dataID = doc.id;
+                              currentJobDataMap[dataID] = doc.data();
+                            }
+                          });
+                          return ExpansionTile(
+                              textColor: Color(0xFF0069C1),
+                              title: Text(
+                                "Current Jobs (${currentJobDataMap.length})",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: GoogleFonts.montserrat().fontFamily),
+                              ),
+                              children: [buildCurrentJobsList(context)]);
+                        }
+                        return Container();
+                      }),
+                  StreamBuilder(
+                      stream: jobsStreamPharmacist,
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                        if (!snapshot.hasData) {
+                          return ExpansionTile(
+                              textColor: Color(0xFF0069C1),
+                              title: Text(
+                                "Applied Jobs (${appliedJobDataMap.length})",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: GoogleFonts.montserrat().fontFamily),
+                              ),
+                              children: [buildAppliedJobsList(context)]);
+                        }
+                        if (snapshot.data != null) {
+                          appliedJobDataMap.clear();
+                          currentJobDataMap.clear();
+                          snapshot.data?.docs.forEach((doc) {
+                            if ((doc.data() as Map)["applicationStatus"] == "applied") {
+                              dataID = doc.id;
+                              appliedJobDataMap[dataID] = doc.data();
+                            }
+                          });
+                          return ExpansionTile(
+                              textColor: Color(0xFF0069C1),
+                              title: Text(
+                                "Applied Jobs (${appliedJobDataMap.length})",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: GoogleFonts.montserrat().fontFamily),
+                              ),
+                              children: [buildAppliedJobsList(context)]);
+                        }
+                        return Container();
+                      })
+                ],
+              ),
+              //Past Jobs
+              Column(
+                children: [
+                  StreamBuilder(
+                      stream: jobsStreamPharmacist,
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                        if (!snapshot.hasData) {
+                          return ExpansionTile(
+                              textColor: Color(0xFF0069C1),
+                              title: Text(
+                                "Past Jobs (${pastJobDataMap.length})",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: GoogleFonts.montserrat().fontFamily),
+                              ),
+                              children: [buildPastJobsList(context)]);
+                        }
+                        if (snapshot.data != null) {
+                          snapshot.data?.docs.forEach((doc) {
+                            if ((doc.data() as Map)["applicationStatus"] == "past") {
+                              dataID = doc.id;
+                              pastJobDataMap[dataID] = doc.data();
+                            }
+                          });
+
+                          return ExpansionTile(
+                              textColor: Color(0xFF0069C1),
+                              title: Text(
+                                "Past Jobs (${pastJobDataMap.length})",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: GoogleFonts.montserrat().fontFamily),
+                              ),
+                              children: [buildPastJobsList(context)]);
+                        }
+                        return Container();
+                      }),
+                  StreamBuilder(
+                      stream: jobsStreamPharmacist,
+                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                        if (!snapshot.hasData) {
+                          return ExpansionTile(
+                              textColor: Color(0xFF0069C1),
+                              title: Text(
+                                "Rejected Jobs (${rejectedJobDataMap.length})",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: GoogleFonts.montserrat().fontFamily),
+                              ),
+                              children: [buildRejectedJobsList(context)]);
+                        }
+                        if (snapshot.data != null) {
+                          snapshot.data?.docs.forEach((doc) {
+                            if ((doc.data() as Map)["applicationStatus"] == "rejected") {
+                              dataID = doc.id;
+                              rejectedJobDataMap[dataID] = doc.data();
+                            }
+                          });
+
+                          return ExpansionTile(
+                              textColor: Color(0xFF0069C1),
+                              title: Text(
+                                "Rejected Jobs (${rejectedJobDataMap.length})",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: GoogleFonts.montserrat().fontFamily),
+                              ),
+                              children: [buildRejectedJobsList(context)]);
+                        }
+                        return Container();
+                      }),
+                ],
+              )
+            ],
+          )),
+    );
+  }
+  /* 
+  Container(
           child: Column(
             children: <Widget>[
               //Slider
               Container(
                 padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
                 width: MediaQuery.of(context).size.width,
-                height: 75,
+                height: 65,
                 alignment: Alignment.topCenter,
                 //color: Colors.white,
                 decoration: const BoxDecoration(
@@ -525,7 +718,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: [
-                      0.9,
+                      1,
                       1,
                     ],
                     colors: [Colors.white, Color(0xFFE3E3E3)],
@@ -533,13 +726,12 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 ),
                 child: CupertinoSlidingSegmentedControl(
                     thumbColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                    backgroundColor: const Color(0xFFC4C4C4),
+                    backgroundColor: Colors.white,
                     groupValue: segmentedControlGroupValue,
                     children: <int, Widget>{
                       0: Container(
                         alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 34),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40.45),
                         child: segmentedControlGroupValue == 0
                             ? const Text(
                                 "Active Jobs",
@@ -652,42 +844,25 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             ],
           ),
         ),
-      ),
-    );
-  }
+      
+  */
 
   Column buildCurrentJobsList(BuildContext context) {
+    print("Building Current Jobs");
     return Column(children: <Widget>[
       //Headline
-      Row(children: <Widget>[
-        Text(
-          "   Current (${currentJobDataMap.length})",
-        ),
-        Expanded(
-          child: new Container(
-              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: const Divider(
-                color: Colors.grey,
-                height: 36,
-                thickness: 4,
-              )),
-        ),
-      ]),
+
       if (currentJobDataMap.isEmpty)
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-          child: Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.95,
-              height: 30,
-              child: const Center(
-                  child: Text(
-                "No current jobs found",
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )),
-            ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.95,
+            height: 30,
+            child: const Center(
+                child: Text(
+              "No current jobs found",
+              style: TextStyle(color: Colors.grey, fontSize: 15),
+            )),
           ),
         )
       else
@@ -746,36 +921,17 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
   Column buildAppliedJobsList(BuildContext context) {
     return Column(children: <Widget>[
-      //Headline
-      Row(children: <Widget>[
-        Text(
-          "   Applied (${appliedJobDataMap.length})",
-        ),
-        Expanded(
-          child: new Container(
-              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: const Divider(
-                color: Colors.grey,
-                height: 36,
-                thickness: 4,
-              )),
-        ),
-      ]),
       if (appliedJobDataMap.isEmpty)
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-          child: Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.95,
-              height: 30,
-              child: const Center(
-                  child: Text(
-                "No applied jobs found",
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )),
-            ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.95,
+            height: 30,
+            child: const Center(
+                child: Text(
+              "No applied jobs found",
+              style: TextStyle(color: Colors.grey, fontSize: 15),
+            )),
           ),
         )
       else
@@ -834,36 +990,17 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
   Column buildPastJobsList(BuildContext context) {
     return Column(children: <Widget>[
-      //Headline
-      Row(children: <Widget>[
-        Text(
-          "   Past (${pastJobDataMap.length})",
-        ),
-        Expanded(
-          child: new Container(
-              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: const Divider(
-                color: Colors.grey,
-                height: 36,
-                thickness: 4,
-              )),
-        ),
-      ]),
       if (pastJobDataMap.isEmpty)
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-          child: Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.95,
-              height: 30,
-              child: const Center(
-                  child: Text(
-                "No past jobs found",
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )),
-            ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.95,
+            height: 30,
+            child: const Center(
+                child: Text(
+              "No past jobs found",
+              style: TextStyle(color: Colors.grey, fontSize: 15),
+            )),
           ),
         )
       else
@@ -922,36 +1059,17 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
   Column buildRejectedJobsList(BuildContext context) {
     return Column(children: <Widget>[
-      //Headline
-      Row(children: <Widget>[
-        Text(
-          "   Rejected (${rejectedJobDataMap.length})",
-        ),
-        Expanded(
-          child: new Container(
-              margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child: const Divider(
-                color: Colors.grey,
-                height: 36,
-                thickness: 4,
-              )),
-        ),
-      ]),
       if (rejectedJobDataMap.isEmpty)
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-          child: Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.95,
-              height: 30,
-              child: const Center(
-                  child: Text(
-                "No rejected jobs found",
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )),
-            ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.95,
+            height: 30,
+            child: const Center(
+                child: Text(
+              "No rejected jobs found",
+              style: TextStyle(color: Colors.grey, fontSize: 15),
+            )),
           ),
         )
       else

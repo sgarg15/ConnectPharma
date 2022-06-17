@@ -28,6 +28,13 @@ service cloud.firestore {
       allow read, update, delete: if request.auth != null && request.auth.uid == userID;
       allow create: if request.auth != null;
     }
+    
+    //Writing (Update) is only allowed if the user is a pharmacist
+    //Reading is only allowed if the user is a pharmacy
+    match /Users/{userID}/Main/{jobID} {
+      allow update: if isPharmacy() == false;
+      allow read: if isPharmacy();
+    }
 
     //Writing only allowed if user is pharmacy
     //Reading is only allowed if user is not a pharmacy

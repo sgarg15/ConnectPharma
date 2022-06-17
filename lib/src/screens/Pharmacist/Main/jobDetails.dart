@@ -627,6 +627,7 @@ class JobDetails extends ConsumerWidget {
                                           //Follow step 2)
                                           await sendJobDataToPharmacist(
                                               ref, context, jobApplicationBatch);
+
                                           jobApplicationBatch.commit().onError((error, stackTrace) {
                                             print("ERROR APPLYING: $error");
                                             showDialog(
@@ -637,10 +638,10 @@ class JobDetails extends ConsumerWidget {
                                                           "There was an error trying to apply for this job. Please try again after restarting the app."),
                                                     ));
                                           });
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => JobHistoryPharmacist()));
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) => JobHistoryPharmacist()));
                                         },
                                       ),
                                     ],
@@ -674,12 +675,18 @@ class JobDetails extends ConsumerWidget {
   Future<void> sendJobDataToPharmacist(
       WidgetRef ref, BuildContext context, WriteBatch batchValue) async {
     jobDetails?.addAll({"applicationStatus": "applied", "userType": "Pharmacist"});
-    DocumentReference pharmacistJobsCollection = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(ref.read(userProviderLogin.notifier).userUID)
-        .collection("PharmacistJobs")
-        .doc(jobDetails?["jobID"]);
-    batchValue.set(pharmacistJobsCollection, jobDetails);
+
+    try {
+      DocumentReference pharmacistJobsCollection = FirebaseFirestore.instance
+          .collection("Users")
+          .doc(ref.read(userProviderLogin.notifier).userUID)
+          .collection("PharmacistJobs")
+          .doc(jobDetails?["jobID"]);
+      batchValue.set(pharmacistJobsCollection, jobDetails);
+} on Exception catch (e) {
+      print("ERROR: $e");
+    }
+
     // String? result = await context
     //     .read(authProviderMain.notifier)
     //     .sendJobInfoToPharmacistProfile(
@@ -707,13 +714,24 @@ class JobDetails extends ConsumerWidget {
       "yearsOfExperience": userDataMap?["workingExperience"],
     });
 
-    batchValue.update(
+    print("Uploading applicant data to pharmacy");
+    print("applicantInformation: ${jobDetails?["pharmacyUID"]}");
+    print("applicantInformation: ${jobDetails?["jobID"]}");
+
+    try {
+      batchValue.update(
         FirebaseFirestore.instance
             .collection("Users")
             .doc(jobDetails?["pharmacyUID"])
             .collection("Main")
             .doc(jobDetails?["jobID"]),
-        {"applicants.${ref.read(userProviderLogin.notifier).userUID}": applicantInformation});
+        {"applicants.${ref.read(userProviderLogin.notifier).userUID}": applicantInformation},
+      );
+    } on Exception catch (e) {
+      print("ERROR: $e");
+    }
+    
+    
 
     // String? result = await context
     //     .read(authProviderMain.notifier)
