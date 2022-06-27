@@ -59,6 +59,8 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
     setState(() {
       jobsDataMapTemp = jobsData.data() as Map;
     });
+
+    print("jobsDataMapTemp: ${jobsDataMapTemp}");
   }
 
   void jobsSortedWithSchedule(WidgetRef ref) async {
@@ -73,34 +75,47 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
 
     print("Jobs DataMap: $jobsDataMapTemp");
 
+    // from here
     jobsDataMapTemp.forEach((key, value) async {
-      print(value["pharmacyUID"]);
+      debugPrint(value["pharmacyUID"]);
+      print("jobsDataMapTemp: ${jobsDataMapTemp}");
+      print("jobsDataMapTemp Length: ${jobsDataMapTemp.length}");
       print("--------------------------------------------");
-      double distanceBetweenPharmacistAndPharmacy =
-          await getDistanceBetweenPharmacyAndPharmacist(ref, value);
-      print("Distance: $distanceBetweenPharmacistAndPharmacy");
+      if (!jobsMap.containsKey(key)) {
+        double distanceBetweenPharmacistAndPharmacy =
+            await getDistanceBetweenPharmacyAndPharmacist(ref, value);
+        print("Distance: $distanceBetweenPharmacistAndPharmacy");
 
-      if (jobsBetweenDates(ref, value) &&
-          distanceBetweenPharmacistAndPharmacy < distanceWillingToTravel) {
-        print(value["pharmacyUID"]);
-        print("Key: $key");
-        if (!jobsMap.containsKey(key)) {
+        if (jobsBetweenDates(ref, value) &&
+            distanceBetweenPharmacistAndPharmacy < distanceWillingToTravel) {
+          print(value["pharmacyUID"]);
+          print("Key: $key");
+
+          print("Jobs Data Map Before: $jobsDataMap");
           jobsDataMap[key] = value;
+          print("Jobs Data Map After: $jobsDataMap");
           print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n");
           print("YESS \n");
           print("Distance: $distanceBetweenPharmacistAndPharmacy");
           print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvv \n");
+          // to here
+          print("Jobs Data Map: $jobsDataMap");
+          setState(() {
+            // await function
+            sortedJobsDataMap = Map.fromEntries(jobsDataMap.entries.toList()
+              ..sort((e1, e2) => e1.value["startDate"].compareTo(e2.value["startDate"])));
+          });
+          print("Sorted Jobs Data Map: $sortedJobsDataMap");
+        } else {
+          print("NO because of date or distance");
+          print(value["pharmacyUID"]);
+          print("Key: $key");
         }
       } else {
+        print("NO because already applied");
         print(value["pharmacyUID"]);
         print("Key: $key");
-        print("NO");
       }
-    });
-    print("Jobs Data Map: ${jobsDataMap.keys}");
-    setState(() {
-      sortedJobsDataMap = Map.fromEntries(jobsDataMap.entries.toList()
-        ..sort((e1, e2) => e1.value["startDate"].compareTo(e2.value["startDate"])));
     });
   }
 
@@ -113,10 +128,12 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
         " " +
         value["pharmacyAddress"]["country"];
 
-    List<Location> pharmacyLocation = await locationFromAddress(pharmacyAddress);
-
     List<Location> pharmacistLocation = await locationFromAddress(
         ref.read(pharmacistMainProvider.notifier).userDataMap?["address"]);
+
+    List<Location> pharmacyLocation = await locationFromAddress(pharmacyAddress);
+
+    print("Pharmacy Location: $pharmacyLocation");
 
     double distanceBetweenPharmacistAndPharmacy = Geolocator.distanceBetween(
             pharmacistLocation.first.latitude,
@@ -138,9 +155,18 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
             (ref.read(pharmacistMainProvider.notifier).startDate as DateTime).day);
   }
 
+  void getAndSetJobsFromFirestore(WidgetRef ref) {
+    print(ref.read(pharmacistMainProvider.notifier).startDate);
+    scheduleJobsDataSub?.cancel();
+    scheduleJobsDataSub = aggregationRef.doc("jobs").snapshots().listen((allJobsData) {
+      getAllJobs(allJobsData);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getAndSetJobsFromFirestore(ref);
   }
 
   @override
@@ -328,10 +354,10 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                                 ref.read(pharmacistMainProvider.notifier).endDate !=
                                                     null)
                                             ? () {
-                                                print("Pressed");
+                                                print("Finding Shifts for User");
                                                 //sortedJobsDataMap = {};
                                                 //jobsDataMap = {};
-                                                getAndSetJobsFromFirestore(ref);
+                                                //getAndSetJobsFromFirestore(ref);
                                                 jobsSortedWithSchedule(ref);
                                               }
                                             : null,
@@ -491,14 +517,6 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
         );
       },
     );
-  }
-
-  void getAndSetJobsFromFirestore(WidgetRef ref) {
-    print(ref.read(pharmacistMainProvider.notifier).startDate);
-    scheduleJobsDataSub?.cancel();
-    scheduleJobsDataSub = aggregationRef.doc("jobs").snapshots().listen((allJobsData) {
-      getAllJobs(allJobsData);
-    });
   }
 }
 

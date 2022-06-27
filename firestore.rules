@@ -32,8 +32,15 @@ service cloud.firestore {
     //Writing (Update) is only allowed if the user is a pharmacist
     //Reading is only allowed if the user is a pharmacy
     match /Users/{userID}/Main/{jobID} {
-      allow update: if isPharmacy() == false;
+      allow update: if (isPharmacy() == false && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['applicants']));
       allow read: if isPharmacy();
+    }
+
+    //Writing (Update) is only allowed if the user is a pharmacy
+    //Reading is only allowed if the user is a pharmacy
+    match /Users/{userID}/PharmacistJobs/{jobID} {
+      allow update: if (isPharmacy() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['applicationStatus']));
+      allow read: if isPharmacy() == false;
     }
 
     //Writing only allowed if user is pharmacy

@@ -638,10 +638,10 @@ class JobDetails extends ConsumerWidget {
                                                           "There was an error trying to apply for this job. Please try again after restarting the app."),
                                                     ));
                                           });
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) => JobHistoryPharmacist()));
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => JobHistoryPharmacist()));
                                         },
                                       ),
                                     ],

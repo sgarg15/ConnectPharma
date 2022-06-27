@@ -33,7 +33,7 @@ Future<void> main() async {
   //String? token = await FirebaseAppCheck.instance.getToken();
   //print("The token is: $token");
 
-  const bool useEmulator = false;
+  const bool useEmulator = true;
 
   // ignore: dead_code
   if (useEmulator) {
