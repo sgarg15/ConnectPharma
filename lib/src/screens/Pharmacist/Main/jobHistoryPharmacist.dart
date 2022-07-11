@@ -187,6 +187,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         print("Key: $key");
         removedJob[key] = value;
         alertJobs.addAll({key: value});
+        print("Removed Job: $removedJob");
         alertJobs[key]["newJobStatus"] = "removed";
       } else if ((jobsMap.length >= allJobs.length)) {
         print(
@@ -290,7 +291,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
     print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
     //clearFilesOrDirectory();
     userDataFirestoreSort(ref);
-    checkIfJobUpdated(ref, allJobs);
+    //checkIfJobUpdated(ref, allJobs);
     jobsFirestoreSort(ref);
   }
 
