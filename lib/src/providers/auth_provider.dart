@@ -452,17 +452,27 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<UserCredential?>? uploadAvailalibitlityData(
-      String userUID, Map dataUpload, bool? permanentJobBool) async {
+      String userUID, Map dataUpload, bool? permanentJobBool, bool? nightShiftBool) async {
     if (dataUpload.isEmpty) {
       users.doc(userUID).collection("SignUp").doc("Information").set({
         "permanentJob": permanentJobBool,
+        "nightShift": nightShiftBool,
       }, SetOptions(merge: true));
     } else {
       users.doc(userUID).collection("SignUp").doc("Information").set({
         "availability": dataUpload,
         "permanentJob": permanentJobBool,
+        "nightShift": nightShiftBool,
       }, SetOptions(merge: true));
     }
+
+    return null;
+  }
+
+  Future<UserCredential?>? clearAvailabilityData(String userUID) async {
+    users.doc(userUID).collection("SignUp").doc("Information").update({
+      "availability": [],
+    });
 
     return null;
   }

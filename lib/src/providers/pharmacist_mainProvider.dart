@@ -13,6 +13,8 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
   DateTime? get endDate => state.endDate;
   File? get resumePDFData => state.resumePDF;
   bool? get permanentJob => state.permanentJob;
+  bool? get nightShift => state.nightShift;
+
 
   void clearDates() {
     state.startDate = null;
@@ -26,6 +28,7 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
     state.permanentJob = false;
     state.resumePDF = null;
     state.userData = null;
+    state.nightShift = false;
   }
 
   void changeDateRanges(List<PickerDateRange> dateRanges) {
@@ -50,6 +53,9 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
 
   void changePermanentJob(bool? value) {
     state = state.copyWithPharmacistMain(permanentJob: value);
+  }
+ void changeNightShift(bool? value) {
+    state = state.copyWithPharmacistMain(nightShift: value);
   }
 
   void clearResumePDF() {

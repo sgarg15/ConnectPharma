@@ -9,6 +9,7 @@ class PharmacistMainModel {
   DateTime? endDate;
   File? resumePDF;
   bool? permanentJob;
+  bool? nightShift;
 
   PharmacistMainModel({
     this.dateRanges = const [],
@@ -17,6 +18,7 @@ class PharmacistMainModel {
     this.endDate,
     this.resumePDF,
     this.permanentJob = false,
+    this.nightShift = false,
   });
 
   PharmacistMainModel copyWithPharmacistMain({
@@ -26,6 +28,7 @@ class PharmacistMainModel {
     DateTime? endDate,
     File? resumePDF,
     bool? permanentJob,
+    bool? nightShift,
   }) {
     return PharmacistMainModel(
       dateRanges: dateRanges ?? this.dateRanges,
@@ -34,6 +37,7 @@ class PharmacistMainModel {
       endDate: endDate ?? this.endDate,
       resumePDF: resumePDF ?? this.resumePDF,
       permanentJob: permanentJob ?? this.permanentJob,
+      nightShift: nightShift ?? this.nightShift,
     );
   }
 }
