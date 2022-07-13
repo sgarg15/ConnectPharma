@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Main/jobDetails.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Main/jobHistoryPharmacist.dart';
@@ -31,6 +33,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
   Map sortedJobsDataMap = Map();
   StreamSubscription? scheduleJobsDataSub;
   final LocalStorage localStorage = LocalStorage();
+  String calendarIcon = "assets/icons/calendar2.svg";
 
   double distanceWillingToTravel = 50;
 
@@ -188,212 +191,264 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
           },
           child: Scaffold(
             appBar: AppBar(
-              centerTitle: true,
-              iconTheme: IconThemeData(color: Colors.black),
-              elevation: 12,
-              title: Text(
-                "Find Shift",
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+              iconTheme: IconThemeData(color: Colors.white),
+              elevation: 0,
+              title: new Text(
+                "Availability",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+                ),
               ),
-              backgroundColor: Color(0xFFF6F6F6),
+              backgroundColor: Color(0xFFF0069C1),
+              foregroundColor: Colors.white,
+              bottomOpacity: 1,
+              shadowColor: Colors.white,
             ),
             body: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 //Start and End Date Fields and Search
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-                  child: Material(
-                    elevation: 10,
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 15, 10, 20),
-                      child: Column(
-                        children: <Widget>[
-                          //Start and End Fields Date
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 15, 10, 20),
+                  child: Column(
+                    children: <Widget>[
+                      //Start and End Fields Date
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               //Start Date
-                              Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        text: "Start Date",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 18.0,
-                                            color: Colors.black),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(calendarIcon, height: 20, width: 20),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: "Start Date",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 18.0,
+                                                color: Colors.black,
+                                                fontFamily: GoogleFonts.montserrat().fontFamily,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      width: MediaQuery.of(context).size.width * 0.45,
+                                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                      child: DateTimeField(
+                                        format: DateFormat("dd MMM, yyyy"),
+                                        decoration: InputDecoration(
+                                            isDense: true,
+                                            hintText: "Select a date",
+                                            hintStyle: TextStyle(
+                                                fontFamily: GoogleFonts.montserrat().fontFamily)),
+                                        onShowPicker: (context, currentValue) async {
+                                          final date = await showDatePicker(
+                                              context: context,
+                                              firstDate: DateTime.now(),
+                                              initialDate: currentValue ?? DateTime.now(),
+                                              lastDate: DateTime(2100));
+
+                                          if (date != null) {
+                                            ref
+                                                .read(pharmacistMainProvider.notifier)
+                                                .changeStartDate(date);
+                                            print(date);
+                                            return date;
+                                          } else {
+                                            ref
+                                                .read(pharmacistMainProvider.notifier)
+                                                .changeStartDate(currentValue);
+                                            return currentValue;
+                                          }
+                                        },
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: MediaQuery.of(context).size.width * 0.44,
-                                    padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                    child: DateTimeField(
-                                      format: DateFormat("yyyy-MM-dd"),
-                                      decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.all(12),
-                                          isDense: true,
-                                          border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(30)),
-                                          labelText: "Select a date"),
-                                      onShowPicker: (context, currentValue) async {
-                                        final date = await showDatePicker(
-                                            context: context,
-                                            firstDate: DateTime.now(),
-                                            initialDate: currentValue ?? DateTime.now(),
-                                            lastDate: DateTime(2100));
-
-                                        if (date != null) {
-                                          ref
-                                              .read(pharmacistMainProvider.notifier)
-                                              .changeStartDate(date);
-                                          print(date);
-                                          return date;
-                                        } else {
-                                          ref
-                                              .read(pharmacistMainProvider.notifier)
-                                              .changeStartDate(currentValue);
-                                          return currentValue;
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.05,
+                              ),
                               //End Date
-                              Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        text: "End Date",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 18.0,
-                                            color: Colors.black),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(calendarIcon, height: 20, width: 20),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: "End Date",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 18.0,
+                                                color: Colors.black,
+                                                fontFamily: GoogleFonts.montserrat().fontFamily,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      width: MediaQuery.of(context).size.width * 0.45,
+                                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                      child: DateTimeField(
+                                        format: DateFormat("yyyy-MM-dd"),
+                                        decoration: InputDecoration(
+                                            isDense: true,
+                                            hintText: "Select a date",
+                                            hintStyle: TextStyle(
+                                                fontFamily: GoogleFonts.montserrat().fontFamily)),
+                                        onShowPicker: (context, currentValue) async {
+                                          final date = await showDatePicker(
+                                              context: context,
+                                              firstDate: ref
+                                                      .read(pharmacistMainProvider.notifier)
+                                                      .startDate ??
+                                                  DateTime.now(),
+                                              initialDate: ref
+                                                      .read(pharmacistMainProvider.notifier)
+                                                      .startDate ??
+                                                  DateTime.now(),
+                                              lastDate: DateTime(2100));
+
+                                          if (date != null) {
+                                            ref
+                                                .read(pharmacistMainProvider.notifier)
+                                                .changeEndDate(date);
+                                            print(date);
+                                            return date;
+                                          } else {
+                                            ref
+                                                .read(pharmacistMainProvider.notifier)
+                                                .changeEndDate(currentValue);
+                                            return currentValue;
+                                          }
+                                        },
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: MediaQuery.of(context).size.width * 0.44,
-                                    padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                    child: DateTimeField(
-                                      format: DateFormat("yyyy-MM-dd"),
-                                      decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.all(12),
-                                          isDense: true,
-                                          border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(30)),
-                                          labelText: "Select a date"),
-                                      onShowPicker: (context, currentValue) async {
-                                        final date = await showDatePicker(
-                                            context: context,
-                                            firstDate: ref
-                                                    .read(pharmacistMainProvider.notifier)
-                                                    .startDate ??
-                                                DateTime.now(),
-                                            initialDate: ref
-                                                    .read(pharmacistMainProvider.notifier)
-                                                    .startDate ??
-                                                DateTime.now(),
-                                            lastDate: DateTime(2100));
-
-                                        if (date != null) {
-                                          ref
-                                              .read(pharmacistMainProvider.notifier)
-                                              .changeEndDate(date);
-                                          print(date);
-                                          return date;
-                                        } else {
-                                          ref
-                                              .read(pharmacistMainProvider.notifier)
-                                              .changeEndDate(currentValue);
-                                          return currentValue;
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
+                        ),
+                      ),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.6,
-                                  height: 51,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.resolveWith<Color>((states) {
-                                          if (states.contains(MaterialState.disabled)) {
-                                            return Colors.grey; // Disabled color
-                                          }
-                                          return Color(0xFFF0069C1); // Regular color
-                                        }),
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(100),
-                                        ))),
-                                    onPressed:
-                                        (ref.read(pharmacistMainProvider.notifier).startDate !=
-                                                    null &&
-                                                ref.read(pharmacistMainProvider.notifier).endDate !=
-                                                    null)
-                                            ? () {
-                                                print("Finding Shifts for User");
-                                                //sortedJobsDataMap = {};
-                                                //jobsDataMap = {};
-                                                //getAndSetJobsFromFirestore(ref);
-                                                jobsSortedWithSchedule(ref);
-                                              }
-                                            : null,
-                                    child: RichText(
-                                      text: TextSpan(
-                                        text: "Search",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                      //Search Button
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height: 51,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.resolveWith<Color>((states) {
+                                      if (states.contains(MaterialState.disabled)) {
+                                        return Colors.grey; // Disabled color
+                                      }
+                                      return Color(0xFFF0069C1); // Regular color
+                                    }),
+                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ))),
+                                onPressed: (ref.read(pharmacistMainProvider.notifier).startDate !=
+                                            null &&
+                                        ref.read(pharmacistMainProvider.notifier).endDate != null)
+                                    ? () {
+                                        print("Finding Shifts for User");
+                                        //sortedJobsDataMap = {};
+                                        //jobsDataMap = {};
+                                        //getAndSetJobsFromFirestore(ref);
+                                        jobsSortedWithSchedule(ref);
+                                      }
+                                    : null,
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: "Search",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                                child: IconButton(
-                                    onPressed: () {
-                                      _showDistanceDialog();
-                                    },
-                                    icon: Icon(Icons.filter_list_rounded)),
-                              ),
-                            ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                            child: IconButton(
+                                onPressed: () {
+                                  _showDistanceDialog();
+                                },
+                                icon: Icon(Icons.filter_list_rounded)),
                           ),
                         ],
                       ),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
+                    ],
+                  ),
+                ),
+
+                Container(
+                  alignment: Alignment.centerLeft,
+                  height: 45,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(width: 1.0, color: Color(0xFFE8E8E8)),
+                      bottom: BorderSide(width: 1.0, color: Color(0xFFE8E8E8)),
+                    ),
+                    color: Color(0xFFF9F9F9),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25),
+                    child: Text(
+                      "${sortedJobsDataMap.length} results found",
+                      style: TextStyle(
+                          color: Color(0xFFA1A0A0),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: GoogleFonts.montserrat().fontFamily),
                     ),
                   ),
                 ),
+
+                
+
+                
                 //All Available Shifts
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(5, 20, 5, 0),
+                    padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -418,67 +473,71 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                         return Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            Material(
-                                              elevation: 10,
-                                              borderRadius: BorderRadius.circular(20),
-                                              child: Container(
-                                                width: MediaQuery.of(context).size.width * 0.97,
-                                                constraints: BoxConstraints(minHeight: 90),
-                                                child: Center(
-                                                  child: ListTile(
-                                                    isThreeLine: true,
-                                                    title: new Text(
-                                                      "${DateFormat("EEE, MMM d yyyy").format((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate())}" +
-                                                          " - " +
-                                                          "${DateFormat("EE, MMM d yyyy").format((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate())}",
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.bold),
-                                                    ),
-                                                    subtitle: RichText(
-                                                      text: TextSpan(children: [
-                                                        TextSpan(
-                                                            text:
-                                                                "${DateFormat("jm").format((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate())}"
-                                                                " - "
-                                                                "${DateFormat("jm").format((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate())} ",
-                                                            style: TextStyle(
-                                                                color: Colors.black,
-                                                                fontWeight: FontWeight.w600,
-                                                                fontSize: 15)),
-                                                        TextSpan(
-                                                            text:
-                                                                "(${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[0]} hrs"
-                                                                "${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[1]}/day)\n",
-                                                            style: TextStyle(
-                                                                color: Colors.black,
-                                                                fontWeight: FontWeight.w600,
-                                                                fontSize: 15)),
-                                                        TextSpan(
-                                                            text: "${snapshot.data}",
-                                                            style: TextStyle(
-                                                                color: Colors.black, fontSize: 15)),
-                                                      ]),
-                                                    ),
-                                                    trailing: Text(
-                                                      "${sortedJobsDataMap[key]["hourlyRate"]}/hr\n"
-                                                      "Pharmacist",
-                                                      style: TextStyle(fontWeight: FontWeight.w600),
-                                                    ),
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) => JobDetails(
-                                                                    jobDetails:
-                                                                        sortedJobsDataMap[key],
-                                                                  )));
-                                                    },
+                                            Container(
+                                              width: MediaQuery.of(context).size.width * 0.97,
+                                              constraints: BoxConstraints(minHeight: 90),
+                                              child: Center(
+                                                child: ListTile(
+                                                  isThreeLine: true,
+                                                  title: new Text(
+                                                    DateFormat("EEE, MMM d yyyy").format(
+                                                            (sortedJobsDataMap[key]["startDate"]
+                                                                    as Timestamp)
+                                                                .toDate()) +
+                                                        " - " +
+                                                        "${DateFormat("EE, MMM d yyyy").format((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate())}",
+                                                    style: TextStyle(
+                                                        fontSize: 16, fontWeight: FontWeight.bold),
                                                   ),
+                                                  subtitle: RichText(
+                                                    text: TextSpan(children: [
+                                                      TextSpan(
+                                                          text:
+                                                              "${DateFormat("jm").format((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate())}"
+                                                              " - "
+                                                              "${DateFormat("jm").format((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate())} ",
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 15)),
+                                                      TextSpan(
+                                                          text:
+                                                              "(${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[0]} hrs"
+                                                              "${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[1]}/day)\n",
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 15)),
+                                                      TextSpan(
+                                                          text: "${snapshot.data}",
+                                                          style: TextStyle(
+                                                              color: Colors.black, fontSize: 15)),
+                                                    ]),
+                                                  ),
+                                                  trailing: Text(
+                                                    "${sortedJobsDataMap[key]["hourlyRate"]}/hr\n"
+                                                    "Pharmacist",
+                                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                                  ),
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => JobDetails(
+                                                                  jobDetails:
+                                                                      sortedJobsDataMap[key],
+                                                                )));
+                                                  },
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 10)
+                                            SizedBox(height: 5),
+                                            Divider(
+                                              color: Colors.grey,
+                                              height: 1,
+                                            ),
+                                            SizedBox(height: 10),
+
                                           ],
                                         );
                                       },

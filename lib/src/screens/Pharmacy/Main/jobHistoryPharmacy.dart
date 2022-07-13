@@ -742,10 +742,9 @@ class SideMenuDrawer extends ConsumerWidget {
                   ref.read(pharmacyMainProvider.notifier).resetValues();
                   ref.read(pharmacySignUpProvider.notifier).resetValues();
                 });
+                Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => ConnectPharma()),
-                    result: Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (context) => ConnectPharma())));
+                    context, MaterialPageRoute(builder: (BuildContext context) => ConnectPharma()));
               },
             ),
           ],
