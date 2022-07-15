@@ -5,12 +5,13 @@
   "metageneration": 1,
   "generation": 1655860696869,
   "storageClass": "STANDARD",
-  "etag": "someETag",
   "contentDisposition": "inline",
+  "cacheControl": "public, max-age=3600",
   "contentEncoding": "identity",
   "downloadTokens": [
     "688aa79b-4321-4158-9d96-0480bd789b73"
   ],
+  "etag": "someETag",
   "timeCreated": "2022-06-22T01:18:16.868Z",
   "updated": "2022-06-22T01:18:16.878Z",
   "size": 2489037,

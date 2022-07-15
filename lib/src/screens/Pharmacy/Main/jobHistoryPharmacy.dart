@@ -13,6 +13,8 @@ import 'package:connectpharma/src/screens/Pharmacy/Main/pharmacyProfile.dart';
 import 'package:connectpharma/src/screens/Pharmacy/Main/searchPharmacist.dart';
 import 'package:connectpharma/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
 import 'package:connectpharma/src/screens/login.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
 //TODO: Permanent Hiring for Pharmacy, show permanent option, for pharmacist in availability show looking for permanent job
@@ -44,6 +46,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
   int numActiveJobs = 0;
   int numPastJobs = 0;
   bool jobDataMapEmpty = false;
+  String clockIcon = "assets/icons/clock.svg";
+
 
   @override
   void initState() {
@@ -97,69 +101,353 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
-        backgroundColor: Color(0xFFE3E3E3),
-        key: _scaffoldKey,
-        drawer: SideMenuDrawer(
-          jobsDataSub: jobsDataSub,
-          userDataSub: userDataSub,
-        ),
-        appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
+    return DefaultTabController(
+      initialIndex: 0,
+      length: 2,
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
           backgroundColor: Colors.white,
-          title: RichText(
-            text: TextSpan(
-              text: "Job History Pharmacy",
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24.0, color: Colors.black),
-            ),
+          key: _scaffoldKey,
+          drawer: SideMenuDrawer(
+            jobsDataSub: jobsDataSub,
+            userDataSub: userDataSub,
           ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: Colors.black,
-            ),
-            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-          ),
-          actions: [],
-        ),
-        bottomNavigationBar: Container(
-          height: 65,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              stops: [
-                0.9,
-                1,
-              ],
-              colors: [Colors.white, Color(0xFFE3E3E3)],
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 3),
-                child: GestureDetector(
-                  child: Icon(
-                    Icons.perm_contact_calendar_outlined,
-                    color: Color(0xFFF0069C1),
-                    size: 50,
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SearchPharmacistPharmacy()));
-                  },
-                ),
+          appBar: AppBar(
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(50.0),
+              child: ColoredBox(
+                color: Colors.white,
+                child: TabBar(
+                    labelColor: Color(0xFFF0069C1),
+                    unselectedLabelColor: Color(0xFF4F4F4F),
+                    unselectedLabelStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                      fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+                    ),
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+                    ),
+                    tabs: const [
+                      Tab(
+                        text: "Active Jobs",
+                      ),
+                      Tab(
+                        text: "Past Jobs",
+                      ),
+                    ]),
               ),
-            ],
+            ),
+            iconTheme: IconThemeData(
+              color: Colors.white, //change your color here
+            ),
+            leading: IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+            ),
+            title: new Text(
+              "Job History",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+              ),
+            ),
+            backgroundColor: Color(0xFFF0069C1),
+            foregroundColor: Colors.white,
+            elevation: 0,
+            bottomOpacity: 1,
+            shadowColor: Colors.white,
+          ),
+          floatingActionButton: Container(
+            height: 60.0,
+            width: 60.0,
+            margin: EdgeInsets.only(bottom: 10, right: 10),
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => SearchPharmacistPharmacy()));
+              },
+              child: SvgPicture.asset(clockIcon),
+              backgroundColor: Color(0xFF0069C1),
+            ),
+          ),
+          body: StreamBuilder(
+            stream: jobsStreamPharmacy,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (!snapshot.hasData) {
+                print("No data");
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              activeJobDataMap.clear();
+              pastJobDataMap.clear();
+
+              snapshot.data?.docs.forEach((doc) {
+                dataID = doc.id;
+                jobDataMap[dataID] = doc.data();
+              });
+
+              sortedJobDataMap = Map.fromEntries(jobDataMap.entries.toList()
+                ..sort((e1, e2) => e1.value["startDate"].compareTo(e2.value["startDate"])));
+              print("Sorted Job Data Map: $sortedJobDataMap");
+
+              sortedJobDataMap.forEach((key, value) {
+                if (value["jobStatus"] == "active") {
+                  activeJobDataMap[key] = value;
+                } else if (value["jobStatus"] == "past") {
+                  pastJobDataMap[key] = value;
+                }
+              });
+
+              if (jobDataMap.isEmpty) {
+                WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+                      jobDataMapEmpty = true;
+                    }));
+
+                return Container();
+              } else {
+                return TabBarView(
+                  physics: BouncingScrollPhysics(),
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildActiveJobsList(context),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildPastJobsList(context),
+                      ],
+                    ),
+                    //buildPastJobs(context),
+                  ],
+                );
+              }
+            },
           ),
         ),
-        body: Container(
+      ),
+    );
+  }
+
+  Column buildActiveJobsList(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        if (activeJobDataMap.isEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: 30,
+              child: const Center(
+                  child: Text(
+                "No active jobs found",
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              )),
+            ),
+          )
+        else
+          ListView.builder(
+            physics: BouncingScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: activeJobDataMap.length,
+            itemBuilder: (BuildContext context, int index) {
+              String key = activeJobDataMap.keys.elementAt(index).toString();
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      children: [
+                        ListTile(
+                          title: new Text(
+                            DateFormat("MMM d, y").format(DateTime.parse(
+                                    activeJobDataMap[key]["startDate"].toDate().toString())) +
+                                " to " +
+                                DateFormat("MMM d, y").format(DateTime.parse(
+                                    activeJobDataMap[key]["endDate"].toDate().toString())),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: GoogleFonts.montserrat().fontFamily,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          subtitle: Text(
+                            "${DateFormat("jm").format(DateTime.parse(activeJobDataMap[key]["startDate"].toDate().toString()))} - "
+                            "${DateFormat("jm").format(DateTime.parse(activeJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                            "${activeJobDataMap[key]["hourlyRate"] + " Hourly Rate"}",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: GoogleFonts.montserrat().fontFamily,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditShift(
+                                          jobDataMap: activeJobDataMap[key],
+                                          jobUID: key,
+                                        )));
+                          },
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 15,
+                          child: IconButton(
+                            icon: Stack(children: <Widget>[
+                              Icon(
+                                Icons.person_outline,
+                                color: Colors.grey,
+                                size: 30,
+                              ),
+                              Positioned(
+                                right: 0,
+                                child: new Container(
+                                  padding: const EdgeInsets.all(1),
+                                  decoration: new BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12,
+                                  ),
+                                  child: new Text(
+                                    '${activeJobDataMap[key]["applicants"] != null ? activeJobDataMap[key]["applicants"].length : "0"}',
+                                    style: new TextStyle(
+                                      height: 1.2,
+                                      color: Colors.white,
+                                      fontSize: 9,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              )
+                            ]),
+                            onPressed: () {
+                              if (activeJobDataMap[key]["applicants"] != null) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PharmacistApplied(
+                                              jodID: key,
+                                              applicants: activeJobDataMap[key]["applicants"],
+                                            )));
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0xFFE8E8E8),
+                    thickness: 1,
+                  ),
+                ],
+              );
+            },
+          )
+      ],
+    );
+  }
+
+  Column buildPastJobsList(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        if (activeJobDataMap.isEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: 30,
+              child: const Center(
+                  child: Text(
+                "No past jobs found",
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              )),
+            ),
+          )
+        else
+          ListView.builder(
+            physics: BouncingScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: pastJobDataMap.length,
+            itemBuilder: (BuildContext context, int index) {
+              String key = pastJobDataMap.keys.elementAt(index).toString();
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      children: [
+                        ListTile(
+                          title: new Text(
+                            DateFormat("MMM d, y").format(DateTime.parse(
+                                    pastJobDataMap[key]["startDate"].toDate().toString())) +
+                                " to " +
+                                DateFormat("MMM d, y").format(DateTime.parse(
+                                    pastJobDataMap[key]["endDate"].toDate().toString())),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontFamily: GoogleFonts.montserrat().fontFamily,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          subtitle: Text(
+                            "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["startDate"].toDate().toString()))} - "
+                            "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                            "${pastJobDataMap[key]["hourlyRate"] + " Hourly Rate"}",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: GoogleFonts.montserrat().fontFamily,
+                            ),
+                          ),
+                          
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0xFFE8E8E8),
+                    thickness: 1,
+                  ),
+                ],
+              );
+            },
+          )
+      ],
+    );
+  }
+}
+
+/*
+Container(
           child: Column(
             children: <Widget>[
               //Slider
@@ -568,10 +856,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
+*/
 
 // ignore: must_be_immutable
 class SideMenuDrawer extends ConsumerWidget {

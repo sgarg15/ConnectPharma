@@ -771,6 +771,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
       ),
     );
   }
+  
   /* 
   Container(
           child: Column(
