@@ -1,3 +1,4 @@
+import 'package:connectpharma/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,66 +79,73 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.45,
-          ),
-          Center(
-              child: Text(
-            "Loading....",
-            style: TextStyle(fontSize: 20),
-          )),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.33,
-          ),
-          Center(child: Text("Not loading? Log In Manually...")),
-          Center(
-            child: Padding(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ConnectPharma()));
+        return true;
+      },
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.45,
+            ),
+            Center(
+                child: Text(
+              "Loading....",
+              style: TextStyle(fontSize: 20),
+            )),
+            Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 51,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                        if (states.contains(MaterialState.disabled)) {
-                          return Colors.grey; // Disabled color
-                        }
-                        return Color(0xFFF0069C1); // Regular color
-                      }),
-                      shape:
-                          MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ))),
-                  onPressed: () {
-                    ref.read(authProviderLogin.notifier).signOut();
-                    ref.read(logInProvider.notifier).clearAllValue();
-                    ref.read(userProviderLogin.notifier).changeUserUID(null);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LogInPage()));
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Log In",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.33,
+            ),
+            Center(child: Text("Not loading? Log In Manually...")),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 51,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                          if (states.contains(MaterialState.disabled)) {
+                            return Colors.grey; // Disabled color
+                          }
+                          return Color(0xFFF0069C1); // Regular color
+                        }),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ))),
+                    onPressed: () {
+                      ref.read(authProviderLogin.notifier).signOut();
+                      ref.read(logInProvider.notifier).clearAllValue();
+                      ref.read(userProviderLogin.notifier).changeUserUID(null);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LogInPage()));
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Log In",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

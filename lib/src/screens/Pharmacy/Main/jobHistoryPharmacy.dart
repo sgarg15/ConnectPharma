@@ -48,7 +48,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
   bool jobDataMapEmpty = false;
   String clockIcon = "assets/icons/clock.svg";
 
-
   @override
   void initState() {
     super.initState();
@@ -250,6 +249,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
   }
 
   Column buildActiveJobsList(BuildContext context) {
+    bool _enabled = true;
     return Column(
       children: <Widget>[
         if (activeJobDataMap.isEmpty)
@@ -346,8 +346,12 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                 ),
                               )
                             ]),
-                            onPressed: () {
+                            onPressed: !_enabled
+                                ? null
+                                : () {
+                                   
                               if (activeJobDataMap[key]["applicants"] != null) {
+                                      
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -355,7 +359,17 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                               jodID: key,
                                               applicants: activeJobDataMap[key]["applicants"],
                                             )));
+                                    } else {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text("No applicants found"),
+                                          duration: Duration(seconds: 1),
+                                        ),
+                                      );
                               }
+                                    
+                                    Timer(Duration(seconds: 5),
+                                        () => setState(() => _enabled = true));
                             },
                           ),
                         ),
@@ -427,9 +441,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                               fontFamily: GoogleFonts.montserrat().fontFamily,
                             ),
                           ),
-                          
                         ),
-                        
                       ],
                     ),
                   ),

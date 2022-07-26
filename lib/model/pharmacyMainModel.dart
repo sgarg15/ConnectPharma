@@ -1,8 +1,12 @@
+import 'package:flutter/material.dart';
+
 import '../all_used.dart';
 
 class PharmacyMainModel {
   DateTime? startDate;
+  TimeOfDay? startTime;
   DateTime? endDate;
+  TimeOfDay? endTime;
   bool? fullTime;
   List<Software?>? softwareList = [];
   List<Skill?>? skillList = [];
@@ -16,7 +20,9 @@ class PharmacyMainModel {
 
   PharmacyMainModel({
     this.startDate,
+    this.startTime,
     this.endDate,
+    this.endTime,
     this.fullTime = false,
     this.softwareList,
     this.skillList,
@@ -31,7 +37,9 @@ class PharmacyMainModel {
 
   PharmacyMainModel copyWithPharmacyMain({
     DateTime? startDate,
+    TimeOfDay? startTime,
     DateTime? endDate,
+    TimeOfDay? endTime,
     bool? fullTime,
     List<Software?>? softwareList,
     List<Skill?>? skillList,
@@ -45,7 +53,9 @@ class PharmacyMainModel {
   }) {
     return PharmacyMainModel(
       startDate: startDate ?? this.startDate,
+      startTime: startTime ?? this.startTime,
       endDate: endDate ?? this.endDate,
+      endTime: endTime ?? this.endTime,
       fullTime: fullTime ?? this.fullTime,
       softwareList: softwareList ?? this.softwareList,
       skillList: skillList ?? this.skillList,

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectpharma/model/pharmacyMainModel.dart';
 import '../../all_used.dart';
@@ -7,6 +8,8 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   bool isValidCreateShift() {
     if (state.startDate == null ||
         state.endDate == null ||
+        state.startTime == null ||
+        state.endTime == null ||
         state.skillList == null ||
         state.hourlyRate == "" ||
         state.jobComments == "") {
@@ -26,7 +29,11 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   bool isValidSearchPharmacist(bool showAllPharmacist) {
     if (showAllPharmacist && state.position != null) {
       return true;
-    } else if (state.startDate != null && state.endDate != null && state.position != null) {
+    } else if (state.startDate != null &&
+        state.endDate != null &&
+        state.position != null &&
+        state.startTime != null &&
+        state.endTime != null) {
       return true;
     } else {
       return false;
@@ -52,8 +59,14 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   void clearDateValues() {
     state.startDate = null;
     state.endDate = null;
+    state.startTime = null;
+    state.endTime = null;
     state.skillList = null;
+    state.softwareList = null;
     state.position = null;
+    state.hourlyRate = "";
+    state.jobComments = "";
+    state.fullTime = false;
   }
 
   void clearValues() {
@@ -61,15 +74,17 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
     state.jobComments = "";
     state.startDate = null;
     state.endDate = null;
+    state.startTime = null;
+    state.endTime = null;
   }
 
   void resetValues() {
     state.startDate = null;
     state.endDate = null;
+    state.startTime = null;
+    state.endTime = null;
     state.hourlyRate = "";
     state.jobComments = "";
-    state.startDate = null;
-    state.endDate = null;
     state.softwareList = null;
     state.skillList = null;
     state.techOnSite = false;
@@ -80,6 +95,8 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
 
   DateTime? get startDate => state.startDate;
   DateTime? get endDate => state.endDate;
+  TimeOfDay? get startTime => state.startTime;
+  TimeOfDay? get endTime => state.endTime;
   List<Software?>? get softwareList => state.softwareList;
   List<Skill?>? get skillList => state.skillList;
   bool? get techOnSite => state.techOnSite;
@@ -95,8 +112,16 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
     state = state.copyWithPharmacyMain(startDate: value);
   }
 
+  void changeStartTime(TimeOfDay? value) {
+    state = state.copyWithPharmacyMain(startTime: value);
+  }
+
   void changeEndDate(DateTime? value) {
     state = state.copyWithPharmacyMain(endDate: value);
+  }
+
+  void changeEndTime(TimeOfDay? value) {
+    state = state.copyWithPharmacyMain(endTime: value);
   }
 
   void changeSoftwareList(List<Software?> value) {
