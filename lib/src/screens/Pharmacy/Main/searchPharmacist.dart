@@ -36,14 +36,34 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
   @override
   void initState() {
     super.initState();
+
     print("state.startDate: ${ref.read(pharmacyMainProvider).startDate}");
     print("state.endDate: ${ref.read(pharmacyMainProvider).endDate}");
     print("state.startTime: ${ref.read(pharmacyMainProvider).startTime}");
     print("state.endTime: ${ref.read(pharmacyMainProvider).endTime}");
+
+    Future.delayed(Duration.zero, () {
+      setState(() {
+        ref.read(pharmacyMainProvider.notifier).changeStartDate(DateTime.now());
+        ref
+            .read(pharmacyMainProvider.notifier)
+            .changeEndDate(DateTime.now().add(Duration(days: 1)));
+        ref.read(pharmacyMainProvider.notifier).changeStartTime(TimeOfDay.now());
+        ref
+            .read(pharmacyMainProvider.notifier)
+            .changeEndTime(TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1));
+      });
+
+      print("state.startDate: ${ref.read(pharmacyMainProvider).startDate}");
+      print("state.endDate: ${ref.read(pharmacyMainProvider).endDate}");
+      print("state.startTime: ${ref.read(pharmacyMainProvider).startTime}");
+      print("state.endTime: ${ref.read(pharmacyMainProvider).endTime}");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () async {
         ref.read(pharmacyMainProvider.notifier).clearDateValues();
@@ -180,7 +200,9 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                 child: DateTimeField(
                                   format: DateFormat('h:mm a'),
                                   initialValue: DateTime(DateTime.now().year, DateTime.now().month,
-                                      DateTime.now().day + 1, 12),
+                                      DateTime.now().day,
+                                      ref.read(pharmacyMainProvider).startTime!.hour,
+                                      ref.read(pharmacyMainProvider).startTime!.minute),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontFamily: GoogleFonts.montserrat().fontFamily,
@@ -319,9 +341,11 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                               width: MediaQuery.of(context).size.width * 0.45,
                               padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                               child: DateTimeField(
-                                format: DateFormat("jm"),
+                                format: DateFormat("h:mm a"),
                                 initialValue: DateTime(DateTime.now().year, DateTime.now().month,
-                                    DateTime.now().day + 1, 12),
+                                    DateTime.now().day,
+                                    ref.read(pharmacyMainProvider).startTime!.hour + 1,
+                                    ref.read(pharmacyMainProvider).startTime!.minute),
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontFamily: GoogleFonts.montserrat().fontFamily,

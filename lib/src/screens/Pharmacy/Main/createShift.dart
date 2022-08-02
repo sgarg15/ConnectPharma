@@ -204,10 +204,9 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                     width: MediaQuery.of(context).size.width * 0.45,
                                     padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                     child: DateTimeField(
-                                      controller: startTimeController,
                                       format: DateFormat('h:mm a'),
-                                      initialValue: DateTime(DateTime.now().year,
-                                          DateTime.now().month, DateTime.now().day + 1, 12),
+                                      initialValue: DateTimeField.convert(
+                                          ref.read(pharmacyMainProvider).startTime),
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontFamily: GoogleFonts.montserrat().fontFamily,
@@ -346,10 +345,9 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                   width: MediaQuery.of(context).size.width * 0.45,
                                   padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                   child: DateTimeField(
-                                    controller: endTimeController,
-                                    format: DateFormat("jm"),
-                                    initialValue: DateTime(DateTime.now().year,
-                                        DateTime.now().month, DateTime.now().day + 1, 12),
+                                    format: DateFormat("h:mm a"),
+                                    initialValue: DateTimeField.convert(
+                                        ref.read(pharmacyMainProvider).endTime),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontFamily: GoogleFonts.montserrat().fontFamily,
