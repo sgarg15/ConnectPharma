@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:connectpharma/src/screens/Pharmacy/Main/createShift.dart';
 import 'package:connectpharma/src/screens/Pharmacy/Main/availablePharmacistProfile.dart';
 import 'package:connectpharma/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../all_used.dart';
 
@@ -148,15 +149,96 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(
+            height: 1,
+            thickness: 1,
+            color: Color(0xFFEAEAEA),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: RichText(
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                text: "Can't find a pharmacist?",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+                ),
+                children: [
+                  TextSpan(
+                    text: " Post a shift for a future date",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.85,
+              height: 51,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.grey; // Disabled color
+                      }
+                      return Color(0xFFF0069C1); // Regular color
+                    }),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ))),
+                onPressed: () {
+                  print("Pressed");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateShift()));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        text: "Create a shift",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       appBar: AppBar(
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black),
-        elevation: 12,
-        title: Text(
+        iconTheme: IconThemeData(color: Colors.white),
+        elevation: 0,
+        title: new Text(
           "Available Pharmacists",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+          ),
         ),
-        backgroundColor: Color(0xFFF6F6F6),
+        backgroundColor: Color(0xFFF0069C1),
+        foregroundColor: Colors.white,
+        bottomOpacity: 1,
+        shadowColor: Colors.white,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -198,47 +280,116 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
 
                       return new Column(
                         children: <Widget>[
-                          Material(
-                            elevation: 10,
-                            borderRadius: BorderRadius.circular(20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChosenPharmacistProfile(
+                                            pharmacistDataMap: allUserDataMap[key],
+                                          )));
+                            },
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.95,
                               height: 90,
-                              child: Center(
-                                child: ListTile(
-                                  title: new Text(
-                                    "${allUserDataMap[key]["name"]}",
-                                    style: TextStyle(fontSize: 18),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            minRadius: 10,
+                                            maxRadius: 35,
+                                            backgroundImage:
+                                                NetworkImage(allUserDataMap[key]["profilePhoto"]),
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Text(
+                                                allUserDataMap[key]["name"],
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Color(0xFF0E5999),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: GoogleFonts.montserrat(
+                                                          fontWeight: FontWeight.normal)
+                                                      .fontFamily,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              RichText(
+                                                textAlign: TextAlign.left,
+                                                text: TextSpan(
+                                                    text: "Experience ",
+                                                    style: TextStyle(
+                                                        color: Color(0xFF6C6C6C),
+                                                        fontSize: 16,
+                                                        fontFamily: GoogleFonts.montserrat(
+                                                                fontWeight: FontWeight.normal)
+                                                            .fontFamily),
+                                                    children: [
+                                                      TextSpan(
+                                                        text: allUserDataMap[key]
+                                                                ["yearsOfExperience"] +
+                                                            " yrs",
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.w600,
+                                                          fontFamily: GoogleFonts.montserrat(
+                                                                  fontWeight: FontWeight.normal)
+                                                              .fontFamily,
+                                                        ),
+                                                      ),
+                                                    ]),
+                                              ),
+                                              
+                                            
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => ChosenPharmacistProfile(
+                                                        pharmacistDataMap: allUserDataMap[key],
+                                                      )));
+                                        },
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Color(0xFF0069C1),
+                                          size: 25,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  subtitle: new Text(
-                                    "Years of working experience: " +
-                                        "${allUserDataMap[key]["yearsOfExperience"]}",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                  leading: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      allUserDataMap[key]["profilePhoto"],
-                                    ),
-                                    radius: 30,
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ChosenPharmacistProfile(
-                                                  pharmacistDataMap: allUserDataMap[key],
-                                                )));
-                                  },
-                                ),
+                                ],
                               ),
                             ),
                           ),
-                          SizedBox(height: 10)
-
-                          // new Divider(
-                          //   height: 10.0,
-                          //   thickness: 2,
-                          // ),
+                          SizedBox(height: 10),
+                          Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: Color(0xFFEAEAEA),
+                          ),
                         ],
                       );
                     },
@@ -279,7 +430,14 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                   ),
                 ),
           //Search Button
-          Padding(
+        ],
+      ),
+    );
+  }
+}
+
+/*
+  Padding(
             padding: const EdgeInsets.fromLTRB(0, 15, 0, 10),
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
@@ -333,8 +491,5 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
+        
+*/
