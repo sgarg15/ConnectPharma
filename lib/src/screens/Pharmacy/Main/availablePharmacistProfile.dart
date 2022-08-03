@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 // ignore: must_be_immutable
@@ -91,109 +92,200 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        elevation: 0,
+        title: new Text(
+          "Profile",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+          ),
+        ),
+        backgroundColor: Color(0xFFF0069C1),
+        foregroundColor: Colors.white,
+        bottomOpacity: 1,
+        shadowColor: Colors.white,
+      ),
+      backgroundColor: Color(0xFF0069C1),
       body: SingleChildScrollView(
+        
         child: Column(
           mainAxisSize: MainAxisSize.max,
+          
           children: <Widget>[
-            //back button
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                  padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    size: 30,
-                  )),
-            ),
             //Profile Photo and Name
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Column(
+              padding: const EdgeInsets.only(left: 30, top: 15),
+              child: Row(
                 children: [
-                  Align(
-                    alignment: Alignment.center,
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    minRadius: 10,
+                    maxRadius: 55,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        widget.pharmacistDataMap?["profilePhoto"],
-                      ),
-                      radius: 70,
-                    ),
+                        minRadius: 5,
+                        maxRadius: 52,
+                        backgroundImage: NetworkImage(widget.pharmacistDataMap!["profilePhoto"])),
                   ),
                   SizedBox(
-                    height: 20,
+                    width: 20,
                   ),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: widget.pharmacistDataMap!["name"],
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        widget.pharmacistDataMap!["name"],
+                        style: TextStyle(
+                          fontSize: 23,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily:
+                              GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+                        ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              text: "Experience",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal)
+                                      .fontFamily),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              text: widget.pharmacistDataMap!["yearsOfExperience"] + " yrs",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal)
+                                    .fontFamily,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+            
             //Highlights
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: Material(
-                elevation: 5,
-                borderRadius: BorderRadius.circular(60),
-                child: Container(
-                  constraints: BoxConstraints(minHeight: 400),
-                  width: MediaQuery.of(context).size.width - 40,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.grey[300]),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 15, 10, 0),
-                    child: Column(
-                      children: <Widget>[
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            text: "Highlights",
-                            style: TextStyle(
-                              fontSize: 23,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
+              child: Container(
+                constraints: BoxConstraints(minHeight: 400),
+                width: MediaQuery.of(context).size.width,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.grey[300]),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 15, 10, 0),
+                  child: Column(
+                    children: <Widget>[
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: "Highlights",
+                          style: TextStyle(
+                            fontSize: 23,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              //Experience
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
+                      ),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            //Experience
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      text: "Experience",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      text:
+                                          widget.pharmacistDataMap!["yearsOfExperience"] + " years",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //Software
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      text: "Software",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.pharmacistDataMap!["knownSkills"] == null) ...[
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: "Experience",
+                                        text: "No Software Found",
                                         style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.grey[800],
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
+                                  ] else ...[
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: widget.pharmacistDataMap![
-                                                "yearsOfExperience"] +
-                                            " years",
+                                        text: widget.pharmacistDataMap?["knownSoftware"]
+                                            .toString()
+                                            .substring(
+                                                widget.pharmacistDataMap?["knownSoftware"]
+                                                        .indexOf("[") +
+                                                    1,
+                                                widget.pharmacistDataMap?["knownSoftware"]
+                                                    .lastIndexOf("]")),
                                         style: TextStyle(
                                           fontSize: 18,
                                           color: Colors.black,
@@ -202,360 +294,266 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                                       ),
                                     ),
                                   ],
-                                ),
+                                ],
                               ),
-                              //Software
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
+                            ),
+                            //Skills
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      text: "Skills",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.pharmacistDataMap!["knownSkills"] == null) ...[
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: "Software",
+                                        text: "No Skills Found",
                                         style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.grey[800],
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    if (widget.pharmacistDataMap![
-                                            "knownSkills"] ==
-                                        null) ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: "No Software Found",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ] else ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: widget.pharmacistDataMap?[
-                                                  "knownSoftware"]
-                                              .toString()
-                                              .substring(
-                                                  widget.pharmacistDataMap?[
-                                                              "knownSoftware"]
-                                                          .indexOf("[") +
-                                                      1,
-                                                  widget.pharmacistDataMap?[
-                                                          "knownSoftware"]
-                                                      .lastIndexOf("]")),
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                              //Skills
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
+                                  ] else ...[
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: "Skills",
+                                        text: widget.pharmacistDataMap?["knownSkills"]
+                                            .toString()
+                                            .substring(
+                                                widget.pharmacistDataMap?["knownSkills"]
+                                                        .indexOf("[") +
+                                                    1,
+                                                widget.pharmacistDataMap?["knownSkills"]
+                                                    .lastIndexOf("]")),
                                         style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.grey[800],
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    if (widget.pharmacistDataMap![
-                                            "knownSkills"] ==
-                                        null) ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: "No Skills Found",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ] else ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: widget
-                                              .pharmacistDataMap?["knownSkills"]
-                                              .toString()
-                                              .substring(
-                                                  widget.pharmacistDataMap?[
-                                                              "knownSkills"]
-                                                          .indexOf("[") +
-                                                      1,
-                                                  widget.pharmacistDataMap?[
-                                                          "knownSkills"]
-                                                      .lastIndexOf("]")),
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
                                   ],
-                                ),
+                                ],
                               ),
-                              //Languages
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
+                            ),
+                            //Languages
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      text: "Languages",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.pharmacistDataMap!["knownLanguages"] == null) ...[
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: "Languages",
+                                        text: "No Languages Found",
                                         style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.grey[800],
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    if (widget.pharmacistDataMap![
-                                            "knownLanguages"] ==
-                                        null) ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: "No Languages Found",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                  ] else ...[
+                                    RichText(
+                                      textAlign: TextAlign.start,
+                                      text: TextSpan(
+                                        text: widget.pharmacistDataMap?["knownLanguages"]
+                                            .toString()
+                                            .substring(
+                                                widget.pharmacistDataMap?["knownLanguages"]
+                                                        .indexOf("[") +
+                                                    1,
+                                                widget.pharmacistDataMap?["knownLanguages"]
+                                                    .lastIndexOf("]")),
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ] else ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: widget.pharmacistDataMap?[
-                                                  "knownLanguages"]
-                                              .toString()
-                                              .substring(
-                                                  widget.pharmacistDataMap?[
-                                                              "knownLanguages"]
-                                                          .indexOf("[") +
-                                                      1,
-                                                  widget.pharmacistDataMap?[
-                                                          "knownLanguages"]
-                                                      .lastIndexOf("]")),
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ],
-                                ),
+                                ],
                               ),
+                            ),
 
-                              //Availability
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
+                            //Availability
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      text: "Availability",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.pharmacistDataMap!["availability"] == null) ...[
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: "Availability",
+                                        text: "No availability Found",
                                         style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.grey[800],
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    if (widget.pharmacistDataMap![
-                                            "availability"] ==
-                                        null) ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: "No availability Found",
+                                  ] else ...[
+                                    RichText(
+                                      textAlign: TextAlign.start,
+                                      text: TextSpan(
+                                          text: "View Availability",
                                           style: TextStyle(
                                             fontSize: 18,
-                                            color: Colors.black,
+                                            color: Colors.blue,
                                             fontWeight: FontWeight.bold,
                                           ),
-                                        ),
-                                      ),
-                                    ] else ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                            text: "View Availability",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () async {
-                                                print("PRESSED");
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      20.0))),
-                                                      titlePadding:
-                                                          EdgeInsets.all(0),
-                                                      title: Text(''),
-                                                      contentPadding:
-                                                          EdgeInsets.fromLTRB(
-                                                              10, 0, 10, 0),
-                                                      content: Container(
-                                                          height: 300,
-                                                          width: 500,
-                                                          child:
-                                                              showAvailability()),
-                                                      actionsPadding:
-                                                          EdgeInsets.all(0),
-                                                      actions: [
-                                                        Center(
-                                                          child: TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: Text("Ok",
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          0xFF228a4d)))),
-                                                        )
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              }),
-                                      ),
-                                    ],
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () async {
+                                              print("PRESSED");
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.all(
+                                                            Radius.circular(20.0))),
+                                                    titlePadding: EdgeInsets.all(0),
+                                                    title: Text(''),
+                                                    contentPadding:
+                                                        EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                                    content: Container(
+                                                        height: 300,
+                                                        width: 500,
+                                                        child: showAvailability()),
+                                                    actionsPadding: EdgeInsets.all(0),
+                                                    actions: [
+                                                      Center(
+                                                        child: TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(context);
+                                                            },
+                                                            child: Text("Ok",
+                                                                style: TextStyle(
+                                                                    color: Color(0xFF228a4d)))),
+                                                      )
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }),
+                                    ),
                                   ],
-                                ),
+                                ],
                               ),
-                              //Resume
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
+                            ),
+                            //Resume
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  RichText(
+                                    textAlign: TextAlign.start,
+                                    text: TextSpan(
+                                      text: "Resume",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.pharmacistDataMap!["resume"] == null) ...[
                                     RichText(
                                       textAlign: TextAlign.start,
                                       text: TextSpan(
-                                        text: "Resume",
+                                        text: "No resume Found",
                                         style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.grey[800],
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    if (widget.pharmacistDataMap!["resume"] ==
-                                        null) ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: "No resume Found",
+                                  ] else ...[
+                                    RichText(
+                                      textAlign: TextAlign.start,
+                                      text: TextSpan(
+                                          text: "View Resume",
                                           style: TextStyle(
                                             fontSize: 18,
-                                            color: Colors.black,
+                                            color: Colors.blue,
                                             fontWeight: FontWeight.bold,
                                           ),
-                                        ),
-                                      ),
-                                    ] else ...[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                            text: "View Resume",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () async {
-                                                print("PRESSED");
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute<dynamic>(
-                                                    builder: (_) =>
-                                                        PDFViewerCachedFromUrl(
-                                                      url: widget
-                                                          .pharmacistDataMap![
-                                                              "resume"]
-                                                          .toString(),
-                                                      name: widget
-                                                          .pharmacistDataMap![
-                                                              "name"]
-                                                          .toString(),
-                                                    ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () async {
+                                              print("PRESSED");
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute<dynamic>(
+                                                  builder: (_) => PDFViewerCachedFromUrl(
+                                                    url: widget.pharmacistDataMap!["resume"]
+                                                        .toString(),
+                                                    name: widget.pharmacistDataMap!["name"]
+                                                        .toString(),
                                                   ),
-                                                );
-                                                // MaterialPageRoute<dynamic>(
-                                                //   builder: (_) =>
-                                                //       const PDFViewerFromUrl(
-                                                //     url:
-                                                //         'http://africau.edu/images/default/sample.pdf',
-                                                //   ),
-                                                // );
-                                              }),
-                                      ),
-                                    ],
+                                                ),
+                                              );
+                                              // MaterialPageRoute<dynamic>(
+                                              //   builder: (_) =>
+                                              //       const PDFViewerFromUrl(
+                                              //     url:
+                                              //         'http://africau.edu/images/default/sample.pdf',
+                                              //   ),
+                                              // );
+                                            }),
+                                    ),
                                   ],
-                                ),
+                                ],
                               ),
+                            ),
 
-                              SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
