@@ -148,6 +148,14 @@ class AuthProvider extends ChangeNotifier {
         user.user!.uid,
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
+
+    List<String?>? softwareList =
+        ref.read(pharmacistSignUpProvider.notifier).softwareList?.map((e) => e?.name).toList();
+    List<String?>? skillsList =
+        ref.read(pharmacistSignUpProvider.notifier).skillList?.map((e) => e?.name).toList();
+    List<String?>? languageList =
+        ref.read(pharmacistSignUpProvider.notifier).languageList?.map((e) => e?.name).toList();
+                          
     print("Setting Info in Firestore");
     users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
@@ -170,9 +178,9 @@ class AuthProvider extends ChangeNotifier {
       "licenseRestricted": ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
       "malPractice": ref.read(pharmacistSignUpProvider.notifier).malpractice,
       "felon": ref.read(pharmacistSignUpProvider.notifier).felon,
-      "knownSoftware": ref.read(pharmacistSignUpProvider.notifier).softwareList.toString(),
-      "knownSkills": ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
-      "knownLanguages": ref.read(pharmacistSignUpProvider.notifier).languageList.toString(),
+      "knownSoftware": softwareList,
+      "knownSkills": skillsList,
+      "knownLanguages": languageList,
       "resumeDownloadURL": resumePDFURL,
       "frontIDDownloadURL": frontIDURL,
       "backIDDownloadURL": backIDURL,
@@ -212,6 +220,15 @@ class AuthProvider extends ChangeNotifier {
         user.user!.uid,
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
+    
+    List<String?>? softwareList =
+        ref.read(pharmacistSignUpProvider.notifier).softwareList?.map((e) => e?.name).toList();
+    List<String?>? skillsList =
+        ref.read(pharmacistSignUpProvider.notifier).skillList?.map((e) => e?.name).toList();
+    List<String?>? languageList =
+        ref.read(pharmacistSignUpProvider.notifier).languageList?.map((e) => e?.name).toList();
+                          
+
 
     users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
@@ -234,9 +251,9 @@ class AuthProvider extends ChangeNotifier {
       "licenseRestricted": ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
       "malPractice": ref.read(pharmacistSignUpProvider.notifier).malpractice,
       "felon": ref.read(pharmacistSignUpProvider.notifier).felon,
-      "knownSoftware": ref.read(pharmacistSignUpProvider.notifier).softwareList.toString(),
-      "knownSkills": ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
-      "knownLanguages": ref.read(pharmacistSignUpProvider.notifier).languageList.toString(),
+      "knownSoftware": softwareList,
+      "knownSkills": skillsList,
+      "knownLanguages": languageList,
       "resumeDownloadURL": resumePDFURL,
       "frontIDDownloadURL": frontIDURL,
       "backIDDownloadURL": backIDURL,
@@ -276,6 +293,15 @@ class AuthProvider extends ChangeNotifier {
         user.user!.uid,
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
+      
+    List<String?>? softwareList =
+        ref.read(pharmacistSignUpProvider.notifier).softwareList?.map((e) => e?.name).toList();
+    List<String?>? skillsList =
+        ref.read(pharmacistSignUpProvider.notifier).skillList?.map((e) => e?.name).toList();
+    List<String?>? languageList =
+        ref.read(pharmacistSignUpProvider.notifier).languageList?.map((e) => e?.name).toList();
+                          
+
 
     users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
@@ -298,9 +324,9 @@ class AuthProvider extends ChangeNotifier {
       "licenseRestricted": ref.read(pharmacistSignUpProvider.notifier).licenseRestricted,
       "malPractice": ref.read(pharmacistSignUpProvider.notifier).malpractice,
       "felon": ref.read(pharmacistSignUpProvider.notifier).felon,
-      "knownSoftware": ref.read(pharmacistSignUpProvider.notifier).softwareList.toString(),
-      "knownSkills": ref.read(pharmacistSignUpProvider.notifier).skillList.toString(),
-      "knownLanguages": ref.read(pharmacistSignUpProvider.notifier).languageList.toString(),
+      "knownSoftware": softwareList,
+      "knownSkills": skillsList,
+      "knownLanguages": languageList,
       "resumeDownloadURL": resumePDFURL,
       "frontIDDownloadURL": frontIDURL,
       "backIDDownloadURL": backIDURL,
