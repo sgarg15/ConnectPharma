@@ -234,11 +234,11 @@ SingleChildScrollView(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ))),
-              
               onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistSkills())
                   ? null
                   : () {
                       print("Pressed");
+                     
                       Navigator.push(
                           context, MaterialPageRoute(builder: (context) => PhotoInformation()));
                     },
@@ -274,7 +274,7 @@ SingleChildScrollView(
                 padding: const EdgeInsets.only(left: 7),
                 child: RichText(
                     text: TextSpan(
-                        text: "Software",
+                        text: "Resume",
                         style: TextStyle(
                             fontSize: 16.0,
                             color: Color(0xFF4A4848),
@@ -317,7 +317,6 @@ SingleChildScrollView(
                     ),
                   ),
                 ),
-                
                 SizedBox(
                   height: 45,
                   child: ElevatedButton(
@@ -427,7 +426,7 @@ SingleChildScrollView(
                 padding: const EdgeInsets.only(left: 7),
                 child: RichText(
                     text: TextSpan(
-                        text: "Software",
+                        text: "Languages",
                         style: TextStyle(
                             fontSize: 16.0,
                             color: Color(0xFF4A4848),

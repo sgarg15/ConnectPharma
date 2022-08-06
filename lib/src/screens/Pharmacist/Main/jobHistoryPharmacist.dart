@@ -287,6 +287,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
   @override
   void initState() {
     super.initState();
+    print("Init State");
 
     print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
     //clearFilesOrDirectory();
@@ -354,8 +355,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
       } else {
         print("Writing Empty File");
         clearFilesOrDirectory();
-        print(
-            "All Files USER: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}")}");
+        // print(
+        //     "All Files USER: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}")}");
         userDirectory = await localStorage.createDirectory(
             path:
                 "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}");

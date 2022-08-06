@@ -272,8 +272,10 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                       print(value);
                       ref.read(pharmacistSignUpProvider.notifier).changeWillingToMove(value);
                     },
-                    activeTrackColor: Color(0xFFF0069C1),
-                    activeColor: Color(0xFFF0069C1),
+                    activeTrackColor: Color(0xFFE2F2FF),
+                    activeColor: Color(0xFF0069C1),
+                    inactiveTrackColor: Color(0xFFDDDFE0),
+                    inactiveThumbColor: Colors.white,
                   ),
                 );
               },
