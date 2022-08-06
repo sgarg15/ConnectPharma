@@ -80,13 +80,13 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
     print("Dates: $availabilityPharmacist");
     print("BlackOutDates: $_blackoutDateCollection");
     print(widget.pharmacistDataMap);
-    final pharmacistKnownSoftwareString =
-        widget.pharmacistDataMap!["knownSoftware"];
-    knownSoftwareList = pharmacistKnownSoftwareString
-        .toString()
-        .substring(pharmacistKnownSoftwareString.indexOf("[") + 1,
-            pharmacistKnownSoftwareString.lastIndexOf("]"))
-        .split(", ");
+    // final pharmacistKnownSoftwareString =
+    //     widget.pharmacistDataMap!["knownSoftware"];
+    // knownSoftwareList = pharmacistKnownSoftwareString
+    //     .toString()
+    //     .substring(pharmacistKnownSoftwareString.indexOf("[") + 1,
+    //         pharmacistKnownSoftwareString.lastIndexOf("]"))
+    //     .split(", ");
   }
 
   @override
@@ -111,14 +111,13 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
       ),
       backgroundColor: Color(0xFF0069C1),
       body: SingleChildScrollView(
-        
         child: Column(
-          mainAxisSize: MainAxisSize.max,
-          
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            //Profile Photo and Name
+            //Photo/Name
             Padding(
-              padding: const EdgeInsets.only(left: 30, top: 15),
+              padding: const EdgeInsets.only(left: 30, top: 10),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -128,64 +127,541 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
                     child: CircleAvatar(
                         minRadius: 5,
                         maxRadius: 52,
-                        backgroundImage: NetworkImage(widget.pharmacistDataMap!["profilePhoto"])),
+                        backgroundImage: NetworkImage(widget.pharmacistDataMap?["profilePhoto"])),
                   ),
                   SizedBox(
-                    width: 20,
+                    width: MediaQuery.of(context).size.width * 0.07,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        widget.pharmacistDataMap!["name"],
+                        widget.pharmacistDataMap?["name"],
                         style: TextStyle(
                           fontSize: 23,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
                           fontFamily:
-                              GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+                              GoogleFonts.montserrat(fontWeight: FontWeight.w500).fontFamily,
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                              text: "Experience",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal)
-                                      .fontFamily),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          RichText(
-                            text: TextSpan(
-                              text: widget.pharmacistDataMap!["yearsOfExperience"] + " yrs",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal)
-                                    .fontFamily,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        widget.pharmacistDataMap?["userType"],
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontFamily:
+                              GoogleFonts.montserrat(fontWeight: FontWeight.w300).fontFamily,
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
+            SizedBox(height: 40),
+            //Info
+            Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
+                ),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //Years of Experience
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          textAlign: TextAlign.left,
+                          text: TextSpan(
+                              text: "Experience",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 15,
+                                color: Color(0xFF505050),
+                                fontWeight: FontWeight.w500,
+                              )),
+                        ),
+                        RichText(
+                            text: TextSpan(
+                                text: widget.pharmacistDataMap?["yearsOfExperience"] + " years",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 15,
+                                    color: Color(0xFF505050),
+                                    fontWeight: FontWeight.w300))),
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    //Software
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            text: "Software:",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 15,
+                              color: Color(0xFF505050),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Wrap(
+                          direction: Axis.horizontal,
+                          spacing: 10,
+                          children: widget.pharmacistDataMap!["knownSoftware"].map<Widget>((item) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                  color: Color(0xFFDEEBF7),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                                  child: Text(item,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontFamily: GoogleFonts.montserrat().fontFamily)),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    //Skills
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            text: "Skills:",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 15,
+                              color: Color(0xFF505050),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Wrap(
+                          direction: Axis.horizontal,
+                          spacing: 10,
+                          children: widget.pharmacistDataMap!["knownSkills"].map<Widget>((item) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                  color: Color(0xFFDEEBF7),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                                  child: Text(item,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontFamily: GoogleFonts.montserrat().fontFamily)),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    //Languages
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            text: "Languages:",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 15,
+                              color: Color(0xFF505050),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Wrap(
+                          direction: Axis.horizontal,
+                          spacing: 10,
+                          children: widget.pharmacistDataMap!["knownLanguages"].map<Widget>((item) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                  color: Color(0xFFDEEBF7),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                                  child: Text(item,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontFamily: GoogleFonts.montserrat().fontFamily)),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50),
+                    //View Availability and Resume
+                    Wrap(
+                      spacing: 15,
+                      children: [
+                        //View Availability
+                        TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                                  titlePadding: EdgeInsets.all(0),
+                                  title: Text(''),
+                                  backgroundColor: Colors.transparent,
+                                  contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  content: showAvailability(),
+                                );
+                              },
+                            );
+                          },
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      side: BorderSide(color: Color(0xFF0069C1))))),
+                          child: SizedBox(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "View \nAvailability",
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 15,
+                                      color: Color(0xFF0069C1),
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(width: 10),
+                                Icon(
+                                  Icons.edit,
+                                  size: 25,
+                                  color: Color(0xFF0069C1),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        //View Resume
+                        TextButton(
+                          onPressed: widget.pharmacistDataMap?["resume"] != null
+                              ? () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute<dynamic>(
+                                      builder: (_) => PDFViewerCachedFromUrl(
+                                        url: widget.pharmacistDataMap!["resume"].toString(),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              : () {
+                                  final snackBar = SnackBar(
+                                    content: Text("No Resume Found."),
+                                    behavior: SnackBarBehavior.floating,
+                                    duration: Duration(seconds: 2),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                },
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      side: BorderSide(color: Color(0xFF0069C1))))),
+                          child: SizedBox(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "View \nResume",
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 15,
+                                      color: Color(0xFF0069C1),
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(width: 10),
+                                Icon(
+                                  Icons.picture_as_pdf_rounded,
+                                  size: 25,
+                                  color: Color(0xFF0069C1),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 30),
+                    //Contact
+                    Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.85,
+                        height: 51,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+                                if (states.contains(MaterialState.disabled)) {
+                                  return Colors.grey; // Disabled color
+                                }
+                                return Color(0xFFF0069C1); // Regular color
+                              }),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ))),
+                          onPressed: () {
+                            print("Pressed");
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Center(
+                                        child: Text(
+                                          widget.pharmacistDataMap?["name"],
+                                          style: TextStyle(
+                                            fontFamily: GoogleFonts.montserrat().fontFamily,
+                                          ),
+                                        ),
+                                      ),
+                                      content: RichText(
+                                        text: TextSpan(
+                                            text: "Email\n",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: GoogleFonts.montserrat().fontFamily,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: "${widget.pharmacistDataMap?["email"]} \n\n",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontFamily: GoogleFonts.montserrat().fontFamily,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: "Phone",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontFamily: GoogleFonts.montserrat().fontFamily,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    "\n${widget.pharmacistDataMap?["phoneNumber"]}\n\n",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontFamily: GoogleFonts.montserrat().fontFamily,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    "\nPlease do not spam the pharmacist email, you can and will be reported for such actions. Resulting in withrawal from this service.",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: GoogleFonts.montserrat().fontFamily,
+                                                ),
+                                              )
+                                            ]),
+                                      ),
+                                      actions: <Widget>[
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            TextButton(
+                                              child: new Text("Report Pharmacist",
+                                                  textAlign: TextAlign.left),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) => AlertDialog(
+                                                          title: Center(
+                                                            child: Text(
+                                                              "Report Pharmacist",
+                                                              style: TextStyle(
+                                                                fontSize: 18,
+                                                                fontFamily: GoogleFonts.montserrat()
+                                                                    .fontFamily,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          content: RichText(
+                                                            text: TextSpan(
+                                                              //TODO: Insert App official Email
+                                                              text:
+                                                                  "Please email connectpharmaltd@gmail.com with the pharmacist name and email as the subject and the body as the reasoning for this report. \n\nThank you, \ConnectPharma Team",
+                                                              style: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontSize: 14,
+                                                                  fontFamily:
+                                                                      GoogleFonts.montserrat()
+                                                                          .fontFamily),
+                                                            ),
+                                                          ),
+                                                          
+                                                        ));
+                                              },
+                                            ),
+                                            new TextButton(
+                                              child: new Text("Ok"),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ));
+
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => AvailablePharmacists()));
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Contact Pharmacist",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                  
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container showAvailability() {
+    return Container(
+      height: 260,
+      child: Material(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
+          child: SfDateRangePicker(
+            controller: _controller,
+            initialSelectedRanges: availabilityPharmacist,
+            view: DateRangePickerView.month,
+            navigationDirection: DateRangePickerNavigationDirection.vertical,
+            selectionShape: DateRangePickerSelectionShape.circle,
+            selectionMode: DateRangePickerSelectionMode.multiRange,
+            selectionTextStyle: TextStyle(color: Colors.white),
+            selectionColor: Color(0xFFE8F4FF),
+            startRangeSelectionColor: Color(0xFF0069C1),
+            endRangeSelectionColor: Color(0xFF0069C1),
+            rangeSelectionColor: Color(0xFFE8F4FF),
+            rangeTextStyle: TextStyle(color: Colors.black),
+            monthViewSettings: DateRangePickerMonthViewSettings(
+              blackoutDates: _blackoutDateCollection,
+            ),
+            monthCellStyle: DateRangePickerMonthCellStyle(
+                blackoutDateTextStyle:
+                    TextStyle(color: Colors.black87, fontSize: 16, fontFamily: 'Roboto')),
+            onViewChanged: viewChanged,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PDFViewerCachedFromUrl extends StatelessWidget {
+  const PDFViewerCachedFromUrl({Key? key, required this.url}) : super(key: key);
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey,
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        elevation: 0,
+        title: new Text(
+          "Resume",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+          ),
+        ),
+        backgroundColor: Color(0xFFF0069C1),
+        foregroundColor: Colors.white,
+        bottomOpacity: 1,
+        shadowColor: Colors.white,
+      ),
+      body: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: const PDF(fitEachPage: false, fitPolicy: FitPolicy.WIDTH).cachedFromUrl(
+            url,
+            placeholder: (double progress) => Center(child: Text('$progress %')),
+            errorWidget: (dynamic error) => Center(child: Text(error.toString())),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/*
             
             //Highlights
             Padding(
@@ -663,75 +1139,4 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
             SizedBox(
               height: 20,
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Container showAvailability() {
-    return Container(
-      height: 350,
-      width: 350,
-      child: Material(
-        elevation: 10,
-        borderRadius: BorderRadius.circular(30),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
-          child: SfDateRangePicker(
-            controller: _controller,
-            view: DateRangePickerView.month,
-            selectionMode: DateRangePickerSelectionMode.multiRange,
-            selectionShape: DateRangePickerSelectionShape.rectangle,
-            initialSelectedRanges: availabilityPharmacist,
-            startRangeSelectionColor: Color(0xFF228a4d),
-            endRangeSelectionColor: Color(0xFF228a4d),
-            rangeSelectionColor: Color(0xFFF0069C1),
-            onSelectionChanged: selectionChanged,
-            monthViewSettings: DateRangePickerMonthViewSettings(
-              blackoutDates: _blackoutDateCollection,
-            ),
-            monthCellStyle: DateRangePickerMonthCellStyle(
-                blackoutDateTextStyle: TextStyle(
-                    color: Colors.black87, fontSize: 16, fontFamily: 'Roboto')),
-            onViewChanged: viewChanged,
-          ),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),
-        ),
-      ),
-    );
-  }
-}
-
-class PDFViewerCachedFromUrl extends StatelessWidget {
-  const PDFViewerCachedFromUrl(
-      {Key? key, required this.url, required this.name})
-      : super(key: key);
-
-  final String url;
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey,
-      appBar: AppBar(
-        title: Text("$name Resume"),
-      ),
-      body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.7,
-          child: const PDF(fitEachPage: false, fitPolicy: FitPolicy.WIDTH)
-              .cachedFromUrl(
-            url,
-            placeholder: (double progress) =>
-                Center(child: Text('$progress %')),
-            errorWidget: (dynamic error) =>
-                Center(child: Text(error.toString())),
-          ),
-        ),
-      ),
-    );
-  }
-}
+ */

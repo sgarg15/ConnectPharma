@@ -163,7 +163,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                                       SizedBox(height: 30),
 
                                       //Login Button
-                                      signUpButton(context, ref, authModel, logIn),
+                                      logInButton(context, ref, authModel, logIn),
                                       SizedBox(height: 25),
 
                                       //Sign Up Text
@@ -185,7 +185,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) => LogInPage()));
+                                                          builder: (context) => ConnectPharma()));
                                                 },
                                               text: "Sign Up",
                                               style: TextStyle(
@@ -338,7 +338,7 @@ class _LogInPageState extends ConsumerState<LogInPage> {
     );
   }
 
-  SizedBox signUpButton(
+  SizedBox logInButton(
       BuildContext context, WidgetRef ref, AuthProvider authModel, LogInModel logIn) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.8,

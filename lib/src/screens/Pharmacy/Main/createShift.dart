@@ -864,13 +864,13 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                             .softwareList
                                             .toString());
 
-                                    // ref.read(authProvider.notifier).uploadJobToPharmacy(
-                                    //     ref, ref.read(userProviderLogin.notifier).userUID, context);
+                                    ref.read(authProvider.notifier).uploadJobToPharmacy(
+                                        ref, ref.read(userProviderLogin.notifier).userUID, context);
 
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => JobHistoryPharmacy()));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => JobHistoryPharmacy()));
                                   }
                                 : null,
                             child: RichText(

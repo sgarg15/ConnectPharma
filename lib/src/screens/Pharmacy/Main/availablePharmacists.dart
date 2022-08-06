@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +102,6 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
         } else if (checkAvailability(ref, value, i) &&
             value["userType"] == ref.read(pharmacyMainProvider.notifier).position) {
           if (ref.read(pharmacyMainProvider.notifier).skillList != null) {
-            if (value["knownSkills"] != null) changeSkillToList(value["knownSkills"]);
             print(value["uid"]);
             allUserDataMap[key] = value;
             print(allUserDataMap.keys);
@@ -147,6 +148,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Column(
@@ -277,19 +279,22 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                     itemCount: allUserDataMap.length,
                     itemBuilder: (BuildContext context, int index) {
                       String key = allUserDataMap.keys.elementAt(index);
-
-                      return new Column(
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () {
+                      // var softwareList = json.decode(allUserDataMap[key]["knownSoftware"]);
+                      // print("softwareList: $softwareList");
+                      print("allUserDataMap: ${allUserDataMap[key]}");
+                      return GestureDetector(
+                        onTap: () {
+                          print("Pressed");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ChosenPharmacistProfile(
                                             pharmacistDataMap: allUserDataMap[key],
                                           )));
-                            },
-                            child: Container(
+                        },
+                        child: new Column(
+                          children: <Widget>[
+                            Container(
                               width: MediaQuery.of(context).size.width * 0.95,
                               height: 90,
                               child: Column(
@@ -328,12 +333,12 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                height: 10,
+                                                height: 5,
                                               ),
                                               RichText(
                                                 textAlign: TextAlign.left,
                                                 text: TextSpan(
-                                                    text: "Experience ",
+                                                    text: "Working Experience \n",
                                                     style: TextStyle(
                                                         color: Color(0xFF6C6C6C),
                                                         fontSize: 16,
@@ -356,13 +361,10 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                                                       ),
                                                     ]),
                                               ),
-                                              
-                                            
                                             ],
                                           ),
                                         ],
                                       ),
-                                    
                                       GestureDetector(
                                         onTap: () {
                                           Navigator.push(
@@ -383,14 +385,14 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                                 ],
                               ),
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          Divider(
-                            height: 1,
-                            thickness: 1,
-                            color: Color(0xFFEAEAEA),
-                          ),
-                        ],
+                            SizedBox(height: 10),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: Color(0xFFEAEAEA),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),

@@ -52,7 +52,7 @@ class CustomFormField extends StatelessWidget {
           textAlign: TextAlign.left,
           text: TextSpan(
               text: fieldTitle,
-              style: GoogleFonts.questrial(
+              style: GoogleFonts.montserrat(
                 fontSize: titleFont,
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
@@ -217,6 +217,7 @@ class Software {
   String toString() {
     return name;
   }
+
 }
 
 class Skill {
