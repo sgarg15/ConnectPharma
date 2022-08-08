@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
   void initState() {
     super.initState();
     print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
-    print(ref.read(pharmacyMainProvider.notifier).userData);
+    log(ref.read(pharmacyMainProvider.notifier).userData.toString(), name: "userData");
     jobsDataSub?.cancel();
     userDataSub?.cancel();
 
