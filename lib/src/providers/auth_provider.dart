@@ -71,7 +71,8 @@ class AuthProvider extends ChangeNotifier {
     try {
       if (asset != null) {
         Reference reference = FirebaseStorage.instance.ref().child(uidName).child(fileName);
-        UploadTask uploadTask = reference.putFile(asset);
+        UploadTask uploadTask =
+            reference.putFile(asset, SettableMetadata(contentType: 'application/pdf'));
 
         String url = await (await uploadTask).ref.getDownloadURL();
         print("Uploaded $fileName");
@@ -90,7 +91,8 @@ class AuthProvider extends ChangeNotifier {
     try {
       if (asset != null) {
         Reference reference = FirebaseStorage.instance.ref().child(uidName).child(fileName);
-        UploadTask uploadTask = reference.putData(asset);
+        UploadTask uploadTask =
+            reference.putData(asset, SettableMetadata(contentType: 'image/jpeg'));
 
         String url = await (await uploadTask).ref.getDownloadURL();
         return url;
