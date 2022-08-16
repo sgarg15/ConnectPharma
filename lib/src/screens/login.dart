@@ -145,10 +145,55 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                                             text: "Forgot your Password?",
                                             recognizer: new TapGestureRecognizer()
                                               ..onTap = () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => LogInPage()));
+                                                if (ref.read(logInProvider.notifier).email == "") {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Text(
+                                                          "Error",
+                                                          style: GoogleFonts.montserrat(),
+                                                        ),
+                                                        content:
+                                                            Text("Please enter your email above"),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            child: Text("OK"),
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  ref
+                                                      .read(authProviderLogin.notifier)
+                                                      .sendPasswordResetEmail(
+                                                          ref.read(logInProvider.notifier).email);
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Text(
+                                                          "Reset Password",
+                                                          style: GoogleFonts.montserrat(),
+                                                        ),
+                                                        content: Text(
+                                                            "An email will be sent to your email address with instructions on how to reset your password"),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            child: Text("OK"),
+                                                            onPressed: () {
+                                                              Navigator.of(context).pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                }
                                               },
                                             style: TextStyle(
                                               fontSize: 12,

@@ -17,7 +17,6 @@ import 'package:connectpharma/src/screens/Pharmacist/Sign%20Up/1pharmacistSignUp
 import 'package:connectpharma/src/screens/login.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../Custom Widgets/custom_sliding_segmented_control.dart';
 import 'package:intl/intl.dart';
 import '../../../../Custom Widgets/fileStorage.dart';
 
@@ -404,7 +403,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
             child: ColoredBox(
               color: Colors.white,
               child: TabBar(
-                  labelColor: Color(0xFFF0069C1),
+                  labelColor: Color(0xFF0069C1),
                   unselectedLabelColor: Color(0xFF4F4F4F),
                   unselectedLabelStyle: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -562,6 +561,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                   Column(
                     children: [
                       ExpansionTile(
+                        
                           textColor: Color(0xFF0069C1),
                           title: Text(
                             "Current Jobs (${currentJobDataMap.length})",
@@ -570,7 +570,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                                 fontWeight: FontWeight.w700,
                                 fontFamily: GoogleFonts.montserrat().fontFamily),
                           ),
-                          children: [buildCurrentJobsList(context)]),
+                        children: [
+                          Divider(
+                            color: Color(0xFFC6C6C6),
+                            thickness: 1,
+                          ),
+                          buildCurrentJobsList(context)
+                        ],
+                      ),
                       ExpansionTile(
                           textColor: Color(0xFF0069C1),
                           title: Text(
@@ -611,312 +618,9 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 ],
               );
             }),
-        /*
-        body: TabBarView(
-          children: [
-            //Active Jobs
-            Column(
-              children: [
-                StreamBuilder(
-                    stream: jobsStreamPharmacist,
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData) {
-                        print("No data");
-                        return ExpansionTile(
-                            textColor: Color(0xFF0069C1),
-                            title: Text(
-                              "Current Jobs (${currentJobDataMap.length})",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: GoogleFonts.montserrat().fontFamily),
-                            ),
-                            children: [buildCurrentJobsList(context)]);
-                      }
-                      if (snapshot.data != null) {
-                        appliedJobDataMap.clear();
-                        currentJobDataMap.clear();
-                        snapshot.data?.docs.forEach((doc) {
-                          if ((doc.data() as Map)["applicationStatus"] == "current" ||
-                              (doc.data() as Map)["applicationStatus"] == "accept") {
-                            dataID = doc.id;
-                            currentJobDataMap[dataID] = doc.data();
-                          }
-                        });
-                        return ExpansionTile(
-                            textColor: Color(0xFF0069C1),
-                            title: Text(
-                              "Current Jobs (${currentJobDataMap.length})",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: GoogleFonts.montserrat().fontFamily),
-                            ),
-                            children: [buildCurrentJobsList(context)]);
-                      }
-                      return Container();
-                    }),
-                StreamBuilder(
-                    stream: jobsStreamPharmacist,
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData) {
-                        return ExpansionTile(
-                            textColor: Color(0xFF0069C1),
-                            title: Text(
-                              "Applied Jobs (${appliedJobDataMap.length})",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: GoogleFonts.montserrat().fontFamily),
-                            ),
-                            children: [buildAppliedJobsList(context)]);
-                      }
-                      if (snapshot.data != null) {
-                        appliedJobDataMap.clear();
-                        currentJobDataMap.clear();
-                        snapshot.data?.docs.forEach((doc) {
-                          if ((doc.data() as Map)["applicationStatus"] == "applied") {
-                            dataID = doc.id;
-                            appliedJobDataMap[dataID] = doc.data();
-                          }
-                        });
-                        return ExpansionTile(
-                            textColor: Color(0xFF0069C1),
-                            title: Text(
-                              "Applied Jobs (${appliedJobDataMap.length})",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: GoogleFonts.montserrat().fontFamily),
-                            ),
-                            children: [buildAppliedJobsList(context)]);
-                      }
-                      return Container();
-                    })
-              ],
-            ),
-            //Past Jobs
-            Column(
-              children: [
-                StreamBuilder(
-                    stream: jobsStreamPharmacist,
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      if (!snapshot.hasData) {
-                        print("No Data Past Jobs");
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      pastJobDataMap.clear();
-                        snapshot.data?.docs.forEach((doc) {
-                          if ((doc.data() as Map)["applicationStatus"] == "past") {
-                            dataID = doc.id;
-                            pastJobDataMap[dataID] = doc.data();
-                          }
-                        });
-                        return ExpansionTile(
-                            textColor: Color(0xFF0069C1),
-                            title: Text(
-                              "Past Jobs (${pastJobDataMap.length})",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: GoogleFonts.montserrat().fontFamily),
-                            ),
-                            children: [buildPastJobsList(context)]);
-                    }),
-                StreamBuilder(
-                    stream: jobsStreamPharmacist,
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData) {
-                        return ExpansionTile(
-                            textColor: Color(0xFF0069C1),
-                            title: Text(
-                              "Rejected Jobs (${rejectedJobDataMap.length})",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: GoogleFonts.montserrat().fontFamily),
-                            ),
-                            children: [buildRejectedJobsList(context)]);
-                      }
-                      if (snapshot.data != null) {
-                        snapshot.data?.docs.forEach((doc) {
-                          if ((doc.data() as Map)["applicationStatus"] == "rejected") {
-                            dataID = doc.id;
-                            rejectedJobDataMap[dataID] = doc.data();
-                          }
-                        });
-                        return ExpansionTile(
-                            textColor: Color(0xFF0069C1),
-                            title: Text(
-                              "Rejected Jobs (${rejectedJobDataMap.length})",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: GoogleFonts.montserrat().fontFamily),
-                            ),
-                            children: [buildRejectedJobsList(context)]);
-                      }
-                      return Container();
-                    }),
-              ],
-            )
-          ],
-        )),
-      */
       ),
     );
   }
-  
-  /* 
-  Container(
-          child: Column(
-            children: <Widget>[
-              //Slider
-              Container(
-                padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
-                width: MediaQuery.of(context).size.width,
-                height: 65,
-                alignment: Alignment.topCenter,
-                //color: Colors.white,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [
-                      1,
-                      1,
-                    ],
-                    colors: [Colors.white, Color(0xFFE3E3E3)],
-                  ),
-                ),
-                child: CupertinoSlidingSegmentedControl(
-                    thumbColor: Colors.white,
-                    backgroundColor: Colors.white,
-                    groupValue: segmentedControlGroupValue,
-                    children: <int, Widget>{
-                      0: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40.45),
-                        child: segmentedControlGroupValue == 0
-                            ? const Text(
-                                "Active Jobs",
-                                style: TextStyle(
-                                  color: Color(0xFFF0069C1),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
-                                ),
-                              )
-                            : const Text(
-                                "Active Jobs",
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                              ),
-                      ),
-                      1: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 40.45),
-                        child: segmentedControlGroupValue == 1
-                            ? const Text(
-                                "Past Jobs",
-                                style: TextStyle(
-                                  color: Color(0xFFF0069C1),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
-                                ),
-                              )
-                            : const Text(
-                                "Past Jobs",
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                              ),
-                      ),
-                    },
-                    onValueChanged: (int? i) {
-                      setState(() {
-                        segmentedControlGroupValue = i!.toInt();
-                      });
-                    }),
-              ),
-              //Active
-              if (segmentedControlGroupValue == 0)
-                StreamBuilder(
-                    stream: jobsStreamPharmacist,
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData)
-                        return const Center(child: CircularProgressIndicator());
-                      if (snapshot.data != null) {
-                        appliedJobDataMap.clear();
-                        currentJobDataMap.clear();
-                        snapshot.data?.docs.forEach((doc) {
-                          if ((doc.data() as Map)["applicationStatus"] == "applied") {
-                            dataID = doc.id;
-                            appliedJobDataMap[dataID] = doc.data();
-                          } else if ((doc.data() as Map)["applicationStatus"] == "current" ||
-                              (doc.data() as Map)["applicationStatus"] == "accept") {
-                            dataID = doc.id;
-                            currentJobDataMap[dataID] = doc.data();
-                          }
-                        });
-                        return Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                //Current Jobs
-                                buildCurrentJobsList(context),
-                                //Applied Jobs
-                                buildAppliedJobsList(context),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                      return Container();
-                    })
-
-              //Past
-              else if (segmentedControlGroupValue == 1)
-                StreamBuilder(
-                    stream: jobsStreamPharmacist,
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-                      if (!snapshot.hasData)
-                        return const Center(child: CircularProgressIndicator());
-                      if (snapshot.data != null) {
-                        snapshot.data?.docs.forEach((doc) {
-                          if ((doc.data() as Map)["applicationStatus"] == "past") {
-                            dataID = doc.id;
-                            pastJobDataMap[dataID] = doc.data();
-                          } else if ((doc.data() as Map)["applicationStatus"] == "rejected") {
-                            dataID = doc.id;
-                            rejectedJobDataMap[dataID] = doc.data();
-                          }
-                        });
-
-                        return Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                //Current Jobs
-                                buildPastJobsList(context),
-                                //Applied Jobs
-                                buildRejectedJobsList(context),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                      return Container();
-                    })
-            ],
-          ),
-        ),
-      
-  */
 
   Column buildCurrentJobsList(BuildContext context) {
     print("Building Current Jobs");
@@ -938,52 +642,62 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         )
       else
         ListView.builder(
-          physics: new NeverScrollableScrollPhysics(),
+          physics: new BouncingScrollPhysics(),
           shrinkWrap: true,
           itemCount: currentJobDataMap.length,
           itemBuilder: (BuildContext context, int index) {
             String key = currentJobDataMap.keys.elementAt(index).toString();
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  constraints: const BoxConstraints(minHeight: 90),
-                  child: Center(
-                    child: ListTile(
-                      title: new Text(
-                        DateFormat("MMM d, y").format(DateTime.parse(
-                                currentJobDataMap[key]["startDate"].toDate().toString())) +
-                            " to " +
-                            DateFormat("MMM d, y").format(DateTime.parse(
-                                currentJobDataMap[key]["endDate"].toDate().toString())),
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      subtitle: Text(
-                        "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["startDate"].toDate().toString()))} - "
-                        "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["endDate"].toDate().toString()))} \n"
-                        "${currentJobDataMap[key]["hourlyRate"] + "/hr"}",
-                        style: const TextStyle(
-                            color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) =>
-                        //             EditShift(
-                        //               jobDataMap:
-                        //                   sortedJobDataMap[
-                        //                       key],
-                        //               jobUID: key,
-                        //             )));
-                      },
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: new Text(
+                      DateFormat("MMM d, y").format(DateTime.parse(
+                              currentJobDataMap[key]["startDate"].toDate().toString())) +
+                          " to " +
+                          DateFormat("MMM d, y").format(DateTime.parse(
+                              currentJobDataMap[key]["endDate"].toDate().toString())),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: GoogleFonts.montserrat().fontFamily,
+                          fontWeight: FontWeight.w500),
                     ),
+                    subtitle: Text(
+                      "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["startDate"].toDate().toString()))} - "
+                      "${DateFormat("jm").format(DateTime.parse(currentJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                      "${currentJobDataMap[key]["hourlyRate"] + " Hourly Rate"}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
+                      ),
+                    ),
+                    enabled: false,
+                    onTap: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             EditShift(
+                      //               jobDataMap:
+                      //                   sortedJobDataMap[
+                      //                       key],
+                      //               jobUID: key,
+                      //             )));
+                    },
                   ),
                 ),
-              ),
+
+                if (index != currentJobDataMap.length - 1)
+                  Divider(
+                    color: Color(0xFFC6C6C6),
+                    thickness: 1,
+                  ),
+               
+              ],
             );
           },
         ),
@@ -1007,52 +721,62 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         )
       else
         ListView.builder(
-          physics: new NeverScrollableScrollPhysics(),
+          physics: new BouncingScrollPhysics(),
           shrinkWrap: true,
           itemCount: appliedJobDataMap.length,
           itemBuilder: (BuildContext context, int index) {
             String key = appliedJobDataMap.keys.elementAt(index).toString();
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  constraints: const BoxConstraints(minHeight: 90),
-                  child: Center(
-                    child: ListTile(
-                      title: new Text(
-                        DateFormat("MMM d, y").format(DateTime.parse(
-                                appliedJobDataMap[key]["startDate"].toDate().toString())) +
-                            " to " +
-                            DateFormat("MMM d, y").format(DateTime.parse(
-                                appliedJobDataMap[key]["endDate"].toDate().toString())),
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      subtitle: Text(
-                        "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["startDate"].toDate().toString()))} - "
-                        "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["endDate"].toDate().toString()))} \n"
-                        "${appliedJobDataMap[key]["hourlyRate"] + "/hr"}",
-                        style: const TextStyle(
-                            color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) =>
-                        //             EditShift(
-                        //               jobDataMap:
-                        //                   sortedJobDataMap[
-                        //                       key],
-                        //               jobUID: key,
-                        //             )));
-                      },
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    enabled: false,
+
+                    title: new Text(
+                      DateFormat("MMM d, y").format(DateTime.parse(
+                              appliedJobDataMap[key]["startDate"].toDate().toString())) +
+                          " to " +
+                          DateFormat("MMM d, y").format(DateTime.parse(
+                              appliedJobDataMap[key]["endDate"].toDate().toString())),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: GoogleFonts.montserrat().fontFamily,
+                          fontWeight: FontWeight.w500),
                     ),
+                    subtitle: Text(
+                      "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["startDate"].toDate().toString()))} - "
+                      "${DateFormat("jm").format(DateTime.parse(appliedJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                      "${appliedJobDataMap[key]["hourlyRate"] + " Hourly Rate"}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
+                      ),
+                    ),
+                          
+                    onTap: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             EditShift(
+                      //               jobDataMap:
+                      //                   sortedJobDataMap[
+                      //                       key],
+                      //               jobUID: key,
+                      //             )));
+                    },
                   ),
                 ),
-              ),
+                if (index != currentJobDataMap.length - 1)
+                  Divider(
+                    color: Color(0xFFC6C6C6),
+                    thickness: 1,
+                  ),
+              ],
             );
           },
         ),
@@ -1077,52 +801,62 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
         )
       else
         ListView.builder(
-          physics: new NeverScrollableScrollPhysics(),
+          physics: new BouncingScrollPhysics(),
           shrinkWrap: true,
           itemCount: pastJobDataMap.length,
           itemBuilder: (BuildContext context, int index) {
             String key = pastJobDataMap.keys.elementAt(index).toString();
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  constraints: const BoxConstraints(minHeight: 90),
-                  child: Center(
-                    child: ListTile(
-                      title: new Text(
-                        DateFormat("MMM d, y").format(DateTime.parse(
-                                pastJobDataMap[key]["startDate"].toDate().toString())) +
-                            " to " +
-                            DateFormat("MMM d, y").format(
-                                DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString())),
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      subtitle: Text(
-                        "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["startDate"].toDate().toString()))} - "
-                        "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString()))} \n"
-                        "${pastJobDataMap[key]["hourlyRate"] + "/hr"}",
-                        style: const TextStyle(
-                            color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) =>
-                        //             EditShift(
-                        //               jobDataMap:
-                        //                   sortedJobDataMap[
-                        //                       key],
-                        //               jobUID: key,
-                        //             )));
-                      },
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    enabled: false,
+
+                    title: new Text(
+                      DateFormat("MMM d, y").format(DateTime.parse(
+                              pastJobDataMap[key]["startDate"].toDate().toString())) +
+                          " to " +
+                          DateFormat("MMM d, y").format(
+                              DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString())),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: GoogleFonts.montserrat().fontFamily,
+                          fontWeight: FontWeight.w500),
                     ),
+                    subtitle: Text(
+                      "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["startDate"].toDate().toString()))} - "
+                      "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                      "${pastJobDataMap[key]["hourlyRate"] + " Hourly Rate"}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
+                      ),
+                    ),
+                          
+                    onTap: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             EditShift(
+                      //               jobDataMap:
+                      //                   sortedJobDataMap[
+                      //                       key],
+                      //               jobUID: key,
+                      //             )));
+                    },
                   ),
                 ),
-              ),
+                if (index != currentJobDataMap.length - 1)
+                  Divider(
+                    color: Color(0xFFC6C6C6),
+                    thickness: 1,
+                  ),
+              ],
             );
           },
         ),
@@ -1151,49 +885,59 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
           physics: new NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: rejectedJobDataMap.length,
+          
           itemBuilder: (BuildContext context, int index) {
             String key = rejectedJobDataMap.keys.elementAt(index).toString();
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Material(
-                elevation: 10,
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  constraints: const BoxConstraints(minHeight: 90),
-                  child: Center(
-                    child: ListTile(
-                      title: new Text(
-                        DateFormat("MMM d, y").format(DateTime.parse(
-                                rejectedJobDataMap[key]["startDate"].toDate().toString())) +
-                            " to " +
-                            DateFormat("MMM d, y").format(DateTime.parse(
-                                rejectedJobDataMap[key]["endDate"].toDate().toString())),
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      subtitle: Text(
-                        "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["startDate"].toDate().toString()))} - "
-                        "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["endDate"].toDate().toString()))} \n"
-                        "${rejectedJobDataMap[key]["hourlyRate"] + "/hr"}",
-                        style: const TextStyle(
-                            color: Colors.black54, fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) =>
-                        //             EditShift(
-                        //               jobDataMap:
-                        //                   sortedJobDataMap[
-                        //                       key],
-                        //               jobUID: key,
-                        //             )));
-                      },
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    enabled: false,
+                    title: new Text(
+                      DateFormat("MMM d, y").format(DateTime.parse(
+                              rejectedJobDataMap[key]["startDate"].toDate().toString())) +
+                          " to " +
+                          DateFormat("MMM d, y").format(DateTime.parse(
+                              rejectedJobDataMap[key]["endDate"].toDate().toString())),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: GoogleFonts.montserrat().fontFamily,
+                          fontWeight: FontWeight.w500),
                     ),
+                    subtitle: Text(
+                      "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["startDate"].toDate().toString()))} - "
+                      "${DateFormat("jm").format(DateTime.parse(rejectedJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                      "${rejectedJobDataMap[key]["hourlyRate"] + " Hourly Rate"}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: GoogleFonts.montserrat().fontFamily,
+                      ),
+                    ),
+                    
+                    onTap: () {
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) =>
+                      //             EditShift(
+                      //               jobDataMap:
+                      //                   sortedJobDataMap[
+                      //                       key],
+                      //               jobUID: key,
+                      //             )));
+                    },
                   ),
                 ),
-              ),
+                if (index != rejectedJobDataMap.length - 1)
+                  Divider(
+                    color: Color(0xFFC6C6C6),
+                    thickness: 1,
+                  ),
+              ],
             );
           },
         ),

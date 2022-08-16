@@ -377,8 +377,9 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                       ],
                     ),
                   ),
+                  if (index != activeJobDataMap.length - 1)
                   Divider(
-                    color: Color(0xFFE8E8E8),
+                      color: Color(0xFFC6C6C6),
                     thickness: 1,
                   ),
                 ],
@@ -446,8 +447,9 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                       ],
                     ),
                   ),
+                  if (index != pastJobDataMap.length - 1)
                   Divider(
-                    color: Color(0xFFE8E8E8),
+                      color: Color(0xFFC6C6C6),
                     thickness: 1,
                   ),
                 ],
