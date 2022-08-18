@@ -54,11 +54,7 @@ class _EditPharmacyProfileState extends ConsumerState<EditPharmacyProfile> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      List<dynamic> dynamicSoftwareList =
-          ref.read(pharmacyMainProvider.notifier).userData?["softwareList"];
 
-      List<Software?> softwareList =
-          dynamicSoftwareList.map((e) => Software(id: 1, name: e)).toList();
 
       log(softwareList.runtimeType.toString(), name: "softwareList Runtime Type");
       log("SoftwareListToUpload: $softwareListToUpload", name: "SoftwareListToUpload");

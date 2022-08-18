@@ -191,6 +191,21 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                   child: CircularProgressIndicator(),
                 );
               }
+              if (snapshot.data!.docs.isEmpty) {
+                log("Snapshot data is empty");
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    height: 30,
+                    child: const Center(
+                        child: Text(
+                      "No published jobs found",
+                      style: TextStyle(color: Colors.grey, fontSize: 15),
+                    )),
+                  ),
+                );
+              }
 
               activeJobDataMap.clear();
               pastJobDataMap.clear();
@@ -212,36 +227,28 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                 }
               });
 
-              if (jobDataMap.isEmpty) {
-                WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-                      jobDataMapEmpty = true;
-                    }));
-
-                return Container();
-              } else {
-                return TabBarView(
-                  physics: BouncingScrollPhysics(),
-                  children: [
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        buildActiveJobsList(context),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        buildPastJobsList(context),
-                      ],
-                    ),
-                    //buildPastJobs(context),
-                  ],
-                );
-              }
+              return TabBarView(
+                physics: BouncingScrollPhysics(),
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      buildActiveJobsList(context),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      buildPastJobsList(context),
+                    ],
+                  ),
+                  //buildPastJobs(context),
+                ],
+              );
             },
           ),
         ),
@@ -293,8 +300,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                 fontWeight: FontWeight.w500),
                           ),
                           subtitle: Text(
-                            "${DateFormat("jm").format(DateTime.parse(activeJobDataMap[key]["startDate"].toDate().toString()))} - "
-                            "${DateFormat("jm").format(DateTime.parse(activeJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                            "${DateFormat("jm").format(DateTime.parse(activeJobDataMap[key]["startTime"].toDate().toString()))} - "
+                            "${DateFormat("jm").format(DateTime.parse(activeJobDataMap[key]["endTime"].toDate().toString()))} \n"
                             "${activeJobDataMap[key]["hourlyRate"] + " Hourly Rate"}",
                             style: TextStyle(
                               color: Colors.black,
@@ -350,16 +357,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                             onPressed: !_enabled
                                 ? null
                                 : () {
-                                   
-                              if (activeJobDataMap[key]["applicants"] != null) {
-                                      
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PharmacistApplied(
-                                              jodID: key,
-                                              applicants: activeJobDataMap[key]["applicants"],
-                                            )));
+                                    if (activeJobDataMap[key]["applicants"] != null) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => PharmacistApplied(
+                                                    jodID: key,
+                                                    applicants: activeJobDataMap[key]["applicants"],
+                                                  )));
                                     } else {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
@@ -367,21 +372,21 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                           duration: Duration(seconds: 1),
                                         ),
                                       );
-                              }
-                                    
+                                    }
+
                                     Timer(Duration(seconds: 5),
                                         () => setState(() => _enabled = true));
-                            },
+                                  },
                           ),
                         ),
                       ],
                     ),
                   ),
                   if (index != activeJobDataMap.length - 1)
-                  Divider(
+                    Divider(
                       color: Color(0xFFC6C6C6),
-                    thickness: 1,
-                  ),
+                      thickness: 1,
+                    ),
                 ],
               );
             },
@@ -393,7 +398,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
   Column buildPastJobsList(BuildContext context) {
     return Column(
       children: <Widget>[
-        if (activeJobDataMap.isEmpty)
+        if (pastJobDataMap.isEmpty)
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
             child: Container(
@@ -433,8 +438,8 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                                 fontWeight: FontWeight.w500),
                           ),
                           subtitle: Text(
-                            "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["startDate"].toDate().toString()))} - "
-                            "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["endDate"].toDate().toString()))} \n"
+                            "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["startTime"].toDate().toString()))} - "
+                            "${DateFormat("jm").format(DateTime.parse(pastJobDataMap[key]["endTime"].toDate().toString()))} \n"
                             "${pastJobDataMap[key]["hourlyRate"] + " Hourly Rate"}",
                             style: TextStyle(
                               color: Colors.black,
@@ -448,10 +453,10 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                     ),
                   ),
                   if (index != pastJobDataMap.length - 1)
-                  Divider(
+                    Divider(
                       color: Color(0xFFC6C6C6),
-                    thickness: 1,
-                  ),
+                      thickness: 1,
+                    ),
                 ],
               );
             },

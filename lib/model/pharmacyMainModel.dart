@@ -10,6 +10,7 @@ class PharmacyMainModel {
   bool? fullTime;
   List<Software?>? softwareList = [];
   List<Skill?>? skillList = [];
+  List<Language?>? languageList = [];
   bool? techOnSite;
   bool? assistantOnSite;
   bool? limaStatus;
@@ -26,6 +27,7 @@ class PharmacyMainModel {
     this.fullTime = false,
     this.softwareList,
     this.skillList,
+    this.languageList,
     this.techOnSite = false,
     this.assistantOnSite = false,
     this.limaStatus = false,
@@ -43,6 +45,7 @@ class PharmacyMainModel {
     bool? fullTime,
     List<Software?>? softwareList,
     List<Skill?>? skillList,
+    List<Language?>? languageList,
     bool? techOnSite,
     bool? assistantOnSite,
     bool? limaStatus,
@@ -59,6 +62,7 @@ class PharmacyMainModel {
       fullTime: fullTime ?? this.fullTime,
       softwareList: softwareList ?? this.softwareList,
       skillList: skillList ?? this.skillList,
+      languageList: languageList ?? this.languageList,
       techOnSite: techOnSite ?? this.techOnSite,
       assistantOnSite: assistantOnSite ?? this.assistantOnSite,
       limaStatus: limaStatus ?? this.limaStatus,

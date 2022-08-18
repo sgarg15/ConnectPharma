@@ -573,7 +573,7 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         children: [
                           Divider(
                             color: Color(0xFFC6C6C6),
-                            thickness: 1,
+                            thickness: 0.7,
                           ),
                           buildCurrentJobsList(context)
                         ],
@@ -587,7 +587,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                                 fontWeight: FontWeight.w700,
                                 fontFamily: GoogleFonts.montserrat().fontFamily),
                           ),
-                          children: [buildAppliedJobsList(context)]),
+                          children: [
+                            Divider(
+                              color: Color(0xFFC6C6C6),
+                              thickness: 0.7,
+                            ),
+                            buildAppliedJobsList(context)
+                          ]),
                     ],
                   ),
                   //Past Jobs
@@ -602,7 +608,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                                 fontWeight: FontWeight.w700,
                                 fontFamily: GoogleFonts.montserrat().fontFamily),
                           ),
-                          children: [buildPastJobsList(context)]),
+                          children: [
+                            Divider(
+                              color: Color(0xFFC6C6C6),
+                              thickness: 0.7,
+                            ),
+                            buildPastJobsList(context)
+                          ]),
                       ExpansionTile(
                           textColor: Color(0xFF0069C1),
                           title: Text(
@@ -612,7 +624,13 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                                 fontWeight: FontWeight.w700,
                                 fontFamily: GoogleFonts.montserrat().fontFamily),
                           ),
-                          children: [buildRejectedJobsList(context)]),
+                          children: [
+                            Divider(
+                              color: Color(0xFFC6C6C6),
+                              thickness: 0.7,
+                            ),
+                            buildRejectedJobsList(context)
+                          ]),
                     ],
                   )
                 ],

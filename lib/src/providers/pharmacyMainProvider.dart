@@ -62,6 +62,7 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
     state.startTime = null;
     state.endTime = null;
     state.skillList = null;
+    state.languageList = null;
     state.softwareList = null;
     state.position = null;
     state.hourlyRate = "";
@@ -99,6 +100,7 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
   TimeOfDay? get endTime => state.endTime;
   List<Software?>? get softwareList => state.softwareList;
   List<Skill?>? get skillList => state.skillList;
+  List<Language?>? get languageList => state.languageList;
   bool? get techOnSite => state.techOnSite;
   bool? get assistantOnSite => state.assistantOnSite;
   bool? get limaStatus => state.limaStatus;
@@ -130,6 +132,10 @@ class PharmacyMainProvider extends StateNotifier<PharmacyMainModel> {
 
   void changeSkillList(List<Skill?> value) {
     state = state.copyWithPharmacyMain(skillList: value);
+  }
+
+  void changeLanguageList(List<Language?> value) {
+    state = state.copyWithPharmacyMain(languageList: value);
   }
 
   void changeTechOnSite(bool? value) {
