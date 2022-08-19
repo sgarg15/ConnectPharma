@@ -23,6 +23,8 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
   final _softwareItems =
       software.map((software) => MultiSelectItem<Software>(software, software.name)).toList();
   final _skillItems = skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+  final _languageItems =
+      language.map((language) => MultiSelectItem<Language>(language, language.name)).toList();
 
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
@@ -476,7 +478,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                           searchable: true,
                           items: _skillItems,
                           buttonText: Text(
-                            "Select known skills",
+                            "Need to know skills",
                             style: GoogleFonts.montserrat(
                               color: Color(0xFFC6C6C6),
                               fontSize: 16,
@@ -545,7 +547,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                             searchable: true,
                             items: _softwareItems,
                             buttonText: Text(
-                              "Select known software",
+                              "Need to know software",
                               style: GoogleFonts.montserrat(
                                 color: Color(0xFFC6C6C6),
                                 fontSize: 16,
@@ -564,6 +566,76 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                               onTap: (value) {
                                 ref.read(pharmacyMainProvider.notifier).softwareList?.remove(value);
                                 return ref.read(pharmacyMainProvider.notifier).softwareList;
+                              },
+                              textStyle: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+
+                    //Languages
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(gearIcon, height: 22, width: 22),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: "Languages",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18.0,
+                                      color: Colors.black,
+                                      fontFamily: GoogleFonts.montserrat().fontFamily,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          MultiSelectBottomSheetField<Language?>(
+                            //enabled: softwareFieldEnabled,
+                            selectedColor: Color(0xFFF0069C1),
+                            selectedItemsTextStyle: TextStyle(color: Colors.white),
+                            initialChildSize: 0.4,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(width: 1, color: Color(0xFFB6B5B5)),
+                              ),
+                            ),
+                            listType: MultiSelectListType.CHIP,
+                            initialValue: ref.read(pharmacyMainProvider.notifier).languageList,
+                            searchable: true,
+                            items: _languageItems,
+                            buttonText: Text(
+                              "Need to know languages",
+                              style: GoogleFonts.montserrat(
+                                color: Color(0xFFC6C6C6),
+                                fontSize: 16,
+                              ),
+                            ),
+                            onConfirm: (values) {
+                              ref.read(pharmacyMainProvider.notifier).changeLanguageList(values);
+                            },
+                            chipDisplay: MultiSelectChipDisplay(
+                              items: ref
+                                  .read(pharmacyMainProvider.notifier)
+                                  .languageList
+                                  ?.map((e) => MultiSelectItem(e, e.toString()))
+                                  .toList(),
+                              chipColor: Color(0xFF0069C1),
+                              onTap: (value) {
+                                ref.read(pharmacyMainProvider.notifier).languageList?.remove(value);
+                                return ref.read(pharmacyMainProvider.notifier).languageList;
                               },
                               textStyle: TextStyle(color: Colors.white),
                             ),
@@ -754,7 +826,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                     ),
 
                     SizedBox(
-                      height: 20,
+                      height: 20
                     ),
 
                     //Job Comments
@@ -785,6 +857,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                             maxLines: null,
                             keyboardType: TextInputType.multiline,
                             textAlign: TextAlign.start,
+                            textCapitalization: TextCapitalization.sentences,
                             onChanged: (value) {
                               ref.read(pharmacyMainProvider.notifier).changeComments(value);
                             },
@@ -800,7 +873,8 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                         ],
                       ),
                     ),
-                    //Search Button
+                    
+                    //Submit Button
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
@@ -813,7 +887,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                   if (states.contains(MaterialState.disabled)) {
                                     return Colors.grey; // Disabled color
                                   }
-                                  return Color(0xFFF0069C1); // Regular color
+                                  return Color(0xFF0069C1); // Regular color
                                 }),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
@@ -862,6 +936,12 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                         ref
                                             .read(pharmacyMainProvider.notifier)
                                             .softwareList
+                                            .toString());
+
+                                    print("Languages: " +
+                                        ref
+                                            .read(pharmacyMainProvider.notifier)
+                                            .languageList
                                             .toString());
 
                                     ref.read(authProvider.notifier).uploadJobToPharmacy(

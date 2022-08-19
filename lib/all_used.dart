@@ -218,6 +218,10 @@ class Software {
     return name;
   }
 
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Software && name == other.name;
+
+
 }
 
 class Skill {
@@ -228,10 +232,14 @@ class Skill {
     required this.id,
     required this.name,
   });
+
   @override
   String toString() {
     return name;
   }
+
+  //equal operator
+  bool operator ==(Object other) => identical(this, other) || other is Skill && name == other.name;
 }
 
 class Language {
@@ -246,6 +254,10 @@ class Language {
   String toString() {
     return name;
   }
+
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Language && name == other.name;
+
 }
 
 List<Software> software = [

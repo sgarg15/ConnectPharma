@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:developer' as dev;
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -157,7 +158,7 @@ class AuthProvider extends ChangeNotifier {
         ref.read(pharmacistSignUpProvider.notifier).skillList?.map((e) => e?.name).toList();
     List<String?>? languageList =
         ref.read(pharmacistSignUpProvider.notifier).languageList?.map((e) => e?.name).toList();
-                          
+
     print("Setting Info in Firestore");
     users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
@@ -222,15 +223,13 @@ class AuthProvider extends ChangeNotifier {
         user.user!.uid,
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
-    
+
     List<String?>? softwareList =
         ref.read(pharmacistSignUpProvider.notifier).softwareList?.map((e) => e?.name).toList();
     List<String?>? skillsList =
         ref.read(pharmacistSignUpProvider.notifier).skillList?.map((e) => e?.name).toList();
     List<String?>? languageList =
         ref.read(pharmacistSignUpProvider.notifier).languageList?.map((e) => e?.name).toList();
-                          
-
 
     users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
@@ -295,15 +294,13 @@ class AuthProvider extends ChangeNotifier {
         user.user!.uid,
         "Signature",
         ref.read(pharmacistSignUpProvider.notifier).firstName);
-      
+
     List<String?>? softwareList =
         ref.read(pharmacistSignUpProvider.notifier).softwareList?.map((e) => e?.name).toList();
     List<String?>? skillsList =
         ref.read(pharmacistSignUpProvider.notifier).skillList?.map((e) => e?.name).toList();
     List<String?>? languageList =
         ref.read(pharmacistSignUpProvider.notifier).languageList?.map((e) => e?.name).toList();
-                          
-
 
     users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
       "availability": {},
@@ -510,7 +507,6 @@ class AuthProvider extends ChangeNotifier {
 
   Future<UserCredential?>? uploadJobToPharmacy(
       WidgetRef ref, String? userUID, BuildContext context) async {
-
     List<String?>? softwareList =
         ref.read(pharmacyMainProvider.notifier).softwareList?.map((e) => e?.name).toList();
     List<String?>? skillsList =
@@ -531,7 +527,7 @@ class AuthProvider extends ChangeNotifier {
         DateTime.now().day,
         ref.read(pharmacyMainProvider.notifier).endTime!.hour,
         ref.read(pharmacyMainProvider.notifier).endTime!.minute);
-        
+
     users.doc(userUID).collection("Main").add({
       "userType": "Pharmacy",
       "position": ref.read(pharmacyMainProvider).position,
@@ -572,7 +568,8 @@ class AuthProvider extends ChangeNotifier {
     try {
       await users.doc(userUID).collection("Main").doc(jobUID).update(uploadData);
     } catch (error) {
-      return "Profile Upload Failed";
+      dev.log(error.toString(), name: "Error in updateJobInformation");
+      return "Job Update Failed";
     }
     return null;
   }

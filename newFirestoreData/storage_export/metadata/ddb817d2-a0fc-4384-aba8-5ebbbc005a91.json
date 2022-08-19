@@ -1,0 +1,20 @@
+{
+  "name": "i9LJzQuRkJRoo2yYHZTsmzIlwdZb/Front ID",
+  "bucket": "connectpharma-c65a9.appspot.com",
+  "contentType": "",
+  "metageneration": 1,
+  "generation": 1655860696493,
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "cacheControl": "public, max-age=3600",
+  "contentEncoding": "identity",
+  "downloadTokens": [
+    "74027274-6c47-4eea-9445-a2f9b3ff194e"
+  ],
+  "etag": "someETag",
+  "timeCreated": "2022-06-22T01:18:16.492Z",
+  "updated": "2022-06-22T01:18:16.497Z",
+  "size": 1502407,
+  "md5Hash": "WaK5rFZchpD5xijmXG0s7g==",
+  "crc32c": "3312175815"
+}

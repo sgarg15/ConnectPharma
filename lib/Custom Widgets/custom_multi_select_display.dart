@@ -160,9 +160,7 @@ class CustomMultiSelectChipDisplay<V> extends StatelessWidget {
         selected: items!.contains(item),
         selectedColor: colorator != null && colorator!(item.value) != null
             ? colorator!(item.value)
-            : chipColor != null
-                ? chipColor
-                : Theme.of(context).primaryColor.withOpacity(0.33),
+            : chipColor ?? Theme.of(context).primaryColor.withOpacity(0.33),
         onSelected: (_) {
           if (onTap != null) onTap!(item.value);
         },
