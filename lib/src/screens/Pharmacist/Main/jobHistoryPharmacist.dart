@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectpharma/src/screens/Pharmacist/Main/jobDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectpharma/main.dart';
@@ -693,18 +694,16 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                     ),
-                    enabled: false,
+                    enabled: true,
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             EditShift(
-                      //               jobDataMap:
-                      //                   sortedJobDataMap[
-                      //                       key],
-                      //               jobUID: key,
-                      //             )));
+                      print("Tapped");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => JobDetails(
+                                    jobDetails: currentJobDataMap[key],
+                                    viewing: true,
+                                  )));
                     },
                   ),
                 ),
@@ -749,7 +748,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
-                    enabled: false,
 
                     title: new Text(
                       DateFormat("MMM d, y").format(DateTime.parse(
@@ -776,20 +774,18 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     ),
                           
                     onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             EditShift(
-                      //               jobDataMap:
-                      //                   sortedJobDataMap[
-                      //                       key],
-                      //               jobUID: key,
-                      //             )));
+                      print("Tapped");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => JobDetails(
+                                    jobDetails: appliedJobDataMap[key],
+                                    viewing: true,
+                                  )));
                     },
                   ),
                 ),
-                if (index != currentJobDataMap.length - 1)
+                if (index != appliedJobDataMap.length - 1)
                   Divider(
                     color: Color(0xFFC6C6C6),
                     thickness: 1,

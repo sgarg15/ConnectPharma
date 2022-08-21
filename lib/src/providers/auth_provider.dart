@@ -586,6 +586,8 @@ class AuthProvider extends ChangeNotifier {
         print(
             "--------------------------------------HELOOOOO------------------------------------------");
         print("User verified: " + result.user!.emailVerified.toString());
+        print("User uid: " + result.user!.uid);
+        
         DocumentSnapshot user = await users
             .doc(result.user?.uid.toString())
             .collection("SignUp")

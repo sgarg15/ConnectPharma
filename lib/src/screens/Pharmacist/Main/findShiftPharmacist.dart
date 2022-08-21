@@ -526,6 +526,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                                             builder: (context) => JobDetails(
                                                                   jobDetails:
                                                                       sortedJobsDataMap[key],
+                                                                  viewing: false,
                                                                 )));
                                                   },
                                                 ),

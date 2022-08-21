@@ -291,9 +291,12 @@ exports.aggregateCreateJobs = functions.firestore
     const aggregatedDataRef = dataBase.doc("aggregation/jobs");
     const startDate = afterData.startDate;
     const endDate = afterData.endDate;
+    const startTime = afterData.startTime;
+    const endTime = afterData.endTime;
     const jobStatus = afterData.jobStatus;
     const skillsNeeded = afterData.skillsNeeded;
     const softwareNeeded = afterData.softwareNeeded;
+    const languageNeeded = afterData.languageNeeded;
     const techOnSite = afterData.techOnSite;
     const assistantOnSite = afterData.assistantOnSite;
     const hourlyRate = afterData.hourlyRate;
@@ -310,9 +313,12 @@ exports.aggregateCreateJobs = functions.firestore
     const next = {
       startDate: startDate,
       endDate: endDate,
+      startTime: startTime,
+      endTime: endTime,
       jobStatus: jobStatus,
       skillsNeeded: skillsNeeded,
       softwareNeeded: softwareNeeded,
+      languageNeeded: languageNeeded,
       techOnSite: techOnSite,
       assistantOnSite: assistantOnSite,
       hourlyRate: hourlyRate,
