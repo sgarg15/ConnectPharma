@@ -916,6 +916,7 @@ class JobDetails extends ConsumerWidget {
       "resume": userDataMap?["resumeDownloadURL"],
       "uid": ref.read(userProviderLogin.notifier).userUID,
       "yearsOfExperience": userDataMap?["workingExperience"],
+      "userType": userDataMap?["userType"],
     });
 
     print("Uploading applicant data to pharmacy");

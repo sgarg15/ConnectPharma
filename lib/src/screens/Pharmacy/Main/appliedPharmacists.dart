@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectpharma/all_used.dart';
 import 'package:flutter/material.dart';
 import 'package:connectpharma/src/screens/Pharmacy/Main/availablePharmacistProfile.dart';
 import 'package:connectpharma/src/screens/Pharmacy/Main/jobHistoryPharmacy.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../login.dart';
 
@@ -33,14 +35,21 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.black),
-          elevation: 12,
-          title: Text(
+          iconTheme: IconThemeData(color: Colors.white),
+          elevation: 0,
+          title: new Text(
             "Pharmacists",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 22),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+            ),
           ),
-          backgroundColor: Color(0xFFF6F6F6),
+          backgroundColor: Color(0xFFF0069C1),
+          foregroundColor: Colors.white,
+          bottomOpacity: 1,
+          shadowColor: Colors.white,
         ),
         body: Column(
           mainAxisSize: MainAxisSize.min,
@@ -53,38 +62,90 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                 itemCount: widget.applicants?.length,
                 itemBuilder: (BuildContext context, int index) {
                   String key = widget.applicants?.keys.elementAt(index);
-
-                  if (widget.applicants?[key]["jobStatus"] == "current") {
-                    return new Column(
+print("allUserDataMap: ${widget.applicants?[key]}");
+                  return GestureDetector(
+                    onTap: () {
+                      print("Pressed");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChosenPharmacistProfile(
+                                    pharmacistDataMap: widget.applicants?[key],
+                                  )));
+                    },
+                    child: new Column(
                       children: <Widget>[
-                        Material(
-                          elevation: 10,
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.95,
-                            constraints: BoxConstraints(minHeight: 90),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                //Basic Info about applicant
-                                Center(
-                                  child: ListTile(
-                                    title: new Text(
-                                      "${widget.applicants?[key]["name"]}",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    subtitle: new Text(
-                                      "Years of working experience: " +
-                                          "${widget.applicants?[key]["yearsOfExperience"]}",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    leading: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        widget.applicants?[key]["profilePhoto"],
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        minRadius: 10,
+                                        maxRadius: 35,
+                                        foregroundImage:
+                                            NetworkImage(widget.applicants?[key]["profilePhoto"]),
                                       ),
-                                      radius: 30,
-                                    ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Text(
+                                            widget.applicants?[key]["name"],
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Color(0xFF0E5999),
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: GoogleFonts.montserrat(
+                                                      fontWeight: FontWeight.normal)
+                                                  .fontFamily,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          RichText(
+                                            textAlign: TextAlign.left,
+                                            text: TextSpan(
+                                                text: "Working Experience \n",
+                                                style: TextStyle(
+                                                    color: Color(0xFF6C6C6C),
+                                                    fontSize: 16,
+                                                    fontFamily: GoogleFonts.montserrat(
+                                                            fontWeight: FontWeight.normal)
+                                                        .fontFamily),
+                                                children: [
+                                                  TextSpan(
+                                                    text: widget.applicants?[key]
+                                                            ["yearsOfExperience"] +
+                                                        " yrs",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600,
+                                                      fontFamily: GoogleFonts.montserrat(
+                                                              fontWeight: FontWeight.normal)
+                                                          .fontFamily,
+                                                    ),
+                                                  ),
+                                                ]),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  GestureDetector(
                                     onTap: () {
                                       Navigator.push(
                                           context,
@@ -93,170 +154,18 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                                                     pharmacistDataMap: widget.applicants?[key],
                                                   )));
                                     },
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Color(0xFF0069C1),
+                                      size: 25,
+                                    ),
                                   ),
-                                ),
-                                ButtonBar(
-                                  alignment: MainAxisAlignment.center,
-                                  children: [
-                                    //Accepted Button
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.5,
-                                      height: 40,
-                                      child: ElevatedButton(
-                                        child: Text("Accepted"),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.resolveWith<Color>((states) {
-                                              if (states.contains(MaterialState.disabled)) {
-                                                return Colors.grey; // Disabled color
-                                              }
-                                              return Color(0xFFF0069C1); // Regular color
-                                            }),
-                                            shape:
-                                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(100),
-                                            ))),
-                                        onPressed: () {},
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10)
-
-                        // new Divider(
-                        //   height: 10.0,
-                        //   thickness: 2,
-                        // ),
-                      ],
-                    );
-                  } else if (widget.applicants?[key]["jobStatus"] == "rejected") {
-                    return new Column(
-                      children: <Widget>[
-                        Material(
-                          elevation: 10,
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.95,
-                            constraints: BoxConstraints(minHeight: 90),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                //Basic Info about applicant
-                                Center(
-                                  child: ListTile(
-                                    title: new Text(
-                                      "${widget.applicants?[key]["name"]}",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    subtitle: new Text(
-                                      "Years of working experience: " +
-                                          "${widget.applicants?[key]["yearsOfExperience"]}",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    leading: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        widget.applicants?[key]["profilePhoto"],
-                                      ),
-                                      radius: 30,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ChosenPharmacistProfile(
-                                                    pharmacistDataMap: widget.applicants?[key],
-                                                  )));
-                                    },
-                                  ),
-                                ),
-                                ButtonBar(
-                                  alignment: MainAxisAlignment.center,
-                                  children: [
-                                    //Accepted Button
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.5,
-                                      height: 40,
-                                      child: ElevatedButton(
-                                        child: Text("Rejected"),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.resolveWith<Color?>((states) {
-                                              if (states.contains(MaterialState.disabled)) {
-                                                return Colors.grey; // Disabled color
-                                              }
-                                              return Colors.red[400]; // Regular color
-                                            }),
-                                            shape:
-                                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(100),
-                                            ))),
-                                        onPressed: () {},
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10)
-
-                        // new Divider(
-                        //   height: 10.0,
-                        //   thickness: 2,
-                        // ),
-                      ],
-                    );
-                  } else {
-                    return new Column(
-                      children: <Widget>[
-                        Material(
-                          elevation: 10,
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.95,
-                            constraints: BoxConstraints(minHeight: 90),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                //Basic Info about applicant
-                                Center(
-                                  child: ListTile(
-                                    title: new Text(
-                                      "${widget.applicants?[key]["name"]}",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    subtitle: new Text(
-                                      "Years of working experience: " +
-                                          "${widget.applicants?[key]["yearsOfExperience"]}",
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    leading: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        widget.applicants?[key]["profilePhoto"],
-                                      ),
-                                      radius: 30,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ChosenPharmacistProfile(
-                                                    pharmacistDataMap: widget.applicants?[key],
-                                                  )));
-                                    },
-                                  ),
-                                ),
-                                ButtonBar(
-                                  alignment: MainAxisAlignment.center,
+                                ],
+                              ),
+                              (widget.applicants?[key]["jobStatus"] != "rejected" &&
+                                      widget.applicants?[key]["jobStatus"] != "current")
+                                  ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     //Reject Button
                                     SizedBox(
@@ -269,12 +178,12 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                                               if (states.contains(MaterialState.disabled)) {
                                                 return Colors.grey; // Disabled color
                                               }
-                                              return Colors.red[400]; // Regular color
+                                                  return Colors.grey; // Regular color
                                             }),
                                             shape:
                                                 MaterialStateProperty.all<RoundedRectangleBorder>(
                                                     RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(100),
+                                                  borderRadius: BorderRadius.circular(10),
                                             ))),
                                         child: Text("Reject"),
                                         onPressed: () {
@@ -282,12 +191,7 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                                         },
                                       ),
                                     ),
-                                    //Space
-                                    SizedBox(
-                                      width: ((MediaQuery.of(context).size.width * 0.95) -
-                                              ((MediaQuery.of(context).size.width * 0.42) * 2)) *
-                                          0.1,
-                                    ),
+                                   
                                     //Accept Button
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width * 0.42,
@@ -305,7 +209,7 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                                             shape:
                                                 MaterialStateProperty.all<RoundedRectangleBorder>(
                                                     RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(100),
+                                                  borderRadius: BorderRadius.circular(10),
                                             ))),
                                         onPressed: () {
                                           _acceptPharmacist(ref, context, key);
@@ -313,20 +217,80 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                                       ),
                                     ),
                                   ],
-                                ),
-                              ],
-                            ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.only(top: 20),
+                                      child: widget.applicants?[key]["jobStatus"] == "rejected"
+                                          ? SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.9,
+                                              height: 51,
+                                              child: ElevatedButton(
+                                                child: Text(
+                                                  "Rejected",
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty.resolveWith<Color?>(
+                                                            (states) {
+                                                      if (states.contains(MaterialState.disabled)) {
+                                                        return Colors.grey; // Disabled color
+                                                      }
+                                                      return Colors.grey; // Regular color
+                                                    }),
+                                                    shape: MaterialStateProperty.all<
+                                                            RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                    ))),
+                                                onPressed: () {},
+                                              ),
+                                            )
+                                          : SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.9,
+                                              height: 51,
+                                              child: ElevatedButton(
+                                                child: Text(
+                                                  "Accepted",
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty.resolveWith<Color?>(
+                                                            (states) {
+                                                      if (states.contains(MaterialState.disabled)) {
+                                                        return Colors.grey; // Disabled color
+                                                      }
+                                                      return Color(0xFF0069C1); // Regular color
+                                                    }),
+                                                    shape: MaterialStateProperty.all<
+                                                            RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                    ))),
+                                                onPressed: () {},
+                                              ),
+                                            ),
+                                    ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 10)
-
-                        // new Divider(
-                        //   height: 10.0,
-                        //   thickness: 2,
-                        // ),
+                        SizedBox(height: 10),
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: Color(0xFFEAEAEA),
+                        ),
                       ],
-                    );
-                  }
+                    ),
+                  );
+                    
                 },
               ),
             ),

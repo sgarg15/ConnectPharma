@@ -100,7 +100,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: 16,
             fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
           ),
         ),
@@ -611,7 +611,7 @@ class _PharmacistProfileState extends State<ChosenPharmacistProfile> {
             monthCellStyle: DateRangePickerMonthCellStyle(
                 blackoutDateTextStyle:
                     TextStyle(color: Colors.black87, fontSize: 16, fontFamily: 'Roboto')),
-            onViewChanged: viewChanged,
+            onSelectionChanged: selectionChanged,
           ),
         ),
       ),
