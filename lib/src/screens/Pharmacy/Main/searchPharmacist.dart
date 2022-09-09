@@ -293,10 +293,13 @@ class _SearchPharmacistPharmacyState extends ConsumerState<SearchPharmacistPharm
                                 onShowPicker: (context, currentValue) async {
                                   final date = await showDatePicker(
                                       context: context,
-                                      firstDate: DateTime.now(),
-                                      initialDate: currentValue ?? DateTime.now(),
+                                      firstDate:
+                                          ref.read(pharmacyMainProvider.notifier).startDate ??
+                                              DateTime.now(),
+                                      initialDate:
+                                          ref.read(pharmacyMainProvider.notifier).startDate ??
+                                              DateTime.now(),
                                       lastDate: DateTime(2100));
-
                                   if (date != null) {
                                     ref.read(pharmacyMainProvider.notifier).changeEndDate(date);
                                     print(date);

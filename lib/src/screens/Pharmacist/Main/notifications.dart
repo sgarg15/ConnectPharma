@@ -51,7 +51,6 @@ class _NotificationsPharmacistState extends ConsumerState<NotificationsPharmacis
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    SizedBox(height: 10),
                     widget.jobAlerts.isNotEmpty
                         ? Expanded(
                             child: ListView.builder(
@@ -64,38 +63,47 @@ class _NotificationsPharmacistState extends ConsumerState<NotificationsPharmacis
                                     children: <Widget>[
                                       Container(
                                         width: MediaQuery.of(context).size.width * 0.97,
-                                        constraints: BoxConstraints(minHeight: 90),
                                         child: Center(
                                           child: ListTile(
-                                            isThreeLine: true,
+                                            isThreeLine: false,
                                             title: new Text(
                                               "${widget.jobAlerts[key]["pharmacyName"]} Accepted Application",
                                               style: TextStyle(
-                                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: GoogleFonts.montserrat(
+                                                          fontWeight: FontWeight.normal)
+                                                      .fontFamily),
                                             ),
-                                            subtitle: RichText(
-                                              text: TextSpan(children: [
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 15)),
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 15)),
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black, fontSize: 15)),
-                                              ]),
-                                            ),
-                                            onTap: () {},
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Text("Job Details"),
+                                                    content: Text(
+                                                        "To view job details please go to Job History and look under current tab!"),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: Text(
+                                                          "Ok",
+                                                          style:
+                                                              TextStyle(color: Color(0xFF0069C1)),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                      )
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
                                           ),
                                         ),
+                                      ),
+                                      Divider(
+                                        color: Colors.grey,
                                       ),
                                       SizedBox(height: 10)
                                     ],
@@ -109,33 +117,35 @@ class _NotificationsPharmacistState extends ConsumerState<NotificationsPharmacis
                                         constraints: BoxConstraints(minHeight: 90),
                                         child: Center(
                                           child: ListTile(
-                                            isThreeLine: true,
                                             title: new Text(
                                               "${widget.jobAlerts[key]["pharmacyName"]} Rejected Application",
                                               style: TextStyle(
                                                   fontSize: 16, fontWeight: FontWeight.bold),
                                             ),
-                                            subtitle: RichText(
-                                              text: TextSpan(children: [
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 15)),
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 15)),
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black, fontSize: 15)),
-                                              ]),
-                                            ),
-                                            onTap: () {},
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Text("Job Details"),
+                                                    content: Text(
+                                                        "To view job details please go to Job History and look under rejected tab!"),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: Text(
+                                                          "Ok",
+                                                          style:
+                                                              TextStyle(color: Color(0xFF0069C1)),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                      )
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),
@@ -157,27 +167,7 @@ class _NotificationsPharmacistState extends ConsumerState<NotificationsPharmacis
                                               style: TextStyle(
                                                   fontSize: 16, fontWeight: FontWeight.bold),
                                             ),
-                                            subtitle: RichText(
-                                              text: TextSpan(children: [
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 15)),
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 15)),
-                                                TextSpan(
-                                                    text: "",
-                                                    style: TextStyle(
-                                                        color: Colors.black, fontSize: 15)),
-                                              ]),
-                                            ),
-                                            onTap: () {},
+                                            onTap: () => false,
                                           ),
                                         ),
                                       ),

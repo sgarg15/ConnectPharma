@@ -25,24 +25,10 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
   List<Skill?>? skillList;
 
   Map allUserDataMapTemp = Map();
-  Map allUserDataMap = Map();
+  Map availableUsersMap = Map();
   Map pharmacistDataMapTemp = Map();
   Map pharmacyAssistantDataMapTemp = Map();
   Map pharmacyTechnicianDataMapTemp = Map();
-
-  void changeSkillToList(String? stringList) {
-    int indexOfOpenBracket = stringList!.indexOf("[");
-    int indexOfLastBracket = stringList.lastIndexOf("]");
-    var noBracketString = stringList.substring(indexOfOpenBracket + 1, indexOfLastBracket);
-    List<Skill?>? templist = [];
-    var list = noBracketString.split(", ");
-    for (var i = 0; i < list.length; i++) {
-      templist.add(Skill(id: 1, name: list[i].toString()));
-    }
-    setState(() {
-      skillList = templist;
-    });
-  }
 
   void getAggregatedPharmacists(WidgetRef ref) async {
     DocumentReference pharmacistData = aggregationRef.doc("pharmacists");
@@ -78,7 +64,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
       };
     });
 
-    print("All Users Data: $allUserDataMap");
+    print("Available Users Data: $availableUsersMap");
 
     allUserDataMapTemp.forEach((key, value) {
       print("--------------------------------------------");
@@ -88,56 +74,60 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
       print("Permanent Job: ${ref.read(pharmacyMainProvider.notifier).fullTime}");
 
       print("--------------------------------------------");
-      for (var i = 0; i < value["availability"].length; i++) {
-        if (widget.showFullTimePharmacists) {
-          if (value["permanentJob"] != null &&
-              value["permanentJob"] &&
-              value["userType"] == ref.read(pharmacyMainProvider.notifier).position) {
-            print(value["uid"]);
-            allUserDataMap[key] = value;
-            print(allUserDataMap.keys);
+      if (value["userType"] == ref.read(pharmacyMainProvider.notifier).position) {
+        print("Availability Check: ${value["availability"]}");
+        for (var i = 0; i < value["availability"].length; i++) {
+          if (widget.showFullTimePharmacists) {
+            if (value["permanentJob"] != null &&
+                value["permanentJob"] &&
+                value["userType"] == ref.read(pharmacyMainProvider.notifier).position) {
+              print(value["uid"]);
+              availableUsersMap[key] = value;
+              print(availableUsersMap.keys);
 
-            print("YESR");
-          }
-        } else if (checkAvailability(ref, value, i) &&
-            value["userType"] == ref.read(pharmacyMainProvider.notifier).position) {
-          if (ref.read(pharmacyMainProvider.notifier).skillList != null) {
-            print(value["uid"]);
-            allUserDataMap[key] = value;
-            print(allUserDataMap.keys);
+              print("YESR");
+            }
+          } else if (checkAvailability(ref, value, i)) {
+            if (ref.read(pharmacyMainProvider.notifier).skillList != null) {
+              print(value["uid"]);
+              availableUsersMap[key] = value;
+              print(availableUsersMap.keys);
 
-            print("YESR");
+              print("YESR");
+            } else {
+              print(value["uid"]);
+              availableUsersMap[key] = value;
+              print(availableUsersMap.keys);
+
+              print("YESR");
+            }
           } else {
             print(value["uid"]);
-            allUserDataMap[key] = value;
-            print(allUserDataMap.keys);
 
-            print("YESR");
+            print("NO");
           }
-        } else {
-          print(value["uid"]);
-
-          print("NO");
+          //print(value["availability"][i.toString()]["endDate"]);
         }
-        //print(value["availability"][i.toString()]["endDate"]);
       }
     });
-    print(allUserDataMap);
+    print(availableUsersMap);
   }
 
   bool checkAvailability(WidgetRef ref, value, int i) {
-    return ((value["availability"][i.toString()]["startDate"] as Timestamp)
-                .toDate()
-                .isAfter(ref.read(pharmacyMainProvider.notifier).startDate as DateTime) &&
-            ((value["availability"][i.toString()]["startDate"] as Timestamp)
-                .toDate()
-                .isBefore(ref.read(pharmacyMainProvider.notifier).endDate as DateTime))) ||
-        ((value["availability"][i.toString()]["endDate"] as Timestamp)
-                .toDate()
-                .isAfter(ref.read(pharmacyMainProvider.notifier).startDate as DateTime) &&
-            ((value["availability"][i.toString()]["endDate"] as Timestamp)
-                .toDate()
-                .isBefore(ref.read(pharmacyMainProvider.notifier).endDate as DateTime)));
+    print(
+        "Curr Availability Start: ${(value["availability"][i.toString()]["startDate"] as Timestamp).toDate()}");
+    print(
+        "Curr Availability End: ${(value["availability"][i.toString()]["endDate"] as Timestamp).toDate()}");
+    print("Position Availability Start: ${ref.read(pharmacyMainProvider.notifier).startDate}");
+    print("Position Availability End: ${ref.read(pharmacyMainProvider.notifier).endDate}");
+
+    Timestamp currUserStart = value["availability"][i.toString()]["startDate"];
+    Timestamp currUserEnd = value["availability"][i.toString()]["endDate"];
+    DateTime positionStart = ref.read(pharmacyMainProvider.notifier).startDate!;
+    DateTime positionEnd = ref.read(pharmacyMainProvider.notifier).endDate!;
+
+    return (currUserStart.toDate().isBetween(positionStart, positionEnd)) ||
+        (currUserEnd.toDate().isBetween(positionStart, positionEnd));
   }
 
   @override
@@ -148,7 +138,6 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Column(
@@ -273,24 +262,24 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
               )
           ],
 
-          allUserDataMap.isNotEmpty
+          availableUsersMap.isNotEmpty
               ? Expanded(
                   child: ListView.builder(
-                    itemCount: allUserDataMap.length,
+                    itemCount: availableUsersMap.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String key = allUserDataMap.keys.elementAt(index);
+                      String key = availableUsersMap.keys.elementAt(index);
                       // var softwareList = json.decode(allUserDataMap[key]["knownSoftware"]);
                       // print("softwareList: $softwareList");
-                      print("allUserDataMap: ${allUserDataMap[key]}");
+                      print("allUserDataMap: ${availableUsersMap[key]}");
                       return GestureDetector(
                         onTap: () {
                           print("Pressed");
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ChosenPharmacistProfile(
-                                            pharmacistDataMap: allUserDataMap[key],
-                                          )));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChosenPharmacistProfile(
+                                        pharmacistDataMap: availableUsersMap[key],
+                                      )));
                         },
                         child: new Column(
                           children: <Widget>[
@@ -310,8 +299,8 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                                           CircleAvatar(
                                             minRadius: 10,
                                             maxRadius: 35,
-                                            backgroundImage:
-                                                NetworkImage(allUserDataMap[key]["profilePhoto"]),
+                                            backgroundImage: NetworkImage(
+                                                availableUsersMap[key]["profilePhoto"]),
                                           ),
                                           SizedBox(
                                             width: 20,
@@ -322,7 +311,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
                                               Text(
-                                                allUserDataMap[key]["name"],
+                                                availableUsersMap[key]["name"],
                                                 style: TextStyle(
                                                   fontSize: 18,
                                                   color: Color(0xFF0E5999),
@@ -347,7 +336,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                                                             .fontFamily),
                                                     children: [
                                                       TextSpan(
-                                                        text: allUserDataMap[key]
+                                                        text: availableUsersMap[key]
                                                                 ["yearsOfExperience"] +
                                                             " yrs",
                                                         style: TextStyle(
@@ -371,7 +360,7 @@ class _AvailablePharmacistsState extends ConsumerState<AvailablePharmacists> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) => ChosenPharmacistProfile(
-                                                        pharmacistDataMap: allUserDataMap[key],
+                                                        pharmacistDataMap: availableUsersMap[key],
                                                       )));
                                         },
                                         child: Icon(

@@ -296,8 +296,12 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                     onShowPicker: (context, currentValue) async {
                                       final date = await showDatePicker(
                                           context: context,
-                                          firstDate: DateTime.now(),
-                                          initialDate: currentValue ?? DateTime.now(),
+                                          firstDate:
+                                              ref.read(pharmacyMainProvider.notifier).startDate ??
+                                                  DateTime.now(),
+                                          initialDate:
+                                              ref.read(pharmacyMainProvider.notifier).startDate ??
+                                                  DateTime.now(),
                                           lastDate: DateTime(2100));
 
                                       if (date != null) {
@@ -825,9 +829,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                       ),
                     ),
 
-                    SizedBox(
-                      height: 20
-                    ),
+                    SizedBox(height: 20),
 
                     //Job Comments
                     Container(
@@ -873,7 +875,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                         ],
                       ),
                     ),
-                    
+
                     //Submit Button
                     Center(
                       child: Padding(

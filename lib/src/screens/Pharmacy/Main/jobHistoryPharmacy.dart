@@ -311,13 +311,32 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacy> {
                             ),
                           ),
                           onTap: () {
-                            Navigator.push(
+                            if ((activeJobDataMap[key]["startDate"] as Timestamp).toDate().isBefore(
+                                DateTime.now().subtract(Duration(hours: TimeOfDay.now().hour)))) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                        title: Text("Error"),
+                                        content: Text("Jobs past today's date cannot be edited."),
+                                        actions: <Widget>[
+                                          new TextButton(
+                                            child: new Text("Ok"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      ));
+                            } else {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => EditShift(
                                           jobDataMap: activeJobDataMap[key],
                                           jobUID: key,
-                                        )));
+                                          )));
+                            }
+                            
                           },
                         ),
                         Positioned(

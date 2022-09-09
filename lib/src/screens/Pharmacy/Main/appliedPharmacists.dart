@@ -62,7 +62,7 @@ class _PharmacistAppliedState extends ConsumerState<PharmacistApplied> {
                 itemCount: widget.applicants?.length,
                 itemBuilder: (BuildContext context, int index) {
                   String key = widget.applicants?.keys.elementAt(index);
-print("allUserDataMap: ${widget.applicants?[key]}");
+                  print("allUserDataMap: ${widget.applicants?[key]}");
                   return GestureDetector(
                     onTap: () {
                       print("Pressed");
@@ -164,59 +164,63 @@ print("allUserDataMap: ${widget.applicants?[key]}");
                               ),
                               (widget.applicants?[key]["jobStatus"] != "rejected" &&
                                       widget.applicants?[key]["jobStatus"] != "current")
-                                  ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    //Reject Button
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.42,
-                                      height: 51,
-                                      child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.resolveWith<Color?>((states) {
-                                              if (states.contains(MaterialState.disabled)) {
-                                                return Colors.grey; // Disabled color
-                                              }
-                                                  return Colors.grey; // Regular color
-                                            }),
-                                            shape:
-                                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(10),
-                                            ))),
-                                        child: Text("Reject"),
-                                        onPressed: () {
-                                          _rejectPharmacist(ref, context, key);
-                                        },
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 20),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          //Reject Button
+                                          SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.42,
+                                            height: 51,
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.resolveWith<Color?>(
+                                                          (states) {
+                                                    if (states.contains(MaterialState.disabled)) {
+                                                      return Colors.grey; // Disabled color
+                                                    }
+                                                    return Colors.red.shade900; // Regular color
+                                                  }),
+                                                  shape: MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ))),
+                                              child: Text("Reject"),
+                                              onPressed: () {
+                                                _rejectPharmacist(ref, context, key);
+                                              },
+                                            ),
+                                          ),
+                                          //Accept Button
+                                          SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.42,
+                                            height: 51,
+                                            child: ElevatedButton(
+                                              child: Text("Accept"),
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.resolveWith<Color>(
+                                                          (states) {
+                                                    if (states.contains(MaterialState.disabled)) {
+                                                      return Colors.grey; // Disabled color
+                                                    }
+                                                    return Color(0xFFF0069C1); // Regular color
+                                                  }),
+                                                  shape: MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ))),
+                                              onPressed: () {
+                                                _acceptPharmacist(ref, context, key);
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                   
-                                    //Accept Button
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.42,
-                                      height: 51,
-                                      child: ElevatedButton(
-                                        child: Text("Accept"),
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.resolveWith<Color>((states) {
-                                              if (states.contains(MaterialState.disabled)) {
-                                                return Colors.grey; // Disabled color
-                                              }
-                                              return Color(0xFFF0069C1); // Regular color
-                                            }),
-                                            shape:
-                                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(10),
-                                            ))),
-                                        onPressed: () {
-                                          _acceptPharmacist(ref, context, key);
-                                        },
-                                      ),
-                                    ),
-                                  ],
                                     )
                                   : Padding(
                                       padding: const EdgeInsets.only(top: 20),
@@ -239,7 +243,7 @@ print("allUserDataMap: ${widget.applicants?[key]}");
                                                       if (states.contains(MaterialState.disabled)) {
                                                         return Colors.grey; // Disabled color
                                                       }
-                                                      return Colors.grey; // Regular color
+                                                      return Colors.red.shade900; // Regular color
                                                     }),
                                                     shape: MaterialStateProperty.all<
                                                             RoundedRectangleBorder>(
@@ -451,7 +455,7 @@ print("allUserDataMap: ${widget.applicants?[key]}");
                               if (states.contains(MaterialState.disabled)) {
                                 return Colors.grey; // Disabled color
                               }
-                              return Colors.red[400]; // Regular color
+                              return Colors.red.shade900; // Regular color
                             }),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(

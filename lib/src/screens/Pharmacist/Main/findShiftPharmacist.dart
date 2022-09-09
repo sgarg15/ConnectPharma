@@ -194,7 +194,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
               iconTheme: IconThemeData(color: Colors.white),
               elevation: 0,
               title: new Text(
-                "Availability",
+                "Find Shift",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
@@ -315,7 +315,7 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                       width: MediaQuery.of(context).size.width * 0.45,
                                       padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                       child: DateTimeField(
-                                        format: DateFormat("yyyy-MM-dd"),
+                                        format: DateFormat("dd MMM, yyyy"),
                                         decoration: InputDecoration(
                                             isDense: true,
                                             hintText: "Select a date",
@@ -388,6 +388,9 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                         //sortedJobsDataMap = {};
                                         //jobsDataMap = {};
                                         //getAndSetJobsFromFirestore(ref);
+                                        setState(() {
+                                          sortedJobsDataMap.clear();
+                                        });
                                         jobsSortedWithSchedule(ref);
                                       }
                                     : null,
@@ -442,9 +445,6 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                   ),
                 ),
 
-                
-
-                
                 //All Available Shifts
                 Expanded(
                   child: Padding(
@@ -475,10 +475,10 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                           children: <Widget>[
                                             Container(
                                               width: MediaQuery.of(context).size.width * 0.97,
-                                              constraints: BoxConstraints(minHeight: 90),
                                               child: Center(
                                                 child: ListTile(
                                                   isThreeLine: true,
+                                                  //Date Text
                                                   title: new Text(
                                                     DateFormat("EEE, MMM d yyyy").format(
                                                             (sortedJobsDataMap[key]["startDate"]
@@ -487,37 +487,40 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                                         " - " +
                                                         "${DateFormat("EE, MMM d yyyy").format((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate())}",
                                                     style: TextStyle(
-                                                        fontSize: 16, fontWeight: FontWeight.bold),
+                                                        fontSize: 16,
+                                                        color: Colors.black,
+                                                        fontFamily:
+                                                            GoogleFonts.montserrat().fontFamily),
                                                   ),
                                                   subtitle: RichText(
                                                     text: TextSpan(children: [
+                                                      //Time Text
                                                       TextSpan(
                                                           text:
-                                                              "${DateFormat("jm").format((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate())}"
+                                                              "${DateFormat("jm").format((sortedJobsDataMap[key]["startTime"] as Timestamp).toDate())}"
                                                               " - "
-                                                              "${DateFormat("jm").format((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate())} ",
+                                                              "${DateFormat("jm").format((sortedJobsDataMap[key]["endTime"] as Timestamp).toDate())} ",
                                                           style: TextStyle(
                                                               color: Colors.black,
-                                                              fontWeight: FontWeight.w600,
-                                                              fontSize: 15)),
+                                                              fontSize: 15,
+                                                              fontFamily: GoogleFonts.montserrat()
+                                                                  .fontFamily)),
+                                                      //Time Diff Text
                                                       TextSpan(
                                                           text:
-                                                              "(${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[0]} hrs"
-                                                              "${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endDate"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startDate"] as Timestamp).toDate()))[1]}/day)\n",
-                                                          style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontWeight: FontWeight.w600,
-                                                              fontSize: 15)),
-                                                      TextSpan(
-                                                          text: "${snapshot.data}",
+                                                              "(${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endTime"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startTime"] as Timestamp).toDate()))[0]} hrs"
+                                                              "${getHourDiff(TimeOfDay.fromDateTime((sortedJobsDataMap[key]["endTime"] as Timestamp).toDate()), TimeOfDay.fromDateTime((sortedJobsDataMap[key]["startTime"] as Timestamp).toDate()))[1]}/day)\n",
                                                           style: TextStyle(
                                                               color: Colors.black, fontSize: 15)),
                                                     ]),
                                                   ),
                                                   trailing: Text(
-                                                    "${sortedJobsDataMap[key]["hourlyRate"]}/hr\n"
-                                                    "Pharmacist",
-                                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                                    "${sortedJobsDataMap[key]["hourlyRate"]}/hr",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            GoogleFonts.montserrat().fontFamily),
                                                   ),
                                                   onTap: () {
                                                     Navigator.push(
@@ -532,13 +535,11 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 5),
                                             Divider(
                                               color: Colors.grey,
                                               height: 1,
                                             ),
                                             SizedBox(height: 10),
-
                                           ],
                                         );
                                       },
