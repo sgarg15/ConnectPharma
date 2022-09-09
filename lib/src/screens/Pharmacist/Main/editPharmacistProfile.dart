@@ -69,7 +69,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
       streetAddressController.text =
           ref.read(pharmacistMainProvider.notifier).userDataMap?["address"];
 
-      ref.read(pharmacistSignUpProvider.notifier).changePharmacistAddress(
+      ref.read(userSignUpProvider.notifier).changePharmacistAddress(
           ref.read(pharmacistMainProvider.notifier).userDataMap?["address"]);
 
       print(
@@ -116,7 +116,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
           backgroundColor: Color(0xFF0069C1),
           body: Consumer(
             builder: (context, ref, child) {
-              ref.watch(pharmacistSignUpProvider);
+              ref.watch(userSignUpProvider);
               return GestureDetector(
                 onTap: () {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -187,7 +187,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       textCapitalization: TextCapitalization.words,
                                       onChanged: (String firstName) {
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changeFirstName(firstName);
                                         checkIfChanged(ref, firstName, "firstName");
                                       },
@@ -244,7 +244,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       textCapitalization: TextCapitalization.words,
                                       onChanged: (String lastName) {
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changeLastName(lastName);
                                         checkIfChanged(ref, lastName, "lastName");
                                       },
@@ -300,7 +300,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       keyboardType: TextInputType.phone,
                                       onChanged: (String phoneNumber) {
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changePhoneNumber(phoneNumber);
                                         checkIfChanged(ref, phoneNumber, "phoneNumber");
                                       },
@@ -369,7 +369,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                                 await PlaceApiProvider(sessionToken)
                                                     .getPlaceDetailFromId(result.placeId);
                                             ref
-                                                .read(pharmacistSignUpProvider.notifier)
+                                                .read(userSignUpProvider.notifier)
                                                 .changePharmacistAddress(
                                                     placeDetails.streetNumber! +
                                                         " " +
@@ -438,7 +438,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                         checkIfChanged(ref, licenseYear, "firstYearLicensed");
 
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changeFirstYearLicensed(licenseYear);
                                       },
                                       style: GoogleFonts.montserrat(
@@ -494,7 +494,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                         checkIfChanged(
                                             ref, registrationNumber, "registrationNumber");
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changeRegistrationNumber(registrationNumber);
                                       },
                                       style: GoogleFonts.montserrat(
@@ -549,7 +549,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                         checkIfChanged(
                                             ref, registrationProvince, "registrationProvince");
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changeRegistrationProvince(registrationProvince);
                                       },
                                       style: GoogleFonts.montserrat(
@@ -604,7 +604,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       onChanged: (String graduationYear) {
                                         checkIfChanged(ref, graduationYear, "gradutationYear");
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changeGraduationYear(graduationYear);
                                       },
                                       style: GoogleFonts.montserrat(
@@ -658,7 +658,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       onChanged: (String institutionName) {
                                         checkIfChanged(ref, institutionName, "institutionName");
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changeInstitutionName(institutionName);
                                       },
                                       style: GoogleFonts.montserrat(
@@ -713,7 +713,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                       onChanged: (String workingExperience) {
                                         checkIfChanged(ref, workingExperience, "workingExperience");
                                         ref
-                                            .read(pharmacistSignUpProvider.notifier)
+                                            .read(userSignUpProvider.notifier)
                                             .changeWorkingExperience(workingExperience);
                                       },
                                       style: GoogleFonts.montserrat(
@@ -782,12 +782,12 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                           onConfirm: (values) {
                                             softwareListToUpload?.addAll(values);
                                             ref
-                                                .read(pharmacistSignUpProvider.notifier)
+                                                .read(userSignUpProvider.notifier)
                                                 .changeSoftwareList(values);
                                           },
                                           chipDisplay: CustomMultiSelectChipDisplay(
                                             items: ref
-                                                .read(pharmacistSignUpProvider.notifier)
+                                                .read(userSignUpProvider.notifier)
                                                 .softwareList
                                                 ?.map((e) => MultiSelectItem(e, e.toString()))
                                                 .toList(),
@@ -797,18 +797,18 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                               softwareListToUpload?.removeWhere((element) =>
                                                   element?.name.toString() == value.toString());
                                               ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .softwareList
                                                   ?.cast()
                                                   .remove(value);
                                               ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .softwareList
                                                   ?.removeWhere((element) =>
                                                       element?.name.toString() == value.toString());
 
                                               return ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .softwareList;
                                             },
                                             textStyle: TextStyle(color: Colors.white),
@@ -859,12 +859,12 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                           onConfirm: (values) {
                                             skillListToUpload?.addAll(values);
                                             ref
-                                                .read(pharmacistSignUpProvider.notifier)
+                                                .read(userSignUpProvider.notifier)
                                                 .changeSkillList(values);
                                           },
                                           chipDisplay: CustomMultiSelectChipDisplay(
                                             items: ref
-                                                .read(pharmacistSignUpProvider.notifier)
+                                                .read(userSignUpProvider.notifier)
                                                 .skillList
                                                 ?.map((e) => MultiSelectItem(e, e.toString()))
                                                 .toList(),
@@ -874,18 +874,18 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                               skillListToUpload?.removeWhere((element) =>
                                                   element?.name.toString() == value.toString());
                                               ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .skillList
                                                   ?.cast()
                                                   .remove(value);
                                               ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .skillList
                                                   ?.removeWhere((element) =>
                                                       element?.name.toString() == value.toString());
 
                                               return ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .skillList;
                                             },
                                             textStyle: TextStyle(color: Colors.white),
@@ -936,12 +936,12 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                           onConfirm: (values) {
                                             languageListToUpload?.addAll(values);
                                             ref
-                                                .read(pharmacistSignUpProvider.notifier)
+                                                .read(userSignUpProvider.notifier)
                                                 .changeLanguageList(values);
                                           },
                                           chipDisplay: CustomMultiSelectChipDisplay(
                                             items: ref
-                                                .read(pharmacistSignUpProvider.notifier)
+                                                .read(userSignUpProvider.notifier)
                                                 .languageList
                                                 ?.map((e) => MultiSelectItem(e, e.toString()))
                                                 .toList(),
@@ -951,18 +951,18 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                               languageListToUpload?.removeWhere((element) =>
                                                   element?.name.toString() == value.toString());
                                               ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .languageList
                                                   ?.cast()
                                                   .remove(value);
                                               ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .languageList
                                                   ?.removeWhere((element) =>
                                                       element?.name.toString() == value.toString());
 
                                               return ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .languageList;
                                             },
                                             textStyle: TextStyle(color: Colors.white),
@@ -1166,35 +1166,35 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                                 null)
                                         ? () async {
                                             print(ref
-                                                .read(pharmacistSignUpProvider.notifier)
+                                                .read(userSignUpProvider.notifier)
                                                 .skillList);
                                             print(uploadDataMap);
                                             if (ref
-                                                    .read(pharmacistSignUpProvider.notifier)
+                                                    .read(userSignUpProvider.notifier)
                                                     .softwareList !=
                                                 null) {
                                               uploadDataMap["knownSoftware"] = ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .softwareList
                                                   ?.map((e) => e?.name)
                                                   .toList();
                                             }
                                             if (ref
-                                                    .read(pharmacistSignUpProvider.notifier)
+                                                    .read(userSignUpProvider.notifier)
                                                     .skillList !=
                                                 null) {
                                               uploadDataMap["knownSkills"] = ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .skillList
                                                   ?.map((e) => e?.name)
                                                   .toList();
                                             }
                                             if (ref
-                                                    .read(pharmacistSignUpProvider.notifier)
+                                                    .read(userSignUpProvider.notifier)
                                                     .languageList !=
                                                 null) {
                                               uploadDataMap["knownLanguages"] = ref
-                                                  .read(pharmacistSignUpProvider.notifier)
+                                                  .read(userSignUpProvider.notifier)
                                                   .languageList
                                                   ?.map((e) => e?.name)
                                                   .toList();
@@ -1336,7 +1336,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                       titleFont: 22,
                       onChanged: (String firstName) {
                         ref
-                            .read(pharmacistSignUpProvider.notifier)
+                            .read(userSignUpProvider.notifier)
                             .changeFirstName(firstName);
                         checkIfChanged(ref, firstName, "firstName");
                       },
@@ -1364,7 +1364,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                       titleFont: 22,
                       onChanged: (String lastName) {
                         ref
-                            .read(pharmacistSignUpProvider.notifier)
+                            .read(userSignUpProvider.notifier)
                             .changeLastName(lastName);
                         checkIfChanged(ref, lastName, "lastName");
                       },
@@ -1392,7 +1392,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                       titleFont: 22,
                       onChanged: (String phoneNumber) {
                         ref
-                            .read(pharmacistSignUpProvider.notifier)
+                            .read(userSignUpProvider.notifier)
                             .changePhoneNumber(phoneNumber);
                         checkIfChanged(ref, phoneNumber, "phoneNumber");
                       },
@@ -1457,7 +1457,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                     await PlaceApiProvider(sessionToken)
                                         .getPlaceDetailFromId(result.placeId);
                                 ref
-                                    .read(pharmacistSignUpProvider.notifier)
+                                    .read(userSignUpProvider.notifier)
                                     .changePharmacistAddress(
                                         placeDetails.streetNumber! +
                                             " " +
@@ -1555,7 +1555,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                       checkIfChanged(ref, licenseYear, "firstYearLicensed");
 
                       ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .changeFirstYearLicensed(licenseYear);
                     },
                     validation: (value) {
@@ -1583,7 +1583,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                     onChanged: (String registrationNumber) {
                       checkIfChanged(ref, registrationNumber, "registrationNumber");
                       ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .changeRegistrationNumber(registrationNumber);
                     },
                     validation: (value) {
@@ -1612,7 +1612,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                       checkIfChanged(
                           ref, registrationProvince, "registrationProvince");
                       ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .changeRegistrationProvince(registrationProvince);
                     },
                     validation: (value) {
@@ -1640,7 +1640,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                     onChanged: (String graduationYear) {
                       checkIfChanged(ref, graduationYear, "gradutationYear");
                       ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .changeGraduationYear(graduationYear);
                     },
                     validation: (value) {
@@ -1669,7 +1669,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                       checkIfChanged(ref, institutionName, "institutionName");
 
                       ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .changeInstitutionName(institutionName);
                     },
                     validation: (value) {
@@ -1697,7 +1697,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                     onChanged: (String workingExperience) {
                       checkIfChanged(ref, workingExperience, "workingExperience");
                       ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .changeWorkingExperience(workingExperience);
                     },
                     validation: (value) {
@@ -1779,7 +1779,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                               decoration: BoxDecoration(),
                               listType: MultiSelectListType.CHIP,
                               initialValue: ref
-                                  .read(pharmacistSignUpProvider.notifier)
+                                  .read(userSignUpProvider.notifier)
                                   .softwareList,
                               searchable: true,
                               items: _softwareItems,
@@ -1789,12 +1789,12 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                               onConfirm: (values) {
                                 softwareListToUpload?.addAll(values);
                                 ref
-                                    .read(pharmacistSignUpProvider.notifier)
+                                    .read(userSignUpProvider.notifier)
                                     .changeSoftwareList(values);
                               },
                               chipDisplay: CustomMultiSelectChipDisplay(
                                 items: ref
-                                    .read(pharmacistSignUpProvider.notifier)
+                                    .read(userSignUpProvider.notifier)
                                     .softwareList
                                     ?.map((e) => MultiSelectItem(e, e.toString()))
                                     .toList(),
@@ -1804,19 +1804,19 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                   softwareListToUpload?.removeWhere((element) =>
                                       element?.name.toString() == value.toString());
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .softwareList
                                       ?.cast()
                                       .remove(value);
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .softwareList
                                       ?.removeWhere((element) =>
                                           element?.name.toString() ==
                                           value.toString());
 
                                   return ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .softwareList;
                                 },
                                 textStyle: TextStyle(color: Colors.white),
@@ -1871,7 +1871,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                               decoration: BoxDecoration(),
                               listType: MultiSelectListType.CHIP,
                               initialValue: ref
-                                  .read(pharmacistSignUpProvider.notifier)
+                                  .read(userSignUpProvider.notifier)
                                   .skillList,
                               searchable: true,
                               items: _skillItems,
@@ -1881,12 +1881,12 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                               onConfirm: (values) {
                                 skillListToUpload?.addAll(values);
                                 ref
-                                    .read(pharmacistSignUpProvider.notifier)
+                                    .read(userSignUpProvider.notifier)
                                     .changeSkillList(values);
                               },
                               chipDisplay: CustomMultiSelectChipDisplay(
                                 items: ref
-                                    .read(pharmacistSignUpProvider.notifier)
+                                    .read(userSignUpProvider.notifier)
                                     .skillList
                                     ?.map((e) => MultiSelectItem(e, e.toString()))
                                     .toList(),
@@ -1896,18 +1896,18 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                   skillListToUpload?.removeWhere((element) =>
                                       element?.name.toString() == value.toString());
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .skillList
                                       ?.cast()
                                       .remove(value);
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .skillList
                                       ?.removeWhere((element) =>
                                           element?.name.toString() ==
                                           value.toString());
                                   return ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .skillList;
                                 },
                                 textStyle: TextStyle(color: Colors.white),
@@ -1962,7 +1962,7 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                               decoration: BoxDecoration(),
                               listType: MultiSelectListType.CHIP,
                               initialValue: ref
-                                  .read(pharmacistSignUpProvider.notifier)
+                                  .read(userSignUpProvider.notifier)
                                   .languageList,
                               searchable: true,
                               items: _languageItems,
@@ -1972,12 +1972,12 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                               onConfirm: (values) {
                                 languageListToUpload?.addAll(values);
                                 ref
-                                    .read(pharmacistSignUpProvider.notifier)
+                                    .read(userSignUpProvider.notifier)
                                     .changeLanguageList(values);
                               },
                               chipDisplay: CustomMultiSelectChipDisplay(
                                 items: ref
-                                    .read(pharmacistSignUpProvider.notifier)
+                                    .read(userSignUpProvider.notifier)
                                     .languageList
                                     ?.map((e) => MultiSelectItem(e, e.toString()))
                                     .toList(),
@@ -1987,17 +1987,17 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                   languageListToUpload?.removeWhere((element) =>
                                       element?.name.toString() == value.toString());
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .languageList
                                       ?.remove(value);
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .languageList
                                       ?.removeWhere((element) =>
                                           element?.name.toString() ==
                                           value.toString());
                                   return ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .languageList;
                                 },
                                 textStyle: TextStyle(color: Colors.white),
@@ -2207,25 +2207,25 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                     languageListToUpload!.isNotEmpty ||
                     ref.read(pharmacistMainProvider.notifier).resumePDFData != null)
                 ? () async {
-                    print(ref.read(pharmacistSignUpProvider.notifier).skillList);
-                    if (ref.read(pharmacistSignUpProvider.notifier).softwareList !=
+                    print(ref.read(userSignUpProvider.notifier).skillList);
+                    if (ref.read(userSignUpProvider.notifier).softwareList !=
                         null) {
                       uploadDataMap["knownSoftware"] = ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .softwareList
                           .toString();
                     }
-                    if (ref.read(pharmacistSignUpProvider.notifier).skillList !=
+                    if (ref.read(userSignUpProvider.notifier).skillList !=
                         null) {
                       uploadDataMap["knownSkills"] = ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .skillList
                           .toString();
                     }
-                    if (ref.read(pharmacistSignUpProvider.notifier).languageList !=
+                    if (ref.read(userSignUpProvider.notifier).languageList !=
                         null) {
                       uploadDataMap["knownLanguages"] = ref
-                          .read(pharmacistSignUpProvider.notifier)
+                          .read(userSignUpProvider.notifier)
                           .languageList
                           .toString();
                     }

@@ -219,7 +219,7 @@ SingleChildScrollView(
     return Center(
       child: Consumer(
         builder: (context, ref, child) {
-          ref.watch(pharmacistSignUpProvider);
+          ref.watch(userSignUpProvider);
           return SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             height: 51,
@@ -234,7 +234,7 @@ SingleChildScrollView(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ))),
-              onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistSkills())
+              onPressed: (ref.read(userSignUpProvider.notifier).isValidPharmacistSkills())
                   ? null
                   : () {
                       print("Pressed");
@@ -284,7 +284,7 @@ SingleChildScrollView(
             ],
           ),
           SizedBox(height: 10),
-          if (ref.read(pharmacistSignUpProvider.notifier).resumePDFData != null)
+          if (ref.read(userSignUpProvider.notifier).resumePDFData != null)
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -301,7 +301,7 @@ SingleChildScrollView(
                           borderRadius: BorderRadius.circular(10),
                         ))),
                     onPressed: () async {
-                      file = ref.read(pharmacistSignUpProvider.notifier).resumePDFData;
+                      file = ref.read(userSignUpProvider.notifier).resumePDFData;
                       print("FILE PATH: " + file!.path.toString());
                       OpenFile.open(file!.path);
                     },
@@ -333,9 +333,9 @@ SingleChildScrollView(
                         _result = null;
                         file = null;
                       });
-                      print(ref.read(pharmacistSignUpProvider.notifier).firstName);
-                      ref.read(pharmacistSignUpProvider.notifier).clearResumePDF();
-                      print(ref.read(pharmacistSignUpProvider.notifier).firstName);
+                      print(ref.read(userSignUpProvider.notifier).firstName);
+                      ref.read(userSignUpProvider.notifier).clearResumePDF();
+                      print(ref.read(userSignUpProvider.notifier).firstName);
                     },
                     child: RichText(
                       text: TextSpan(
@@ -375,8 +375,8 @@ SingleChildScrollView(
                       });
                       file = File(_result!.files.first.path.toString());
 
-                      ref.read(pharmacistSignUpProvider.notifier).changeResumePDF(file);
-                      print(ref.read(pharmacistSignUpProvider.notifier).resumePDFData);
+                      ref.read(userSignUpProvider.notifier).changeResumePDF(file);
+                      print(ref.read(userSignUpProvider.notifier).resumePDFData);
                     } else {
                       // User canceled the picker
                     }
@@ -441,24 +441,24 @@ SingleChildScrollView(
             initialChildSize: 0.4,
             decoration: BoxDecoration(),
             listType: MultiSelectListType.CHIP,
-            initialValue: ref.read(pharmacistSignUpProvider.notifier).languageList,
+            initialValue: ref.read(userSignUpProvider.notifier).languageList,
             searchable: true,
             items: _languageItems,
             buttonText: Text("Select known languages...",
                 style: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16)),
             onConfirm: (values) {
-              ref.read(pharmacistSignUpProvider.notifier).changeLanguageList(values);
+              ref.read(userSignUpProvider.notifier).changeLanguageList(values);
             },
             chipDisplay: MultiSelectChipDisplay(
               items: ref
-                  .read(pharmacistSignUpProvider.notifier)
+                  .read(userSignUpProvider.notifier)
                   .languageList
                   ?.map((e) => MultiSelectItem(e, e.toString()))
                   .toList(),
               chipColor: Color(0xFFF0069C1),
               onTap: (value) {
-                ref.read(pharmacistSignUpProvider.notifier).languageList?.remove(value);
-                return ref.read(pharmacistSignUpProvider.notifier).languageList;
+                ref.read(userSignUpProvider.notifier).languageList?.remove(value);
+                return ref.read(userSignUpProvider.notifier).languageList;
               },
               textStyle: TextStyle(color: Colors.white),
             ),
@@ -502,24 +502,24 @@ SingleChildScrollView(
             initialChildSize: 0.4,
             decoration: BoxDecoration(),
             listType: MultiSelectListType.CHIP,
-            initialValue: ref.read(pharmacistSignUpProvider.notifier).skillList,
+            initialValue: ref.read(userSignUpProvider.notifier).skillList,
             searchable: true,
             items: _skillItems,
             buttonText: Text("Select your skills...",
                 style: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16)),
             onConfirm: (values) {
-              ref.read(pharmacistSignUpProvider.notifier).changeSkillList(values);
+              ref.read(userSignUpProvider.notifier).changeSkillList(values);
             },
             chipDisplay: MultiSelectChipDisplay(
               items: ref
-                  .read(pharmacistSignUpProvider.notifier)
+                  .read(userSignUpProvider.notifier)
                   .skillList
                   ?.map((e) => MultiSelectItem(e, e.toString()))
                   .toList(),
               chipColor: Color(0xFFF0069C1),
               onTap: (value) {
-                ref.read(pharmacistSignUpProvider.notifier).skillList?.remove(value);
-                return ref.read(pharmacistSignUpProvider.notifier).skillList;
+                ref.read(userSignUpProvider.notifier).skillList?.remove(value);
+                return ref.read(userSignUpProvider.notifier).skillList;
               },
               textStyle: TextStyle(color: Colors.white),
             ),
@@ -564,24 +564,24 @@ SingleChildScrollView(
             initialChildSize: 0.4,
             decoration: BoxDecoration(),
             listType: MultiSelectListType.CHIP,
-            initialValue: ref.read(pharmacistSignUpProvider.notifier).softwareList,
+            initialValue: ref.read(userSignUpProvider.notifier).softwareList,
             searchable: true,
             items: _softwareItems,
             buttonText: Text("Select known software...",
                 style: GoogleFonts.inter(color: Color(0xFFBDBDBD), fontSize: 16)),
             onConfirm: (values) {
-              ref.read(pharmacistSignUpProvider.notifier).changeSoftwareList(values);
+              ref.read(userSignUpProvider.notifier).changeSoftwareList(values);
             },
             chipDisplay: MultiSelectChipDisplay(
               items: ref
-                  .read(pharmacistSignUpProvider.notifier)
+                  .read(userSignUpProvider.notifier)
                   .softwareList
                   ?.map((e) => MultiSelectItem(e, e.toString()))
                   .toList(),
               chipColor: Color(0xFFF0069C1),
               onTap: (value) {
-                ref.read(pharmacistSignUpProvider.notifier).softwareList?.remove(value);
-                return ref.read(pharmacistSignUpProvider.notifier).softwareList;
+                ref.read(userSignUpProvider.notifier).softwareList?.remove(value);
+                return ref.read(userSignUpProvider.notifier).softwareList;
               },
               textStyle: TextStyle(color: Colors.white),
             ),
@@ -672,7 +672,7 @@ class _SignatureBoxState extends ConsumerState<SignatureBox> {
                             onPressed: () async {
                               if (widget._sigController.isNotEmpty) {
                                 ref
-                                    .read(pharmacistSignUpProvider.notifier)
+                                    .read(userSignUpProvider.notifier)
                                     .changeSignature(await widget._sigController.toPngBytes());
                                 setState(() {
                                   signatureSaved = true;

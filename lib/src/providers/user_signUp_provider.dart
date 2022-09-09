@@ -3,11 +3,11 @@ import 'dart:typed_data';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:connectpharma/model/pharmacistSignUpModel.dart';
+import 'package:connectpharma/model/userSignUpModel.dart';
 import '../../all_used.dart';
 
-class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
-  PharmacistSignUpProvider() : super(PharmacistSignUpModel());
+class UserSignUpProvider extends StateNotifier<UserSignUpModel> {
+  UserSignUpProvider() : super(UserSignUpModel());
 
   bool isValidPharmacistSignUp() {
     if (EmailValidator.validate(state.email.toString()) == false || state.password.length < 6) {
@@ -231,7 +231,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   void clearResumePDF() {
-    state = PharmacistSignUpModel(
+    state = UserSignUpModel(
       email: state.email,
       password: state.password,
       firstName: state.firstName,
@@ -269,7 +269,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   void clearFrontIDImage() {
-    state = PharmacistSignUpModel(
+    state = UserSignUpModel(
       email: state.email,
       password: state.password,
       firstName: state.firstName,
@@ -307,7 +307,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   void clearBackIDImage() {
-    state = PharmacistSignUpModel(
+    state = UserSignUpModel(
       email: state.email,
       password: state.password,
       firstName: state.firstName,
@@ -345,7 +345,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   void clearRegistrationCertificatePDF() {
-    state = PharmacistSignUpModel(
+    state = UserSignUpModel(
       email: state.email,
       password: state.password,
       firstName: state.firstName,
@@ -383,7 +383,7 @@ class PharmacistSignUpProvider extends StateNotifier<PharmacistSignUpModel> {
   }
 
   void clearProfilePhotoImage() {
-    state = PharmacistSignUpModel(
+    state = UserSignUpModel(
       email: state.email,
       password: state.password,
       firstName: state.firstName,

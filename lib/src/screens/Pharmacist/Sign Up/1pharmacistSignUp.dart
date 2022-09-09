@@ -4,9 +4,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:connectpharma/model/pharmacistSignUpModel.dart';
+import 'package:connectpharma/model/userSignUpModel.dart';
 import 'package:connectpharma/src/providers/auth_provider.dart';
-import 'package:connectpharma/src/providers/pharmacist_signUp_provider.dart';
+import 'package:connectpharma/src/providers/user_signUp_provider.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Sign Up/2pharmacistLocation.dart';
 import 'package:connectpharma/src/screens/login.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,9 +14,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../all_used.dart';
 
-final pharmacistSignUpProvider =
-    StateNotifierProvider<PharmacistSignUpProvider, PharmacistSignUpModel>((ref) {
-  return PharmacistSignUpProvider();
+final userSignUpProvider =
+    StateNotifierProvider<UserSignUpProvider, UserSignUpModel>((ref) {
+  return UserSignUpProvider();
 });
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
@@ -46,8 +46,8 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
 
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      ref.read(pharmacistSignUpProvider.notifier).changeUserType(widget.userType);
-      print("User Type: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
+      ref.read(userSignUpProvider.notifier).changeUserType(widget.userType);
+      print("User Type: ${ref.read(userSignUpProvider.notifier).userType}");
     });
     super.initState();
   }
@@ -56,7 +56,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        ref.watch(pharmacistSignUpProvider);
+        ref.watch(userSignUpProvider);
         return GestureDetector(
           onTap: () {
             FocusManager.instance.primaryFocus?.unfocus();
@@ -242,7 +242,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               keyboardType: TextInputType.emailAddress,
               textCapitalization: TextCapitalization.none,
               onChanged: (String emailAddress) {
-                ref.read(pharmacistSignUpProvider.notifier).changeEmail(emailAddress);
+                ref.read(userSignUpProvider.notifier).changeEmail(emailAddress);
               },
               validator: (value) {
                 if (!EmailValidator.validate(value!)) {
@@ -251,7 +251,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                 return null;
               },
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              initialValue: ref.read(pharmacistSignUpProvider.notifier).email,
+              initialValue: ref.read(userSignUpProvider.notifier).email,
               decoration: InputDecoration(
                 isDense: true,
                 hintText: "abc@gmail.com",
@@ -298,7 +298,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
             obscureText: !passwordVisibility,
             textCapitalization: TextCapitalization.none,
             onChanged: (String password) {
-              ref.read(pharmacistSignUpProvider.notifier).changePassword(password);
+              ref.read(userSignUpProvider.notifier).changePassword(password);
             },
             validator: (value) {
               if (value!.length < 6) {
@@ -307,7 +307,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               return null;
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            initialValue: ref.read(pharmacistSignUpProvider.notifier).password,
+            initialValue: ref.read(userSignUpProvider.notifier).password,
             decoration: InputDecoration(
               suffixIconConstraints: BoxConstraints(minHeight: 40, minWidth: 40),
               suffixIcon: IconButton(
@@ -355,11 +355,11 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ))),
-        onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistSignUp())
+        onPressed: (ref.read(userSignUpProvider.notifier).isValidPharmacistSignUp())
             ? null
             : () async {
                 List<String> signInMethod = await FirebaseAuth.instance
-                    .fetchSignInMethodsForEmail(ref.read(pharmacistSignUpProvider.notifier).email);
+                    .fetchSignInMethodsForEmail(ref.read(userSignUpProvider.notifier).email);
                 if (signInMethod.isNotEmpty) {
                   print("-----------------ERROR------------------");
                   await showDialog(
@@ -449,12 +449,12 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
   //                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
   //                   borderRadius: BorderRadius.circular(100),
   //                 ))),
-  //             onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistSignUp())
+  //             onPressed: (ref.read(userSignUpProvider.notifier).isValidPharmacistSignUp())
   //                 ? null
   //                 : () async {
   //                     List<String> signInMethod = await FirebaseAuth.instance
   //                         .fetchSignInMethodsForEmail(
-  //                             ref.read(pharmacistSignUpProvider.notifier).email);
+  //                             ref.read(userSignUpProvider.notifier).email);
   //                     if (signInMethod.isNotEmpty) {
   //                       print("-----------------ERROR------------------");
   //                       await showDialog(
@@ -536,7 +536,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               keyboardStyle: TextInputType.emailAddress,
               textCapitalization: TextCapitalization.none,
               onChanged: (String emailAddress) {
-                ref.read(pharmacistSignUpProvider.notifier).changeEmail(emailAddress);
+                ref.read(userSignUpProvider.notifier).changeEmail(emailAddress);
               },
               validation: (value) {
                 if (!EmailValidator.validate(value)) {
@@ -544,7 +544,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                 }
                 return null;
               },
-              initialValue: ref.read(pharmacistSignUpProvider.notifier).email,
+              initialValue: ref.read(userSignUpProvider.notifier).email,
               inputDecoration: InputDecoration(
                 focusedErrorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -578,7 +578,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               decoration: false,
               keyboardStyle: TextInputType.emailAddress,
               onChanged: (String password) {
-                ref.read(pharmacistSignUpProvider.notifier).changePassword(password);
+                ref.read(userSignUpProvider.notifier).changePassword(password);
               },
               validation: (value) {
                 if (value!.length < 6) {
@@ -586,7 +586,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                 }
                 return null;
               },
-              initialValue: ref.read(pharmacistSignUpProvider.notifier).password,
+              initialValue: ref.read(userSignUpProvider.notifier).password,
               inputDecoration: InputDecoration(
                 filled: true,
                 fillColor: Color(0xFFF6F6F6),

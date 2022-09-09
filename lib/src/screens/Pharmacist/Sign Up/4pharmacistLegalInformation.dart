@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:connectpharma/model/pharmacistSignUpModel.dart';
+import 'package:connectpharma/model/userSignUpModel.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Sign Up/1pharmacistSignUp.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Sign Up/5pharmacistSkills.dart';
@@ -21,7 +21,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      final pharmacistSignUp = ref.watch(pharmacistSignUpProvider);
+      final pharmacistSignUp = ref.watch(userSignUpProvider);
       return Scaffold(
           appBar: AppBar(
             iconTheme: IconThemeData(
@@ -84,10 +84,10 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   ref,
                                   certificateIcon,
                                   "Are you legally entitled to work in Canada?",
-                                  ref.read(pharmacistSignUpProvider).entitledToWork,
+                                  ref.read(userSignUpProvider).entitledToWork,
                                   (value) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeEntitledToWork(value);
                                   },
                                 ),
@@ -99,10 +99,10 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   ref,
                                   certificateIcon,
                                   "Are you currently registered as an active member and in good standing with your provincial pharmacy licensing authority?",
-                                  ref.read(pharmacistSignUpProvider).activeMember,
+                                  ref.read(userSignUpProvider).activeMember,
                                   (value) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeActiveMember(value);
                                   },
                                 ),
@@ -114,10 +114,10 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   ref,
                                   certificateIcon,
                                   "Do you have valid Personal Professional Liability insurance as required by your provincial pharmacy licensing authority?",
-                                  ref.read(pharmacistSignUpProvider).liabilityInsurance,
+                                  ref.read(userSignUpProvider).liabilityInsurance,
                                   (value) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeLiabilityInsurance(value);
                                   },
                                 ),
@@ -129,10 +129,10 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   ref,
                                   certificateIcon,
                                   "Have you ever had your Professional license restricted, suspended, or revoked by your provincial pharmacy licensing authority?",
-                                  ref.read(pharmacistSignUpProvider).licenseRestricted,
+                                  ref.read(userSignUpProvider).licenseRestricted,
                                   (value) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeLicenseRestricted(value);
                                   },
                                 ),
@@ -144,10 +144,10 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   ref,
                                   certificateIcon,
                                   "Have you ever been found guilty of professional malpractice, misconduct or incapacitated by your provincial pharmacy licensing authority?",
-                                  ref.read(pharmacistSignUpProvider).malpractice,
+                                  ref.read(userSignUpProvider).malpractice,
                                   (value) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeMalpractice(value);
                                   },
                                 ),
@@ -159,10 +159,10 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   ref,
                                   certificateIcon,
                                   "Have you ever been convicted of felony or been charged with a criminal offense for which a pardon was not granted?",
-                                  ref.read(pharmacistSignUpProvider).felon,
+                                  ref.read(userSignUpProvider).felon,
                                   (value) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeFelonStatus(value);
                                   },
                                 ),
@@ -226,7 +226,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                           "Are you legally entitled to work in Canada",
                           pharmacistSignUp.entitledToWork,
                           (bool value) {
-                            ref.read(pharmacistSignUpProvider.notifier).changeEntitledToWork(value);
+                            ref.read(userSignUpProvider.notifier).changeEntitledToWork(value);
                           },
                         ),
 
@@ -239,7 +239,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                           pharmacistSignUp.activeMember,
                           (bool activeMember) {
                             ref
-                                .read(pharmacistSignUpProvider.notifier)
+                                .read(userSignUpProvider.notifier)
                                 .changeActiveMember(activeMember);
                           },
                         ),
@@ -252,7 +252,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                           pharmacistSignUp.liabilityInsurance,
                           (bool value) {
                             ref
-                                .read(pharmacistSignUpProvider.notifier)
+                                .read(userSignUpProvider.notifier)
                                 .changeLiabilityInsurance(value);
                           },
                         ),
@@ -265,7 +265,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                           pharmacistSignUp.licenseRestricted,
                           (bool value) {
                             ref
-                                .read(pharmacistSignUpProvider.notifier)
+                                .read(userSignUpProvider.notifier)
                                 .changeLicenseRestricted(value);
                           },
                         ),
@@ -277,7 +277,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                           "Have you ever been found guilty of professional malpractice, misconduct or incapacitated by your provincial pharmacy licensing authority?",
                           pharmacistSignUp.malpractice,
                           (bool value) {
-                            ref.read(pharmacistSignUpProvider.notifier).changeMalpractice(value);
+                            ref.read(userSignUpProvider.notifier).changeMalpractice(value);
                           },
                         ),
                         SizedBox(height: 20),
@@ -288,7 +288,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                           "Have you ever been convicted of felony or been charged with a criminal offense for which a pardon was not granted?",
                           pharmacistSignUp.felon,
                           (bool value) {
-                            ref.read(pharmacistSignUpProvider.notifier).changeFelonStatus(value);
+                            ref.read(userSignUpProvider.notifier).changeFelonStatus(value);
                           },
                         ),
                         SizedBox(height: 20),
@@ -404,7 +404,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                 ),
                 Consumer(
               builder: (context, ref, child) {
-                ref.watch(pharmacistSignUpProvider);
+                ref.watch(userSignUpProvider);
                 return Padding(
                       padding: const EdgeInsets.only(left: 5),
                   child: Transform.scale(

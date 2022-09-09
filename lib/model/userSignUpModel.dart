@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import '../all_used.dart';
 
-class PharmacistSignUpModel {
+class UserSignUpModel {
   String email;
   String password;
 
@@ -39,7 +39,7 @@ class PharmacistSignUpModel {
 
   String userType;
 
-  PharmacistSignUpModel({
+  UserSignUpModel({
     this.email = "",
     this.password = "",
     this.firstName = "",
@@ -71,7 +71,7 @@ class PharmacistSignUpModel {
     this.userType = "",
   });
 
-  PharmacistSignUpModel copyWithPharmacistSignUp({
+  UserSignUpModel copyWithPharmacistSignUp({
     String? email,
     String? password,
     String? firstName,
@@ -102,7 +102,7 @@ class PharmacistSignUpModel {
     File? profilePhoto,
     String? userType,
   }) {
-    return PharmacistSignUpModel(
+    return UserSignUpModel(
       email: email ?? this.email,
       password: password ?? this.password,
       firstName: firstName ?? this.firstName,

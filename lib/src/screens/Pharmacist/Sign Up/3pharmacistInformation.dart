@@ -92,7 +92,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                   keyboardStyle: TextInputType.number,
                                   onChanged: (String licenseYear) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeFirstYearLicensed(licenseYear);
                                   },
                                   validation: (value) {
@@ -102,7 +102,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                     return null;
                                   },
                                   initialValue:
-                                      ref.read(pharmacistSignUpProvider.notifier).firstYearLicensed,
+                                      ref.read(userSignUpProvider.notifier).firstYearLicensed,
                                 ),
                                 SizedBox(height: 30),
 
@@ -114,7 +114,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                   keyboardStyle: TextInputType.number,
                                   onChanged: (String registrationNumber) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeRegistrationNumber(registrationNumber);
                                   },
                                   validation: (value) {
@@ -124,7 +124,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                     return null;
                                   },
                                   initialValue: ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .registrationNumber,
                                 ),
                                 SizedBox(height: 30),
@@ -137,7 +137,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                   keyboardStyle: TextInputType.name,
                                   onChanged: (String registrationProvince) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeRegistrationProvince(registrationProvince);
                                   },
                                   validation: (value) {
@@ -147,7 +147,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                     return null;
                                   },
                                   initialValue: ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .registrationProvince,
                                 ),
                                 SizedBox(height: 30),
@@ -160,7 +160,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                   keyboardStyle: TextInputType.number,
                                   onChanged: (String yearOfGraduation) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeGraduationYear(yearOfGraduation);
                                   },
                                   validation: (value) {
@@ -170,7 +170,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                     return null;
                                   },
                                   initialValue:
-                                      ref.read(pharmacistSignUpProvider.notifier).graduationYear,
+                                      ref.read(userSignUpProvider.notifier).graduationYear,
                                 ),
                                 SizedBox(height: 30),
 
@@ -182,7 +182,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                   keyboardStyle: TextInputType.name,
                                   onChanged: (String institutionName) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeInstitutionName(institutionName);
                                   },
                                   validation: (value) {
@@ -192,7 +192,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                     return null;
                                   },
                                   initialValue:
-                                      ref.read(pharmacistSignUpProvider.notifier).institutionName,
+                                      ref.read(userSignUpProvider.notifier).institutionName,
                                 ),
                                 SizedBox(height: 30),
 
@@ -204,7 +204,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                   keyboardStyle: TextInputType.number,
                                   onChanged: (String yearsOfExperience) {
                                     ref
-                                        .read(pharmacistSignUpProvider.notifier)
+                                        .read(userSignUpProvider.notifier)
                                         .changeWorkingExperience(yearsOfExperience);
                                   },
                                   validation: (value) {
@@ -214,7 +214,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                     return null;
                                   },
                                   initialValue:
-                                      ref.read(pharmacistSignUpProvider.notifier).workingExperience,
+                                      ref.read(userSignUpProvider.notifier).workingExperience,
                                 ),
                                 SizedBox(height: 30),
 
@@ -263,14 +263,14 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
             ),
             Consumer(
               builder: (context, ref, child) {
-                ref.watch(pharmacistSignUpProvider);
+                ref.watch(userSignUpProvider);
                 return Transform.scale(
                   scale: 1.3,
                   child: Switch(
-                    value: ref.read(pharmacistSignUpProvider.notifier).willingToMove,
+                    value: ref.read(userSignUpProvider.notifier).willingToMove,
                     onChanged: (value) {
                       print(value);
-                      ref.read(pharmacistSignUpProvider.notifier).changeWillingToMove(value);
+                      ref.read(userSignUpProvider.notifier).changeWillingToMove(value);
                     },
                     activeTrackColor: Color(0xFFE2F2FF),
                     activeColor: Color(0xFF0069C1),
@@ -288,7 +288,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
     return Center(
       child: Consumer(
         builder: (context, ref, child) {
-          ref.watch(pharmacistSignUpProvider);
+          ref.watch(userSignUpProvider);
           return SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             height: 51,
@@ -305,7 +305,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                   ))),
               
               onPressed: (ref
-                      .read(pharmacistSignUpProvider.notifier)
+                      .read(userSignUpProvider.notifier)
                       .isValidPharmacistInformation())
                   ? null
                   : () {

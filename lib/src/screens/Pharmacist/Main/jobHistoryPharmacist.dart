@@ -1154,7 +1154,7 @@ class SideMenuDrawer extends ConsumerWidget {
                 userDataStreamSub?.cancel();
                 ref.read(authProviderMain.notifier).signOut().then((value) {
                   ref.read(pharmacistMainProvider.notifier).resetValues();
-                  ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
+                  ref.read(userSignUpProvider.notifier).clearAllValues();
                 });
                 Navigator.pushReplacement(
                     context, MaterialPageRoute(builder: (context) => ConnectPharma()),

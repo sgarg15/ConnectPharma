@@ -26,7 +26,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
   @override
   Widget build(BuildContext context) {
     TextEditingController streetAddress =
-        TextEditingController(text: ref.read(pharmacistSignUpProvider.notifier).address);
+        TextEditingController(text: ref.read(userSignUpProvider.notifier).address);
 
     final String personIcon = 'assets/icons/person.svg';
     final String phoneIcon = 'assets/icons/phone.svg';
@@ -100,7 +100,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                                 keyboardStyle: TextInputType.name,
                                 onChanged: (String firstName) {
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .changeFirstName(firstName);
                                 },
                                 validation: (value) {
@@ -110,7 +110,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                                   }
                                   return null;
                                 },
-                                initialValue: ref.read(pharmacistSignUpProvider.notifier).firstName,
+                                initialValue: ref.read(userSignUpProvider.notifier).firstName,
                               ),
                               SizedBox(height: 30),
 
@@ -122,7 +122,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                                 keyboardStyle: TextInputType.name,
                                 onChanged: (String lastName) {
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .changeLastName(lastName);
                                 },
                                 validation: (value) {
@@ -132,7 +132,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                                   }
                                   return null;
                                 },
-                                initialValue: ref.read(pharmacistSignUpProvider.notifier).lastName,
+                                initialValue: ref.read(userSignUpProvider.notifier).lastName,
                               ),
                               SizedBox(height: 30),
 
@@ -147,7 +147,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                                 keyboardStyle: TextInputType.number,
                                 onChanged: (String phoneNumber) {
                                   ref
-                                      .read(pharmacistSignUpProvider.notifier)
+                                      .read(userSignUpProvider.notifier)
                                       .changePhoneNumber(phoneNumber);
                                 },
                                 validation: (value) {
@@ -157,7 +157,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                                   return null;
                                 },
                                 initialValue:
-                                    ref.read(pharmacistSignUpProvider.notifier).phoneNumber,
+                                    ref.read(userSignUpProvider.notifier).phoneNumber,
                                 formatter: [PhoneInputFormatter()],
                               ),
                               SizedBox(height: 30),
@@ -209,7 +209,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
     return Center(
       child: Consumer(
         builder: (context, ref, child) {
-          ref.watch(pharmacistSignUpProvider);
+          ref.watch(userSignUpProvider);
           return SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             height: 51,
@@ -225,7 +225,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
                     borderRadius: BorderRadius.circular(10),
                   ))),
               
-              onPressed: (ref.read(pharmacistSignUpProvider.notifier).isValidPharmacistLocation())
+              onPressed: (ref.read(userSignUpProvider.notifier).isValidPharmacistLocation())
                   ? null
                   : () {
                       print("Pressed");
@@ -266,7 +266,7 @@ class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
           if (result != null) {
             final placeDetails =
                 await PlaceApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
-            ref.read(pharmacistSignUpProvider.notifier).changePharmacistAddress(
+            ref.read(userSignUpProvider.notifier).changePharmacistAddress(
                 placeDetails.streetNumber! +
                     " " +
                     placeDetails.street.toString() +

@@ -378,7 +378,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
             // Center(
             //   child: Consumer(
             //     builder: (context, watch, child) {
-            //       watch(pharmacistSignUpProvider);
+            //       watch(userSignUpProvider);
             //       return SizedBox(
             //         width: 324,
             //         height: 51,
@@ -430,7 +430,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
             //                       ?.sendEmailVerification()
             //                       .then((_) {
             //                     context
-            //                         .read(pharmacistSignUpProvider.notifier)
+            //                         .read(userSignUpProvider.notifier)
             //                         .clearAllValues();
             //                     Navigator.push(
             //                         context,

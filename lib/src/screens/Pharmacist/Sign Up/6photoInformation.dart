@@ -277,7 +277,7 @@ SingleChildScrollView(
     return Center(
       child: Consumer(
         builder: (context, ref, child) {
-          ref.watch(pharmacistSignUpProvider);
+          ref.watch(userSignUpProvider);
           return SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             height: 51,
@@ -298,21 +298,21 @@ SingleChildScrollView(
                       setState(() {
                         disableButton = true;
                       });
-                      if (ref.read(pharmacistSignUpProvider.notifier).userType!.isNotEmpty) {
+                      if (ref.read(userSignUpProvider.notifier).userType!.isNotEmpty) {
                         ref
                             .read(authProvider.notifier)
                             .registerWithEmailAndPassword(
-                                ref.read(pharmacistSignUpProvider.notifier).email.toString(),
-                                ref.read(pharmacistSignUpProvider.notifier).password.toString())
+                                ref.read(userSignUpProvider.notifier).email.toString(),
+                                ref.read(userSignUpProvider.notifier).password.toString())
                             .then((user) async {
                           print("UPLOADING DATA");
                           print(
-                              "USER TYPE: ${ref.read(pharmacistSignUpProvider.notifier).userType}");
+                              "USER TYPE: ${ref.read(userSignUpProvider.notifier).userType}");
 
                           if (user == null) {
                             return errorMethod(context);
                           } else {
-                            if (ref.read(pharmacistSignUpProvider.notifier).userType ==
+                            if (ref.read(userSignUpProvider.notifier).userType ==
                                 "Pharmacist") {
                               showLoaderDialog(context);
                               ref
@@ -326,7 +326,7 @@ SingleChildScrollView(
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                 print("DATA UPLOADED");
                                 await value?.user?.sendEmailVerification().then((_) {
-                                  ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
+                                  ref.read(userSignUpProvider.notifier).clearAllValues();
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) => ConnectPharma()));
                                   ref.read(authProvider.notifier).signOut();
@@ -349,7 +349,7 @@ SingleChildScrollView(
                               }).catchError((e) {
                                 errorMethod(context);
                               });
-                            } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
+                            } else if (ref.read(userSignUpProvider.notifier).userType ==
                                 "Pharmacy Assistant") {
                               print("Registering Pharmacy Assistant");
                               ref
@@ -362,7 +362,7 @@ SingleChildScrollView(
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                 print("DATA UPLOADED");
                                 await value?.user?.sendEmailVerification().then((_) {
-                                  ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
+                                  ref.read(userSignUpProvider.notifier).clearAllValues();
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) => ConnectPharma()));
                                   showDialog(
@@ -384,7 +384,7 @@ SingleChildScrollView(
                               }).catchError((e) {
                                 errorMethod(context);
                               });
-                            } else if (ref.read(pharmacistSignUpProvider.notifier).userType ==
+                            } else if (ref.read(userSignUpProvider.notifier).userType ==
                                 "Pharmacy Technician") {
                               print("Registering Pharmacy Technician");
                               ref
@@ -397,7 +397,7 @@ SingleChildScrollView(
                                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                 print("DATA UPLOADED");
                                 await value?.user?.sendEmailVerification().then((_) {
-                                  ref.read(pharmacistSignUpProvider.notifier).clearAllValues();
+                                  ref.read(userSignUpProvider.notifier).clearAllValues();
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) => ConnectPharma()));
                                   showDialog(
@@ -454,7 +454,7 @@ SingleChildScrollView(
                                         }).toList(),
                                         onChanged: (String? value) {
                                           ref
-                                              .read(pharmacistSignUpProvider.notifier)
+                                              .read(userSignUpProvider.notifier)
                                               .changeUserType(value);
                                         },
                                         style: GoogleFonts.questrial(
@@ -549,7 +549,7 @@ SingleChildScrollView(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           SizedBox(height: 10),
-          if (ref.read(pharmacistSignUpProvider.notifier).profilePhotoData != null)
+          if (ref.read(userSignUpProvider.notifier).profilePhotoData != null)
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -572,7 +572,7 @@ SingleChildScrollView(
                       ),
                       onPressed: () async {
                         profilePhotoFile =
-                            ref.read(pharmacistSignUpProvider.notifier).profilePhotoData;
+                            ref.read(userSignUpProvider.notifier).profilePhotoData;
                         print("FILE PATH: " + profilePhotoFile!.path.toString());
                         OpenFile.open(profilePhotoFile!.path);
                       },
@@ -612,7 +612,7 @@ SingleChildScrollView(
                           profilePhotoFile = null;
                         });
 
-                        ref.read(pharmacistSignUpProvider.notifier).clearProfilePhotoImage();
+                        ref.read(userSignUpProvider.notifier).clearProfilePhotoImage();
                       },
                       child: RichText(
                         text: TextSpan(
@@ -659,7 +659,7 @@ SingleChildScrollView(
                         profilePhotoFile = File(_profilePhotoResult!.files.first.path.toString());
 
                         ref
-                            .read(pharmacistSignUpProvider.notifier)
+                            .read(userSignUpProvider.notifier)
                             .changeProfilePhotoImage(profilePhotoFile);
                       } else {
                         // User canceled the picker
@@ -751,7 +751,7 @@ SingleChildScrollView(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           SizedBox(height: 10),
-          if (ref.read(pharmacistSignUpProvider.notifier).registrationCertificateData != null)
+          if (ref.read(userSignUpProvider.notifier).registrationCertificateData != null)
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -774,7 +774,7 @@ SingleChildScrollView(
                       ),
                       onPressed: () async {
                         registrationFile =
-                            ref.read(pharmacistSignUpProvider.notifier).registrationCertificateData;
+                            ref.read(userSignUpProvider.notifier).registrationCertificateData;
                         print("FILE PATH: " + registrationFile!.path.toString());
                         OpenFile.open(registrationFile!.path);
                       },
@@ -815,7 +815,7 @@ SingleChildScrollView(
                         });
 
                         ref
-                            .read(pharmacistSignUpProvider.notifier)
+                            .read(userSignUpProvider.notifier)
                             .clearRegistrationCertificatePDF();
                       },
                       child: RichText(
@@ -866,7 +866,7 @@ SingleChildScrollView(
                             File(_registrationCertificateResult!.files.first.path.toString());
 
                         ref
-                            .read(pharmacistSignUpProvider.notifier)
+                            .read(userSignUpProvider.notifier)
                             .changeRegistrationCertificate(registrationFile);
 
                         //Check if registrationCertificate is correct
@@ -879,7 +879,7 @@ SingleChildScrollView(
                           });
             
                           ref
-                              .read(pharmacistSignUpProvider.notifier)
+                              .read(userSignUpProvider.notifier)
                               .clearRegistrationCertificatePDF();
                           _showRegistrationCertificateError();
                         }
@@ -928,7 +928,7 @@ SingleChildScrollView(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           SizedBox(height: 10),
-          if (ref.read(pharmacistSignUpProvider.notifier).backIDData != null)
+          if (ref.read(userSignUpProvider.notifier).backIDData != null)
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -950,7 +950,7 @@ SingleChildScrollView(
                         ),
                       ),
                       onPressed: () async {
-                        backFile = ref.read(pharmacistSignUpProvider.notifier).backIDData;
+                        backFile = ref.read(userSignUpProvider.notifier).backIDData;
                         print("FILE PATH: " + backFile!.path.toString());
                         OpenFile.open(backFile!.path);
                       },
@@ -991,7 +991,7 @@ SingleChildScrollView(
                           backFile = null;
                         });
 
-                        ref.read(pharmacistSignUpProvider.notifier).clearBackIDImage();
+                        ref.read(userSignUpProvider.notifier).clearBackIDImage();
                       },
                       child: RichText(
                         text: TextSpan(
@@ -1037,7 +1037,7 @@ SingleChildScrollView(
                         });
                         backFile = File(_backOfIDResult!.files.first.path.toString());
 
-                        ref.read(pharmacistSignUpProvider.notifier).changeBackIDImage(backFile);
+                        ref.read(userSignUpProvider.notifier).changeBackIDImage(backFile);
                       } else {
                         // User canceled the picker
                       }
@@ -1083,7 +1083,7 @@ SingleChildScrollView(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           SizedBox(height: 10),
-          if (ref.read(pharmacistSignUpProvider.notifier).frontIDData != null)
+          if (ref.read(userSignUpProvider.notifier).frontIDData != null)
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1105,7 +1105,7 @@ SingleChildScrollView(
                         ),
                       ),
                       onPressed: () async {
-                        frontFile = ref.read(pharmacistSignUpProvider.notifier).frontIDData;
+                        frontFile = ref.read(userSignUpProvider.notifier).frontIDData;
                         print("FILE PATH: " + frontFile!.path.toString());
                         OpenFile.open(frontFile!.path);
                       },
@@ -1145,7 +1145,7 @@ SingleChildScrollView(
                           frontFile = null;
                         });
 
-                        ref.read(pharmacistSignUpProvider.notifier).clearFrontIDImage();
+                        ref.read(userSignUpProvider.notifier).clearFrontIDImage();
                       },
                       child: RichText(
                         text: TextSpan(
@@ -1191,7 +1191,7 @@ SingleChildScrollView(
                         });
                         frontFile = File(_frontOfIDResult!.files.first.path.toString());
 
-                        ref.read(pharmacistSignUpProvider.notifier).changeFrontIDImage(frontFile);
+                        ref.read(userSignUpProvider.notifier).changeFrontIDImage(frontFile);
                       } else {
                         // User canceled the picker
                       }
