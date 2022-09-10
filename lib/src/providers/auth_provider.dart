@@ -392,90 +392,8 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
-  ///Function to test the upload of the user details to firebase.
-  Future<UserCredential?> uploadTestInformaiton(UserCredential? user, BuildContext context) async {
-    if (user == null) {
-      return null;
-    }
-    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-    Random _rnd = Random();
-
-    String getRandomString(int length) => String.fromCharCodes(
-        Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-
-    String resumePDFURL = "http://www.africau.edu/images/default/sample.pdf";
-    String frontIDURL = "http://www.africau.edu/images/default/sample.pdf";
-    String backIDURL = "http://www.africau.edu/images/default/sample.pdf";
-    String registrationCertificateURL = "http://www.africau.edu/images/default/sample.pdf";
-    String profilePhotoURL = "http://www.africau.edu/images/default/sample.pdf";
-
-    String signaureImageURL = "http://www.africau.edu/images/default/sample.pdf";
-
-    users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
-      "userType": "Pharmacist",
-      "email": getRandomString(5),
-      "firstName": getRandomString(4),
-      "lastName": getRandomString(4),
-      "address": getRandomString(9),
-      "phoneNumber": getRandomString(8),
-      "firstYearLicensed": getRandomString(4),
-      "registrationNumber": getRandomString(6),
-      "registrationProvince": getRandomString(9),
-      "gradutationYear": getRandomString(4),
-      "institutionName": getRandomString(8),
-      "workingExperience": getRandomString(2),
-      "willingToMove": getRandomString(2),
-      "entitledToWork": getRandomString(2),
-      "activeMember": getRandomString(2),
-      "liabilityInsurance": getRandomString(2),
-      "licenseRestricted": getRandomString(2),
-      "malPractice": getRandomString(2),
-      "felon": getRandomString(2),
-      "knownSoftware": getRandomString(8),
-      "knownSkills": getRandomString(8),
-      "knownLanguages": getRandomString(8),
-      "resumeDownloadURL": resumePDFURL,
-      "frontIDDownloadURL": frontIDURL,
-      "backIDDownloadURL": backIDURL,
-      "registrationCertificateDownloadURL": registrationCertificateURL,
-      "profilePhotoDownloadURL": profilePhotoURL,
-      "signatureDownloadURL": signaureImageURL,
-    });
-    return user;
-  }
-
-  ///Function to test the upload of jobs to firebase.
-  Future<UserCredential?>? uploadTestJobToPharmacy(String? userUID, BuildContext context) async {
-    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-    Random _rnd = Random();
-
-    String getRandomString(int length) => String.fromCharCodes(
-        Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-
-    users.doc(userUID).collection("Main").add({
-      "userType": "Pharmacy",
-      "startDate": DateTime(2019, 01, 01),
-      "endDate": DateTime(2021, 01, 01),
-      "pharmacyUID": userUID,
-      "pharmacyNumber": getRandomString(6),
-      "pharmacyName": getRandomString(6),
-      "pharmacyAddress": getRandomString(6),
-      "jobStatus": "active",
-      "skillsNeeded": getRandomString(6),
-      "softwareNeeded": getRandomString(6),
-      "techOnSite": true,
-      "assistantOnSite": false,
-      "hourlyRate": "\$45.03",
-      "limaStatus": true,
-      "comments": getRandomString(10),
-      "email": getRandomString(6),
-    });
-    return null;
-  }
-
   ///Function to upload the availability of a pharmacist to firebase.
-  Future<UserCredential?>? uploadAvailalibitlityData(
-      String userUID, Map dataUpload, bool? permanentJobBool, bool? nightShiftBool) async {
+  Future<UserCredential?>? uploadAvailalibitlityData(String userUID, Map dataUpload, bool? permanentJobBool, bool? nightShiftBool) async {
     if (dataUpload.isEmpty) {
       users.doc(userUID).collection("SignUp").doc("Information").set({
         "permanentJob": permanentJobBool,
@@ -502,8 +420,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   ///Function to upload a job from a pharmacy to firebase.
-  Future<UserCredential?>? uploadJobToPharmacy(
-      WidgetRef ref, String? userUID, BuildContext context) async {
+  Future<UserCredential?>? uploadJobToPharmacy(WidgetRef ref, String? userUID, BuildContext context) async {
     List<String?>? softwareList =
         ref.read(pharmacyMainProvider.notifier).softwareList?.map((e) => e?.name).toList();
     List<String?>? skillsList =
@@ -562,8 +479,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   ///Function to update a job from a pharmacy in firebase.
-  Future<String?>? updateJobInformation(
-      String userUID, Map<String, dynamic> uploadData, String? jobUID) async {
+  Future<String?>? updateJobInformation(String userUID, Map<String, dynamic> uploadData, String? jobUID) async {
     try {
       await users.doc(userUID).collection("Main").doc(jobUID).update(uploadData);
     } catch (error) {
@@ -651,4 +567,86 @@ class AuthProvider extends ChangeNotifier {
       _googleSignIn.signOut();
     });
   }
-}
+
+  ///Function to test the upload of the user details to firebase.
+  Future<UserCredential?> uploadTestInformaiton(UserCredential? user, BuildContext context) async {
+    if (user == null) {
+      return null;
+    }
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+
+    String getRandomString(int length) => String.fromCharCodes(
+        Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+    String resumePDFURL = "http://www.africau.edu/images/default/sample.pdf";
+    String frontIDURL = "http://www.africau.edu/images/default/sample.pdf";
+    String backIDURL = "http://www.africau.edu/images/default/sample.pdf";
+    String registrationCertificateURL = "http://www.africau.edu/images/default/sample.pdf";
+    String profilePhotoURL = "http://www.africau.edu/images/default/sample.pdf";
+
+    String signaureImageURL = "http://www.africau.edu/images/default/sample.pdf";
+
+    users.doc(user.user?.uid.toString()).collection("SignUp").doc("Information").set({
+      "userType": "Pharmacist",
+      "email": getRandomString(5),
+      "firstName": getRandomString(4),
+      "lastName": getRandomString(4),
+      "address": getRandomString(9),
+      "phoneNumber": getRandomString(8),
+      "firstYearLicensed": getRandomString(4),
+      "registrationNumber": getRandomString(6),
+      "registrationProvince": getRandomString(9),
+      "gradutationYear": getRandomString(4),
+      "institutionName": getRandomString(8),
+      "workingExperience": getRandomString(2),
+      "willingToMove": getRandomString(2),
+      "entitledToWork": getRandomString(2),
+      "activeMember": getRandomString(2),
+      "liabilityInsurance": getRandomString(2),
+      "licenseRestricted": getRandomString(2),
+      "malPractice": getRandomString(2),
+      "felon": getRandomString(2),
+      "knownSoftware": getRandomString(8),
+      "knownSkills": getRandomString(8),
+      "knownLanguages": getRandomString(8),
+      "resumeDownloadURL": resumePDFURL,
+      "frontIDDownloadURL": frontIDURL,
+      "backIDDownloadURL": backIDURL,
+      "registrationCertificateDownloadURL": registrationCertificateURL,
+      "profilePhotoDownloadURL": profilePhotoURL,
+      "signatureDownloadURL": signaureImageURL,
+    });
+    return user;
+  }
+
+  ///Function to test the upload of jobs to firebase.
+  Future<UserCredential?>? uploadTestJobToPharmacy(String? userUID, BuildContext context) async {
+    const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+
+    String getRandomString(int length) => String.fromCharCodes(
+        Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+    users.doc(userUID).collection("Main").add({
+      "userType": "Pharmacy",
+      "startDate": DateTime(2019, 01, 01),
+      "endDate": DateTime(2021, 01, 01),
+      "pharmacyUID": userUID,
+      "pharmacyNumber": getRandomString(6),
+      "pharmacyName": getRandomString(6),
+      "pharmacyAddress": getRandomString(6),
+      "jobStatus": "active",
+      "skillsNeeded": getRandomString(6),
+      "softwareNeeded": getRandomString(6),
+      "techOnSite": true,
+      "assistantOnSite": false,
+      "hourlyRate": "\$45.03",
+      "limaStatus": true,
+      "comments": getRandomString(10),
+      "email": getRandomString(6),
+    });
+    return null;
+  }
+
+  }

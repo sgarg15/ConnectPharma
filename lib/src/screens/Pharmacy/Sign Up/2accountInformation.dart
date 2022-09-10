@@ -246,11 +246,11 @@ class _AccountInformationPharmacyState extends ConsumerState<AccountInformationP
                   borderRadius: BorderRadius.circular(10),
                 ))),
             onPressed: (ref.read(pharmacySignUpProvider.notifier).isValidAccountInfo())
-                ? null
-                : () {
+                ? () {
                     Navigator.push(
                         context, MaterialPageRoute(builder: (context) => PharmacyInformation()));
-                  },
+                  }
+                : null,
             child: RichText(
               text: TextSpan(
                 text: "Next",

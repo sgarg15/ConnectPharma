@@ -332,7 +332,7 @@ class _PharmacyManagerInformationState extends ConsumerState<PharmacyManagerInfo
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ))),
-              onPressed: (!ref.read(pharmacySignUpProvider.notifier).isValidManagerInformation() &&
+              onPressed: (ref.read(pharmacySignUpProvider.notifier).isValidManagerInformation() &&
                       !disableButton)
                   ? () {
                       print("Pressed");

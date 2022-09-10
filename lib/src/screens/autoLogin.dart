@@ -23,7 +23,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
 
     if (userType == "Pharmacist") {
       print("Pharmacist");
-      ref.read(logInProvider.notifier).clearAllValue();
+      ref.read(logInProvider.notifier).clearEmailAndPassword();
       ref.read(userProviderLogin.notifier).changeUserUID(FirebaseAuth.instance.currentUser?.uid);
 
       //send to pharmacist main page
@@ -32,7 +32,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
     } else if (userType == "Pharmacy") {
       print("Pharmacy");
 
-      ref.read(logInProvider.notifier).clearAllValue();
+      ref.read(logInProvider.notifier).clearEmailAndPassword();
       ref.read(userProviderLogin.notifier).changeUserUID(FirebaseAuth.instance.currentUser?.uid);
 
       //send to pharmacy main page
@@ -42,7 +42,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
       print("Pharmacy Assistant");
 
       print("Sending to Pharmacist SignUp page1");
-      ref.read(logInProvider.notifier).clearAllValue();
+      ref.read(logInProvider.notifier).clearEmailAndPassword();
 
       print("Sending to Pharmacist SignUp page2");
       ref.read(userProviderLogin.notifier).changeUserUID(FirebaseAuth.instance.currentUser?.uid);
@@ -56,7 +56,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
       print("Pharmacy Technician");
 
       print("Sending to Pharmacist SignUp page1");
-      ref.read(logInProvider.notifier).clearAllValue();
+      ref.read(logInProvider.notifier).clearEmailAndPassword();
 
       print("Sending to Pharmacist SignUp page2");
       ref.read(userProviderLogin.notifier).changeUserUID(FirebaseAuth.instance.currentUser?.uid);
@@ -118,7 +118,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
                           if (states.contains(MaterialState.disabled)) {
                             return Colors.grey; // Disabled color
                           }
-                          return Color(0xFFF0069C1); // Regular color
+                          return Color(0xFF0069C1); // Regular color
                         }),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
@@ -126,7 +126,7 @@ class _AutoLoginState extends ConsumerState<AutoLogin> {
                         ))),
                     onPressed: () {
                       ref.read(authProviderLogin.notifier).signOut();
-                      ref.read(logInProvider.notifier).clearAllValue();
+                      ref.read(logInProvider.notifier).clearEmailAndPassword();
                       ref.read(userProviderLogin.notifier).changeUserUID(null);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => LogInPage()));
                     },

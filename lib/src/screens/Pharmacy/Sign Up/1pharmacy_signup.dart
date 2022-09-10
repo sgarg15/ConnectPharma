@@ -346,9 +346,8 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ))),
-        onPressed: (ref.read(pharmacySignUpProvider.notifier).isValidSignUp())
-            ? null
-            : () async {
+        onPressed: (ref.read(pharmacySignUpProvider.notifier).isValidSignUpEmail())
+            ? () async {
                 List<String> signInMethod = await FirebaseAuth.instance
                     .fetchSignInMethodsForEmail(ref.read(pharmacySignUpProvider.notifier).email);
                 if (signInMethod.isNotEmpty) {
@@ -372,7 +371,7 @@ class _PharmacySignUpPageState extends ConsumerState<PharmacySignUpPage> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => AccountInformationPharmacy()));
                 }
-              },
+              } : null,
         child: RichText(
           text: TextSpan(
             text: "Sign Up as a Pharmacy",

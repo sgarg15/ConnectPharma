@@ -8,17 +8,19 @@ class LogInProvider extends StateNotifier<LogInModel> {
   String get email => state.email;
   String get password => state.password;
 
-  bool isValid() {
+  ///Check if the email is valid
+  bool isValidEmail() {
     if (EmailValidator.validate(state.email.toString()) == false || state.password.length < 6) {
-      print("true");
-      return true;
-    } else {
-      print("false");
+      print("Email not valid");
       return false;
+    } else {
+      print("Email is valid");
+      return true;
     }
   }
 
-  void clearAllValue() {
+  ///Clears the email and password information
+  void clearEmailAndPassword() {
     state.email = "";
     state.password = "";
   }

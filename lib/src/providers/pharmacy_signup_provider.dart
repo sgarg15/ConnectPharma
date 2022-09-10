@@ -9,27 +9,32 @@ import '../../all_used.dart';
 class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
   PharmacySignUpProvider() : super(PharmacySignUpModel());
 
-  bool isValidSignUp() {
+  ///Checks if the sign up email is valid
+  bool isValidSignUpEmail() {
     if (EmailValidator.validate(state.email.toString()) == false || state.password.length < 6) {
-      return true;
-    } else {
+      print("Email not valid");
       return false;
+    } else {
+      print("Email is valid");
+      return true;
     }
   }
 
+  ///Checks if account info is valid
   bool isValidAccountInfo() {
     if (state.firstName == "" ||
         state.lastName == "" ||
         state.phoneNumber == "" ||
         state.position == "") {
-      print("true account info");
-      return true;
-    } else {
-      print("false account info");
+      print("Account info is not valid");
       return false;
+    } else {
+      print("Account info is valid");
+      return true;
     }
   }
 
+  ///Checks is pharmacy information is valid
   bool isValidPharmacyInformation() {
     if (state.pharmacyName == "" ||
         state.streetAddress == "" ||
@@ -41,27 +46,51 @@ class PharmacySignUpProvider extends StateNotifier<PharmacySignUpModel> {
         state.faxNumberPharmacy == "" ||
         state.postalCode == "" ||
         state.accreditationProvince == "") {
-      print("true pharmacy info");
-      return true;
-    } else {
-      print("false pharmacy info");
+      print("Pharmacy information is not valid");
       return false;
+    } else {
+      print("Pharmacy information is valid");
+      return true;
     }
   }
 
+  ///Checks if Manager information is valid
   bool isValidManagerInformation() {
     if (state.managerFirstName == "" ||
         state.managerLastName == "" ||
         state.managerPhoneNumber.length < 4 ||
         state.licenseNumber.length != 5) {
-      print("true manager info");
-      return true;
-    } else {
-      print("false manager info");
+      print("Manager information is not valid");
       return false;
+    } else {
+      print("Manager information is valid");
+      return true;
     }
   }
 
+  ///Resets the following values:
+  /// - [email]
+  /// - [password]
+  /// - [firstName]
+  /// - [lastName]
+  /// - [phoneNumber]
+  /// - [position]
+  /// - [signatureData]
+  /// - [pharmacyName]
+  /// - [streetAddress]
+  /// - [storeNumber]
+  /// - [city]
+  /// - [postalCode]
+  /// - [province]
+  /// - [country]
+  /// - [phoneNumberPharmacy]
+  /// - [faxNumberPharmacy]
+  /// - [accreditationProvince]
+  /// - [softwareList]
+  /// - [managerFirstName]
+  /// - [managerLastName]
+  /// - [managerPhoneNumber]
+  /// - [licenseNumber]
   void resetValues() {
     state.email = "";
     state.password = "";

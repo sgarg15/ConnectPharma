@@ -15,12 +15,20 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
   bool? get permanentJob => state.permanentJob;
   bool? get nightShift => state.nightShift;
 
-
+  ///Clears Dates information.
   void clearDates() {
     state.startDate = null;
     state.endDate = null;
   }
 
+  ///Resets the following information:
+  /// - [dateRanges]
+  /// - [endDate]
+  /// - [startDate]
+  /// - [permanentJob]
+  /// - [resumePDF]
+  /// - [userData]
+  /// - [nightShift]
   void resetValues() {
     state.dateRanges = [];
     state.endDate = null;
@@ -31,6 +39,7 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
     state.nightShift = false;
   }
 
+  //Setters
   void changeDateRanges(List<PickerDateRange> dateRanges) {
     state = state.copyWithPharmacistMain(dateRanges: dateRanges);
   }
@@ -54,10 +63,15 @@ class PharmacistMainProvider extends StateNotifier<PharmacistMainModel> {
   void changePermanentJob(bool? value) {
     state = state.copyWithPharmacistMain(permanentJob: value);
   }
- void changeNightShift(bool? value) {
+
+  void changeNightShift(bool? value) {
     state = state.copyWithPharmacistMain(nightShift: value);
   }
 
+  ///Clears the resumePDF Data and sets:
+  /// - [dateRanges] to its value
+  /// - [startDate] to its value
+  /// - [userData] to its value
   void clearResumePDF() {
     state = PharmacistMainModel(
       dateRanges: state.dateRanges,

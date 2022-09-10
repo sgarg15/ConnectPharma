@@ -345,11 +345,11 @@ class _PharmacyInformationState extends ConsumerState<PharmacyInformation> {
                 borderRadius: BorderRadius.circular(10),
               ))),
           onPressed: (ref.read(pharmacySignUpProvider.notifier).isValidPharmacyInformation())
-              ? null
-              : () {
+              ? () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => PharmacyManagerInformation()));
-                },
+                }
+              : null,
           child: RichText(
             text: TextSpan(
               text: "Next",
