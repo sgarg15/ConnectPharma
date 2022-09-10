@@ -7,9 +7,9 @@ import 'package:connectpharma/src/screens/Pharmacist/Main/jobDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectpharma/main.dart';
-import 'package:connectpharma/model/pharmacistMainModel.dart';
+import 'package:connectpharma/model/userMainModel.dart';
 import 'package:connectpharma/src/providers/auth_provider.dart';
-import 'package:connectpharma/src/providers/pharmacist_mainProvider.dart';
+import 'package:connectpharma/src/providers/user_mainProvider.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Main/findShiftPharmacist.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Main/notifications.dart';
 import 'package:connectpharma/src/screens/Pharmacist/Main/pharmacistAvailibility.dart';
@@ -28,8 +28,8 @@ final authProviderMain = ChangeNotifierProvider<AuthProvider>((ref) {
 });
 
 final pharmacistMainProvider =
-    StateNotifierProvider<PharmacistMainProvider, PharmacistMainModel>((ref) {
-  return PharmacistMainProvider();
+    StateNotifierProvider<UserMainProvider, UserMainModel>((ref) {
+  return UserMainProvider();
 });
 
 class JobHistoryPharmacist extends ConsumerStatefulWidget {

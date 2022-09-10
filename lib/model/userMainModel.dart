@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class PharmacistMainModel {
+class UserMainModel {
   List<PickerDateRange> dateRanges = [];
   Map<String, dynamic>? userData;
   DateTime? startDate;
@@ -11,7 +11,7 @@ class PharmacistMainModel {
   bool? permanentJob;
   bool? nightShift;
 
-  PharmacistMainModel({
+  UserMainModel({
     this.dateRanges = const [],
     this.userData,
     this.startDate,
@@ -21,7 +21,7 @@ class PharmacistMainModel {
     this.nightShift = false,
   });
 
-  PharmacistMainModel copyWithPharmacistMain({
+  UserMainModel copyWithPharmacistMain({
     List<PickerDateRange>? dateRanges,
     Map<String, dynamic>? userData,
     DateTime? startDate,
@@ -30,7 +30,7 @@ class PharmacistMainModel {
     bool? permanentJob,
     bool? nightShift,
   }) {
-    return PharmacistMainModel(
+    return UserMainModel(
       dateRanges: dateRanges ?? this.dateRanges,
       userData: userData ?? this.userData,
       startDate: startDate ?? this.startDate,

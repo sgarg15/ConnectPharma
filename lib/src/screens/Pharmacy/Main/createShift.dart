@@ -895,7 +895,7 @@ class _CreateShiftPharmacyState extends ConsumerState<CreateShift> {
                                     RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ))),
-                            onPressed: (!ref
+                            onPressed: (ref
                                     .read(pharmacyMainProvider.notifier)
                                     .isValidCreateShift())
                                 ? () {
