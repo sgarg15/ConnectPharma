@@ -204,6 +204,17 @@ class CustomInputField extends StatelessWidget {
   }
 }
 
+class CustomIcons {
+  static String backArrow = 'assets/icons/back-arrow.svg';
+  static String singUpDude = 'assets/icons/sign-up.svg';
+  static String emailIcon = 'assets/icons/emailIcon.svg';
+  static String passwordIcon = 'assets/icons/passwordIcon.svg';
+  static String cornerCircles = 'assets/icons/CornerDesigns.svg';
+  static String personIcon = 'assets/icons/person.svg';
+  static String phoneIcon = 'assets/icons/phone.svg';
+}
+
+
 class Software {
   int id;
   String name;
@@ -419,3 +430,4 @@ extension DateTimeExtension on DateTime? {
     return isAfter && isBefore;
   }
 }
+

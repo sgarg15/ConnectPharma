@@ -23,26 +23,18 @@ final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
-class PharmacistSignUpPage extends ConsumerStatefulWidget {
+class UserSignUpPage extends ConsumerStatefulWidget {
   String userType = "";
-  PharmacistSignUpPage({Key? key, required this.userType}) : super(key: key);
+  UserSignUpPage({Key? key, required this.userType}) : super(key: key);
 
   @override
-  _PharmacistSignUpPageState createState() => _PharmacistSignUpPageState();
+  _UserSignUpPageState createState() => _UserSignUpPageState();
 }
 
-class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
+class _UserSignUpPageState extends ConsumerState<UserSignUpPage> {
   bool checkedValue = false;
-  bool isSwitched = true;
   bool passwordVisibility = false;
-  //String _password, _email;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  final String backArrow = 'assets/icons/back-arrow.svg';
-  final String singUpDude = 'assets/icons/sign-up.svg';
-  final String emailIcon = 'assets/icons/emailIcon.svg';
-  final String passwordIcon = 'assets/icons/passwordIcon.svg';
-  final String cornerCircles = 'assets/icons/CornerDesigns.svg';
 
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -62,157 +54,175 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
             FocusManager.instance.primaryFocus?.unfocus();
           },
           child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            body: Stack(
-              children: <Widget>[
-                Container(
-                    transform: Matrix4.translationValues(MediaQuery.of(context).size.width * -0.55,
-                        MediaQuery.of(context).size.height * -0.28, 0),
-                    child: SvgPicture.asset(cornerCircles)),
-                Container(
-                    transform: Matrix4.translationValues(MediaQuery.of(context).size.width * 0.65,
-                        MediaQuery.of(context).size.height * 0.77, 0),
-                    child: SvgPicture.asset(cornerCircles)),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 50),
-                  child: GestureDetector(
-                    child: SvgPicture.asset(backArrow),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                
-                Center(
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: LayoutBuilder(
-                          builder: ((context, constraints) {
-                            return NotificationListener<OverscrollIndicatorNotification>(
-                              onNotification: (OverscrollIndicatorNotification overscroll) {
-                                overscroll.disallowIndicator();
-                                return true;
-                              },
-                              child: SingleChildScrollView(
-                                physics: ClampingScrollPhysics(),
-                                child: Column(
-                                  children: [
-                                    constraints.maxHeight > 700
-                                        ? SizedBox(height: 150)
-                                        : SizedBox(height: 70),
-                                    //Sign Up Picture
-                                    SvgPicture.asset(singUpDude),
-                                    SizedBox(height: 30),
-
-                                    //Sign Up Text
-                                    RichText(
-                                      text: TextSpan(
-                                        text: "Sign Up",
-                                        style: TextStyle(
-                                            fontSize: 32.0,
-                                            color: Color(0xFF4A4848),
-                                            fontFamily: GoogleFonts.montserrat(
-                                              fontWeight: FontWeight.w600,
-                                            ).fontFamily),
-                                      ),
-                                    ),
-                                    SizedBox(height: 30),
-
-                                    //Email Form
-                                    emailField(context, ref),
-                                    SizedBox(height: 30),
-
-                                    //Password Form
-                                    passwordField(context, ref),
-                                    SizedBox(height: 10),
-
-                                    //Newsletter Checkbox
-                                    Container(
-                                      width: MediaQuery.of(context).size.width * 0.8,
-                                      child: CheckboxListTile(
-                                        selectedTileColor: Color(0xFF0069C1),
-                                        activeColor: Color(0xFF0069C1),
-                                        contentPadding: EdgeInsets.only(left: 0, right: 0),
-                                        title: Transform.translate(
-                                          offset: Offset(-10, 0),
-                                          child: RichText(
-                                            text: TextSpan(
-                                              text:
-                                                  "I would like to receive your newsletter and other promotional information.",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w300,
-                                                fontSize: 14.0,
-                                                color: Color(0xFF666666),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        value: checkedValue,
-                                        onChanged: (newValue) {
-                                          //todo: Save the check value information to save to account
-                                          setState(() {
-                                            checkedValue = newValue!;
-                                          });
-                                        },
-                                        controlAffinity: ListTileControlAffinity
-                                            .leading, //  <-- leading Checkbox
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-
-                                    //Sign Up Button
-                                    signUpButton(context, ref),
-                                    SizedBox(height: 20),
-
-                                    //Login Text
-                                    RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: "Already have an Account? ",
-                                            style: TextStyle(
-                                                fontSize: 13.0,
-                                                color: Color.fromARGB(169, 60, 60, 60),
-                                                fontFamily: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w400,
-                                                ).fontFamily),
-                                          ),
-                                          TextSpan(
-                                            recognizer: new TapGestureRecognizer()
-                                              ..onTap = () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => LogInPage()));
-                                              },
-                                            text: "Login",
-                                            style: TextStyle(
-                                                fontSize: 13.0,
-                                                color: Color(0xFF0069C1),
-                                                fontFamily: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                ).fontFamily),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            body: SingleChildScrollView(
+              child: _buildBody(),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildBody() {
+    return Stack(
+      children: <Widget>[
+        Container(
+            transform: Matrix4.translationValues(MediaQuery.of(context).size.width * -0.55,
+                MediaQuery.of(context).size.height * -0.28, 0),
+            child: SvgPicture.asset(CustomIcons.cornerCircles)),
+        Container(
+            transform: Matrix4.translationValues(MediaQuery.of(context).size.width * 0.65,
+                MediaQuery.of(context).size.height * 0.77, 0),
+            child: SvgPicture.asset(CustomIcons.cornerCircles)),
+        Padding(
+          padding: EdgeInsets.only(left: 20, top: 50),
+          child: GestureDetector(
+            child: SvgPicture.asset(CustomIcons.backArrow),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        Center(
+          child: Column(
+            children: <Widget>[
+              LayoutBuilder(
+                builder: ((context, constraints) {
+                  return NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (OverscrollIndicatorNotification overscroll) {
+                      overscroll.disallowIndicator();
+                      return true;
+                    },
+                    child: SingleChildScrollView(
+                      physics: ClampingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          constraints.maxHeight > 700
+                              ? SizedBox(height: 150)
+                              : SizedBox(height: 70),
+                          //Sign Up Picture
+                          SvgPicture.asset(CustomIcons.singUpDude),
+                          SizedBox(height: 30),
+
+                          //Sign Up Text
+                          RichText(
+                            text: TextSpan(
+                              text: "Sign Up",
+                              style: TextStyle(
+                                  fontSize: 32.0,
+                                  color: Color(0xFF4A4848),
+                                  fontFamily: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w600,
+                                  ).fontFamily),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+
+                          //Email Form
+                          emailField(context, ref),
+                          SizedBox(height: 30),
+
+                          //Password Form
+                          passwordField(context, ref),
+                          SizedBox(height: 10),
+
+                          //Newsletter Checkbox
+                          newsLetterCheckbox(context),
+                          SizedBox(height: 20),
+
+                          //Sign Up Button
+                          signUpButton(context, ref),
+                          SizedBox(height: 20),
+
+                          //Login Text
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Already have an account? ",
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      color: Color.fromARGB(169, 60, 60, 60),
+                                      fontFamily: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w400,
+                                      ).fontFamily),
+                                ),
+                                TextSpan(
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => LogInPage()));
+                                    },
+                                  text: "Login",
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      color: Color(0xFF0069C1),
+                                      fontFamily: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                      ).fontFamily),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  //Seperated UI
+  Column backgroundCircles() {
+    return Column(
+      children: [
+        Container(
+            transform: Matrix4.translationValues(MediaQuery.of(context).size.width * -0.55,
+                MediaQuery.of(context).size.height * -0.28, 0),
+            child: SvgPicture.asset(CustomIcons.cornerCircles)),
+        Container(
+            transform: Matrix4.translationValues(MediaQuery.of(context).size.width * 0.65,
+                MediaQuery.of(context).size.height * 0.77, 0),
+            child: SvgPicture.asset(CustomIcons.cornerCircles)),
+      ],
+    );
+  }
+
+  Container newsLetterCheckbox(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: CheckboxListTile(
+        selectedTileColor: Color(0xFF0069C1),
+        activeColor: Color(0xFF0069C1),
+        contentPadding: EdgeInsets.only(left: 0, right: 0),
+        title: Transform.translate(
+          offset: Offset(-10, 0),
+          child: RichText(
+            text: TextSpan(
+              text: "I would like to receive your newsletter and other promotional information.",
+              style: TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: 14.0,
+                color: Color(0xFF666666),
+              ),
+            ),
+          ),
+        ),
+        value: checkedValue,
+        onChanged: (newValue) {
+          //todo: Save the check value information to save to account
+          setState(() {
+            checkedValue = newValue!;
+          });
+        },
+        controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
+      ),
     );
   }
 
@@ -224,7 +234,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                SvgPicture.asset(emailIcon, width: 15, height: 15),
+                SvgPicture.asset(CustomIcons.emailIcon, width: 15, height: 15),
                 Padding(
                   padding: const EdgeInsets.only(left: 7),
                   child: RichText(
@@ -279,7 +289,7 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SvgPicture.asset(passwordIcon, width: 25, height: 25),
+              SvgPicture.asset(CustomIcons.passwordIcon, width: 25, height: 25),
               Padding(
                 padding: const EdgeInsets.only(left: 5, top: 6),
                 child: RichText(
@@ -356,12 +366,11 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
               borderRadius: BorderRadius.circular(8),
             ))),
         onPressed: (ref.read(userSignUpProvider.notifier).isValidPharmacistSignUp())
-            ? null
-            : () async {
+            ? () async {
                 List<String> signInMethod = await FirebaseAuth.instance
                     .fetchSignInMethodsForEmail(ref.read(userSignUpProvider.notifier).email);
                 if (signInMethod.isNotEmpty) {
-                  print("-----------------ERROR------------------");
+                  print("Email already exists");
                   await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -381,7 +390,8 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (context) => PharmacistLocation()));
                 }
-              },
+              }
+            : null,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -424,101 +434,6 @@ class _PharmacistSignUpPageState extends ConsumerState<PharmacistSignUpPage> {
       ),
     );
   }
-
-
-  // Align signUpButton(WidgetRef ref, BuildContext context) {
-  //   return Align(
-  //     alignment: Alignment(0, 0.87),
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: <Widget>[
-  //         //Sign Up Button
-  //         SizedBox(
-  //           width: 324,
-  //           height: 51,
-  //           child: ElevatedButton(
-  //             style: ButtonStyle(
-  //                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
-  //                   (Set<MaterialState> states) {
-  //                     if (states.contains(MaterialState.pressed))
-  //                       return Color(0xFFF0069C1);
-  //                     else if (states.contains(MaterialState.disabled)) return Colors.grey;
-  //                     return Color(0xFFF0069C1); // Use the component's default.
-  //                   },
-  //                 ),
-  //                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(100),
-  //                 ))),
-  //             onPressed: (ref.read(userSignUpProvider.notifier).isValidPharmacistSignUp())
-  //                 ? null
-  //                 : () async {
-  //                     List<String> signInMethod = await FirebaseAuth.instance
-  //                         .fetchSignInMethodsForEmail(
-  //                             ref.read(userSignUpProvider.notifier).email);
-  //                     if (signInMethod.isNotEmpty) {
-  //                       print("-----------------ERROR------------------");
-  //                       await showDialog(
-  //                           context: context,
-  //                           builder: (context) => AlertDialog(
-  //                                 title: Text("Error"),
-  //                                 content: Text(
-  //                                     "Sorry this email address already exists. Please use another address. \n\nThank you!"),
-  //                                 actions: <Widget>[
-  //                                   new TextButton(
-  //                                     child: new Text("Ok"),
-  //                                     onPressed: () {
-  //                                       Navigator.of(context).pop();
-  //                                     },
-  //                                   ),
-  //                                 ],
-  //                               ));
-  //                     } else {
-  //                       Navigator.push(
-  //                           context, MaterialPageRoute(builder: (context) => PharmacistLocation()));
-  //                     }
-  //                   },
-  //             child: Column(
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 if (widget.userType == "Pharmacist") ...[
-  //                   RichText(
-  //                     text: TextSpan(
-  //                       text: "Sign Up as a pharmacist",
-  //                       style: TextStyle(
-  //                         fontSize: 16,
-  //                         color: Colors.white,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ] else if (widget.userType == "Pharmacy Assistant") ...[
-  //                   RichText(
-  //                     text: TextSpan(
-  //                       text: "Sign Up as a pharmacy assistant",
-  //                       style: TextStyle(
-  //                         fontSize: 16,
-  //                         color: Colors.white,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ] else if (widget.userType == "Pharmacy Technician") ...[
-  //                   RichText(
-  //                     text: TextSpan(
-  //                       text: "Sign Up as a pharmacy technician",
-  //                       style: TextStyle(
-  //                         fontSize: 16,
-  //                         color: Colors.white,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ]
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Align signUpInfo(WidgetRef ref) {
     return Align(

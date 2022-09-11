@@ -732,7 +732,7 @@ SingleChildScrollView(
               ),
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 child: Text('Close'),
                 onPressed: () {
                   Navigator.of(context).pop();

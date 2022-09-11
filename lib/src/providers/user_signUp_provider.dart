@@ -11,9 +11,9 @@ class UserSignUpProvider extends StateNotifier<UserSignUpModel> {
 
   bool isValidPharmacistSignUp() {
     if (EmailValidator.validate(state.email.toString()) == false || state.password.length < 6) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   }
 

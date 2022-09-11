@@ -86,7 +86,8 @@ class _LogInPageState extends ConsumerState<LogInPage> {
                     child: GestureDetector(
                       child: SvgPicture.asset(backArrow),
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (context) => ConnectPharma()));
                       },
                     ),
                   ),

@@ -1,5 +1,5 @@
+import 'package:connectpharma/src/screens/Pharmacy/Sign%20Up/1pharmacy_signup.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +11,6 @@ import 'package:connectpharma/src/screens/Pharmacist/Sign Up/3pharmacistInformat
 import 'package:uuid/uuid.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
-import '../../../../main.dart';
 
 class PharmacistLocation extends ConsumerStatefulWidget {
   const PharmacistLocation({Key? key}) : super(key: key);
@@ -21,158 +20,160 @@ class PharmacistLocation extends ConsumerStatefulWidget {
 }
 
 class _PharmacistLocationState extends ConsumerState<PharmacistLocation> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController streetAddress = TextEditingController();
+
+  @override
+  void initState() {
+    streetAddress.text = ref.read(pharmacySignUpProvider).streetAddress;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController streetAddress =
-        TextEditingController(text: ref.read(userSignUpProvider.notifier).address);
-
-    final String personIcon = 'assets/icons/person.svg';
-    final String phoneIcon = 'assets/icons/phone.svg';
-
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-          appBar: AppBar(
-            iconTheme: IconThemeData(
-              color: Colors.white, //change your color here
-            ),
-            leading: IconButton(
-                icon: Icon(Icons.arrow_back_sharp), onPressed: () => Navigator.pop(context)),
-            title: new Text(
-              "Pharmacist Location",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
-              ),
-            ),
-            backgroundColor: Color(0xFFF0069C1),
-            foregroundColor: Colors.white,
-            elevation: 12,
-            bottomOpacity: 1,
-            shadowColor: Colors.white,
-          ),
-          body: Stack(
-            children: [
-              Center(
-                child: Column(children: [
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: ((context, constraints) {
-                        return NotificationListener<OverscrollIndicatorNotification>(
-                          onNotification: (OverscrollIndicatorNotification overscroll) {
-                            overscroll.disallowIndicator();
-                            return true;
-                          },
-                          
-                          child: SingleChildScrollView(
-                            physics: ClampingScrollPhysics(),
-                            child: Column(
-                              children: [
-                              SizedBox(height: 30),
-                              //Information Text
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                                child: RichText(
-                                  textAlign: TextAlign.left,
-                                  text: TextSpan(
-                                    text:
-                                        "Please provide us with your location information, to help us provide results tailored to you.",
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                    ),
-                                  ),
+        appBar: _buildAppBar(context),
+        body: _buildBody(streetAddress),
+      ),
+    );
+  }
+
+  Stack _buildBody(TextEditingController streetAddress) {
+    return Stack(
+      children: [
+        Center(
+          child: Column(children: [
+            Expanded(
+              child: LayoutBuilder(
+                builder: ((context, constraints) {
+                  return NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (OverscrollIndicatorNotification overscroll) {
+                      overscroll.disallowIndicator();
+                      return true;
+                    },
+                    child: SingleChildScrollView(
+                      physics: ClampingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30),
+                          //Information Text
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                            child: RichText(
+                              textAlign: TextAlign.left,
+                              text: TextSpan(
+                                text:
+                                    "Please provide us with your location information, to help us provide results tailored to you.",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 13,
+                                  color: Colors.black,
                                 ),
                               ),
-                              SizedBox(height: 30),
-
-                              //First Name
-                              CustomInputField(
-                                fieldTitle: "First Name",
-                                hintText: "Enter your first name",
-                                icon: personIcon,
-                                keyboardStyle: TextInputType.name,
-                                onChanged: (String firstName) {
-                                  ref
-                                      .read(userSignUpProvider.notifier)
-                                      .changeFirstName(firstName);
-                                },
-                                validation: (value) {
-                                  if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
-                                      .hasMatch(value ?? "")) {
-                                    return "Invalid field";
-                                  }
-                                  return null;
-                                },
-                                initialValue: ref.read(userSignUpProvider.notifier).firstName,
-                              ),
-                              SizedBox(height: 30),
-
-                              //Last Name
-                              CustomInputField(
-                                fieldTitle: "Last Name",
-                                hintText: "Enter your last name",
-                                icon: personIcon,
-                                keyboardStyle: TextInputType.name,
-                                onChanged: (String lastName) {
-                                  ref
-                                      .read(userSignUpProvider.notifier)
-                                      .changeLastName(lastName);
-                                },
-                                validation: (value) {
-                                  if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
-                                      .hasMatch(value ?? "")) {
-                                    return "Invalid field";
-                                  }
-                                  return null;
-                                },
-                                initialValue: ref.read(userSignUpProvider.notifier).lastName,
-                              ),
-                              SizedBox(height: 30),
-
-                              streetAddressContainer(context, ref, streetAddress),
-                              SizedBox(height: 30),
-
-                              //Phone Number
-                              CustomInputField(
-                                fieldTitle: "Phone Number",
-                                hintText: "+1 234 567 8910",
-                                icon: phoneIcon,
-                                keyboardStyle: TextInputType.number,
-                                onChanged: (String phoneNumber) {
-                                  ref
-                                      .read(userSignUpProvider.notifier)
-                                      .changePhoneNumber(phoneNumber);
-                                },
-                                validation: (value) {
-                                  if (value.length < 4) {
-                                    return "Phone Number is invalid";
-                                  }
-                                  return null;
-                                },
-                                initialValue:
-                                    ref.read(userSignUpProvider.notifier).phoneNumber,
-                                formatter: [PhoneInputFormatter()],
-                              ),
-                              SizedBox(height: 30),
-
-                              nextButton(),
-                            ]),
+                            ),
                           ),
-                        );
-                      }),
+                          SizedBox(height: 30),
+
+                          //First Name
+                          CustomInputField(
+                            fieldTitle: "First Name",
+                            hintText: "Enter your first name",
+                            icon: CustomIcons.personIcon,
+                            keyboardStyle: TextInputType.name,
+                            onChanged: (String firstName) {
+                              ref.read(userSignUpProvider.notifier).changeFirstName(firstName);
+                            },
+                            validation: (value) {
+                              if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                                  .hasMatch(value ?? "")) {
+                                return "Invalid field";
+                              }
+                              return null;
+                            },
+                            initialValue: ref.read(userSignUpProvider.notifier).firstName,
+                          ),
+                          SizedBox(height: 30),
+
+                          //Last Name
+                          CustomInputField(
+                            fieldTitle: "Last Name",
+                            hintText: "Enter your last name",
+                            icon: CustomIcons.personIcon,
+                            keyboardStyle: TextInputType.name,
+                            onChanged: (String lastName) {
+                              ref.read(userSignUpProvider.notifier).changeLastName(lastName);
+                            },
+                            validation: (value) {
+                              if (!RegExp(r"^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$")
+                                  .hasMatch(value ?? "")) {
+                                return "Invalid field";
+                              }
+                              return null;
+                            },
+                            initialValue: ref.read(userSignUpProvider.notifier).lastName,
+                          ),
+                          SizedBox(height: 30),
+
+                          streetAddressContainer(context, ref, streetAddress),
+                          SizedBox(height: 30),
+
+                          //Phone Number
+                          CustomInputField(
+                            fieldTitle: "Phone Number",
+                            hintText: "+1 234 567 8910",
+                            icon: CustomIcons.phoneIcon,
+                            keyboardStyle: TextInputType.number,
+                            onChanged: (String phoneNumber) {
+                              ref.read(userSignUpProvider.notifier).changePhoneNumber(phoneNumber);
+                            },
+                            validation: (value) {
+                              if (value.length < 4) {
+                                return "Phone Number is invalid";
+                              }
+                              return null;
+                            },
+                            initialValue: ref.read(userSignUpProvider.notifier).phoneNumber,
+                            formatter: [PhoneInputFormatter()],
+                          ),
+                          SizedBox(height: 30),
+
+                          nextButton(),
+                        ],
+                      ),
                     ),
-                  )
-                ]),
-              )
-            ],
-          )),
+                  );
+                }),
+              ),
+            )
+          ]),
+        )
+      ],
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      iconTheme: IconThemeData(
+        color: Colors.white, //change your color here
+      ),
+      leading:
+          IconButton(icon: Icon(Icons.arrow_back_sharp), onPressed: () => Navigator.pop(context)),
+      title: new Text(
+        "Pharmacist Location",
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+          fontFamily: GoogleFonts.montserrat(fontWeight: FontWeight.normal).fontFamily,
+        ),
+      ),
+      backgroundColor: Color(0xFF0069C1),
+      foregroundColor: Colors.white,
+      elevation: 12,
+      bottomOpacity: 1,
+      shadowColor: Colors.white,
     );
   }
 

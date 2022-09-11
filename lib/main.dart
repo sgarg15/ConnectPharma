@@ -294,7 +294,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PharmacistSignUpPage(
+                            builder: (context) => UserSignUpPage(
                                   userType: "Pharmacist",
                                 )));
                   },
@@ -325,7 +325,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PharmacistSignUpPage(
+                            builder: (context) => UserSignUpPage(
                                   userType: "Pharmacy Assistant",
                                 )));
                   },
@@ -356,7 +356,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PharmacistSignUpPage(
+                            builder: (context) => UserSignUpPage(
                                   userType: "Pharmacy Technician",
                                 )));
                   },
