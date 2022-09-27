@@ -94,21 +94,26 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                 SizedBox(height: 20),
 
                                 //Active Member
-                                TextandToggle(
-                                  context,
-                                  ref,
-                                  certificateIcon,
-                                  "Are you currently registered as an active member and in good standing with your provincial pharmacy licensing authority?",
-                                  ref.read(userSignUpProvider).activeMember,
-                                  (value) {
-                                    ref
-                                        .read(userSignUpProvider.notifier)
-                                        .changeActiveMember(value);
-                                  },
-                                ),
+                                if (ref.read(userSignUpProvider).userType !=
+                                    "Pharmacist Assistant") ...[
+                                  TextandToggle(
+                                    context,
+                                    ref,
+                                    certificateIcon,
+                                    "Are you currently registered as an active member and in good standing with your provincial pharmacy licensing authority?",
+                                    ref.read(userSignUpProvider).activeMember,
+                                    (value) {
+                                      ref
+                                          .read(userSignUpProvider.notifier)
+                                          .changeActiveMember(value);
+                                    },
+                                  ),
                                 SizedBox(height: 20),
-
+                                ],
+                                
                                 //Liability Insurance
+                                if (ref.read(userSignUpProvider).userType !=
+                                    "Pharmacist Assistant") ...[
                                 TextandToggle(
                                   context,
                                   ref,
@@ -122,8 +127,11 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   },
                                 ),
                                 SizedBox(height: 20),
+                                ],
 
                                 //License Restricted
+                                if (ref.read(userSignUpProvider).userType !=
+                                    "Pharmacist Assistant") ...[
                                 TextandToggle(
                                   context,
                                   ref,
@@ -137,7 +145,8 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                   },
                                 ),
                                 SizedBox(height: 20),
-
+                                ],
+                              
                                 //Professional Malpractice
                                 TextandToggle(
                                   context,

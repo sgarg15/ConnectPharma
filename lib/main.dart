@@ -17,11 +17,6 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/services.dart';
 import 'package:device_preview/device_preview.dart';
 
-
-//TODO: Change Registration Province In Pharmacist to ask for Full province and not abbreviation for pharmacist signup
-//Decrease Registration Number from 5 to 4 digits for pharmacist signup
-//Add a option to select usertype at the end of pharmacist signup in case the value is null or empty
-
 final authProvider2 = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
@@ -33,7 +28,7 @@ Future<void> main() async {
   //String? token = await FirebaseAppCheck.instance.getToken();
   //print("The token is: $token");
 
-  const bool useEmulator = true;
+  const bool useEmulator = false;
 
   // ignore: dead_code
   if (useEmulator) {
