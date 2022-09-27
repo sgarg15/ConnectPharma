@@ -4,6 +4,9 @@ An app to help connect Pharmacies looking for relief Pharmacists and Pharmacists
 ## Project Images
 <img src="assets/images/main.jpg" width="200"> <img src="assets/images/signUp.jpg" width="200"> <img src="assets/images/jobHistory.jpg" width="200"> <img src="assets/images/searchPharmacist.jpg" width="200">
 
+## View progress
+- Working through the project, I realized I needed a better way to organize my ToDo's rather then just commenting them in my main file. So I decided to create a Kanban board in notion to help with that. To view my current to-do's and see my progress on this project, [click here](https://neat-fluorine-a19.notion.site/deae60de15d8482fbe753b646757c184?v=78fdec3d6f114c0cb160b75ce109a02e).
+
 ## Requirments
 - Firebase Project Setup
     - More Info (https://firebase.google.com/docs/flutter/setup?platform=android)
