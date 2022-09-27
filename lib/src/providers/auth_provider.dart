@@ -110,8 +110,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   ///Function to upload the pharmacist details to firebase.
-  Future<UserCredential?> uploadPharmacistUserInformation(
-      WidgetRef ref, UserCredential? user, BuildContext context) async {
+  Future<UserCredential?> uploadPharmacistUserInformation(WidgetRef ref, UserCredential? user, BuildContext context) async {
     if (user == null) {
       return null;
     }

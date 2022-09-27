@@ -141,126 +141,12 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
     );
   }
 
-  /*
-SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              //All Fields
-              Align(
-                alignment: Alignment(-0.35, -0.70),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    //Front and Back of ID
-                    Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                            child: RichText(
-                              textAlign: TextAlign.left,
-                              text: TextSpan(
-                                text:
-                                    "Please provide a photo of the front and back of your government issued ID along with a profile photo to allow us to verify your identity.",
-                                style: GoogleFonts.questrial(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        //Front of ID
-                        selectFrontID(context),
-                        SizedBox(height: 10),
-                        //Back of ID
-                        selectBackID(context),
-                        SizedBox(height: 20),
-                      ],
-                    ),
-
-                    //Registration Certificate
-                    Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                            child: RichText(
-                              textAlign: TextAlign.left,
-                              text: TextSpan(
-                                text:
-                                    "Please provide a pdf of your Registration Certificate which can be found on the pharmaceutical website.",
-                                style: GoogleFonts.questrial(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        selectRegistrationCertificate(context),
-                        SizedBox(height: 20),
-                      ],
-                    ),
-
-                    //Profile Photo
-                    Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                            child: RichText(
-                              textAlign: TextAlign.left,
-                              text: TextSpan(
-                                text:
-                                    "Please provide an image of your self to be used as a profile photo for this app.",
-                                style: GoogleFonts.questrial(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        selectProfilePhoto(context),
-                        SizedBox(height: 10),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              //Newsletter Check Box
-              newsLetterCheckBox(),
-              SizedBox(height: 20),
-
-              //Submit
-              submitButton(),
-
-              SizedBox(height: 15),
-            ],
-          ),
-        ),
-     
-  */
-
   showLoaderDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
       content: new Row(
         children: [
           CircularProgressIndicator(),
-          Container(margin: EdgeInsets.only(left: 7), child: Text("Loading...")),
+          Container(margin: EdgeInsets.only(left: 12), child: Text("Loading...")),
         ],
       ),
     );
@@ -445,9 +331,9 @@ SingleChildScrollView(
                                               borderSide: BorderSide(color: Color(0xFFE8E8E8))),
                                         ),
                                         items: <String>[
-                                          'Pharmacy',
                                           'Pharmacist',
-                                          'Technician',
+                                          'Pharmacy Assistant',
+                                          'Pharmacy Technician',
                                         ].map<DropdownMenuItem<String>>((String value) {
                                           return DropdownMenuItem<String>(
                                               child: Text(value), value: value);
@@ -470,6 +356,7 @@ SingleChildScrollView(
                                     ),
                                   ],
                                 ));
+                        
                         print("ERROR");
                         final snackBar = SnackBar(
                           content:
@@ -1098,7 +985,6 @@ SingleChildScrollView(
                     width: 110,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        primary: Color(0xFFF0069C1),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),

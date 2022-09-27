@@ -301,6 +301,23 @@ List<Skill> skill = [
   Skill(id: 1, name: "Travel Health Education"),
 ];
 
+List<Skill> assistantskill = [
+  Skill(id: 1, name: "Additional Prescribing Authorization"),
+  Skill(id: 1, name: "Blister Pack"),
+  Skill(id: 1, name: "Cash Trained"),
+  Skill(id: 1, name: "Diabetes Education"),
+  Skill(id: 1, name: "Injection Certified"),
+  Skill(id: 1, name: "Interpreting Lab Results"),
+  Skill(id: 1, name: "Medication Review"),
+  Skill(id: 1, name: "Methadone/Suboxone"),
+  Skill(id: 1, name: "Minor Ailment Prescribing"),
+  Skill(id: 1, name: "Respiratory Education"),
+  Skill(id: 1, name: "Smoking Cessation"),
+  Skill(id: 1, name: "Speciality Compounding"),
+  Skill(id: 1, name: "Sterile IV Compounding"),
+  Skill(id: 1, name: "Travel Health Education"),
+];
+
 List<Language> language = [
   Language(id: 1, name: "Arabic"),
   Language(id: 1, name: "Bengali"),

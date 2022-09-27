@@ -74,7 +74,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                     textAlign: TextAlign.left,
                                     text: TextSpan(
                                       text:
-                                          "Please provide us with your Pharmacist Information, to help us verify.",
+                                          "Please provide us with your information, to help us verify.",
                                       style: GoogleFonts.montserrat(
                                         fontSize: 13,
                                         color: Colors.black,

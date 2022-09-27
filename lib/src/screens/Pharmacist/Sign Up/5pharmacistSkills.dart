@@ -22,7 +22,8 @@ class PharmacistSkills extends ConsumerStatefulWidget {
 class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
   final _softwareItems =
       software.map((software) => MultiSelectItem<Software>(software, software.name)).toList();
-  final _skillItems = skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+
+  List<MultiSelectItem<Skill?>> _skillItems = [];
 
   final _languageItems =
       language.map((language) => MultiSelectItem<Language>(language, language.name)).toList();
@@ -36,6 +37,17 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
   bool filePicked = false;
   FilePickerResult? _result;
   File? file;
+
+  @override
+  void initState() {
+    if (ref.read(userSignUpProvider.notifier).userType == "Pharmacist Assistant") {
+      _skillItems =
+          assistantskill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+    } else {
+      skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +250,7 @@ SingleChildScrollView(
                   ? null
                   : () {
                       print("Pressed");
-                     
+
                       Navigator.push(
                           context, MaterialPageRoute(builder: (context) => PhotoInformation()));
                     },
