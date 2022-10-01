@@ -27,8 +27,7 @@ final authProviderMain = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();
 });
 
-final pharmacistMainProvider =
-    StateNotifierProvider<UserMainProvider, UserMainModel>((ref) {
+final pharmacistMainProvider = StateNotifierProvider<UserMainProvider, UserMainModel>((ref) {
   return UserMainProvider();
 });
 
@@ -65,6 +64,33 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
   String magnifyIcon = "assets/icons/magnify.svg";
 
+  Future<void> createLocalDirectories() async {
+    print("Inside Local Directories Function");
+    String jobsListDirectoryPath = "${await localStorage.localPath}/jobsList";
+    String userDirectoryPath =
+        "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}";
+
+    if (!Directory(userDirectoryPath).existsSync()) {
+      print("Creating Directories");
+
+      String userJobsFilePath =
+          "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList";
+
+      String userNotificationsFilePath =
+          "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/notifications";
+
+      await localStorage.createLocalDirectory(directoryName: 'jobsList');
+
+      await localStorage.createDirectory(path: userDirectoryPath);
+
+      await File(userJobsFilePath).create();
+
+      await File(userNotificationsFilePath).create();
+
+      print("Directories Created2");
+    }
+  }
+
   void clearFilesOrDirectory() async {
     print("All Files Local: ${localStorage.allDirectoryFiles(path: await localStorage.localPath)}");
 
@@ -96,11 +122,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
     print("All User Notifications: ${localStorage.readFile(filePath: userNotificationsFilePath)}");
 
-    if (!File(userNotificationsFilePath).existsSync()) {
-      File(userNotificationsFilePath).createSync();
-      localStorage.writeFile(filePath: userNotificationsFilePath, data: "");
-    }
-
     print("Notifications File Path: ${localStorage.readFile(filePath: userNotificationsFilePath)}");
 
     if (localStorage.readFile(filePath: userNotificationsFilePath).isNotEmpty) {
@@ -109,6 +130,21 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
 
     // print("Updated Job Alerts");
     print("Updated Job Alerts: $alertJobs");
+  }
+
+  Future<void> updateJobNotifications(String userNotificationsFilePath) async {
+    if (alertJobs.isNotEmpty) {
+      String previousNotifications = File(userNotificationsFilePath).readAsStringSync();
+
+      print("Previous Notifications: $previousNotifications");
+      if (previousNotifications.isNotEmpty) {
+        print("Previous Notifications: $previousNotifications");
+        alertJobs.addAll(jsonDecode(previousNotifications));
+      }
+
+      await localStorage.writeFile(
+          filePath: userNotificationsFilePath, data: jsonEncode(alertJobs));
+    }
   }
 
   Future<void> checkIfJobUpdated(WidgetRef ref, Map allJobs) async {
@@ -138,39 +174,16 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
     });
     print("Storage jobs data map: $storageJobsMap");
 
-    //Check if both directory and file exists
-    if (!Directory(jobsListDirectoryPath).existsSync()) {
-      print("\n---------Creating all directories---------\n");
-      jobsListDirectory = await localStorage.createLocalDirectory(directoryName: 'jobsList');
-
-      userDirectory = await localStorage.createDirectory(path: userDirectoryPath);
-
-      File(userJobsFilePath).createSync();
-
-      File(userNotificationsFilePath).createSync();
-
-      await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
-    } else if (!File(userJobsFilePath).existsSync()) {
-      print("Writing File");
-      File(userJobsFilePath).createSync(recursive: true);
-
-      await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
-    }
-
     String jobsListFile = localStorage.readFile(filePath: userJobsFilePath);
 
     print("File: $jobsListFile");
 
-    if (jobsListFile.isEmpty) {
-      await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+    await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
 
-      jobsListFile = localStorage.readFile(filePath: userJobsFilePath);
-      print("Updated Job List File: $jobsListFile");
-    }
+    jobsListFile = localStorage.readFile(filePath: userJobsFilePath);
+    print("Updated Job List File: $jobsListFile");
 
-    if (jobsListFile.isEmpty) {
-      jobsMap = Map();
-    } else {
+    if (jobsListFile.isNotEmpty) {
       jobsMap = jsonDecode(jobsListFile);
     }
 
@@ -262,41 +275,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
     //   });
     // }
 
-    await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
+    // await localStorage.writeFile(filePath: userJobsFilePath, data: jsonEncode(storageJobsMap));
 
-    if (alertJobs.isNotEmpty) {
-      if (!File(userNotificationsFilePath).existsSync()) {
-        File(userNotificationsFilePath).createSync(recursive: true);
-      }
-
-      String previousNotifications = File(userNotificationsFilePath).readAsStringSync();
-
-      print("Previous Notifications: $previousNotifications");
-      if (previousNotifications.isNotEmpty) {
-        print("Previous Notifications: $previousNotifications");
-        alertJobs.addAll(jsonDecode(previousNotifications));
-      }
-
-      await localStorage.writeFile(
-          filePath: userNotificationsFilePath, data: jsonEncode(alertJobs));
-    }
+    await updateJobNotifications(userNotificationsFilePath);
     print("File: $jobsListFile");
     print("Alert Jobs: $alertJobs");
   }
 
-  @override
-  void initState() {
-    super.initState();
-    print("Init State");
-
-    print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
-    //clearFilesOrDirectory();
-    userDataFirestoreSort(ref);
-    //checkIfJobUpdated(ref, allJobs);
-    jobsFirestoreSort(ref);
-  }
-
-  void userDataFirestoreSort(WidgetRef ref) {
+  void getUserDataFirestore(WidgetRef ref) {
     userDataStreamSub?.cancel();
     userDataStreamSub = userRef
         .doc(ref.read(userProviderLogin.notifier).userUID)
@@ -341,39 +327,26 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
           }
         });
         print(ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] == "Pharmacist");
-        if (ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] == "Pharmacist" ||
-            ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] ==
-                "Pharmacy Assistant" ||
-            ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] ==
-                "Pharmacy Technician") {
-          await checkIfJobUpdated(ref, allJobs);
-
-          updateJobAlerts(ref).whenComplete(() {
-            setState(() {});
-          });
+        if (ref.read(pharmacistMainProvider.notifier).userDataMap?["userType"] != "Pharmacy") {
+          await checkIfJobUpdated(ref, allJobs).whenComplete(() => setState(() {}));
         }
-      } else {
-        print("Writing Empty File");
-        clearFilesOrDirectory();
-        // print(
-        //     "All Files USER: ${localStorage.allDirectoryFiles(path: "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}")}");
-        userDirectory = await localStorage.createDirectory(
-            path:
-                "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}");
-
-        File("${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList")
-            .createSync();
-
-        File("${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/notifications")
-            .createSync();
-        print(
-            "All Files USER: ${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList");
-        localStorage.writeFile(
-            filePath:
-                "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList",
-            data: "");
       }
     });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    print("Init State");
+    //Create all local directories if they don't exist
+    createLocalDirectories();
+
+    print("User UID: ${ref.read(userProviderLogin.notifier).userUID}");
+    //clearFilesOrDirectory();
+    getUserDataFirestore(ref);
+    checkIfJobUpdated(ref, allJobs);
+    jobsFirestoreSort(ref);
   }
 
   @override
@@ -562,15 +535,14 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                   Column(
                     children: [
                       ExpansionTile(
-                        
-                          textColor: Color(0xFF0069C1),
-                          title: Text(
-                            "Current Jobs (${currentJobDataMap.length})",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: GoogleFonts.montserrat().fontFamily),
-                          ),
+                        textColor: Color(0xFF0069C1),
+                        title: Text(
+                          "Current Jobs (${currentJobDataMap.length})",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: GoogleFonts.montserrat().fontFamily),
+                        ),
                         children: [
                           Divider(
                             color: Color(0xFFC6C6C6),
@@ -707,13 +679,11 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                     },
                   ),
                 ),
-
                 if (index != currentJobDataMap.length - 1)
                   Divider(
                     color: Color(0xFFC6C6C6),
                     thickness: 1,
                   ),
-               
               ],
             );
           },
@@ -748,7 +718,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
-
                     title: new Text(
                       DateFormat("MMM d, y").format(DateTime.parse(
                               appliedJobDataMap[key]["startDate"].toDate().toString())) +
@@ -772,7 +741,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                     ),
-                          
                     onTap: () {
                       print("Tapped");
                       Navigator.push(
@@ -826,7 +794,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
                     enabled: false,
-
                     title: new Text(
                       DateFormat("MMM d, y").format(DateTime.parse(
                               pastJobDataMap[key]["startDate"].toDate().toString())) +
@@ -850,7 +817,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                     ),
-                          
                     onTap: () {
                       // Navigator.push(
                       //     context,
@@ -899,7 +865,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
           physics: new NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: rejectedJobDataMap.length,
-          
           itemBuilder: (BuildContext context, int index) {
             String key = rejectedJobDataMap.keys.elementAt(index).toString();
             return Column(
@@ -931,7 +896,6 @@ class _JobHistoryState extends ConsumerState<JobHistoryPharmacist> {
                         fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
                     ),
-                    
                     onTap: () {
                       // Navigator.push(
                       //     context,

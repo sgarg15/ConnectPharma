@@ -44,6 +44,7 @@ class LocalStorage {
   Future<Directory> createLocalDirectory({required String directoryName}) async {
     final _path = await localPath;
     final _directory = Directory('$_path/$directoryName');
+    print("Local Directory Created");
     return _directory.create();
   }
 

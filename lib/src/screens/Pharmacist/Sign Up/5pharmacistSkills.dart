@@ -44,7 +44,7 @@ class _PharmacistSkillsState extends ConsumerState<PharmacistSkills> {
       _skillItems =
           assistantskill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
     } else {
-      skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
+      _skillItems = skill.map((skill) => MultiSelectItem<Skill>(skill, skill.name)).toList();
     }
     super.initState();
   }

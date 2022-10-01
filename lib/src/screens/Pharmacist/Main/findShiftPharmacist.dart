@@ -67,14 +67,14 @@ class _FindShiftForPharmacistState extends ConsumerState<FindShiftForPharmacist>
   }
 
   void jobsSortedWithSchedule(WidgetRef ref) async {
-    String jobsListFile = localStorage.readFile(
-        filePath:
-            "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList");
+    // String jobsListFile = localStorage.readFile(
+    //     filePath:
+    //         "${await localStorage.localPath}/jobsList/${ref.read(userProviderLogin.notifier).userUID}/storageJobsList");
 
-    print("File: $jobsListFile");
-    if (jobsListFile.isNotEmpty) {
-      jobsMap = jsonDecode(jobsListFile);
-    }
+    // print("File: $jobsListFile");
+    // if (jobsListFile.isNotEmpty) {
+    //   jobsMap = jsonDecode(jobsListFile);
+    // }
 
     print("Jobs DataMap: $jobsDataMapTemp");
 
