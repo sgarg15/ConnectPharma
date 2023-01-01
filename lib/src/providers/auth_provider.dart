@@ -45,12 +45,17 @@ class AuthProvider extends ChangeNotifier {
   ///Function used to send given file to the given uid in firebase.
   ///
   ///It returns a [Future<String>] which contains the download url of the file.
-  Future<String> saveAsset(File? asset, String uid, String fileName, String userName) async {
+  Future<String> saveAsset(
+      File? asset, String uid, String fileName, String userName, String filetype) async {
     try {
       if (asset != null) {
         Reference reference = FirebaseStorage.instance.ref().child(uid).child(fileName);
-        UploadTask uploadTask =
-            reference.putFile(asset, SettableMetadata(contentType: 'application/pdf'));
+        UploadTask uploadTask = reference.putFile(asset);
+        if (filetype == 'pdf') {
+          uploadTask = reference.putFile(asset, SettableMetadata(contentType: 'application/pdf'));
+        } else if (filetype == 'image') {
+          uploadTask = reference.putFile(asset, SettableMetadata(contentType: 'image/jpeg'));
+        }
 
         String url = await (await uploadTask).ref.getDownloadURL();
         print("Uploaded $fileName");
@@ -118,18 +123,19 @@ class AuthProvider extends ChangeNotifier {
 
     //Upload the users files to firebase and get the download url
     String resumePDFURL = await saveAsset(ref.read(userSignUpProvider.notifier).resumePDFData,
-        user.user!.uid, "Resume", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Resume", ref.read(userSignUpProvider.notifier).firstName, 'pdf');
     String frontIDURL = await saveAsset(ref.read(userSignUpProvider.notifier).frontIDData,
-        user.user!.uid, "Front ID", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Front ID", ref.read(userSignUpProvider.notifier).firstName, 'image');
     String backIDURL = await saveAsset(ref.read(userSignUpProvider.notifier).backIDData,
-        user.user!.uid, "Back ID", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Back ID", ref.read(userSignUpProvider.notifier).firstName, 'image');
     String registrationCertificateURL = await saveAsset(
         ref.read(userSignUpProvider.notifier).registrationCertificateData,
         user.user!.uid,
         "Registration Certificate",
-        ref.read(userSignUpProvider.notifier).firstName);
+        ref.read(userSignUpProvider.notifier).firstName,
+        'pdf');
     String profilePhotoURL = await saveAsset(ref.read(userSignUpProvider.notifier).profilePhotoData,
-        user.user!.uid, "Profile Photo", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Profile Photo", ref.read(userSignUpProvider.notifier).firstName, 'image');
     String signaureImageURL = await saveImageAsset(
         ref.read(userSignUpProvider.notifier).signatureData,
         user.user!.uid,
@@ -192,18 +198,19 @@ class AuthProvider extends ChangeNotifier {
 
     //Upload the users files to firebase and get the download url
     String resumePDFURL = await saveAsset(ref.read(userSignUpProvider.notifier).resumePDFData,
-        user.user!.uid, "Resume", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Resume", ref.read(userSignUpProvider.notifier).firstName, 'pdf');
     String frontIDURL = await saveAsset(ref.read(userSignUpProvider.notifier).frontIDData,
-        user.user!.uid, "Front ID", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Front ID", ref.read(userSignUpProvider.notifier).firstName, 'image');
     String backIDURL = await saveAsset(ref.read(userSignUpProvider.notifier).backIDData,
-        user.user!.uid, "Back ID", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Back ID", ref.read(userSignUpProvider.notifier).firstName, 'image');
     String registrationCertificateURL = await saveAsset(
         ref.read(userSignUpProvider.notifier).registrationCertificateData,
         user.user!.uid,
         "Registration Certificate",
-        ref.read(userSignUpProvider.notifier).firstName);
+        ref.read(userSignUpProvider.notifier).firstName,
+        'pdf');
     String profilePhotoURL = await saveAsset(ref.read(userSignUpProvider.notifier).profilePhotoData,
-        user.user!.uid, "Profile Photo", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Profile Photo", ref.read(userSignUpProvider.notifier).firstName, 'image');
     String signaureImageURL = await saveImageAsset(
         ref.read(userSignUpProvider.notifier).signatureData,
         user.user!.uid,
@@ -264,18 +271,19 @@ class AuthProvider extends ChangeNotifier {
     }
     print("Uploading Pharmacy Technician User Info");
     String resumePDFURL = await saveAsset(ref.read(userSignUpProvider.notifier).resumePDFData,
-        user.user!.uid, "Resume", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Resume", ref.read(userSignUpProvider.notifier).firstName, 'pdf');
     String frontIDURL = await saveAsset(ref.read(userSignUpProvider.notifier).frontIDData,
-        user.user!.uid, "Front ID", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Front ID", ref.read(userSignUpProvider.notifier).firstName, 'image');
     String backIDURL = await saveAsset(ref.read(userSignUpProvider.notifier).backIDData,
-        user.user!.uid, "Back ID", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Back ID", ref.read(userSignUpProvider.notifier).firstName, 'image');
     String registrationCertificateURL = await saveAsset(
         ref.read(userSignUpProvider.notifier).registrationCertificateData,
         user.user!.uid,
         "Registration Certificate",
-        ref.read(userSignUpProvider.notifier).firstName);
+        ref.read(userSignUpProvider.notifier).firstName,
+        'pdf');
     String profilePhotoURL = await saveAsset(ref.read(userSignUpProvider.notifier).profilePhotoData,
-        user.user!.uid, "Profile Photo", ref.read(userSignUpProvider.notifier).firstName);
+        user.user!.uid, "Profile Photo", ref.read(userSignUpProvider.notifier).firstName, 'image');
 
     String signaureImageURL = await saveImageAsset(
         ref.read(userSignUpProvider.notifier).signatureData,

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,7 @@ import 'package:open_file/open_file.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:dotted_border/dotted_border.dart';
 import '../../../../main.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class PhotoInformation extends ConsumerStatefulWidget {
   PhotoInformation({Key? key}) : super(key: key);
@@ -41,7 +43,6 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
   String saveIcon = 'assets/icons/save.svg';
   String documentIcon = 'assets/icons/document2.svg';
   String profilePhotoIcon = 'assets/icons/account.svg';
-
 
   @override
   Widget build(BuildContext context) {
@@ -193,14 +194,12 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                                 ref.read(userSignUpProvider.notifier).password.toString())
                             .then((user) async {
                           print("UPLOADING DATA");
-                          print(
-                              "USER TYPE: ${ref.read(userSignUpProvider.notifier).userType}");
+                          print("USER TYPE: ${ref.read(userSignUpProvider.notifier).userType}");
 
                           if (user == null) {
                             return errorMethod(context);
                           } else {
-                            if (ref.read(userSignUpProvider.notifier).userType ==
-                                "Pharmacist") {
+                            if (ref.read(userSignUpProvider.notifier).userType == "Pharmacist") {
                               await registerPharmacist(context, ref, user);
                             } else if (ref.read(userSignUpProvider.notifier).userType ==
                                 "Pharmacy Assistant") {
@@ -259,7 +258,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                                     ),
                                   ],
                                 ));
-                        
+
                         print("ERROR");
                         final snackBar = SnackBar(
                           content:
@@ -293,7 +292,8 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
     );
   }
 
-  Future<void> registerPharmacyTechnician(WidgetRef ref, UserCredential user, BuildContext context) async {
+  Future<void> registerPharmacyTechnician(
+      WidgetRef ref, UserCredential user, BuildContext context) async {
     print("Registering Pharmacy Technician");
     ref
         .read(authProvider.notifier)
@@ -306,8 +306,8 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
       print("DATA UPLOADED");
       await value?.user?.sendEmailVerification().then((_) {
         ref.read(userSignUpProvider.notifier).clearAllValues();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => ConnectPharma()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ConnectPharma()));
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -329,7 +329,8 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
     });
   }
 
-  Future<void> registerPharmacyAssistant(WidgetRef ref, UserCredential user, BuildContext context) async {
+  Future<void> registerPharmacyAssistant(
+      WidgetRef ref, UserCredential user, BuildContext context) async {
     print("Registering Pharmacy Assistant");
     ref
         .read(authProvider.notifier)
@@ -342,8 +343,8 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
       print("DATA UPLOADED");
       await value?.user?.sendEmailVerification().then((_) {
         ref.read(userSignUpProvider.notifier).clearAllValues();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => ConnectPharma()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ConnectPharma()));
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -379,8 +380,8 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
       print("DATA UPLOADED");
       await value?.user?.sendEmailVerification().then((_) {
         ref.read(userSignUpProvider.notifier).clearAllValues();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => ConnectPharma()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ConnectPharma()));
         ref.read(authProvider.notifier).signOut();
         showDialog(
             context: context,
@@ -471,8 +472,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                         ),
                       ),
                       onPressed: () async {
-                        profilePhotoFile =
-                            ref.read(userSignUpProvider.notifier).profilePhotoData;
+                        profilePhotoFile = ref.read(userSignUpProvider.notifier).profilePhotoData;
                         print("FILE PATH: " + profilePhotoFile!.path.toString());
                         OpenFile.open(profilePhotoFile!.path);
                       },
@@ -557,6 +557,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                           profilePhotoPicked = true;
                         });
                         profilePhotoFile = File(_profilePhotoResult!.files.first.path.toString());
+                        profilePhotoFile = await compressAndGetFile(profilePhotoFile!);
 
                         ref
                             .read(userSignUpProvider.notifier)
@@ -714,9 +715,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                           registrationFile = null;
                         });
 
-                        ref
-                            .read(userSignUpProvider.notifier)
-                            .clearRegistrationCertificatePDF();
+                        ref.read(userSignUpProvider.notifier).clearRegistrationCertificatePDF();
                       },
                       child: RichText(
                         text: TextSpan(
@@ -777,10 +776,8 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                             _registrationCertificateResult = null;
                             registrationFile = null;
                           });
-            
-                          ref
-                              .read(userSignUpProvider.notifier)
-                              .clearRegistrationCertificatePDF();
+
+                          ref.read(userSignUpProvider.notifier).clearRegistrationCertificatePDF();
                           _showRegistrationCertificateError();
                         }
                       } else {
@@ -936,7 +933,8 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                           backOfIDPicked = true;
                         });
                         backFile = File(_backOfIDResult!.files.first.path.toString());
-
+                        backFile = await compressAndGetFile(backFile!);
+                        
                         ref.read(userSignUpProvider.notifier).changeBackIDImage(backFile);
                       } else {
                         // User canceled the picker
@@ -1089,6 +1087,7 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                           frontOfIDPicked = true;
                         });
                         frontFile = File(_frontOfIDResult!.files.first.path.toString());
+                        frontFile = await compressAndGetFile(frontFile!);
 
                         ref.read(userSignUpProvider.notifier).changeFrontIDImage(frontFile);
                       } else {
@@ -1127,5 +1126,22 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
         ],
       ),
     );
+  }
+
+  Future<File?> compressAndGetFile(File file) async {
+    print("File Path2: " + file.path);
+    final dir = await path_provider.getTemporaryDirectory();
+    final targetPath = dir.absolute.path + '/temp${file.lengthSync()}.jpg';
+
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.path,
+      targetPath,
+      quality: 50,
+    );
+
+    print(file.lengthSync() * 0.000001);
+    print(result!.lengthSync() * 0.000001);
+
+    return result;
   }
 }

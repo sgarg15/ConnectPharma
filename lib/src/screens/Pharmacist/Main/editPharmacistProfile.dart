@@ -1217,7 +1217,8 @@ class _EditPharmacistProfileState extends ConsumerState<EditPharmacistProfile> {
                                                       "Resume",
                                                       ref
                                                           .read(pharmacistMainProvider.notifier)
-                                                          .userDataMap?["firstName"]);
+                                                          .userDataMap?["firstName"],
+                                                      'pdf');
                                               uploadDataMap["resumeDownloadURL"] = resumePDFURL;
                                             }
                                             log("Upload Data Map: $uploadDataMap",

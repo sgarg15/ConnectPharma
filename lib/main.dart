@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectpharma/src/screens/testScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -54,23 +55,46 @@ Future<void> main() async {
   }
 
   await dotenv.load();
-  runApp(
-    DevicePreview(
-      enabled: false,
-      builder: (context) {
-        return ProviderScope(
-      child: MaterialApp(
-            useInheritedMediaQuery: true,
-            locale: DevicePreview.locale(context),
-            builder: DevicePreview.appBuilder,
-        home: ConnectPharma(),
-        debugShowCheckedModeBanner: false,
+
+  bool showTestScreen;
+
+  showTestScreen = false;
+
+  if (showTestScreen) {
+    runApp(
+      DevicePreview(
+        enabled: false,
+        builder: (context) {
+          return ProviderScope(
+            child: MaterialApp(
+              useInheritedMediaQuery: true,
+              locale: DevicePreview.locale(context),
+              builder: DevicePreview.appBuilder,
+              home: TestScreen(),
+              debugShowCheckedModeBanner: false,
+            ),
+          );
+        },
       ),
-        );
-      },
-    ),
-    
-  );
+    );
+  } else {
+    runApp(
+      DevicePreview(
+        enabled: false,
+        builder: (context) {
+          return ProviderScope(
+            child: MaterialApp(
+              useInheritedMediaQuery: true,
+              locale: DevicePreview.locale(context),
+              builder: DevicePreview.appBuilder,
+              home: ConnectPharma(),
+              debugShowCheckedModeBanner: false,
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
 
 class ConnectPharma extends ConsumerStatefulWidget {
@@ -180,17 +204,15 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
               child: RichText(
                 text: TextSpan(
                   text: "Connect",
-                  style:
-                      TextStyle(
+                  style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40.0,
                       color: Colors.white,
                       fontFamily: GoogleFonts.montserrat().fontFamily),
-                      
                 ),
               ),
             ),
-            
+
             //Pharma Text
             Container(
               //top: 240,
@@ -199,8 +221,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
               child: RichText(
                 text: TextSpan(
                   text: "Pharma",
-                  style:
-                      TextStyle(
+                  style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40.0,
                       color: Colors.white,
@@ -226,8 +247,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                   RichText(
                     text: TextSpan(
                       text: "Register as",
-                      style:
-                          TextStyle(
+                      style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 18.0,
                           color: Colors.white.withOpacity(0.57),
@@ -245,7 +265,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                 ],
               ),
             ),
-            
+
             //Buttons
 
             //Button For Pharmacy Registration
@@ -258,8 +278,7 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                   style: selectUserTypeButtonStyle,
                   onPressed: () {
                     //Send to Pharmacy Sign Up Page
-                    Navigator.push(
-                        context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const PharmacySignUpPage()));
                   },
                   child: RichText(
@@ -485,7 +504,8 @@ class _ConnectPharmaState extends ConsumerState<ConnectPharma> {
                 onTap: () {
                   //Push to Login Screen
 
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const LogInPage()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => const LogInPage()));
                 },
               ),
             ),
