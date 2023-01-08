@@ -27,6 +27,25 @@ class UserSignUpProvider extends StateNotifier<UserSignUpModel> {
     }
   }
 
+  bool isValidPharmacistLegal() {
+    if (userType == "Pharmacy Assistant") {
+      if (state.entitledToWork && !state.malpractice && !state.felon) {
+        return true;
+      }
+    } else {
+      if (state.entitledToWork &&
+          state.activeMember &&
+          state.liabilityInsurance &&
+          !state.licenseRestricted &&
+          !state.malpractice &&
+          !state.felon) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   bool isValidPharmacistInformation() {
     if (state.firstYearLicensed == "" ||
         state.registrationNumber == "" ||

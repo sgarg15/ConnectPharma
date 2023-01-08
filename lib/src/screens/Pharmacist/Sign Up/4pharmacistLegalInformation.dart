@@ -14,7 +14,6 @@ class PharmacistLegalInformation extends ConsumerStatefulWidget {
 }
 
 class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInformation> {
-
   String certificateIcon = 'assets/icons/certificate.svg';
   String licenseIcon = 'assets/icons/license.svg';
 
@@ -60,7 +59,6 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                             physics: ClampingScrollPhysics(),
                             child: Column(
                               children: <Widget>[
-
                                 SizedBox(height: 30),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -79,7 +77,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                 SizedBox(height: 30),
 
                                 //Legally Entitled
-                                TextandToggle(
+                                textToggle(
                                   context,
                                   ref,
                                   certificateIcon,
@@ -95,8 +93,8 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
 
                                 //Active Member
                                 if (ref.read(userSignUpProvider).userType !=
-                                    "Pharmacist Assistant") ...[
-                                  TextandToggle(
+                                    "Pharmacy Assistant") ...[
+                                  textToggle(
                                     context,
                                     ref,
                                     certificateIcon,
@@ -108,71 +106,67 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                                           .changeActiveMember(value);
                                     },
                                   ),
-                                SizedBox(height: 20),
+                                  SizedBox(height: 20),
                                 ],
                                 
                                 //Liability Insurance
                                 if (ref.read(userSignUpProvider).userType !=
-                                    "Pharmacist Assistant") ...[
-                                TextandToggle(
-                                  context,
-                                  ref,
-                                  certificateIcon,
-                                  "Do you have valid Personal Professional Liability insurance as required by your provincial pharmacy licensing authority?",
-                                  ref.read(userSignUpProvider).liabilityInsurance,
-                                  (value) {
-                                    ref
-                                        .read(userSignUpProvider.notifier)
-                                        .changeLiabilityInsurance(value);
-                                  },
-                                ),
-                                SizedBox(height: 20),
+                                    "Pharmacy Assistant") ...[
+                                  textToggle(
+                                    context,
+                                    ref,
+                                    certificateIcon,
+                                    "Do you have valid Personal Professional Liability insurance as required by your provincial pharmacy licensing authority?",
+                                    ref.read(userSignUpProvider).liabilityInsurance,
+                                    (value) {
+                                      ref
+                                          .read(userSignUpProvider.notifier)
+                                          .changeLiabilityInsurance(value);
+                                    },
+                                  ),
+                                  SizedBox(height: 20),
                                 ],
 
                                 //License Restricted
                                 if (ref.read(userSignUpProvider).userType !=
-                                    "Pharmacist Assistant") ...[
-                                TextandToggle(
-                                  context,
-                                  ref,
-                                  certificateIcon,
-                                  "Have you ever had your Professional license restricted, suspended, or revoked by your provincial pharmacy licensing authority?",
-                                  ref.read(userSignUpProvider).licenseRestricted,
-                                  (value) {
-                                    ref
-                                        .read(userSignUpProvider.notifier)
-                                        .changeLicenseRestricted(value);
-                                  },
-                                ),
-                                SizedBox(height: 20),
+                                    "Pharmacy Assistant") ...[
+                                  textToggle(
+                                    context,
+                                    ref,
+                                    certificateIcon,
+                                    "Have you ever had your Professional license restricted, suspended, or revoked by your provincial pharmacy licensing authority?",
+                                    ref.read(userSignUpProvider).licenseRestricted,
+                                    (value) {
+                                      ref
+                                          .read(userSignUpProvider.notifier)
+                                          .changeLicenseRestricted(value);
+                                    },
+                                  ),
+                                  SizedBox(height: 20),
                                 ],
-                              
+
                                 //Professional Malpractice
-                                TextandToggle(
+                                textToggle(
                                   context,
                                   ref,
                                   certificateIcon,
                                   "Have you ever been found guilty of professional malpractice, misconduct or incapacitated by your provincial pharmacy licensing authority?",
                                   ref.read(userSignUpProvider).malpractice,
                                   (value) {
-                                    ref
-                                        .read(userSignUpProvider.notifier)
-                                        .changeMalpractice(value);
+                                    ref.read(userSignUpProvider.notifier).changeMalpractice(value);
                                   },
                                 ),
                                 SizedBox(height: 20),
 
                                 ///Convicted Felon
-                                TextandToggle(
+                                textToggle(
                                   context,
                                   ref,
                                   certificateIcon,
                                   "Have you ever been convicted of felony or been charged with a criminal offense for which a pardon was not granted?",
                                   ref.read(userSignUpProvider).felon,
                                   (value) {
-                                    ref
-                                        .read(userSignUpProvider.notifier)
-                                        .changeFelonStatus(value);
+                                    ref.read(userSignUpProvider.notifier).changeFelonStatus(value);
                                   },
                                 ),
                                 SizedBox(height: 20),
@@ -193,127 +187,6 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
     });
   }
 
-  /*
-          SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                //Information Text
-                Align(
-                  alignment: Alignment(0, -0.96),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
-                    child: RichText(
-                      textAlign: TextAlign.left,
-                      text: TextSpan(
-                        text:
-                            "Please provide us with some legal information to assure safe transactions.",
-                        style: GoogleFonts.questrial(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                //All Fields
-                Align(
-                  alignment: Alignment(-0.35, -0.70),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 5, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        SizedBox(height: 20),
-                        //Legally Entitled
-                        customTextAndToggle(
-                          ref,
-                          "Are you legally entitled to work in Canada",
-                          pharmacistSignUp.entitledToWork,
-                          (bool value) {
-                            ref.read(userSignUpProvider.notifier).changeEntitledToWork(value);
-                          },
-                        ),
-
-                        SizedBox(height: 20),
-
-                        // Active Member
-                        customTextAndToggle(
-                          ref,
-                          "Are you currently registered as an active member and in good standing with your provincial pharmacy licensing authority?",
-                          pharmacistSignUp.activeMember,
-                          (bool activeMember) {
-                            ref
-                                .read(userSignUpProvider.notifier)
-                                .changeActiveMember(activeMember);
-                          },
-                        ),
-                        SizedBox(height: 20),
-
-                        // //Liability Insurance
-                        customTextAndToggle(
-                          ref,
-                          "Do you have valid Personal Professional Liability insurance as required by your provincial pharmacy licensing authority?",
-                          pharmacistSignUp.liabilityInsurance,
-                          (bool value) {
-                            ref
-                                .read(userSignUpProvider.notifier)
-                                .changeLiabilityInsurance(value);
-                          },
-                        ),
-                        SizedBox(height: 20),
-
-                        // //License Restricted
-                        customTextAndToggle(
-                          ref,
-                          "Have you ever had your Professional license restricted, suspended, or revoked by your provincial pharmacy licensing authority?",
-                          pharmacistSignUp.licenseRestricted,
-                          (bool value) {
-                            ref
-                                .read(userSignUpProvider.notifier)
-                                .changeLicenseRestricted(value);
-                          },
-                        ),
-                        SizedBox(height: 20),
-
-                        // //Professional Malpractice
-                        customTextAndToggle(
-                          ref,
-                          "Have you ever been found guilty of professional malpractice, misconduct or incapacitated by your provincial pharmacy licensing authority?",
-                          pharmacistSignUp.malpractice,
-                          (bool value) {
-                            ref.read(userSignUpProvider.notifier).changeMalpractice(value);
-                          },
-                        ),
-                        SizedBox(height: 20),
-
-                        // //Convicted Felon
-                        customTextAndToggle(
-                          ref,
-                          "Have you ever been convicted of felony or been charged with a criminal offense for which a pardon was not granted?",
-                          pharmacistSignUp.felon,
-                          (bool value) {
-                            ref.read(userSignUpProvider.notifier).changeFelonStatus(value);
-                          },
-                        ),
-                        SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                ),
-
-                //Next Button
-                nextButton(context),
-                SizedBox(height: 15),
-              ],
-            )),
-      
-  */
-
   Center nextButton(BuildContext context) {
     return Center(
       child: SizedBox(
@@ -330,12 +203,14 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ))),
-         
-          onPressed: () {
-            print("Pressed");
+          onPressed: (ref.read(userSignUpProvider.notifier).isValidPharmacistLegal())
+              ? () {
+                  print("Pressed");
 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => PharmacistSkills()));
-          },
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => PharmacistSkills()));
+                }
+              : null,
           child: RichText(
             text: TextSpan(
               text: "Next",
@@ -351,39 +226,7 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
     );
   }
 
-  /*
-  Column customTextAndToggle(
-      WidgetRef ref, String text, bool valueName, Function(bool)? onChanged) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RichText(
-          textAlign: TextAlign.left,
-          text: TextSpan(
-              text: text,
-              style: GoogleFonts.questrial(
-                fontSize: 16,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              )),
-        ),
-        Transform.scale(
-          scale: 1.5,
-          child: Switch(
-            value: valueName,
-            onChanged: onChanged,
-            activeTrackColor: Color(0xFFF0069C1),
-            activeColor: Color(0xFFF0069C1),
-          ),
-        ),
-      ],
-    );
-  }
-
-  */
-
-  Container TextandToggle(
+  Container textToggle(
     BuildContext context,
     WidgetRef ref,
     String iconString,
@@ -412,25 +255,24 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
                   ),
                 ),
                 Consumer(
-              builder: (context, ref, child) {
-                ref.watch(userSignUpProvider);
-                return Padding(
+                  builder: (context, ref, child) {
+                    ref.watch(userSignUpProvider);
+                    return Padding(
                       padding: const EdgeInsets.only(left: 5),
-                  child: Transform.scale(
-                    scale: 1.3,
-                    child: Switch(
-                      value: currentValue,
-                      onChanged: onChanged,
+                      child: Transform.scale(
+                        scale: 1.3,
+                        child: Switch(
+                          value: currentValue,
+                          onChanged: onChanged,
                           activeTrackColor: Color(0xFFE2F2FF),
                           activeColor: Color(0xFF0069C1),
                           inactiveTrackColor: Color(0xFFDDDFE0),
                           inactiveThumbColor: Colors.white,
-                    ),
-                  ),
-                );
-              },
-            ),
-         
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
             Divider(
@@ -440,6 +282,4 @@ class _PharmacistLegalInformationState extends ConsumerState<PharmacistLegalInfo
           ],
         ));
   }
-
-
 }
