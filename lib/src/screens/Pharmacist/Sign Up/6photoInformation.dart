@@ -113,12 +113,15 @@ class _PhotoInformationState extends ConsumerState<PhotoInformation> {
                                 SizedBox(height: 30),
 
                                 //Registration Certificate
+                                if (ref.read(userSignUpProvider.notifier).userType !=
+                                    "Pharmacy Assistant") ...[
                                 Tooltip(
                                     message: 'Hi there!ddddddddddddddddddddddddddd',
                                     triggerMode: TooltipTriggerMode.longPress,
                                     preferBelow: false,
                                     child: selectRegistrationCertificate(context)),
                                 SizedBox(height: 30),
+                                ],
 
                                 //Profile Photo
                                 selectProfilePhoto(context),
