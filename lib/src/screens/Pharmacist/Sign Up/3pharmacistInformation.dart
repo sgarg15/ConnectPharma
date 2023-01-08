@@ -106,7 +106,9 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                 ),
                                 SizedBox(height: 30),
 
-                                //Registration Number
+                                if (ref.read(userSignUpProvider.notifier).userType !=
+                                    'Pharmacy Assistant') ...[
+                                  //Registration Number
                                 CustomInputField(
                                   fieldTitle: "Registration Number",
                                   hintText: "Enter your registration number",
@@ -128,7 +130,7 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                       .registrationNumber,
                                 ),
                                 SizedBox(height: 30),
-
+                                
                                 //Province Registration
                                 CustomInputField(
                                   fieldTitle: "Province of Registration",
@@ -195,7 +197,8 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
                                       ref.read(userSignUpProvider.notifier).institutionName,
                                 ),
                                 SizedBox(height: 30),
-
+                                ],
+                               
                                 //Year of Working Experience
                                 CustomInputField(
                                   fieldTitle: "Years of Working Experience",
@@ -307,12 +310,12 @@ class _PharmacistInformationState extends ConsumerState<PharmacistInformation> {
               onPressed: (ref
                       .read(userSignUpProvider.notifier)
                       .isValidPharmacistInformation())
-                  ? null
-                  : () {
+                  ? () {
                       print("Pressed");
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => PharmacistLegalInformation()));
-                    },
+                    }
+                  : null,
               child: RichText(
                 text: TextSpan(
                   text: "Next",

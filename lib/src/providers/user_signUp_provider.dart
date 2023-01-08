@@ -47,6 +47,16 @@ class UserSignUpProvider extends StateNotifier<UserSignUpModel> {
   }
 
   bool isValidPharmacistInformation() {
+    if (userType == 'Pharmacy Assistant') {
+      if (state.firstYearLicensed == "" || state.workingExperiance == "") {
+        print("true account info Pharmacy assistant");
+        return false;
+      } else {
+        print("false account info Pharmacy assistant");
+        return true;
+      }
+    }
+
     if (state.firstYearLicensed == "" ||
         state.registrationNumber == "" ||
         state.registrationProvince == "" ||
@@ -54,10 +64,10 @@ class UserSignUpProvider extends StateNotifier<UserSignUpModel> {
         state.institutionName == "" ||
         state.workingExperiance == "") {
       print("true account info");
-      return true;
+      return false;
     } else {
       print("false account info");
-      return false;
+      return true;
     }
   }
 
